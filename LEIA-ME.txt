@@ -1,0 +1,1 @@
+Copie REGRAS_DO_JOGO.md para docs/REGRAS_DO_JOGO.md do projeto. Coloque cartas.json em src/data/cartas.json (ou diretório de dados definido por sua arquitetura). O CSV é auxiliar para revisar o catálogo. AGENTS.md e CLAUDE.md devem apontar para as mesmas regras.

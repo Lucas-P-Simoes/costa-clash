@@ -1,0 +1,101 @@
+﻿id,nome,tipo,grupo_ou_subtipo,atk,def,efeito_json,informacao_educativa
+CC-001,Manguezal Protegido,unidade,ecossistema,1200,2000,,Manguezais abrigam espécies e retêm sedimentos.
+CC-002,Restinga Preservada,unidade,ecossistema,1000,1800,,Vegetação de restinga ajuda a estabilizar dunas.
+CC-003,Recife de Coral,unidade,ecossistema,1600,1500,,Recifes oferecem abrigo e diversidade de habitats.
+CC-004,Duna Costeira,unidade,ecossistema,900,2000,,Dunas armazenam sedimentos e podem amortecer eventos costeiros.
+CC-005,Estuário Vivo,unidade,ecossistema,1500,1900,,Estuários integram águas continentais e marinhas.
+CC-006,Praia Natural,unidade,ecossistema,1100,1600,,Praias são sistemas dinâmicos de troca de sedimentos.
+CC-007,Costão Rochoso,unidade,ecossistema,1700,2000,,Costões abrigam organismos adaptados às marés.
+CC-008,Pradaria Marinha,unidade,ecossistema,1300,1900,,Pradarias marinhas oferecem habitat e retêm carbono.
+CC-009,Lagoa Costeira,unidade,ecossistema,1200,1700,,Lagoas costeiras respondem às trocas de água e nutrientes.
+CC-010,Mata Atlântica Litorânea,unidade,ecossistema,1400,2100,,A vegetação litorânea contribui para a biodiversidade.
+CC-011,Manguezal de Franja,unidade,ecossistema,1100,2100,,Manguezais podem reduzir energia da água localmente.
+CC-012,Marisma Costeira,unidade,ecossistema,1000,2000,,Marismas podem reter sedimentos e nutrientes.
+CC-013,Banco de Areia,unidade,ecossistema,700,1800,,Bancos de areia migram conforme ondas e correntes.
+CC-014,Ilha Costeira,unidade,ecossistema,1300,2100,,Ilhas costeiras concentram habitats diversos.
+CC-015,Rio de Maré,unidade,ecossistema,1200,1600,,Rios de maré sofrem influência da oscilação marinha.
+CC-016,Falésia Vegetada,unidade,ecossistema,1000,2300,,A vegetação pode influenciar a estabilidade superficial.
+CC-017,Berçário de Peixes,unidade,fauna,1500,1600,,Áreas de berçário sustentam fases juvenis de peixes.
+CC-018,Tartaruga Marinha,unidade,fauna,1700,1500,,Tartarugas podem sofrer com captura acidental e lixo.
+CC-019,Boto-Cinza,unidade,fauna,1900,1400,,Mamíferos costeiros são sensíveis a perturbações humanas.
+CC-020,Caranguejo-Uçá,unidade,fauna,1300,1800,,Caranguejos participam da dinâmica dos manguezais.
+CC-021,Garça-Branca,unidade,fauna,1500,1300,,Aves utilizam ambientes úmidos para alimentação.
+CC-022,Cavalo-Marinho,unidade,fauna,1100,1700,,Cavalos-marinhos dependem de habitats estruturados.
+CC-023,Peixe-Robalo,unidade,fauna,1800,1200,,Alguns robalos utilizam ambientes estuarinos.
+CC-024,Raia Costeira,unidade,fauna,1700,1400,,Raias integram redes alimentares marinhas.
+CC-025,Ostra de Mangue,unidade,fauna,800,2000,,Ostras filtram partículas suspensas na água.
+CC-026,Coral-Cérebro,unidade,fauna,1200,2200,,Corais construtores dependem de condições ambientais adequadas.
+CC-027,Golfinho Costeiro,unidade,fauna,2000,1300,,Golfinhos podem ser afetados por ruídos e embarcações.
+CC-028,Ave Migratória,unidade,fauna,1400,1400,,Áreas costeiras oferecem descanso a aves migratórias.
+CC-029,Sardinha Costeira,unidade,fauna,1300,1100,,Peixes pequenos conectam vários níveis alimentares.
+CC-030,Estrela-do-Mar,unidade,fauna,900,1700,,Equinodermos compõem comunidades bentônicas.
+CC-031,Pesca Artesanal,unidade,atividade,1400,1200,,A pesca artesanal se relaciona com saberes locais.
+CC-032,Turismo Responsável,unidade,atividade,1500,1600,,O turismo pode ser planejado com menor pressão ambiental.
+CC-033,Urbanização Planejada,unidade,atividade,1800,1600,,Planejamento pode reduzir exposição a riscos costeiros.
+CC-034,Pesquisa Oceanográfica,unidade,atividade,1600,1800,,O monitoramento apoia decisões ambientais.
+CC-035,Coleta Seletiva,unidade,atividade,1200,1500,,Separar resíduos facilita destinações apropriadas.
+CC-036,Educação Ambiental,unidade,atividade,1300,1700,,Educação pode ampliar participação comunitária.
+CC-037,Monitoramento da Água,unidade,atividade,1700,1800,,O monitoramento permite acompanhar indicadores de qualidade.
+CC-038,Fiscalização Costeira,unidade,atividade,1900,1600,,Fiscalização apoia o cumprimento de normas ambientais.
+CC-039,Comunidade Caiçara,unidade,atividade,1500,2000,,Conhecimentos tradicionais ajudam a entender o território.
+CC-040,Restauração de Dunas,unidade,atividade,1600,1900,,Restauração exige diagnóstico e manejo adequados.
+CC-041,Viveiro de Mudas Nativas,unidade,atividade,1100,1800,,Mudas nativas podem apoiar ações de restauração.
+CC-042,Gestão Participativa,unidade,atividade,1500,1800,,A participação social fortalece decisões territoriais.
+CC-043,Saneamento Integrado,unidade,atividade,2000,1700,,"Água, esgoto e drenagem demandam planejamento conjunto."
+CC-044,Proteção de Nascentes,unidade,atividade,1200,2100,,Nascentes integram processos da bacia hidrográfica.
+CC-045,Recuperação de Mata Ciliar,unidade,atividade,1400,2100,,Matas ciliares podem reduzir erosão nas margens.
+CC-046,Observatório Costeiro,unidade,atividade,1600,1700,,Séries históricas ajudam a identificar mudanças na costa.
+CC-047,Poluição do Mar,unidade,impacto,1800,900,,Poluentes podem comprometer águas e organismos marinhos.
+CC-048,Erosão Costeira,unidade,impacto,2000,800,,Erosão é o recuo de sedimentos ou da linha de costa.
+CC-049,Desmatamento,unidade,impacto,1700,1000,,Remover vegetação altera habitats e processos locais.
+CC-050,Chuva Intensa,unidade,impacto,1600,1300,,Chuvas fortes podem intensificar o escoamento superficial.
+CC-051,Esgoto Sem Tratamento,unidade,impacto,1900,1000,,Esgoto pode elevar carga orgânica e microbiana.
+CC-052,Lixo Plástico,unidade,impacto,1700,1200,,Plásticos podem causar ingestão e emalhamento de fauna.
+CC-053,Ocupação Irregular,unidade,impacto,2100,900,,Ocupação em áreas frágeis pode ampliar riscos.
+CC-054,Pesca Predatória,unidade,impacto,2000,1100,,Capturas excessivas ameaçam populações exploradas.
+CC-055,Assoreamento,unidade,impacto,1600,1900,,Acúmulo de sedimentos pode alterar a profundidade de canais.
+CC-056,Derramamento de Óleo,unidade,impacto,2200,700,,Óleo pode causar impactos químicos e físicos na costa.
+CC-057,Ressaca Marinha,unidade,impacto,2300,1000,,Ondas intensas podem causar danos e erosão.
+CC-058,Expansão Portuária,unidade,impacto,2100,1300,,Obras portuárias exigem avaliação de impactos.
+CC-059,Microplásticos,unidade,impacto,1500,1300,,Microplásticos são encontrados em vários ambientes aquáticos.
+CC-060,Ilha de Calor Urbana,unidade,impacto,1800,1200,,A urbanização pode alterar temperaturas locais.
+CC-061,Drenagem Inadequada,unidade,impacto,1900,1200,,Sistemas deficientes podem agravar alagamentos.
+CC-062,Supressão de Restinga,unidade,impacto,1800,1100,,Perda de restinga reduz habitats e proteção vegetal.
+CC-063,Turismo Predatório,unidade,impacto,1900,1200,,Uso intenso sem gestão pode pressionar ecossistemas.
+CC-064,Sobrepesca,unidade,impacto,2100,900,,Remoção excessiva altera estoques e relações tróficas.
+CC-065,Obra Sobre a Duna,unidade,impacto,2200,900,,Construir sobre dunas pode afetar a dinâmica sedimentar.
+CC-066,Canalização de Rio,unidade,impacto,2000,1400,,Canalizações podem modificar fluxos e habitats.
+CC-067,Invasão de Espécies,unidade,impacto,2100,1300,,Espécies exóticas podem desestabilizar comunidades.
+CC-068,Contaminação Industrial,unidade,impacto,2300,800,,Efluentes industriais exigem controle e monitoramento.
+CC-069,Dragagem Sem Controle,unidade,impacto,2200,1100,,Dragagens podem ressuspender sedimentos e alterar fundos.
+CC-070,Branqueamento de Corais,unidade,impacto,2000,1000,,Estresse térmico pode provocar branqueamento coralíneo.
+CC-071,Elevação do Nível do Mar,unidade,impacto,2400,1100,,A elevação do mar amplia riscos em certos trechos costeiros.
+CC-072,Descarga de Nutrientes,unidade,impacto,1800,1400,,Excesso de nutrientes pode favorecer eutrofização.
+CC-073,Tratamento de Esgoto,acao,instantanea,,,"{""operacao"": ""debuff_grupo"", ""alvo"": ""impacto"", ""valor"": -500}",Reduz carga poluidora de efluentes antes do lançamento.
+CC-074,Recuperação Ambiental,acao,instantanea,,,"{""operacao"": ""buff_grupo"", ""alvo"": ""ecossistema"", ""valor"": 500}",Recuperação precisa considerar condições e espécies locais.
+CC-075,Fiscalização Ambiental,acao,instantanea,,,"{""operacao"": ""destruir_grupo"", ""alvo"": ""impacto"", ""valor"": 0}",Fiscalização apoia medidas de prevenção e correção.
+CC-076,Limpeza de Praia,acao,instantanea,,,"{""operacao"": ""debuff_grupo"", ""alvo"": ""impacto"", ""valor"": -400}","Mutirões removem resíduos, mas não substituem prevenção."
+CC-077,Alerta de Ressaca,acao,instantanea,,,"{""operacao"": ""buff_unidade"", ""alvo"": ""qualquer"", ""valor"": 400}",Alertas ajudam a reduzir exposição a eventos extremos.
+CC-078,Plano Diretor Costeiro,acao,instantanea,,,"{""operacao"": ""buff_grupo"", ""alvo"": ""atividade"", ""valor"": 300}",Regras de uso do solo podem reduzir conflitos e riscos.
+CC-079,Campanha Educativa,acao,instantanea,,,"{""operacao"": ""cura"", ""alvo"": ""jogador"", ""valor"": 500}",Campanhas podem apoiar mudanças de comportamento.
+CC-080,Mutirão Comunitário,acao,instantanea,,,"{""operacao"": ""cura"", ""alvo"": ""jogador"", ""valor"": 700}",Ações comunitárias podem complementar políticas públicas.
+CC-081,Barreira de Contenção,acao,instantanea,,,"{""operacao"": ""debuff_grupo"", ""alvo"": ""impacto"", ""valor"": -600}",Barreiras ajudam em situações específicas de vazamento.
+CC-082,Estudo de Impacto,acao,instantanea,,,"{""operacao"": ""revelar"", ""alvo"": ""oponente"", ""valor"": 0}",A avaliação antecipada identifica impactos potenciais.
+CC-083,Monitoramento Contínuo,acao,instantanea,,,"{""operacao"": ""buff_unidade"", ""alvo"": ""qualquer"", ""valor"": 300}",Medições repetidas permitem observar tendências.
+CC-084,Manejo da Bacia,acao,instantanea,,,"{""operacao"": ""buff_grupo"", ""alvo"": ""ecossistema"", ""valor"": 400}",Ações na bacia influenciam as águas costeiras.
+CC-085,Raízes Protetoras,acao,equipamento,,,"{""operacao"": ""equip_buff_def"", ""alvo"": ""ecossistema"", ""valor"": 500}",Raízes podem favorecer retenção de sedimentos.
+CC-086,Tecnologia Limpa,acao,equipamento,,,"{""operacao"": ""equip_buff_atk"", ""alvo"": ""atividade"", ""valor"": 500}",Tecnologias podem diminuir pressões quando bem operadas.
+CC-087,Vigilância Ambiental,acao,equipamento,,,"{""operacao"": ""equip_buff_def"", ""alvo"": ""atividade"", ""valor"": 400}",Acompanhamento e fiscalização favorecem respostas.
+CC-088,Adaptação Climática,acao,equipamento,,,"{""operacao"": ""equip_buff_def"", ""alvo"": ""qualquer"", ""valor"": 300}","Adaptação reduz vulnerabilidades, não elimina riscos."
+CC-089,Terreno: Manguezal,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""ecossistema"", ""valor"": 300}",Manguezais são sistemas costeiros sujeitos às marés.
+CC-090,Terreno: Zona Urbana,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""atividade"", ""valor"": 300}",Cidades costeiras combinam infraestrutura e ecossistemas.
+CC-091,Terreno: Mar Aberto,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""fauna"", ""valor"": 300}",As condições do mar influenciam organismos e atividades.
+CC-092,Terreno: Costa Pressionada,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""impacto"", ""valor"": 300}",Pressões antrópicas podem se acumular na zona costeira.
+CC-093,Fiscalização Surpresa,armadilha,,,,"{""gatilho"": ""ataque_recebido"", ""operacao"": ""reduzir_dano"", ""valor"": 600}",Inspeções podem revelar infrações ambientais.
+CC-094,Barreira Natural,armadilha,,,,"{""gatilho"": ""ataque_recebido"", ""operacao"": ""reduzir_dano"", ""valor"": 800}",Ecossistemas naturais podem atenuar alguns impactos.
+CC-095,Plano de Contingência,armadilha,,,,"{""gatilho"": ""ataque_direto"", ""operacao"": ""anular_ataque"", ""valor"": 0}",Planos prévios auxiliam respostas a emergências.
+CC-096,Alerta Meteorológico,armadilha,,,,"{""gatilho"": ""ataque_direto"", ""operacao"": ""reduzir_dano"", ""valor"": 1000}",Previsões permitem preparar ações preventivas.
+CC-097,Denúncia Comunitária,armadilha,,,,"{""gatilho"": ""invocacao_impacto"", ""operacao"": ""debuff_invocada"", ""valor"": 500}",Denúncias podem apoiar respostas dos órgãos competentes.
+CC-098,Monitoramento Cidadão,armadilha,,,,"{""gatilho"": ""invocacao_impacto"", ""operacao"": ""debuff_invocada"", ""valor"": 400}",Observações locais ajudam a sinalizar problemas.
+CC-099,Proteção Emergencial,armadilha,,,,"{""gatilho"": ""ataque_recebido"", ""operacao"": ""anular_ataque"", ""valor"": 0}",Ações emergenciais devem considerar contexto e segurança.
+CC-100,Rede de Proteção,armadilha,,,,"{""gatilho"": ""ataque_direto"", ""operacao"": ""cura"", ""valor"": 500}",Colaboração pode fortalecer a gestão ambiental.

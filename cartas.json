@@ -1,0 +1,1110 @@
+{
+  "versao": "1.0",
+  "jogo": "Costa Clash",
+  "cartas": [
+    {
+      "id": "CC-001",
+      "nome": "Manguezal Protegido",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1200,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Manguezais abrigam espécies e retêm sedimentos."
+    },
+    {
+      "id": "CC-002",
+      "nome": "Restinga Preservada",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1000,
+      "defesa": 1800,
+      "efeito": null,
+      "educacao": "Vegetação de restinga ajuda a estabilizar dunas."
+    },
+    {
+      "id": "CC-003",
+      "nome": "Recife de Coral",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1600,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Recifes oferecem abrigo e diversidade de habitats."
+    },
+    {
+      "id": "CC-004",
+      "nome": "Duna Costeira",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 900,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Dunas armazenam sedimentos e podem amortecer eventos costeiros."
+    },
+    {
+      "id": "CC-005",
+      "nome": "Estuário Vivo",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1500,
+      "defesa": 1900,
+      "efeito": null,
+      "educacao": "Estuários integram águas continentais e marinhas."
+    },
+    {
+      "id": "CC-006",
+      "nome": "Praia Natural",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1100,
+      "defesa": 1600,
+      "efeito": null,
+      "educacao": "Praias são sistemas dinâmicos de troca de sedimentos."
+    },
+    {
+      "id": "CC-007",
+      "nome": "Costão Rochoso",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1700,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Costões abrigam organismos adaptados às marés."
+    },
+    {
+      "id": "CC-008",
+      "nome": "Pradaria Marinha",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1300,
+      "defesa": 1900,
+      "efeito": null,
+      "educacao": "Pradarias marinhas oferecem habitat e retêm carbono."
+    },
+    {
+      "id": "CC-009",
+      "nome": "Lagoa Costeira",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1200,
+      "defesa": 1700,
+      "efeito": null,
+      "educacao": "Lagoas costeiras respondem às trocas de água e nutrientes."
+    },
+    {
+      "id": "CC-010",
+      "nome": "Mata Atlântica Litorânea",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1400,
+      "defesa": 2100,
+      "efeito": null,
+      "educacao": "A vegetação litorânea contribui para a biodiversidade."
+    },
+    {
+      "id": "CC-011",
+      "nome": "Manguezal de Franja",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1100,
+      "defesa": 2100,
+      "efeito": null,
+      "educacao": "Manguezais podem reduzir energia da água localmente."
+    },
+    {
+      "id": "CC-012",
+      "nome": "Marisma Costeira",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1000,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Marismas podem reter sedimentos e nutrientes."
+    },
+    {
+      "id": "CC-013",
+      "nome": "Banco de Areia",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 700,
+      "defesa": 1800,
+      "efeito": null,
+      "educacao": "Bancos de areia migram conforme ondas e correntes."
+    },
+    {
+      "id": "CC-014",
+      "nome": "Ilha Costeira",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1300,
+      "defesa": 2100,
+      "efeito": null,
+      "educacao": "Ilhas costeiras concentram habitats diversos."
+    },
+    {
+      "id": "CC-015",
+      "nome": "Rio de Maré",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1200,
+      "defesa": 1600,
+      "efeito": null,
+      "educacao": "Rios de maré sofrem influência da oscilação marinha."
+    },
+    {
+      "id": "CC-016",
+      "nome": "Falésia Vegetada",
+      "tipo": "unidade",
+      "grupo": "ecossistema",
+      "atk": 1000,
+      "defesa": 2300,
+      "efeito": null,
+      "educacao": "A vegetação pode influenciar a estabilidade superficial."
+    },
+    {
+      "id": "CC-017",
+      "nome": "Berçário de Peixes",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1600,
+      "efeito": null,
+      "educacao": "Áreas de berçário sustentam fases juvenis de peixes."
+    },
+    {
+      "id": "CC-018",
+      "nome": "Tartaruga Marinha",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1700,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Tartarugas podem sofrer com captura acidental e lixo."
+    },
+    {
+      "id": "CC-019",
+      "nome": "Boto-Cinza",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1900,
+      "defesa": 1400,
+      "efeito": null,
+      "educacao": "Mamíferos costeiros são sensíveis a perturbações humanas."
+    },
+    {
+      "id": "CC-020",
+      "nome": "Caranguejo-Uçá",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1300,
+      "defesa": 1800,
+      "efeito": null,
+      "educacao": "Caranguejos participam da dinâmica dos manguezais."
+    },
+    {
+      "id": "CC-021",
+      "nome": "Garça-Branca",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1300,
+      "efeito": null,
+      "educacao": "Aves utilizam ambientes úmidos para alimentação."
+    },
+    {
+      "id": "CC-022",
+      "nome": "Cavalo-Marinho",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1100,
+      "defesa": 1700,
+      "efeito": null,
+      "educacao": "Cavalos-marinhos dependem de habitats estruturados."
+    },
+    {
+      "id": "CC-023",
+      "nome": "Peixe-Robalo",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1800,
+      "defesa": 1200,
+      "efeito": null,
+      "educacao": "Alguns robalos utilizam ambientes estuarinos."
+    },
+    {
+      "id": "CC-024",
+      "nome": "Raia Costeira",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1700,
+      "defesa": 1400,
+      "efeito": null,
+      "educacao": "Raias integram redes alimentares marinhas."
+    },
+    {
+      "id": "CC-025",
+      "nome": "Ostra de Mangue",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 800,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Ostras filtram partículas suspensas na água."
+    },
+    {
+      "id": "CC-026",
+      "nome": "Coral-Cérebro",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1200,
+      "defesa": 2200,
+      "efeito": null,
+      "educacao": "Corais construtores dependem de condições ambientais adequadas."
+    },
+    {
+      "id": "CC-027",
+      "nome": "Golfinho Costeiro",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 1300,
+      "efeito": null,
+      "educacao": "Golfinhos podem ser afetados por ruídos e embarcações."
+    },
+    {
+      "id": "CC-028",
+      "nome": "Ave Migratória",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1400,
+      "defesa": 1400,
+      "efeito": null,
+      "educacao": "Áreas costeiras oferecem descanso a aves migratórias."
+    },
+    {
+      "id": "CC-029",
+      "nome": "Sardinha Costeira",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1300,
+      "defesa": 1100,
+      "efeito": null,
+      "educacao": "Peixes pequenos conectam vários níveis alimentares."
+    },
+    {
+      "id": "CC-030",
+      "nome": "Estrela-do-Mar",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 900,
+      "defesa": 1700,
+      "efeito": null,
+      "educacao": "Equinodermos compõem comunidades bentônicas."
+    },
+    {
+      "id": "CC-031",
+      "nome": "Pesca Artesanal",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1400,
+      "defesa": 1200,
+      "efeito": null,
+      "educacao": "A pesca artesanal se relaciona com saberes locais."
+    },
+    {
+      "id": "CC-032",
+      "nome": "Turismo Responsável",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1500,
+      "defesa": 1600,
+      "efeito": null,
+      "educacao": "O turismo pode ser planejado com menor pressão ambiental."
+    },
+    {
+      "id": "CC-033",
+      "nome": "Urbanização Planejada",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1800,
+      "defesa": 1600,
+      "efeito": null,
+      "educacao": "Planejamento pode reduzir exposição a riscos costeiros."
+    },
+    {
+      "id": "CC-034",
+      "nome": "Pesquisa Oceanográfica",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1600,
+      "defesa": 1800,
+      "efeito": null,
+      "educacao": "O monitoramento apoia decisões ambientais."
+    },
+    {
+      "id": "CC-035",
+      "nome": "Coleta Seletiva",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1200,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Separar resíduos facilita destinações apropriadas."
+    },
+    {
+      "id": "CC-036",
+      "nome": "Educação Ambiental",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1300,
+      "defesa": 1700,
+      "efeito": null,
+      "educacao": "Educação pode ampliar participação comunitária."
+    },
+    {
+      "id": "CC-037",
+      "nome": "Monitoramento da Água",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1700,
+      "defesa": 1800,
+      "efeito": null,
+      "educacao": "O monitoramento permite acompanhar indicadores de qualidade."
+    },
+    {
+      "id": "CC-038",
+      "nome": "Fiscalização Costeira",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1900,
+      "defesa": 1600,
+      "efeito": null,
+      "educacao": "Fiscalização apoia o cumprimento de normas ambientais."
+    },
+    {
+      "id": "CC-039",
+      "nome": "Comunidade Caiçara",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1500,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Conhecimentos tradicionais ajudam a entender o território."
+    },
+    {
+      "id": "CC-040",
+      "nome": "Restauração de Dunas",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1600,
+      "defesa": 1900,
+      "efeito": null,
+      "educacao": "Restauração exige diagnóstico e manejo adequados."
+    },
+    {
+      "id": "CC-041",
+      "nome": "Viveiro de Mudas Nativas",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1100,
+      "defesa": 1800,
+      "efeito": null,
+      "educacao": "Mudas nativas podem apoiar ações de restauração."
+    },
+    {
+      "id": "CC-042",
+      "nome": "Gestão Participativa",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1500,
+      "defesa": 1800,
+      "efeito": null,
+      "educacao": "A participação social fortalece decisões territoriais."
+    },
+    {
+      "id": "CC-043",
+      "nome": "Saneamento Integrado",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 2000,
+      "defesa": 1700,
+      "efeito": null,
+      "educacao": "Água, esgoto e drenagem demandam planejamento conjunto."
+    },
+    {
+      "id": "CC-044",
+      "nome": "Proteção de Nascentes",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1200,
+      "defesa": 2100,
+      "efeito": null,
+      "educacao": "Nascentes integram processos da bacia hidrográfica."
+    },
+    {
+      "id": "CC-045",
+      "nome": "Recuperação de Mata Ciliar",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1400,
+      "defesa": 2100,
+      "efeito": null,
+      "educacao": "Matas ciliares podem reduzir erosão nas margens."
+    },
+    {
+      "id": "CC-046",
+      "nome": "Observatório Costeiro",
+      "tipo": "unidade",
+      "grupo": "atividade",
+      "atk": 1600,
+      "defesa": 1700,
+      "efeito": null,
+      "educacao": "Séries históricas ajudam a identificar mudanças na costa."
+    },
+    {
+      "id": "CC-047",
+      "nome": "Poluição do Mar",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1800,
+      "defesa": 900,
+      "efeito": null,
+      "educacao": "Poluentes podem comprometer águas e organismos marinhos."
+    },
+    {
+      "id": "CC-048",
+      "nome": "Erosão Costeira",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2000,
+      "defesa": 800,
+      "efeito": null,
+      "educacao": "Erosão é o recuo de sedimentos ou da linha de costa."
+    },
+    {
+      "id": "CC-049",
+      "nome": "Desmatamento",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1700,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Remover vegetação altera habitats e processos locais."
+    },
+    {
+      "id": "CC-050",
+      "nome": "Chuva Intensa",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1600,
+      "defesa": 1300,
+      "efeito": null,
+      "educacao": "Chuvas fortes podem intensificar o escoamento superficial."
+    },
+    {
+      "id": "CC-051",
+      "nome": "Esgoto Sem Tratamento",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1900,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Esgoto pode elevar carga orgânica e microbiana."
+    },
+    {
+      "id": "CC-052",
+      "nome": "Lixo Plástico",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1700,
+      "defesa": 1200,
+      "efeito": null,
+      "educacao": "Plásticos podem causar ingestão e emalhamento de fauna."
+    },
+    {
+      "id": "CC-053",
+      "nome": "Ocupação Irregular",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2100,
+      "defesa": 900,
+      "efeito": null,
+      "educacao": "Ocupação em áreas frágeis pode ampliar riscos."
+    },
+    {
+      "id": "CC-054",
+      "nome": "Pesca Predatória",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2000,
+      "defesa": 1100,
+      "efeito": null,
+      "educacao": "Capturas excessivas ameaçam populações exploradas."
+    },
+    {
+      "id": "CC-055",
+      "nome": "Assoreamento",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1600,
+      "defesa": 1900,
+      "efeito": null,
+      "educacao": "Acúmulo de sedimentos pode alterar a profundidade de canais."
+    },
+    {
+      "id": "CC-056",
+      "nome": "Derramamento de Óleo",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2200,
+      "defesa": 700,
+      "efeito": null,
+      "educacao": "Óleo pode causar impactos químicos e físicos na costa."
+    },
+    {
+      "id": "CC-057",
+      "nome": "Ressaca Marinha",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2300,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Ondas intensas podem causar danos e erosão."
+    },
+    {
+      "id": "CC-058",
+      "nome": "Expansão Portuária",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2100,
+      "defesa": 1300,
+      "efeito": null,
+      "educacao": "Obras portuárias exigem avaliação de impactos."
+    },
+    {
+      "id": "CC-059",
+      "nome": "Microplásticos",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1500,
+      "defesa": 1300,
+      "efeito": null,
+      "educacao": "Microplásticos são encontrados em vários ambientes aquáticos."
+    },
+    {
+      "id": "CC-060",
+      "nome": "Ilha de Calor Urbana",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1800,
+      "defesa": 1200,
+      "efeito": null,
+      "educacao": "A urbanização pode alterar temperaturas locais."
+    },
+    {
+      "id": "CC-061",
+      "nome": "Drenagem Inadequada",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1900,
+      "defesa": 1200,
+      "efeito": null,
+      "educacao": "Sistemas deficientes podem agravar alagamentos."
+    },
+    {
+      "id": "CC-062",
+      "nome": "Supressão de Restinga",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1800,
+      "defesa": 1100,
+      "efeito": null,
+      "educacao": "Perda de restinga reduz habitats e proteção vegetal."
+    },
+    {
+      "id": "CC-063",
+      "nome": "Turismo Predatório",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1900,
+      "defesa": 1200,
+      "efeito": null,
+      "educacao": "Uso intenso sem gestão pode pressionar ecossistemas."
+    },
+    {
+      "id": "CC-064",
+      "nome": "Sobrepesca",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2100,
+      "defesa": 900,
+      "efeito": null,
+      "educacao": "Remoção excessiva altera estoques e relações tróficas."
+    },
+    {
+      "id": "CC-065",
+      "nome": "Obra Sobre a Duna",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2200,
+      "defesa": 900,
+      "efeito": null,
+      "educacao": "Construir sobre dunas pode afetar a dinâmica sedimentar."
+    },
+    {
+      "id": "CC-066",
+      "nome": "Canalização de Rio",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2000,
+      "defesa": 1400,
+      "efeito": null,
+      "educacao": "Canalizações podem modificar fluxos e habitats."
+    },
+    {
+      "id": "CC-067",
+      "nome": "Invasão de Espécies",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2100,
+      "defesa": 1300,
+      "efeito": null,
+      "educacao": "Espécies exóticas podem desestabilizar comunidades."
+    },
+    {
+      "id": "CC-068",
+      "nome": "Contaminação Industrial",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2300,
+      "defesa": 800,
+      "efeito": null,
+      "educacao": "Efluentes industriais exigem controle e monitoramento."
+    },
+    {
+      "id": "CC-069",
+      "nome": "Dragagem Sem Controle",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2200,
+      "defesa": 1100,
+      "efeito": null,
+      "educacao": "Dragagens podem ressuspender sedimentos e alterar fundos."
+    },
+    {
+      "id": "CC-070",
+      "nome": "Branqueamento de Corais",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2000,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Estresse térmico pode provocar branqueamento coralíneo."
+    },
+    {
+      "id": "CC-071",
+      "nome": "Elevação do Nível do Mar",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 2400,
+      "defesa": 1100,
+      "efeito": null,
+      "educacao": "A elevação do mar amplia riscos em certos trechos costeiros."
+    },
+    {
+      "id": "CC-072",
+      "nome": "Descarga de Nutrientes",
+      "tipo": "unidade",
+      "grupo": "impacto",
+      "atk": 1800,
+      "defesa": 1400,
+      "efeito": null,
+      "educacao": "Excesso de nutrientes pode favorecer eutrofização."
+    },
+    {
+      "id": "CC-073",
+      "nome": "Tratamento de Esgoto",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "debuff_grupo",
+        "alvo": "impacto",
+        "valor": -500
+      },
+      "educacao": "Reduz carga poluidora de efluentes antes do lançamento."
+    },
+    {
+      "id": "CC-074",
+      "nome": "Recuperação Ambiental",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "buff_grupo",
+        "alvo": "ecossistema",
+        "valor": 500
+      },
+      "educacao": "Recuperação precisa considerar condições e espécies locais."
+    },
+    {
+      "id": "CC-075",
+      "nome": "Fiscalização Ambiental",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "destruir_grupo",
+        "alvo": "impacto",
+        "valor": 0
+      },
+      "educacao": "Fiscalização apoia medidas de prevenção e correção."
+    },
+    {
+      "id": "CC-076",
+      "nome": "Limpeza de Praia",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "debuff_grupo",
+        "alvo": "impacto",
+        "valor": -400
+      },
+      "educacao": "Mutirões removem resíduos, mas não substituem prevenção."
+    },
+    {
+      "id": "CC-077",
+      "nome": "Alerta de Ressaca",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "buff_unidade",
+        "alvo": "qualquer",
+        "valor": 400
+      },
+      "educacao": "Alertas ajudam a reduzir exposição a eventos extremos."
+    },
+    {
+      "id": "CC-078",
+      "nome": "Plano Diretor Costeiro",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "buff_grupo",
+        "alvo": "atividade",
+        "valor": 300
+      },
+      "educacao": "Regras de uso do solo podem reduzir conflitos e riscos."
+    },
+    {
+      "id": "CC-079",
+      "nome": "Campanha Educativa",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "cura",
+        "alvo": "jogador",
+        "valor": 500
+      },
+      "educacao": "Campanhas podem apoiar mudanças de comportamento."
+    },
+    {
+      "id": "CC-080",
+      "nome": "Mutirão Comunitário",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "cura",
+        "alvo": "jogador",
+        "valor": 700
+      },
+      "educacao": "Ações comunitárias podem complementar políticas públicas."
+    },
+    {
+      "id": "CC-081",
+      "nome": "Barreira de Contenção",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "debuff_grupo",
+        "alvo": "impacto",
+        "valor": -600
+      },
+      "educacao": "Barreiras ajudam em situações específicas de vazamento."
+    },
+    {
+      "id": "CC-082",
+      "nome": "Estudo de Impacto",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "revelar",
+        "alvo": "oponente",
+        "valor": 0
+      },
+      "educacao": "A avaliação antecipada identifica impactos potenciais."
+    },
+    {
+      "id": "CC-083",
+      "nome": "Monitoramento Contínuo",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "buff_unidade",
+        "alvo": "qualquer",
+        "valor": 300
+      },
+      "educacao": "Medições repetidas permitem observar tendências."
+    },
+    {
+      "id": "CC-084",
+      "nome": "Manejo da Bacia",
+      "tipo": "acao",
+      "subtipo": "instantanea",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "buff_grupo",
+        "alvo": "ecossistema",
+        "valor": 400
+      },
+      "educacao": "Ações na bacia influenciam as águas costeiras."
+    },
+    {
+      "id": "CC-085",
+      "nome": "Raízes Protetoras",
+      "tipo": "acao",
+      "subtipo": "equipamento",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "equip_buff_def",
+        "alvo": "ecossistema",
+        "valor": 500
+      },
+      "educacao": "Raízes podem favorecer retenção de sedimentos."
+    },
+    {
+      "id": "CC-086",
+      "nome": "Tecnologia Limpa",
+      "tipo": "acao",
+      "subtipo": "equipamento",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "equip_buff_atk",
+        "alvo": "atividade",
+        "valor": 500
+      },
+      "educacao": "Tecnologias podem diminuir pressões quando bem operadas."
+    },
+    {
+      "id": "CC-087",
+      "nome": "Vigilância Ambiental",
+      "tipo": "acao",
+      "subtipo": "equipamento",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "equip_buff_def",
+        "alvo": "atividade",
+        "valor": 400
+      },
+      "educacao": "Acompanhamento e fiscalização favorecem respostas."
+    },
+    {
+      "id": "CC-088",
+      "nome": "Adaptação Climática",
+      "tipo": "acao",
+      "subtipo": "equipamento",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "equip_buff_def",
+        "alvo": "qualquer",
+        "valor": 300
+      },
+      "educacao": "Adaptação reduz vulnerabilidades, não elimina riscos."
+    },
+    {
+      "id": "CC-089",
+      "nome": "Terreno: Manguezal",
+      "tipo": "acao",
+      "subtipo": "terreno",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "field_bonus",
+        "alvo": "ecossistema",
+        "valor": 300
+      },
+      "educacao": "Manguezais são sistemas costeiros sujeitos às marés."
+    },
+    {
+      "id": "CC-090",
+      "nome": "Terreno: Zona Urbana",
+      "tipo": "acao",
+      "subtipo": "terreno",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "field_bonus",
+        "alvo": "atividade",
+        "valor": 300
+      },
+      "educacao": "Cidades costeiras combinam infraestrutura e ecossistemas."
+    },
+    {
+      "id": "CC-091",
+      "nome": "Terreno: Mar Aberto",
+      "tipo": "acao",
+      "subtipo": "terreno",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "field_bonus",
+        "alvo": "fauna",
+        "valor": 300
+      },
+      "educacao": "As condições do mar influenciam organismos e atividades."
+    },
+    {
+      "id": "CC-092",
+      "nome": "Terreno: Costa Pressionada",
+      "tipo": "acao",
+      "subtipo": "terreno",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "operacao": "field_bonus",
+        "alvo": "impacto",
+        "valor": 300
+      },
+      "educacao": "Pressões antrópicas podem se acumular na zona costeira."
+    },
+    {
+      "id": "CC-093",
+      "nome": "Fiscalização Surpresa",
+      "tipo": "armadilha",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "gatilho": "ataque_recebido",
+        "operacao": "reduzir_dano",
+        "valor": 600
+      },
+      "educacao": "Inspeções podem revelar infrações ambientais."
+    },
+    {
+      "id": "CC-094",
+      "nome": "Barreira Natural",
+      "tipo": "armadilha",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "gatilho": "ataque_recebido",
+        "operacao": "reduzir_dano",
+        "valor": 800
+      },
+      "educacao": "Ecossistemas naturais podem atenuar alguns impactos."
+    },
+    {
+      "id": "CC-095",
+      "nome": "Plano de Contingência",
+      "tipo": "armadilha",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "gatilho": "ataque_direto",
+        "operacao": "anular_ataque",
+        "valor": 0
+      },
+      "educacao": "Planos prévios auxiliam respostas a emergências."
+    },
+    {
+      "id": "CC-096",
+      "nome": "Alerta Meteorológico",
+      "tipo": "armadilha",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "gatilho": "ataque_direto",
+        "operacao": "reduzir_dano",
+        "valor": 1000
+      },
+      "educacao": "Previsões permitem preparar ações preventivas."
+    },
+    {
+      "id": "CC-097",
+      "nome": "Denúncia Comunitária",
+      "tipo": "armadilha",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "gatilho": "invocacao_impacto",
+        "operacao": "debuff_invocada",
+        "valor": 500
+      },
+      "educacao": "Denúncias podem apoiar respostas dos órgãos competentes."
+    },
+    {
+      "id": "CC-098",
+      "nome": "Monitoramento Cidadão",
+      "tipo": "armadilha",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "gatilho": "invocacao_impacto",
+        "operacao": "debuff_invocada",
+        "valor": 400
+      },
+      "educacao": "Observações locais ajudam a sinalizar problemas."
+    },
+    {
+      "id": "CC-099",
+      "nome": "Proteção Emergencial",
+      "tipo": "armadilha",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "gatilho": "ataque_recebido",
+        "operacao": "anular_ataque",
+        "valor": 0
+      },
+      "educacao": "Ações emergenciais devem considerar contexto e segurança."
+    },
+    {
+      "id": "CC-100",
+      "nome": "Rede de Proteção",
+      "tipo": "armadilha",
+      "atk": null,
+      "defesa": null,
+      "efeito": {
+        "gatilho": "ataque_direto",
+        "operacao": "cura",
+        "valor": 500
+      },
+      "educacao": "Colaboração pode fortalecer a gestão ambiental."
+    }
+  ]
+}
