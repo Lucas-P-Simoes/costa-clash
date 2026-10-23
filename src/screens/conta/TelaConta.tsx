@@ -2,7 +2,7 @@ import { useState } from 'react'
 import type { UsuarioAutenticado } from '../../auth/servicoAuth'
 import { BotaoRetro } from '../../components/ui/BotaoRetro'
 import { CabecalhoTela } from '../../components/ui/CabecalhoTela'
-import { IconeVoltar } from '../../components/ui/Icones'
+import { IconeEspadas, IconeVoltar } from '../../components/ui/Icones'
 import { MolduraPedra } from '../../components/ui/MolduraPedra'
 import { RodapeControles } from '../../components/ui/RodapeControles'
 import '../telaSimples.css'
@@ -11,10 +11,12 @@ interface Props {
   usuario: UsuarioAutenticado
   /** Chama o logout do serviço e volta ao login. */
   onSair: () => Promise<void> | void
+  /** Abre a seleção de adversário do Duelo Livre. */
+  onDueloLivre?: () => void
 }
 
 /** Tela provisória pós-login: dados da conta e SAIR. O restante do jogo ainda não existe. */
-export function TelaConta({ usuario, onSair }: Props) {
+export function TelaConta({ usuario, onSair, onDueloLivre }: Props) {
   const [saindo, setSaindo] = useState(false)
   const totalColecao = usuario.colecao?.reduce((s, i) => s + i.quantidade, 0)
   const informado = (n: number | undefined) => (n === undefined ? 'não informado' : String(n))
@@ -47,6 +49,11 @@ export function TelaConta({ usuario, onSair }: Props) {
               </div>
             </dl>
             <p>Esta é uma tela provisória. Os duelos, a montagem de baralho e as recompensas ainda não existem.</p>
+            {onDueloLivre ? (
+              <BotaoRetro variante="primario" icone={<IconeEspadas />} onClick={onDueloLivre}>
+                Duelo livre
+              </BotaoRetro>
+            ) : null}
             <BotaoRetro icone={<IconeVoltar />} ocupado={saindo} onClick={sair} autoFocus>
               {saindo ? 'Saindo…' : 'Sair'}
             </BotaoRetro>

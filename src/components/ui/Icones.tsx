@@ -3,6 +3,7 @@ import { PixelArt } from './PixelArt'
 import {
   circulo,
   GRADE_CADEADO,
+  GRADE_CONCHA,
   GRADE_DPAD,
   GRADE_ESPADAS,
   GRADE_GRUPO,
@@ -165,5 +166,28 @@ export function OrnamentoOnda({ className, espelhado = false }: Props & { espelh
       grade={GRADE_ORNAMENTO_ONDA}
       paleta={{ T: '#1a8aa8', W: '#58d4ec' }}
     />
+  )
+}
+
+/** Concha pixelada para o medidor de dificuldade. */
+export function IconeConcha({ className, cheia = true }: Props & { cheia?: boolean }) {
+  return (
+    <PixelArt
+      className={className}
+      grade={GRADE_CONCHA}
+      paleta={cheia ? { O: '#0a2a3a', X: '#7fe6f6', L: '#2aa4c4' } : { O: '#0a1a24', X: '#4a5862', L: '#2c3840' }}
+    />
+  )
+}
+
+/** Anel com ponto central (ícone ao lado do nome do adversário). */
+export function IconeAlvo({ className }: Props) {
+  return (
+    <svg className={`pixel-art ${className ?? ''}`} viewBox="0 0 15 15" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
+      <PixelArtRaw grade={circulo(15, 2, 'A', 'M')} paleta={{ A: '#58d4ec', M: '#07202e' }} />
+      <g transform="translate(4 4)">
+        <PixelArtRaw grade={circulo(7, 0, 'A')} paleta={{ A: '#58d4ec' }} />
+      </g>
+    </svg>
   )
 }

@@ -1,0 +1,389 @@
+/* ===== Tela Duelo Livre ===== */
+.tela-duelo__corpo {
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 2.05fr) minmax(300px, 1fr);
+  align-items: start;
+  gap: clamp(14px, 2vw, 28px);
+  width: 100%;
+  max-width: 1700px;
+  margin: 0 auto;
+  padding: clamp(14px, 2vw, 26px) clamp(12px, 2vw, 28px);
+}
+
+.tela-duelo__grade {
+  min-width: 0;
+}
+
+/* ===== Grade e cartões ===== */
+.grade-oponentes {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(8px, 1.4vw, 20px);
+}
+
+.cartao-oponente {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 5px;
+  border: 3px solid var(--cc-contorno);
+  background: #0b1520;
+  cursor: pointer;
+  text-align: center;
+  box-shadow:
+    inset 0 0 0 2px #53675f,
+    inset 0 0 0 3px var(--cc-contorno),
+    0 0 0 2px #3a4c48,
+    0 4px 0 rgba(0, 0, 0, 0.55);
+  transition: box-shadow 0.12s, transform 0.12s;
+}
+
+.cartao-oponente__arte {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 212 / 150;
+  border: 2px solid var(--cc-contorno);
+}
+
+.cartao-oponente__imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.cartao-oponente__nome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.9em;
+  padding: 3px 4px;
+  background: #060e17;
+  color: var(--cc-pedra-texto);
+  font-size: clamp(0.62rem, 1.05vw, 0.9rem);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  line-height: 1.15;
+  text-transform: uppercase;
+  overflow-wrap: anywhere;
+}
+
+.cartao-oponente:hover {
+  transform: translateY(-2px);
+  box-shadow:
+    inset 0 0 0 2px var(--cc-turquesa-med),
+    inset 0 0 0 3px var(--cc-contorno),
+    0 0 0 2px var(--cc-turquesa-esc),
+    0 0 14px var(--cc-brilho),
+    0 4px 0 rgba(0, 0, 0, 0.55);
+}
+
+/* selecionado: moldura turquesa luminosa com cantos */
+.cartao-oponente[data-selecionado] {
+  z-index: 1;
+  background: #06202c;
+  box-shadow:
+    inset 0 0 0 2px var(--cc-turquesa),
+    inset 0 0 0 3px var(--cc-contorno),
+    0 0 0 3px var(--cc-turquesa),
+    0 0 22px 4px var(--cc-brilho),
+    0 4px 0 rgba(0, 0, 0, 0.55);
+}
+
+.cartao-oponente[data-selecionado]::after {
+  --c: #b8f6ff;
+  content: '';
+  position: absolute;
+  inset: -9px;
+  pointer-events: none;
+  background:
+    linear-gradient(var(--c), var(--c)) 0 0 / 22px 4px no-repeat,
+    linear-gradient(var(--c), var(--c)) 0 0 / 4px 22px no-repeat,
+    linear-gradient(var(--c), var(--c)) 100% 0 / 22px 4px no-repeat,
+    linear-gradient(var(--c), var(--c)) 100% 0 / 4px 22px no-repeat,
+    linear-gradient(var(--c), var(--c)) 0 100% / 22px 4px no-repeat,
+    linear-gradient(var(--c), var(--c)) 0 100% / 4px 22px no-repeat,
+    linear-gradient(var(--c), var(--c)) 100% 100% / 22px 4px no-repeat,
+    linear-gradient(var(--c), var(--c)) 100% 100% / 4px 22px no-repeat;
+}
+
+.cartao-oponente[data-selecionado] .cartao-oponente__nome {
+  color: #d8fbff;
+}
+
+.cartao-oponente:focus-visible {
+  outline: 3px solid #fff;
+  outline-offset: 6px;
+}
+
+/* ===== Painel de detalhe ===== */
+.painel-oponente {
+  position: sticky;
+  top: 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  min-width: 0;
+  max-height: calc(100dvh - 16px);
+  overflow-y: auto;
+  padding: clamp(12px, 1.2vw, 18px);
+}
+
+.painel-oponente__mais {
+  display: none;
+}
+
+/* desktop: cabeçalho mais baixo nesta tela para o painel (e o botão DUELO) caber na primeira tela */
+.tela-duelo .cabecalho__cena { height: clamp(72px, 7.5vw, 110px); }
+.tela-duelo .cabecalho__nome { font-size: clamp(1.6rem, 3.6vw, 3rem); }
+.tela-duelo .cabecalho__faixa { padding-block: 4px; }
+.tela-duelo .cabecalho__titulo { font-size: clamp(1.6rem, 3.2vw, 2.8rem); }
+
+.painel-oponente__nome {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 8px 12px;
+  background: var(--cc-campo);
+  border: 3px solid #1a3a50;
+  box-shadow: inset 0 0 0 1px #000;
+}
+
+.painel-oponente__icone {
+  flex: none;
+  width: 32px;
+  height: auto;
+}
+
+.painel-oponente__titulo {
+  margin: 0;
+  color: #aef2fc;
+  font-size: clamp(1.2rem, 2.1vw, 1.9rem);
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #0a3a4c;
+  overflow-wrap: anywhere;
+}
+
+.painel-oponente__arte {
+  height: clamp(96px, 20vh, 240px);
+  overflow: hidden;
+  border: 3px solid #1a3a50;
+  box-shadow: inset 0 0 0 1px #000;
+}
+
+.painel-oponente__imagem {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  image-rendering: pixelated;
+}
+
+.painel-oponente__info {
+  padding: 10px 14px;
+  background: var(--cc-campo);
+  border: 3px solid #1a3a50;
+  box-shadow: inset 0 0 0 1px #000;
+}
+
+.painel-oponente__rotulo {
+  margin: 0 0 6px;
+  color: var(--cc-texto-suave);
+  font-size: 0.85rem;
+  font-weight: 400;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+}
+
+.painel-oponente__rotulo--desc {
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 2px solid #20384a;
+}
+
+.painel-oponente__descricao {
+  margin: 0;
+  color: var(--cc-texto);
+  font-size: clamp(0.85rem, 1.15vw, 1.05rem);
+  line-height: 1.45;
+}
+
+.painel-oponente__aviso:empty {
+  display: none;
+}
+
+.painel-oponente__aviso {
+  padding: 8px 12px;
+  border-left: 4px solid var(--cc-ouro);
+  background: rgba(230, 182, 72, 0.12);
+  color: #ffe7a6;
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+.painel-oponente__acoes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.painel-oponente__acoes > :first-child {
+  grid-column: 1 / -1;
+}
+
+/* ===== Medidor de dificuldade ===== */
+.medidor {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+}
+
+.medidor__conchas {
+  display: flex;
+  gap: 10px;
+}
+
+.medidor__concha {
+  width: 36px;
+  height: auto;
+}
+
+.medidor__rotulo {
+  color: var(--cc-ouro);
+  font-size: 1.05rem;
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+/* ===== Tablet e celular (<=1000px): grade abaixo do cabeçalho e painel compacto fixo na base ===== */
+@media (max-width: 1000px) {
+  .tela-duelo__corpo {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    padding-bottom: 0;
+  }
+  .painel-oponente {
+    position: sticky;
+    bottom: 0;
+    z-index: 5;
+    top: auto;
+    max-height: 44dvh;
+    overflow: hidden;
+    gap: 6px;
+    margin: 0 -4px;
+    padding: 8px 10px;
+  }
+  .painel-oponente__arte { display: none; }
+  .painel-oponente__nome { padding: 2px 8px; gap: 10px; }
+  .painel-oponente__icone { width: 24px; }
+  .painel-oponente__titulo { font-size: 1.15rem; }
+  .painel-oponente > * { flex: none; }
+  /* só a área de informações rola (descrição expandida); DUELO/BARALHO/VOLTAR ficam sempre visíveis */
+  .painel-oponente > .painel-oponente__info {
+    flex: 0 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  .painel-oponente__info {
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
+    align-items: center;
+    column-gap: 10px;
+    padding: 4px 10px;
+  }
+  /* rótulos visuais ocultos no compacto (continuam para leitores de tela): o medidor já diz o nível */
+  .painel-oponente__rotulo {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    margin: -1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+  .painel-oponente__rotulo--desc { display: none; }
+  .painel-oponente__descricao {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    margin-top: 4px;
+    font-size: 0.82rem;
+    line-height: 1.3;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .painel-oponente[data-expandido] .painel-oponente__descricao {
+    display: block;
+    overflow: visible;
+  }
+  .painel-oponente__mais {
+    display: inline-block;
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    white-space: nowrap;
+    min-height: 32px;
+    padding: 2px 4px;
+    border: 0;
+    background: none;
+    color: var(--cc-turquesa);
+    font-size: 0.8rem;
+    letter-spacing: 0.08em;
+    text-decoration: underline;
+    text-underline-offset: 4px;
+    cursor: pointer;
+  }
+  /* com aviso visível o painel economiza altura: descrição só via "Ler mais" */
+  .painel-oponente[data-aviso]:not([data-expandido]) .painel-oponente__descricao { display: none; }
+  .medidor { gap: 10px; }
+  .medidor__conchas { gap: 4px; }
+  .medidor__concha { width: 24px; }
+  .medidor__rotulo { font-size: 0.85rem; }
+  .painel-oponente__aviso { padding: 6px 10px; font-size: 0.8rem; }
+  .painel-oponente__acoes { grid-template-columns: 1.3fr 1fr 1fr; gap: 6px; }
+  .painel-oponente__acoes > :first-child { grid-column: auto; }
+  .painel-oponente__acoes .botao { gap: 6px; padding: 6px 4px; font-size: 0.85rem; letter-spacing: 0.04em; min-height: 44px; }
+  .painel-oponente__acoes .botao--primario { font-size: 1rem; min-height: 44px; }
+}
+
+@media (max-width: 600px) {
+  .tela-duelo__corpo {
+    padding: 12px 10px 0;
+    gap: 12px;
+  }
+  .grade-oponentes {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
+  }
+  .cartao-oponente__nome {
+    min-height: 3em;
+    font-size: 0.78rem;
+  }
+  .painel-oponente__titulo { font-size: 1.05rem; }
+  .painel-oponente__acoes .botao__icone { display: none; }
+  .painel-oponente__acoes .botao { font-size: 0.8rem; }
+  .painel-oponente__acoes .botao--primario { font-size: 0.95rem; }
+}
+
+/* altura baixa (celular deitado etc.): painel deixa de ser fixo para não cobrir a grade */
+@media (max-height: 520px) and (orientation: landscape) {
+  .painel-oponente { position: static; max-height: none; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cartao-oponente:hover { transform: none; }
+}
+
+/* O painel fixo (position: sticky) precisa que o body não seja um contêiner de rolagem
+   (base.css usa overflow-x: hidden em html e body). 'clip' evita rolagem horizontal sem isso. */
+body:has(.tela-duelo) {
+  overflow-x: clip;
+}

@@ -196,3 +196,17 @@ export const GRADE_VOLTAR: Grade = [
   '..X.......XX',
   '..XXXXXXXX..',
 ]
+
+export const GRADE_CONCHA: Grade = [
+  '.....OOOO.....',
+  '...OOXXXXOO...',
+  '..OXXLXXLXXO..',
+  '.OXLXXLLXXLXO.',
+  '.OXLXXLLXXLXO.',
+  'OXXLXXLLXXLXXO',
+  'OXLXXLXXLXXLXO',
+  '.OXXLXXXXLXXO.',
+  '..OOXXXXXXOO..',
+  '...OOOXXOOO...',
+  '.....OOOO.....',
+]

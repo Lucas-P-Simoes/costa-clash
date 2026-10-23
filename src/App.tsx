@@ -4,6 +4,7 @@ import { MENSAGEM_RECONEXAO } from './auth/servicoAuth'
 import { servicoAuthPadrao } from './auth/servicoPadrao'
 import { CabecalhoTela } from './components/ui/CabecalhoTela'
 import { TelaConta } from './screens/conta/TelaConta'
+import { TelaDueloLivre } from './screens/dueloLivre/TelaDueloLivre'
 import { TelaCriarConta } from './screens/criarConta/TelaCriarConta'
 import { TelaLogin } from './screens/login/TelaLogin'
 import { ConvidadoInicio, RecuperarSenhaPlaceholder } from './screens/Placeholders'
@@ -15,6 +16,7 @@ type Tela =
   | { nome: 'recuperarSenha' }
   | { nome: 'convidado' }
   | { nome: 'conta'; usuario: UsuarioAutenticado }
+  | { nome: 'dueloLivre'; usuario?: UsuarioAutenticado } // sem usuário = veio do convidado
 
 // Navegação por estado simples (sem react-router). `servicoAuth` é injetável para testes;
 // o padrão depende de VITE_API_URL (ausente -> "não configurado").
@@ -82,9 +84,13 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
     case 'recuperarSenha':
       return <RecuperarSenhaPlaceholder onVoltar={irParaLogin} />
     case 'convidado':
-      return <ConvidadoInicio onVoltar={irParaLogin} />
+      return <ConvidadoInicio onVoltar={irParaLogin} onDueloLivre={() => setTela({ nome: 'dueloLivre' })} />
     case 'conta':
-      return <TelaConta usuario={tela.usuario} onSair={sair} />
+      return <TelaConta usuario={tela.usuario} onSair={sair} onDueloLivre={() => setTela({ nome: 'dueloLivre', usuario: tela.usuario })} />
+    case 'dueloLivre': {
+      const usuario = tela.usuario
+      return <TelaDueloLivre usuario={usuario} onVoltar={() => setTela(usuario ? { nome: 'conta', usuario } : { nome: 'convidado' })} />
+    }
     default:
       return (
         <TelaLogin

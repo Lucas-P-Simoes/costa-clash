@@ -9,3 +9,5 @@
 - Dados são locais; uma API de CETESB não é dependência do duelo e pode ser integrada em etapa separada, se aprovada.
 
 Separar conteúdo educativo, motor de jogo e UI. Qualquer arquivo/stack aqui é proposta até a inicialização real do projeto.
+
+- Duelo Livre: dados em `src/data/oponentes.ts` (16 adversários; só apresentação, sem baralhos); retratos em `src/assets/oponentes/` (resolvidos por `import.meta.glob`); UI reutilizável em `src/components/ui/{GradeOponentes,navegacaoGrade,PainelOponente,MedidorDificuldade}` e tela em `src/screens/dueloLivre/`. `App.tsx` ganhou o estado `dueloLivre` (com `usuario` quando vem da Conta; sem, quando vem do Convidado).

@@ -48,6 +48,11 @@ Vitest para lógica TypeScript. Testes de componentes com React Testing Library 
 `npm run build` — typecheck + build de produção.
 Cobertura (`test:coverage`) ainda não configurada.
 
+### Duelo Livre (seleção de adversário)
+- `src/data/__tests__/oponentes.test.ts` (node): 16 adversários únicos na ordem da referência, dificuldade 1-3, arquivos de retrato existentes (via `import.meta.glob`), Ressaca padrão, descrições sem "elimina".
+- `src/screens/__tests__/dueloLivre.test.tsx` (jsdom): radiogroup/roving tabindex, clique, setas/Home/End e limites, `proximoIndice` com 2 colunas, painel e aria-live, DUELO (aviso, sem iniciar nada), BARALHO (logado/convidado), "Ler mais" (aria-expanded), reanúncio do aviso repetido, grupos/textos revisados, VOLTAR/Esc, integração via App a partir de Convidado e Conta (permanece logada). Em jsdom não há CSS, então o número de colunas cai no padrão 4; o comportamento com 2 colunas (celular) só é coberto em `proximoIndice`.
+- Não coberto por testes: layout/responsividade e aparência (verificados manualmente com Chrome headless via CDP em 360, 600, 768, 820x420, 1280, 1448 e 1920 px; sem revisão visual formal).
+
 ### Worker (contas/nuvem)
 - `npm test` também roda `worker/src/__tests__/*` (ambiente node): `api.test.ts` chama `tratar()` do worker sobre um D1 falso em SQLite em memória (`node:sqlite`, requer Node 22.5+/24) com a migração real (`d1Falso.ts`); `cripto.test.ts`; `baralho.test.ts`.
 - `npm run worker:typecheck` — `tsc -p worker/tsconfig.json` (também no CI).
