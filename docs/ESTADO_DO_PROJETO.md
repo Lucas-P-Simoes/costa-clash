@@ -2,7 +2,7 @@
 
 ## Situação atual
 - Valores oficiais confirmados pelo responsável (2026-10-22): **8.000 LP, 5 zonas de unidade + 5 de suporte**, baralho de 40 cartas, catálogo de 100. `AGENTS.md` e `docs/ARQUITETURA.md` alinhados a `docs/REGRAS_DO_JOGO.md`.
-- Projeto Vite + React 19 + TypeScript + Vitest inicializado (Git iniciado, nenhum commit).
+- Projeto Vite + React 19 + TypeScript + Vitest inicializado (repositório público em https://github.com/Lucas-P-Simoes/costa-clash, deploy automático em https://lucas-p-simoes.github.io/costa-clash/).
 - Tela atual é apenas um placeholder; motor de jogo ainda não existe.
 
 ## Diagnóstico e plano

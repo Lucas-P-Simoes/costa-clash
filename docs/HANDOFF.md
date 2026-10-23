@@ -10,7 +10,8 @@
 - Arquivos impactados: `package.json`, `index.html`, `src/**`, `tsconfig*.json`, `vite.config.ts`, `.oxlintrc.json`, `AGENTS.md`, `docs/*`
 - Scripts: `npm test` (vitest run), `npm run test:watch`, `npm run typecheck`, `npm run lint` (oxlint), `npm run build`, `npm run dev`
 - Testes/build: test 4/4 OK; typecheck, lint e build OK
-- Estado Git: branch inicial sem commits; tudo untracked
+- Estado Git: branch `main`, remoto `origin` = https://github.com/Lucas-P-Simoes/costa-clash (público). Commit inicial 840592d enviado.
+- Hospedagem: GitHub Pages por Actions (`.github/workflows/deploy.yml`, roda testes+build a cada push na `main`). Site: https://lucas-p-simoes.github.io/costa-clash/ (HTTP 200 verificado). `vite.config.ts` usa `base: '/costa-clash/'`; `npm run dev` abre em `/costa-clash/`.
 - Pendências: ver "Decisões pendentes" em `ESTADO_DO_PROJETO.md`
 - Segunda tarefa da sessão: diagnóstico e planejamento (sem implementar jogo); criado `docs/PLANO_DE_DESENVOLVIMENTO.md` (leitura obrigatória antes da etapa 1). Verificado por script que `cartas.json`, `src/data/cartas.json` e `cartas.csv` são consistentes.
 - Próxima ação indicada: aprovar o plano e iniciar etapas 2–3 do plano (motor puro) e/ou etapa 1 (tabuleiro); motor de turnos puro (`src/game/`) com RNG injetável, compra até 5, fases e combate, com testes da seção 12 das regras
