@@ -17,6 +17,9 @@
 - Diagnóstico, 12 inconsistências, arquitetura, plano de 8 etapas e papéis DEV/QA: `docs/PLANO_DE_DESENVOLVIMENTO.md`.
 - Etapa atual do plano: **nenhuma concluída**; aguardando aprovação para iniciar a etapa 1 (tabuleiro) e/ou 2–3 (baralho, turnos, combate).
 
+## Nuvem
+- API de contas publicada em https://costa-clash-api.lucaspsimoes22.workers.dev (Cloudflare Worker + D1); site ligado via `VITE_API_URL`. Detalhes em `docs/CONTAS_E_NUVEM.md`.
+
 ## Funcionalidades concluídas
 - Catálogo em `src/data/cartas.json` (cópia do `cartas.json` da raiz) com carregador `src/data/catalogo.ts`.
 - Tipos e constantes do jogo em `src/game/tipos.ts`.

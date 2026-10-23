@@ -9,7 +9,5 @@ ORIGENS_PERMITIDAS = "https://lucas-p-simoes.github.io,http://localhost:5173"
 [[d1_databases]]
 binding = "DB"
 database_name = "costa-clash"
-# TODO(DONO): substitua pelo id real exibido por `npx wrangler d1 create costa-clash`.
-# Enquanto for este placeholder, `wrangler dev --local` funciona, mas o deploy NÃO.
-database_id = "00000000-0000-0000-0000-000000000000"
+database_id = "ee2fb634-7093-4094-aaeb-cb345341853a"
 migrations_dir = "migrations"

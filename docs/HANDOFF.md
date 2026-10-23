@@ -44,6 +44,12 @@
 - Segunda tarefa da sessão: diagnóstico e planejamento (sem implementar jogo); criado `docs/PLANO_DE_DESENVOLVIMENTO.md` (leitura obrigatória antes da etapa 1). Verificado por script que `cartas.json`, `src/data/cartas.json` e `cartas.csv` são consistentes.
 - Próxima ação indicada: aprovar o plano e iniciar etapas 2–3 do plano (motor puro) e/ou etapa 1 (tabuleiro); motor de turnos puro (`src/game/`) com RNG injetável, compra até 5, fases e combate, com testes da seção 12 das regras
 
+## Deploy da API (2026-10-22)
+- Conta Cloudflare do dono; Worker `costa-clash-api` publicado em https://costa-clash-api.lucaspsimoes22.workers.dev (D1 `costa-clash`, id em `worker/wrangler.toml`; migração 0001 aplicada no remoto).
+- Variável de repositório GitHub `VITE_API_URL` aponta para essa URL; o deploy do site (GitHub Pages) a usa no build.
+- Smoke test em produção: /api/saude 200; cadastro 201; login 200 (e 401 com senha errada, mesma mensagem); /me 200; CORS 204 para o site e 403 para origem estranha. Risco R1 (CPU do PBKDF2 no plano gratuito) NÃO se confirmou em 6 operações de hash (sem erro 1102); latência ~1,4 a 1,8 s por login/cadastro medida de fora. Conta de teste removida do banco.
+- Redeploy do worker: `npm run worker:deploy`. Migrações futuras: `npm run worker:migrar:remoto`.
+
 ## Modelo para próximas sessões
 - Ferramenta e objetivo:
 - Mudanças e arquivos:
