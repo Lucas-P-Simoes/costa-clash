@@ -48,6 +48,13 @@ Vitest para lógica TypeScript. Testes de componentes com React Testing Library 
 `npm run build` — typecheck + build de produção.
 Cobertura (`test:coverage`) ainda não configurada.
 
+### Worker (contas/nuvem)
+- `npm test` também roda `worker/src/__tests__/*` (ambiente node): `api.test.ts` chama `tratar()` do worker sobre um D1 falso em SQLite em memória (`node:sqlite`, requer Node 22.5+/24) com a migração real (`d1Falso.ts`); `cripto.test.ts`; `baralho.test.ts`.
+- `npm run worker:typecheck` — `tsc -p worker/tsconfig.json` (também no CI).
+- Validação de integração local (manual): `npm run worker:migrar:local`, `npm run worker:dev` e, noutro terminal, `node worker/scripts/fluxo-local.mjs` (cadastro, login, /me, PUT /baralho válido/inválido, logout, limite de tentativas, CORS). Apague `worker/.wrangler/` para resetar o banco local.
+- Ataque paralelo: o QA reproduziu 30 logins e 25 cadastros simultâneos e achou o limite não atômico (corrigido). Cobertura atual: `api.test.ts` ("limites sob concorrência e por IP", via `Promise.all`) e as duas últimas linhas de `fluxo-local.mjs` contra `wrangler dev` (esperado: 5×401 + 25×429; ≤10×201).
+- Não coberto por testes automáticos: Worker publicado, D1 remoto, CORS em navegador real.
+
 Não alegar execução se o comando ou dependências não existirem. No início do projeto, configurar os scripts e explicar a instalação.
 
 ## Relatório mínimo de QA

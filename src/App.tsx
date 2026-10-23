@@ -1,34 +1,97 @@
-import { useState } from 'react'
-import type { ServicoAuth } from './auth/servicoAuth'
+import { useEffect, useState } from 'react'
+import type { ResultadoAuth, ServicoAuth, UsuarioAutenticado } from './auth/servicoAuth'
+import { MENSAGEM_RECONEXAO } from './auth/servicoAuth'
+import { servicoAuthPadrao } from './auth/servicoPadrao'
+import { CabecalhoTela } from './components/ui/CabecalhoTela'
+import { TelaConta } from './screens/conta/TelaConta'
+import { TelaCriarConta } from './screens/criarConta/TelaCriarConta'
 import { TelaLogin } from './screens/login/TelaLogin'
-import { ConvidadoInicio, CriarContaPlaceholder, RecuperarSenhaPlaceholder } from './screens/Placeholders'
+import { ConvidadoInicio, RecuperarSenhaPlaceholder } from './screens/Placeholders'
 
-type Tela = { nome: 'login' } | { nome: 'criarConta' } | { nome: 'recuperarSenha' } | { nome: 'convidado' } | { nome: 'inicioConta'; email: string }
+type Tela =
+  | { nome: 'restaurando' }
+  | { nome: 'login' }
+  | { nome: 'criarConta' }
+  | { nome: 'recuperarSenha' }
+  | { nome: 'convidado' }
+  | { nome: 'conta'; usuario: UsuarioAutenticado }
 
-// Navegação por estado simples (sem react-router). `servicoAuth` é injetável para testes.
-export default function App({ servicoAuth }: { servicoAuth?: ServicoAuth }) {
-  const [tela, setTela] = useState<Tela>({ nome: 'login' })
+// Navegação por estado simples (sem react-router). `servicoAuth` é injetável para testes;
+// o padrão depende de VITE_API_URL (ausente -> "não configurado").
+export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?: ServicoAuth }) {
+  // Com token salvo, abre em "restaurando" para não piscar a tela de login.
+  const [tela, setTela] = useState<Tela>(() => (servicoAuth.temSessaoSalva?.() ? { nome: 'restaurando' } : { nome: 'login' }))
   const [voltou, setVoltou] = useState(false)
+  const [aviso, setAviso] = useState<string | undefined>()
   const irParaLogin = () => {
     setVoltou(true)
+    setAviso(undefined)
     setTela({ nome: 'login' })
   }
 
+  useEffect(() => {
+    if (tela.nome !== 'restaurando') return
+    let ativo = true
+    const restaurar = servicoAuth.restaurarSessao
+    const promessa = restaurar ? restaurar.call(servicoAuth) : Promise.resolve<ResultadoAuth>({ ok: false, codigo: 'nao_configurado', mensagem: '' })
+    promessa
+      .then((r) => {
+        if (!ativo) return
+        if (r.ok) setTela({ nome: 'conta', usuario: r.usuario })
+        else {
+          // Falha de rede (token mantido): avisa no login; sessão inválida volta sem aviso.
+          if (r.codigo === 'indisponivel') setAviso(MENSAGEM_RECONEXAO)
+          setTela({ nome: 'login' })
+        }
+      })
+      .catch(() => {
+        if (ativo) setTela({ nome: 'login' })
+      })
+    return () => {
+      ativo = false
+    }
+  }, [tela.nome, servicoAuth])
+
+  async function sair() {
+    try {
+      await servicoAuth.sair?.()
+    } catch {
+      /* o serviço já limpa o token local; seguimos para o login */
+    }
+    irParaLogin()
+  }
+
   switch (tela.nome) {
+    case 'restaurando':
+      return (
+        <div className="tela">
+          <CabecalhoTela titulo="Costa Clash" />
+          <main className="tela-simples__corpo">
+            <p role="status">Carregando sua sessão…</p>
+          </main>
+        </div>
+      )
     case 'criarConta':
-      return <CriarContaPlaceholder onVoltar={irParaLogin} />
+      return (
+        <TelaCriarConta
+          servicoAuth={servicoAuth}
+          onAutenticado={(usuario) => setTela({ nome: 'conta', usuario })}
+          onVoltar={irParaLogin}
+        />
+      )
     case 'recuperarSenha':
       return <RecuperarSenhaPlaceholder onVoltar={irParaLogin} />
     case 'convidado':
       return <ConvidadoInicio onVoltar={irParaLogin} />
-    case 'inicioConta':
-      return <ConvidadoInicio onVoltar={irParaLogin} email={tela.email} />
+    case 'conta':
+      return <TelaConta usuario={tela.usuario} onSair={sair} />
     default:
       return (
         <TelaLogin
           servicoAuth={servicoAuth}
           focarAoMontar={voltou}
-          onAutenticado={(u) => setTela({ nome: 'inicioConta', email: u.email })}
+          aviso={aviso}
+          onAutenticado={(usuario) => setTela({ nome: 'conta', usuario })}
           onCriarConta={() => setTela({ nome: 'criarConta' })}
           onRecuperarSenha={() => setTela({ nome: 'recuperarSenha' })}
           onConvidado={() => setTela({ nome: 'convidado' })}

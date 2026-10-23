@@ -15,7 +15,7 @@ O mesmo repositório é usado alternadamente por OpenAI Codex e Claude Code. Nen
 - **Coordenador:** organizar DEV -> QA -> registro de continuidade; se a plataforma não disponibilizar subagentes, executar os papéis sequencialmente na sessão atual.
 
 ## Requisitos do jogo
-- MVP para navegador: React + TypeScript + Vite, 1 jogador vs computador, **8.000 pontos de vida** por lado, **5 zonas de unidade + 5 zonas de suporte** por jogador e terreno global único, baralhos de **40 cartas** montados a partir do **catálogo de 100 cartas** (`cartas.json`, até 3 cópias por ID). Sem multiplayer, fusões ou backend inicialmente.
+- MVP para navegador: React + TypeScript + Vite, 1 jogador vs computador, **8.000 pontos de vida** por lado, **5 zonas de unidade + 5 zonas de suporte** por jogador e terreno global único, baralhos de **40 cartas** montados a partir do **catálogo de 100 cartas** (`cartas.json`, até 3 cópias por ID). Sem multiplayer ou fusões; backend apenas de contas, baralho e coleção (Cloudflare Worker + D1).
 - Em caso de divergência entre este arquivo, o mockup (`Interface de Batalha Costa Clash.png`) e `docs/REGRAS_DO_JOGO.md`, vale `docs/REGRAS_DO_JOGO.md`. O mockup é referência visual, não de regras (ex.: ele mostra 4.000 de vida e 4 cartas na mão, valores superados).
 - `docs/REGRAS_DO_JOGO.md` é referência para regras aprovadas/propostas; não mudar balanceamento ou condições de vitória silenciosamente.
 - Toda explicação ambiental deve ser tecnicamente defensável; evitar afirmar que uma medida elimina totalmente determinado risco.

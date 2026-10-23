@@ -144,7 +144,6 @@ describe('Regressões de QA', () => {
 describe('Navegação por estado', () => {
   it.each([
     ['Jogar como convidado', 'Convidado', /jogando como convidado/],
-    ['Criar conta', 'Criar conta', /não está disponível/],
     ['Esqueci a senha', 'Recuperar senha', /não está disponível/],
   ])('%s abre a tela provisória e volta ao login', (rotulo, titulo, texto) => {
     render(<App />)
@@ -159,7 +158,7 @@ describe('Navegação por estado', () => {
 
   it('Esc volta ao login a partir de uma tela provisória', () => {
     render(<App />)
-    fireEvent.click(botao('Criar conta'))
+    fireEvent.click(botao('Esqueci a senha'))
     fireEvent.keyDown(window, { key: 'Escape' })
     expect(screen.getByRole('heading', { level: 1, name: 'Login' })).toBeTruthy()
   })

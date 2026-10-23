@@ -9,13 +9,14 @@ import './login.css'
 interface Props {
   servicoAuth?: ServicoAuth
   focarAoMontar?: boolean
+  aviso?: string
   onAutenticado: (usuario: UsuarioAutenticado) => void
   onCriarConta: () => void
   onRecuperarSenha: () => void
   onConvidado: () => void
 }
 
-export function TelaLogin({ servicoAuth, focarAoMontar, onAutenticado, onCriarConta, onRecuperarSenha, onConvidado }: Props) {
+export function TelaLogin({ servicoAuth, focarAoMontar, aviso, onAutenticado, onCriarConta, onRecuperarSenha, onConvidado }: Props) {
   return (
     <div className="tela tela-login">
       <CabecalhoTela titulo="Login" />
@@ -26,6 +27,7 @@ export function TelaLogin({ servicoAuth, focarAoMontar, onAutenticado, onCriarCo
         <PainelFormulario
           servicoAuth={servicoAuth}
           focarAoMontar={focarAoMontar}
+          aviso={aviso}
           onAutenticado={onAutenticado}
           onCriarConta={onCriarConta}
           onRecuperarSenha={onRecuperarSenha}

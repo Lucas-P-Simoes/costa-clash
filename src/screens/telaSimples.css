@@ -34,3 +34,26 @@
   color: var(--cc-texto-suave);
   font-size: 0.9rem;
 }
+
+.conta__dados {
+  display: grid;
+  gap: 8px;
+  margin: 0;
+}
+
+.conta__dados div {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--cc-texto-suave);
+}
+
+.conta__dados dt,
+.conta__dados dd {
+  margin: 0;
+}
+
+.conta__dados dd {
+  font-weight: 700;
+}

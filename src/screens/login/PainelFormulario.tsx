@@ -15,13 +15,15 @@ interface Props {
   servicoAuth?: ServicoAuth
   /** Foca o campo de e-mail ao montar (ex.: ao voltar de outra tela). */
   focarAoMontar?: boolean
+  /** Aviso inicial (ex.: falha ao reconectar a sessão salva). */
+  aviso?: string
   onAutenticado: (usuario: UsuarioAutenticado) => void
   onCriarConta: () => void
   onRecuperarSenha: () => void
   onConvidado: () => void
 }
 
-export function PainelFormulario({ servicoAuth = servicoAuthNaoConfigurado, focarAoMontar = false, onAutenticado, onCriarConta, onRecuperarSenha, onConvidado }: Props) {
+export function PainelFormulario({ servicoAuth = servicoAuthNaoConfigurado, focarAoMontar = false, aviso, onAutenticado, onCriarConta, onRecuperarSenha, onConvidado }: Props) {
   const idBase = useId()
   const idEmail = `${idBase}-email`
   const idSenha = `${idBase}-senha`
@@ -30,7 +32,7 @@ export function PainelFormulario({ servicoAuth = servicoAuthNaoConfigurado, foca
   const [mostrarSenha, setMostrarSenha] = useState(false)
   const [erros, setErros] = useState<ErrosLogin>({})
   const [tocados, setTocados] = useState({ email: false, senha: false })
-  const [erroGeral, setErroGeral] = useState<string | null>(null)
+  const [erroGeral, setErroGeral] = useState<string | null>(aviso ?? null)
   const [carregando, setCarregando] = useState(false)
   const emailRef = useRef<HTMLInputElement>(null)
   const senhaRef = useRef<HTMLInputElement>(null)
