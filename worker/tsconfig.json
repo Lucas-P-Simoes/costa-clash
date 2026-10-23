@@ -17,5 +17,5 @@
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true
   },
-  "include": ["src", "../src/auth/validacao.ts", "../src/data/cartas.json"]
+  "include": ["src", "../src/auth/validacao.ts", "../src/data/cartas.json", "../src/data/baralhoInicial.ts"]
 }

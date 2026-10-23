@@ -5,6 +5,7 @@ import { servicoAuthPadrao } from './auth/servicoPadrao'
 import { CabecalhoTela } from './components/ui/CabecalhoTela'
 import { TelaConta } from './screens/conta/TelaConta'
 import { TelaDueloLivre } from './screens/dueloLivre/TelaDueloLivre'
+import { TelaDuelo } from './screens/duelo/TelaDuelo'
 import { TelaCriarConta } from './screens/criarConta/TelaCriarConta'
 import { TelaLogin } from './screens/login/TelaLogin'
 import { ConvidadoInicio, RecuperarSenhaPlaceholder } from './screens/Placeholders'
@@ -16,7 +17,8 @@ type Tela =
   | { nome: 'recuperarSenha' }
   | { nome: 'convidado' }
   | { nome: 'conta'; usuario: UsuarioAutenticado }
-  | { nome: 'dueloLivre'; usuario?: UsuarioAutenticado } // sem usuário = veio do convidado
+  | { nome: 'dueloLivre'; usuario?: UsuarioAutenticado; oponenteId?: string } // sem usuário = veio do convidado
+  | { nome: 'duelo'; oponenteId: string; usuario?: UsuarioAutenticado }
 
 // Navegação por estado simples (sem react-router). `servicoAuth` é injetável para testes;
 // o padrão depende de VITE_API_URL (ausente -> "não configurado").
@@ -89,7 +91,18 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
       return <TelaConta usuario={tela.usuario} onSair={sair} onDueloLivre={() => setTela({ nome: 'dueloLivre', usuario: tela.usuario })} />
     case 'dueloLivre': {
       const usuario = tela.usuario
-      return <TelaDueloLivre usuario={usuario} onVoltar={() => setTela(usuario ? { nome: 'conta', usuario } : { nome: 'convidado' })} />
+      return (
+        <TelaDueloLivre
+          usuario={usuario}
+          oponenteInicialId={tela.oponenteId}
+          onVoltar={() => setTela(usuario ? { nome: 'conta', usuario } : { nome: 'convidado' })}
+          onDuelo={(oponenteId) => setTela({ nome: 'duelo', oponenteId, usuario })}
+        />
+      )
+    }
+    case 'duelo': {
+      const usuario = tela.usuario
+      return <TelaDuelo oponenteId={tela.oponenteId} usuario={usuario} onVoltar={() => setTela({ nome: 'dueloLivre', usuario, oponenteId: tela.oponenteId })} />
     }
     default:
       return (

@@ -25,7 +25,7 @@ const teclar = (el: HTMLElement, key: string) => fireEvent.keyDown(el, { key })
 
 describe('Tela Duelo Livre: seleção', () => {
   it('mostra 16 adversários em radiogroup, com Ressaca selecionada e roving tabindex', () => {
-    render(<TelaDueloLivre onVoltar={() => {}} />)
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
     expect(screen.getByRole('radiogroup', { name: 'Adversários' })).toBeTruthy()
     expect(radios()).toHaveLength(16)
@@ -37,7 +37,7 @@ describe('Tela Duelo Livre: seleção', () => {
   })
 
   it('clique seleciona e atualiza o painel (anúncio fica só no aviso role=status)', () => {
-    render(<TelaDueloLivre onVoltar={() => {}} />)
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     fireEvent.click(radio('Urbanização'))
     expect(selecionado().map((r) => r.textContent)).toEqual(['Urbanização'])
     expect(radio('Urbanização').tabIndex).toBe(0)
@@ -51,7 +51,7 @@ describe('Tela Duelo Livre: seleção', () => {
   })
 
   it('setas movem foco e seleção na grade de 4 colunas, sem sair dos limites', () => {
-    render(<TelaDueloLivre onVoltar={() => {}} />)
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     teclar(radio('Ressaca'), 'ArrowRight')
     expect(selecionado()[0].textContent).toBe('Urbanização')
     expect(document.activeElement).toBe(radio('Urbanização'))
@@ -68,7 +68,7 @@ describe('Tela Duelo Livre: seleção', () => {
   })
 
   it('Home/End vão ao primeiro/último; limites não ultrapassam a grade', () => {
-    render(<TelaDueloLivre onVoltar={() => {}} />)
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     teclar(radio('Ressaca'), 'End')
     expect(selecionado()[0].textContent).toBe('Biodiversidade Costeira')
     teclar(radio('Biodiversidade Costeira'), 'ArrowRight')
@@ -90,7 +90,7 @@ describe('Tela Duelo Livre: seleção', () => {
   })
 
   it('Enter/Espaço (clique nativo do botão) confirmam a seleção do cartão focado', () => {
-    render(<TelaDueloLivre onVoltar={() => {}} />)
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     const c = radio('Coral')
     c.focus()
     fireEvent.click(c) // o navegador converte Enter/Espaço em click no botão; o handler é o mesmo
@@ -100,7 +100,7 @@ describe('Tela Duelo Livre: seleção', () => {
 
 describe('Tela Duelo Livre: ações', () => {
   it('"Ler mais" expande/recolhe a descrição (aria-expanded) e reinicia ao trocar de adversário', () => {
-    render(<TelaDueloLivre onVoltar={() => {}} />)
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     const mais = within(painel()).getByRole('button', { name: 'Ler mais' })
     expect(mais.getAttribute('aria-expanded')).toBe('false')
     expect(mais.getAttribute('aria-controls')).toBe(document.querySelector('.painel-oponente__descricao')!.id)
@@ -112,47 +112,39 @@ describe('Tela Duelo Livre: ações', () => {
   })
 
   it('aviso repetido é reapresentado (novo nó na região status)', () => {
-    render(<TelaDueloLivre onVoltar={() => {}} />)
-    fireEvent.click(botao('Duelo'))
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
+    fireEvent.click(botao('Baralho'))
     const antes = within(painel()).getByRole('status').firstElementChild
-    fireEvent.click(botao('Duelo'))
+    fireEvent.click(botao('Baralho'))
     const depois = within(painel()).getByRole('status').firstElementChild
     expect(depois).not.toBe(antes)
     expect(depois?.textContent).toBe(antes?.textContent)
   })
 
-  it('DUELO mostra aviso honesto, não inicia nada e some ao trocar de adversário', () => {
-    const onVoltar = vi.fn()
-    render(<TelaDueloLivre onVoltar={onVoltar} />)
+  it('DUELO inicia o duelo com o adversário selecionado (sem aviso "Em breve")', () => {
+    const onDuelo = vi.fn()
+    render(<TelaDueloLivre onDuelo={onDuelo} onVoltar={() => {}} />)
     fireEvent.click(botao('Duelo'))
-    expect(within(painel()).getByRole('status').textContent).toBe('Em breve — o duelo contra Ressaca ainda está em desenvolvimento.')
-    expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
-    expect(onVoltar).not.toHaveBeenCalled()
+    expect(onDuelo).toHaveBeenCalledWith('ressaca')
     fireEvent.click(radio('Porto'))
-    expect(within(painel()).getByRole('status').textContent).toBe('')
     fireEvent.click(botao('Duelo'))
-    expect(within(painel()).getByRole('status').textContent).toContain('contra Porto')
-  })
-
-  it('BARALHO: logado mostra a quantidade de cartas do perfil', () => {
-    render(<TelaDueloLivre usuario={usuario} onVoltar={() => {}} />)
-    fireEvent.click(botao('Baralho'))
-    expect(within(painel()).getByRole('status').textContent).toContain('Seu baralho atual tem 40 cartas')
+    expect(onDuelo).toHaveBeenLastCalledWith('porto')
+    expect(within(painel()).getByRole('status').textContent).toBe('')
   })
 
   it('BARALHO: logado sem dado de baralho e convidado mostram "Em breve"', () => {
-    const { unmount } = render(<TelaDueloLivre usuario={{ id: 'x', email: 'a@b.co' }} onVoltar={() => {}} />)
+    const { unmount } = render(<TelaDueloLivre onDuelo={() => {}} usuario={{ id: 'x', email: 'a@b.co' }} onVoltar={() => {}} />)
     fireEvent.click(botao('Baralho'))
     expect(within(painel()).getByRole('status').textContent).toMatch(/^Em breve/)
     unmount()
-    render(<TelaDueloLivre onVoltar={() => {}} />)
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     fireEvent.click(botao('Baralho'))
     expect(within(painel()).getByRole('status').textContent).toMatch(/^Em breve.*conta/)
   })
 
   it('VOLTAR e Esc chamam onVoltar', () => {
     const onVoltar = vi.fn()
-    render(<TelaDueloLivre onVoltar={onVoltar} />)
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={onVoltar} />)
     fireEvent.click(botao('Voltar'))
     expect(onVoltar).toHaveBeenCalledTimes(1)
     fireEvent.keyDown(window, { key: 'Escape' })

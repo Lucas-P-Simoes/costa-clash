@@ -14,13 +14,17 @@ interface Props {
   /** Usuário logado (resumo do baralho vem do perfil já carregado); ausente = convidado. */
   usuario?: UsuarioAutenticado
   onVoltar: () => void
+  /** Inicia o duelo contra o adversário selecionado. */
+  onDuelo: (oponenteId: string) => void
+  /** Adversário pré-selecionado (ao voltar do duelo). */
+  oponenteInicialId?: string
 }
 
-type Aviso = { tipo: 'duelo' | 'baralho'; n: number } | null
+type Aviso = { tipo: 'baralho'; n: number } | null
 
-/** Seleção de adversário do Duelo Livre. O duelo ainda não existe: DUELO só mostra um aviso honesto. */
-export function TelaDueloLivre({ usuario, onVoltar }: Props) {
-  const [selecionadoId, setSelecionadoId] = useState(OPONENTE_PADRAO_ID)
+/** Seleção de adversário do Duelo Livre; DUELO inicia a partida contra o adversário selecionado. */
+export function TelaDueloLivre({ usuario, onVoltar, onDuelo, oponenteInicialId }: Props) {
+  const [selecionadoId, setSelecionadoId] = useState(oponenteInicialId && buscarOponente(oponenteInicialId) ? oponenteInicialId : OPONENTE_PADRAO_ID)
   const [aviso, setAviso] = useState<Aviso>(null)
   useAtalhoVoltar(onVoltar)
   const oponente = buscarOponente(selecionadoId) ?? OPONENTES[0]
@@ -32,8 +36,7 @@ export function TelaDueloLivre({ usuario, onVoltar }: Props) {
   }
 
   let mensagem: string | undefined
-  if (aviso?.tipo === 'duelo') mensagem = `Em breve — o duelo contra ${oponente.nome} ainda está em desenvolvimento.`
-  else if (aviso?.tipo === 'baralho') {
+  if (aviso?.tipo === 'baralho') {
     const qtd = usuario?.baralho?.length
     mensagem = !usuario
       ? 'Em breve — baralhos ficarão disponíveis para quem entrar com uma conta.'
@@ -51,7 +54,7 @@ export function TelaDueloLivre({ usuario, onVoltar }: Props) {
         </div>
         {/* A chave força nova leitura quando o mesmo aviso é pedido de novo. */}
         <PainelOponente oponente={oponente} aviso={mensagem ? <span key={aviso?.n}>{mensagem}</span> : undefined}>
-          <BotaoRetro variante="primario" icone={<IconeEspadas />} onClick={() => setAviso((a) => ({ tipo: 'duelo', n: (a?.n ?? 0) + 1 }))}>
+          <BotaoRetro variante="primario" icone={<IconeEspadas />} onClick={() => onDuelo(oponente.id)}>
             Duelo
           </BotaoRetro>
           <BotaoRetro icone={<IconeCartas />} onClick={() => setAviso((a) => ({ tipo: 'baralho', n: (a?.n ?? 0) + 1 }))}>

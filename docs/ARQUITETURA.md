@@ -11,3 +11,34 @@
 Separar conteúdo educativo, motor de jogo e UI. Qualquer arquivo/stack aqui é proposta até a inicialização real do projeto.
 
 - Duelo Livre: dados em `src/data/oponentes.ts` (16 adversários; só apresentação, sem baralhos); retratos em `src/assets/oponentes/` (resolvidos por `import.meta.glob`); UI reutilizável em `src/components/ui/{GradeOponentes,navegacaoGrade,PainelOponente,MedidorDificuldade}` e tela em `src/screens/dueloLivre/`. `App.tsx` ganhou o estado `dueloLivre` (com `usuario` quando vem da Conta; sem, quando vem do Convidado).
+
+## Motor de duelo (implementado, 2026-10-22; fase A, sem UI)
+Módulos em `src/game/` (todos puros; sem React/DOM/localStorage/`Math.random`; estado imutável e serializável em JSON):
+- `rng.ts` (mulberry32 + Fisher-Yates), `baralho.ts` (`validarBaralhoDuelo`), `estado.ts` (tipos, `criarEstadoInicial`, LP/destruição/fim de jogo, `invariantes`), `acoes.ts` (comandos e `aplicarComando`, início de turno, `jogadasLegais`/`ataquesLegais`), `combate.ts` (ATK/DEF efetivos, ataque), `efeitos.ts` (tabela por `operacao`), `armadilhas.ts` (elegibilidade, prioridade, gatilhos), `visao.ts` (`visaoParaJogador`: visão parcial, sem informação oculta), `ia.ts` (`decidirComando`), `duelo.ts` (`criarDuelo`, `executarTurnoIA`), `index.ts` (barrel da API pública).
+- Dados: `src/data/baralhosOponentes.ts` (40 IDs para cada um dos 16 oponentes, provisórios), `src/data/baralhoInicial.ts` (movido de `worker/src/inicial.ts`, que agora só reexporta; saída da API idêntica).
+- **Instâncias**: cada carta física tem `uid` (`h1..h40` do humano, `o1..o40` do oponente). Comandos referenciam cartas da mão por `uid` e unidades por **índice de zona** (0-4). Jogadores: `'humano'` (começa) e `'oponente'`.
+- Todas as funções aceitam um `catalogo` opcional (padrão: `CATALOGO`).
+
+### API pública (consumida pela UI na fase B)
+```ts
+criarDuelo({ baralhoJogador, baralhoOponente, seed, rng?, catalogo? })
+  : { ok: true; estado; eventos } | { ok: false; erros: string[] }       // baralhos validados; humano em PRINCIPAL, turno 1
+aplicarComando(estado, comando, catalogo?)
+  : { ok: true; estado; eventos } | { ok: false; erro: string; estado }  // ilegal => MESMO objeto de estado, erro em português
+executarTurnoIA(estado, seed?, catalogo?) : mesmo formato  // joga o turno inteiro do jogador ativo; eventos em ordem para animar
+jogadasLegais(estado) : Comando[]     // jogadas da mão legais agora (ou os descartes possíveis se não houver jogada)
+ataquesLegais(estado) : ComandoAtacar[]
+visaoParaJogador(estado, 'humano' | 'oponente') : VisaoDuelo  // única fonte segura para renderizar a perspectiva do humano
+atkEfetivo / defEfetiva(estado, dono, unidade, mapaCatalogo()) // valores a mostrar na carta (buffs, equipamento, terreno)
+validarBaralhoDuelo(ids) : { ok: true } | { ok: false; erros: string[] }
+```
+Comandos (`Comando`, campo `jogador` obrigatório): `{tipo:'jogarCarta', uid, zona?, posicao?, alvo?}`, `{tipo:'mudarPosicao', zona, posicao}`, `{tipo:'descartar', uid}`, `{tipo:'avancarFase'}`, `{tipo:'encerrarTurno'}`, `{tipo:'atacar', atacante, alvo: zona | 'direto'}`, `{tipo:'desistir'}`.
+Estado (`EstadoDuelo`): `jogadores[id] = {lp, baralho, mao, campo[5], suporte[5], descarte}`, `terreno`, `fase`, `ativo`, `turno` (absoluto, 1 = humano), `jogadaFeita`, `revelacao`, `resultado: {vencedor|null, motivo} | null`, `log`.
+Eventos (`Evento` = dados + `turno` + `texto` em português): `turno_iniciado`, `compra`, `carta_jogada`, `descarte_forcado`, `posicao_alterada`, `efeito_aplicado`, `cura`, `dano`, `unidade_destruida`, `terreno_alterado`, `armadilhas_reveladas`, `armadilha_ativada`, `ataque_declarado`, `ataque_anulado`, `combate_resolvido`, `fase_alterada`, `turno_encerrado`, `desistencia`, `fim_de_jogo`, `ia_fallback`.
+- **Atenção para a UI**: `estado` completo e `estado.log` contêm informação oculta (mão/baralho do oponente, cartas dos eventos `compra`). Renderizar sempre a partir de `visaoParaJogador(estado, 'humano')` e filtrar eventos do oponente (`compra`, `carta_jogada` de armadilha) antes de mostrar o `texto`. A dica educativa vem de `Carta.educacao` pelo `cartaId` do evento `carta_jogada`.
+- Decisões de regra provisórias: `REGRAS_DO_JOGO.md` §15.
+### Fase B: tela do duelo (UI)
+- `src/screens/duelo/`: `TelaDuelo` (cria o duelo; seed no estado da tela; erros de baralho/adversário), `Partida` (estado do motor + seleção/modos guiados + reprodução do turno da IA), `ResultadoDuelo`, `duelo.css`. `src/components/duelo/`: `CartaView`/`CartaVerso`, `ArteCarta` (pixel art por grupo/tipo), `textoCarta` (efeito curto).
+- Regra de ouro: a UI só chama `aplicarComando`/`executarTurnoIAComPassos` e renderiza `visaoParaJogador(estado,'humano')` + `logPublico`; `EstadoDuelo` completo e `log` crus nunca vão ao DOM. `App.tsx` tem a tela `duelo` (volta ao Duelo Livre mantendo o adversário e a sessão).
+- API nova no motor: `logPublico(estado, jogador)`, `eventosPublicos(eventos, jogador)`, `executarTurnoIAComPassos(estado)` ({estado, eventos, passos[]}), evento `desistencia`.
+

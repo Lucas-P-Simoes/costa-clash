@@ -205,3 +205,38 @@ O jogo de referência inclui fusões, estrelas guardiãs, posições especiais e
 - https://ftp.yugipedia.com/wiki/Yu-Gi-Oh%21_True_Duel_Monsters%3A_Sealed_Memories
 - https://yugioh.fandom.com/wiki/Yu-Gi-Oh%21_Forbidden_Memories_Gameplay
 - https://yugiohpro.com.br/guide/como-duelar.php
+
+## 15. Decisões de implementação (provisórias)
+> Registradas pelo DEV em 2026-10-22 ao implementar o motor (`src/game/`). Resolvem ambiguidades do texto **sem alterar balanceamento nem regras aprovadas**; aguardam confirmação do responsável. Os itens marcados **[DECISÃO DO DONO]** são os mais relevantes.
+
+**Valores e sinais**
+1. **Sinal dos valores do catálogo** é normalizado por operação (o sinal do JSON não é usado): `debuff_grupo` e `debuff_invocada` sempre **reduzem** `|valor|` (no JSON o primeiro é negativo e o segundo positivo); `buff_grupo`/`buff_unidade` sempre **aumentam** `|valor|`; `equip_buff_*` e `field_bonus` usam o valor como está.
+2. **Buffs/debuffs** são guardados "brutos" na unidade (ATK e DEF) e só o resultado é limitado: `ATK_EFETIVO = max(0, base + buffs + equipamento + terreno)` (idem DEF). Um buff posterior compensa um debuff anterior. LP nunca fica abaixo de 0 (dano limitado ao que resta) nem acima de 8.000 (cura parcial permitida).
+3. **Buffs temporários não existem no MVP** (nenhuma carta os tem): a etapa "encerrar buffs temporários" do `INICIO` não faz nada além de zerar as flags de ataque.
+
+**Fluxo de turno**
+4. O estado só "repousa" em `PRINCIPAL` ou `COMBATE`; `INICIO` e `FIM` são processados dentro dos comandos (eventos `turno_iniciado`, `compra`, `turno_encerrado`). `criarDuelo` já devolve o turno 1 do humano em `PRINCIPAL`.
+5. `avancarFase` (PRINCIPAL -> COMBATE) e `encerrarTurno` exigem que a jogada da mão (ou o descarte forçado) já tenha sido feita; só há exceção se a mão estiver vazia (estado atípico, para nunca travar). Ataques só na fase `COMBATE`. No turno absoluto 1 o jogador pode avançar/encerrar, mas `atacar` é recusado.
+6. **Descarte** só é aceito quando **nenhuma** jogada de carta é legal ("descarte forçado"); conta como a jogada do turno. Não existe descarte voluntário.
+7. **Mudança de posição**: permitida nas fases `PRINCIPAL` e `COMBATE`, a qualquer momento (inclusive antes da jogada da mão e logo após invocar), para unidades que ainda não atacaram no turno, sem limite de trocas. Posição padrão ao invocar, se não informada: `ATAQUE`.
+8. **Escolha de zona**: o comando pode informar a zona (de unidade, ou de suporte para armadilha/equipamento); omitida = primeira zona livre; zona ocupada é recusada. Alvos de efeitos são sempre escolhidos explicitamente (índice da zona da unidade); alvo omitido ou inválido é recusado (nunca há escolha automática).
+9. **Reposição**: no início de cada turno, se faltarem cartas no baralho para completar a mão, o jogador perde (`motivo: compra`) **sem compra parcial**. O jogador que abre a partida não compra no turno 1; o oponente também não compra no turno 2 (mão já completa).
+
+**Efeitos**
+10. **Ordem de resolução (§6)** implementada: validação -> armadilha por evento -> alterações de atributo/dano -> descarte -> checagem de vitória. Em combate, a armadilha do atacado dispara **antes** do cálculo; o dano é aplicado antes da destruição; a vitória é checada ao final.
+11. **Armadilha dispara sempre que o gatilho ocorre**, mesmo que sua redução se mostre inútil (ex.: o atacante perde a luta): é consumida. `reduzir_dano` só reduz o dano ao **controlador** da armadilha. `anular_ataque` marca a unidade atacante como "já atacou". `ataque_direto/cura` cura **antes** do dano. `ataque_recebido` vale para ataque a qualquer unidade do controlador (ataque ou defesa).
+12. **[DECISÃO DO DONO] Elegibilidade de armadilhas ("a partir do turno seguinte ao da colocação")**: usa o contador de **turno absoluto**; a armadilha é elegível se `turno atual > turno de colocação`. Logo, uma armadilha colocada no turno 1 já pode reagir ao ataque do oponente no turno 2. (Alternativa mais conservadora, não adotada: só a partir do próximo turno do próprio dono, o que enfraqueceria muito as armadilhas.) No fluxo normal essa guarda nunca bloqueia nada, porque o gatilho só ocorre em turnos do adversário; foi testada com estados construídos.
+13. `invocacao_impacto`: dispara quando **qualquer** jogador invoca unidade do grupo `impacto` e o **adversário** tem a armadilha; só `debuff_invocada` é aplicada; o debuff é permanente (guardado nos buffs da unidade). Unidades de outros grupos não disparam e a armadilha continua armada.
+14. **`revelar`**: sem alvo, sempre jogável; liga o campo `revelacao` do estado (jogador que viu); as armadilhas do adversário passam a aparecer na `visaoParaJogador` desse jogador até o fim do turno atual (limpo em `encerrarTurno`); não desarma nada. **Quem vê armadilhas**: o dono sempre; o adversário nunca, salvo por `revelar`; equipamentos são públicos (vinculados a unidades visíveis).
+15. **Terreno**: pertence a quem o jogou (`dono`); ao ser substituído vai ao descarte do dono; jogar o mesmo terreno de novo é permitido. O bônus é calculado dinamicamente (não é gravado nas unidades), vale para os dois lados, e `alvo: 'qualquer'` atinge todos os grupos. Não ocupa zona de suporte.
+16. **Equipamento**: ocupa uma zona de suporte, vinculado por `uid`; unidade já equipada deixa de ser alvo válido; ao sair a unidade, ambos vão ao descarte do dono da unidade.
+17. **Cura** só é jogável se LP < 8.000; revelar e terrenos não têm condição de alvo.
+18. **Desistência**: qualquer jogador, a qualquer momento (não precisa ser o turno), enquanto a partida não terminou.
+
+**Salvaguardas**
+19. **Repetição 3x (§8)**: assinatura do estado (LP, mãos como multiconjunto de IDs, campo, suporte, tamanhos de baralho/descarte, terreno, jogador ativo; sem log, uids nem número de turno) registrada no início de cada turno após a reposição; 3 ocorrências = empate (`motivo: repeticao`). Na prática é inalcançável, pois o baralho encolhe a cada turno (confirmado por teste e pelas simulações).
+20. **Empate duplo** (ambos LP <= 0) é inalcançável pelo catálogo atual (cada evento retira LP de só um lado); a regra está implementada e testada com estado construído.
+
+**IA (§9) — definições concretas**
+21. "Capaz de vencer combate" = ATK efetivo (com bônus de terreno) maior que o valor defensivo (ATK se a unidade inimiga está em ataque, DEF se está em defesa) de ao menos uma unidade inimiga, ou campo inimigo vazio. "Vantagem atual" (posição de ataque) = vence algum combate **e** o ATK não é menor que o de nenhum atacante inimigo. Ordem de jogada: (0) unidade que vence (maior ATK); (1) ação eficaz (peso: destruir > debuff > buff/equipamento > terreno > cura > revelar; alvo de maior ATK); (2) unidade de maior DEF; (3) armadilha; (4) ações pouco eficazes (cura que não recupera o valor inteiro, terreno que não favorece, revelar sem armadilhas inimigas). Desempate: ID crescente, depois uid e zona. Sem jogada legal, descarta a carta de menor soma ATK+DEF (ações/armadilhas valem mais). Ataque: direto se não há unidades inimigas; senão só ataques favoráveis (ATK maior que o ATK da unidade em ataque ou que a DEF da unidade em defesa), preferindo remover a unidade de maior ATK; nunca ataca quando haveria dano ao próprio LP, empate de destruição ou nada. A exceção "evitar estagnação" **não** foi implementada (o baralho finito já encerra toda partida).
+22. A IA só recebe `VisaoDuelo` (sem mão/baralho do adversário, sem armadilhas viradas, sem log). `executarTurnoIA` aceita um `seed` opcional **reservado** (a IA é totalmente determinística e hoje não o usa).

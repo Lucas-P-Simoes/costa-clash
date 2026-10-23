@@ -60,6 +60,27 @@ Cobertura (`test:coverage`) ainda não configurada.
 - Ataque paralelo: o QA reproduziu 30 logins e 25 cadastros simultâneos e achou o limite não atômico (corrigido). Cobertura atual: `api.test.ts` ("limites sob concorrência e por IP", via `Promise.all`) e as duas últimas linhas de `fluxo-local.mjs` contra `wrangler dev` (esperado: 5×401 + 25×429; ≤10×201).
 - Não coberto por testes automáticos: Worker publicado, D1 remoto, CORS em navegador real.
 
+### Motor de duelo (`src/game/__tests__/`, ambiente node, tudo determinístico por seed)
+- `util.ts`: `cenario({humano, oponente, ativo, turno, fase, terreno, ...})` monta um estado arbitrário e válido (campo, suporte, mão, descarte, baralho de enchimento CC-013) e atalhos `jogar`, `atacar`, `ok`. `simular.ts`: `simularIAxIA` (partida completa com a IA nos dois lados).
+- `rngBaralho.test.ts`: RNG determinístico/uniforme, Fisher-Yates sem mutar a entrada; validação de baralho (39/41 cartas, >3 cópias, ID desconhecido, erros acumulados, entrada inválida).
+- `duelo.test.ts`: `criarDuelo` (mão 5, baralho 35, humano no turno 1, serializável, seed, baralhos inválidos), reposição da mão, derrota por compra incompleta (sem compra parcial; mão cheia + baralho vazio não perde), primeiro turno sem ataque, desistência, estado encerrado imutável, empate duplo (estado construído) e repetição 3x.
+- `acoes.test.ts`: fases/turno, uma jogada por turno, zona escolhida × primeira livre, campo/suporte cheios, descarte forçado (só sem jogada legal), posições (inclusive após atacar), validação no motor, comandos inválidos devolvem o mesmo objeto, imutabilidade (entrada congelada), `jogadasLegais`/`ataquesLegais`.
+- `combate.test.ts`: ATK×ATK (maior/menor/empate), ATK×DEF (destrói sem dano; menor causa dano ao atacante; empate nada; sem transbordo), ataque direto, LP exato 0 e clamp, restrições de ataque, atributos efetivos (clamp >= 0), terreno nos dois lados.
+- `efeitos.test.ts`: uma bateria por `operacao` (debuff/buff de grupo, buff de unidade, destruir, cura com clamp 8000, revelar, equipamentos, terrenos), buffs persistentes, equipamento sai com a unidade, alvo inválido/ausente, ação sem alvo injogável, cobertura das 20 ações do catálogo.
+- `armadilhas.test.ts`: as 8 armadilhas e seus gatilhos, prioridade pela mais antiga, uma por evento, inelegibilidade (fica armada), nunca no turno de colocação (estado construído) e fluxo real com colocação no turno 1.
+- `ia.test.ts`: visão parcial sem vazamento (JSON da visão sem uids/cartas ocultas; decisão idêntica quando só muda a informação oculta), prioridades do §9, posições, ataques, descarte, `executarTurnoIA` (turno completo, determinismo, estado encerrado, vitória e derrota por compra durante o turno).
+- `simulacao.test.ts`: 51 partidas IA×IA (inicial + 16 oponentes) terminam em <= 74 turnos, sem exceção, sem `ia_fallback`, com invariantes (LP em [0, 8000], zonas <= 5, total de 40 cartas por jogador, equipamentos consistentes, uids únicos); reprodutível por seed.
+- `propriedade.test.ts`: 80 partidas com baralhos aleatórios do catálogo inteiro e comandos aleatórios (legais e ilegais) sobre estados **congelados** (qualquer mutação lança erro); toda jogada ilegal devolve o mesmo estado; invariantes e serialização JSON após cada comando aceito.
+- `estatisticas.test.ts`: só com `STATS=1` (`STATS=1 npx vitest run src/game/__tests__/estatisticas.test.ts --reporter=verbose --silent=false`): todas as 289 combinações ordenadas de baralhos x 2 seeds (578 partidas) e imprime resultados/duração. Resultados na última rodada: `docs/ESTADO_DO_PROJETO.md`.
+- `src/data/__tests__/baralhosOponentes.test.ts`: os 16 baralhos válidos, temáticos, com ações/armadilhas e dificuldade só pela composição; o worker reexporta o mesmo baralho inicial.
+
+### Tela do duelo (`src/screens/__tests__/duelo.test.tsx`, jsdom, duelos semeados/cenários montados por `cenario()`)
+- `CartaView`/`CartaVerso` e textos de efeito; leitura do tabuleiro (8000 LP, 5+5 zonas, mão, restantes); jogar unidade por modo guiado, posição de entrada/troca em campo; ação com alvo (destaque e efeito); ação sem alvo e descarte forçado com motivo; ataque (atacante -> alvo) e ataque direto; ATACAR no turno 1/antes da jogada; ENCERRAR TURNO + turno da IA (sem atraso e com timers falsos, entrada bloqueada); informação oculta (nenhum nome/ID da mão ou armadilha do oponente no DOM, nem em duelo real semeado; armadilha própria visível, do oponente só com `revelar`); desistência com confirmação, resultado (derrota/vitória, conceitos), JOGAR NOVAMENTE; integração com o Duelo Livre (convidado, logado, baralho inválido, adversário inexistente).
+- `src/game/__tests__/logPublico.test.ts`: `logPublico`/`eventosPublicos`, rng 1.0, evento `desistencia`.
+- Não coberto por testes automáticos: aparência/layout (medido manualmente no navegador embutido; ver HANDOFF), animação real da reprodução, leitor de tela.
+
+- `src/screens/__tests__/duelo_correcoes.test.tsx` (jsdom): desistir durante a reprodução da IA com timers falsos e limpeza ao desmontar, foco e `inert` dos diálogos (foco inicial, Tab preso, retorno ao acionador), foco guiado (zona, alvo, ataque), seleção mantida após DEFENDER, modo zerado no fim, textos (terreno, subtítulo, rodada, log de armadilha). `qa_duelo_ui.test.tsx` e `qa_fase_b.test.ts` são do QA.
+
 Não alegar execução se o comando ou dependências não existirem. No início do projeto, configurar os scripts e explicar a instalação.
 
 ## Relatório mínimo de QA

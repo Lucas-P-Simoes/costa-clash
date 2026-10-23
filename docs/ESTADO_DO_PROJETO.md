@@ -3,7 +3,19 @@
 ## Situação atual
 - Valores oficiais confirmados pelo responsável (2026-10-22): **8.000 LP, 5 zonas de unidade + 5 de suporte**, baralho de 40 cartas, catálogo de 100. `AGENTS.md` e `docs/ARQUITETURA.md` alinhados a `docs/REGRAS_DO_JOGO.md`.
 - Projeto Vite + React 19 + TypeScript + Vitest inicializado (repositório público em https://github.com/Lucas-P-Simoes/costa-clash, deploy automático em https://lucas-p-simoes.github.io/costa-clash/).
-- Tela de LOGIN implementada (2026-10-22, DEV; sem revisão visual do responsável nem QA ainda). Motor de jogo ainda não existe.
+- Tela de LOGIN implementada (2026-10-22, DEV; sem revisão visual do responsável nem QA ainda). Motor de duelo implementado em `src/game/` (fase A, sem UI; ver seção abaixo).
+
+## Tela do duelo (fase B, 2026-10-22, DEV; sem QA da UI nem revisão visual do dono)
+- A tela do duelo existe e está ligada ao botão DUELO do Duelo Livre (adversário escolhido, baralho do perfil ou inicial). Detalhes, decisões, diferenças vs. a referência e riscos: `docs/HANDOFF.md` (primeira seção). Correções do QA do motor (QA-1/2/3, `logPublico`) aplicadas.
+- Correções pós-QA D1-D13 aplicadas (ver HANDOFF). `npm test`: 533 passaram + 1 ignorado (32 arquivos); typecheck, worker:typecheck, lint, build sem erros. Verificado no navegador embutido em 1448/1280/768/375/360 px (sem rolagem horizontal) e um duelo completo jogado por script. Revisão estética e dispositivos reais: pendentes (dono).
+- Pendências: recompensas e progresso ("em breve"), arte individual das cartas, decisões do dono (elegibilidade de armadilha, balanceamento, 'evitar estagnação').
+
+## Motor de duelo — fase A (2026-10-22, DEV; sem QA, sem UI, sem commit)
+- Implementado em `src/game/` o motor puro e determinístico (RNG com seed, validação de baralho, estado, comandos, combate, efeitos por `operacao`, armadilhas, visão parcial, IA §9, `criarDuelo`, `executarTurnoIA`) e `src/data/baralhosOponentes.ts` (16 baralhos provisórios de 40). API e eventos: `docs/ARQUITETURA.md`; decisões de regra (provisórias, algumas pedem confirmação do dono): `docs/REGRAS_DO_JOGO.md` §15. A etapa 2-5 do plano (motor) está **implementada, aguardando QA**; a UI do duelo (fase B) ainda não existe e o botão DUELO continua mostrando "Em breve".
+- `src/data/baralhoInicial.ts` passou a ser a fonte do baralho inicial; `worker/src/inicial.ts` só reexporta (API idêntica).
+- Verificação: `npm test` **401 passaram + 1 ignorado** (23 arquivos; 158 anteriores preservados + 243 novos; o ignorado é o gerador de estatísticas, que exige `STATS=1`), `npm run typecheck`, `npm run worker:typecheck`, `npm run lint` e `npm run build`: sem erros.
+- **Simulações IA×IA** (578 partidas: todas as combinações ordenadas dos 17 baralhos — inicial + 16 oponentes — com 2 seeds): 0 travamentos, 0 exceções, 0 `ia_fallback`, 0 violações de invariante. Resultado por LP em 492 (85%) e por falta de cartas na reposição em 86 (15%); 0 empates. Duração: mínimo 5, mediana 13, média 25,5 e máximo 73 turnos absolutos (teto teórico 74); ~13 ms por partida. Quem joga primeiro (humano) venceu 251 (43%), quem joga em segundo 327 (57%): o segundo jogador ataca primeiro (o humano não ataca no turno 1). Taxa de vitória por baralho: ressaca 91%, chuva-intensa 90%, porto 87%, erosão 78%, planejamento 62%, biodiversidade 60%, poluição 59%, urbanização 59%, inicial 43%, recuperação 41%, coral 37%, fiscal 31%, restinga 26%, caiçara 24%, guardião 22%, pescador 22%, tartaruga 19%. **Leitura**: baralhos de grupo `impacto` (ATK alto, DEF baixa) dominam; dificuldade "fácil" ficou de fato mais fraca, mas a diferença entre os grupos é grande. Balanceamento é provisório e NÃO foi ajustado (não mexi em catálogo nem regras).
+- Não validado: nenhuma interface (não há UI do duelo); jogabilidade subjetiva da IA; balanceamento fino; só foi simulada IA×IA, não partidas com humano real.
 
 ## Tela Duelo Livre (2026-10-22, DEV; sem QA nem revisão visual do responsável)
 - Implementada a seleção de adversário (16 adversários, grade 4x4, painel de detalhe com dificuldade em conchas, DUELO/BARALHO/VOLTAR), acessível por "Duelo livre" na tela Conta e na tela de Convidado. O motor de duelo NÃO existe: DUELO mostra o aviso "Em breve — o duelo contra {nome} ainda está em desenvolvimento." e não inicia nada. BARALHO mostra a contagem do baralho do perfil (logado) ou "Em breve" (convidado/sem dado).
@@ -22,7 +34,7 @@
 
 ## Diagnóstico e plano
 - Diagnóstico, 12 inconsistências, arquitetura, plano de 8 etapas e papéis DEV/QA: `docs/PLANO_DE_DESENVOLVIMENTO.md`.
-- Etapa atual do plano: **nenhuma concluída**; aguardando aprovação para iniciar a etapa 1 (tabuleiro) e/ou 2–3 (baralho, turnos, combate).
+- Etapas 2–5 do plano (motor: baralho, turnos/combate, efeitos, IA) **implementadas, aguardando QA** (2026-10-22). Etapa 1 (tabuleiro) e a UI do duelo (fase B) ainda não iniciadas.
 
 ## Nuvem
 - API de contas publicada em https://costa-clash-api.lucaspsimoes22.workers.dev (Cloudflare Worker + D1); site ligado via `VITE_API_URL`. Detalhes em `docs/CONTAS_E_NUVEM.md`.
@@ -36,7 +48,7 @@
 - Testes: `src/auth/__tests__/validacao.test.ts` e `src/screens/__tests__/login.test.tsx` (jsdom + Testing Library, ambiente por arquivo).
 
 ## Tarefa em andamento
-- Nenhuma. Próxima: motor de turnos/combate puro em `src/game/`.
+- Nenhuma. Próxima: QA do motor e, depois, fase B (tela do duelo sobre `src/game/`).
 
 ## Decisões pendentes
 - Mockup `Interface de Batalha Costa Clash.png` mostra 4.000 LP, mão de 4 e sem áreas de suporte/terreno/descarte/baralho; precisa de nova versão ou aprovação de ajuste.
