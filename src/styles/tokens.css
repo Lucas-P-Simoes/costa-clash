@@ -1,0 +1,31 @@
+/* Tokens do tema "Costa Clash" (PS1 pixel art, noturno costeiro). Reutilizar em todas as telas. */
+:root {
+  --cc-fundo-0: #040a12;
+  --cc-fundo-1: #08131f;
+  --cc-fundo-2: #0d1d2d;
+  --cc-pedra: #15212e;
+  --cc-pedra-clara: #223446;
+  --cc-contorno: #060e17;
+  --cc-campo: #050c14;
+
+  --cc-turquesa: #3fdcf0;
+  --cc-turquesa-med: #1fa0bc;
+  --cc-turquesa-esc: #145f78;
+  --cc-brilho: rgba(63, 220, 240, 0.55);
+
+  --cc-ouro: #e6b648;
+  --cc-ouro-med: #a87414;
+  --cc-ouro-esc: #5a3a0c;
+
+  --cc-texto: #dcecf2;
+  --cc-texto-suave: #a4c4d0;
+  --cc-pedra-texto: #d6c9a6;
+  --cc-erro: #ff8a7a;
+  --cc-erro-fundo: #2a0f12;
+  --cc-ok: #72e8a8;
+
+  --cc-fonte-pixel: 'Lucida Console', 'Cascadia Mono', Consolas, 'Courier New', monospace;
+  --cc-fonte-logo: Impact, 'Arial Black', 'Haettenschweiler', sans-serif;
+
+  --cc-alvo-toque: 48px;
+}

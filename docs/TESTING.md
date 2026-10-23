@@ -12,6 +12,9 @@ Vitest para lógica TypeScript. Testes de componentes com React Testing Library 
 - `src/components/` para interface React.
 - `src/game/__tests__/` para testes de regras e integração.
 
+## Testes de componentes
+`@testing-library/react` + `jsdom` (devDependencies). O ambiente jsdom é escolhido por arquivo com `// @vitest-environment jsdom` na primeira linha; testes do motor continuam em node. Chamar `cleanup` em `afterEach`.
+
 ## Prioridades de teste
 1. Turnos e mudança de fases.
 2. Compra, carta na mão, uso e descarte.

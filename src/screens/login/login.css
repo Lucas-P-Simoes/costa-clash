@@ -1,0 +1,261 @@
+/* Layout da tela de login. Estilos compartilhados ficam em src/styles/. */
+.tela {
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  background:
+    radial-gradient(ellipse at 50% 30%, #0e2a40 0%, transparent 60%),
+    linear-gradient(180deg, var(--cc-fundo-1), var(--cc-fundo-0));
+}
+
+.tela-login__corpo {
+  position: relative;
+  flex: 1;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(360px, 520px) minmax(300px, 400px);
+  gap: clamp(14px, 2.2vw, 30px);
+  padding: 0 clamp(10px, 1.6vw, 26px) clamp(12px, 1.6vw, 22px) 0;
+  min-height: 0;
+  width: 100%;
+  max-width: 1700px;
+  margin: 0 auto;
+}
+
+/* Cena do manguezal (recorte da referência, sem texto/UI). Caixa absoluta para não ditar a altura da linha. */
+.tela-login__cena-caixa {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border-right: 4px solid var(--cc-contorno);
+  box-shadow: inset -3px 0 0 var(--cc-turquesa-esc);
+}
+
+.tela-login__cena {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left bottom;
+  image-rendering: pixelated;
+}
+
+/* ===== Painel de autenticação ===== */
+.painel-form {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  margin-top: clamp(26px, 3vw, 40px);
+  padding: clamp(30px, 3vw, 44px) clamp(12px, 1.4vw, 22px) clamp(12px, 1.4vw, 22px);
+  z-index: 1;
+}
+
+.painel-form__emblema {
+  position: absolute;
+  top: -34px;
+  left: 50%;
+  width: 72px;
+  transform: translateX(-50%);
+  z-index: 2;
+}
+
+.painel-form__emblema svg {
+  width: 100%;
+  height: auto;
+  filter: drop-shadow(0 0 8px var(--cc-brilho));
+}
+
+.painel-form__miolo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: clamp(18px, 2.4vw, 34px) clamp(14px, 2.6vw, 36px);
+}
+
+.painel-form__botoes {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-top: 26px;
+}
+
+.painel-form__link {
+  display: flex;
+  justify-content: center;
+}
+
+.painel-form__erro-geral {
+  margin: 0;
+  padding: 10px 12px;
+  border: 3px solid var(--cc-erro);
+  background: var(--cc-erro-fundo);
+  color: var(--cc-erro);
+  font-size: 0.9rem;
+  line-height: 1.35;
+}
+
+/* ===== Painel informativo ===== */
+.painel-info {
+  display: flex;
+  flex-direction: column;
+  align-self: stretch;
+  gap: 12px;
+  margin-top: clamp(18px, 2vw, 26px);
+  padding: 16px;
+}
+
+.painel-info__bloco {
+  display: grid;
+  grid-template-columns: clamp(80px, 9vw, 120px) minmax(0, 1fr);
+  align-items: center;
+  gap: 14px;
+  padding: 14px 14px;
+  border: 3px solid var(--cc-contorno);
+  background: linear-gradient(180deg, rgba(8, 24, 36, 0.92), rgba(5, 14, 22, 0.92));
+  box-shadow: inset 0 0 0 2px #17404f;
+}
+
+.painel-info__icone svg {
+  width: 100%;
+  height: auto;
+  max-height: 110px;
+  margin: 0 auto;
+}
+
+.painel-info__bloco--proteja .painel-info__icone svg {
+  max-width: 76px;
+}
+
+.painel-info__titulo {
+  margin: 0 0 6px;
+  color: var(--cc-turquesa);
+  font-family: var(--cc-fonte-pixel);
+  font-size: clamp(1.15rem, 1.9vw, 1.6rem);
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 2px 2px 0 #021018;
+}
+
+.painel-info__texto {
+  margin: 0;
+  color: var(--cc-texto);
+  font-size: clamp(0.82rem, 1.1vw, 0.95rem);
+  line-height: 1.45;
+}
+
+.painel-info__cidade {
+  flex: 1;
+  width: 100%;
+  min-height: 60px;
+  object-fit: cover;
+  object-position: center bottom;
+  image-rendering: pixelated;
+  -webkit-mask-image: linear-gradient(180deg, transparent, #000 35%);
+  mask-image: linear-gradient(180deg, transparent, #000 35%);
+}
+
+/* ===== Tablet: cena vira fundo, uma coluna ===== */
+@media (max-width: 1100px) {
+  .tela-login__corpo {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    padding: 36px 14px 18px;
+    gap: 44px;
+  }
+
+  .tela-login__cena-caixa {
+    position: absolute;
+    inset: 0;
+    border: 0;
+    box-shadow: none;
+    opacity: 0.4;
+    z-index: 0;
+  }
+
+  .tela-login__cena {
+    object-position: left bottom;
+  }
+
+  .painel-form {
+    width: min(560px, 100%);
+    margin-top: 0;
+  }
+
+  .painel-info {
+    width: min(760px, 100%);
+    margin-top: 0;
+    z-index: 1;
+  }
+}
+
+@media (min-width: 700px) and (max-width: 1100px) {
+  .painel-info {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+
+  .painel-info__bloco {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+
+  .painel-info__icone svg {
+    max-height: 80px;
+  }
+
+  .painel-info__cidade {
+    display: none;
+  }
+}
+
+/* ===== Celular ===== */
+@media (max-width: 600px) {
+  .tela-login__corpo {
+    padding: 34px 10px 14px;
+    gap: 38px;
+  }
+
+  .painel-info {
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .painel-info__bloco {
+    grid-template-columns: 64px minmax(0, 1fr);
+    gap: 10px;
+    padding: 10px;
+  }
+
+  .painel-info__cidade {
+    display: none;
+  }
+}
+
+/* Altura baixa (paisagem em celular): compacta cabeçalho e espaçamentos. */
+@media (max-height: 640px) {
+  .cabecalho__cena {
+    height: 78px;
+  }
+
+  .cabecalho__nome {
+    font-size: 1.8rem;
+  }
+
+  .cabecalho__subtitulo {
+    font-size: 0.6rem;
+  }
+
+  .cabecalho__titulo {
+    font-size: 1.6rem;
+  }
+
+  .campo__reserva {
+    min-height: 40px;
+  }
+
+  .painel-form__botoes {
+    gap: 8px;
+    margin-top: 14px;
+  }
+}

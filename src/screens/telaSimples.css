@@ -1,0 +1,36 @@
+.tela-simples__corpo {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 14px;
+}
+
+.tela-simples__painel {
+  width: min(560px, 100%);
+  padding: 14px;
+}
+
+.tela-simples__miolo {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding: clamp(18px, 3vw, 32px);
+}
+
+.tela-simples__miolo p {
+  margin: 0;
+  line-height: 1.5;
+}
+
+.tela-simples__destaque {
+  color: var(--cc-turquesa);
+  font-weight: 700;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.tela-simples__nota {
+  color: var(--cc-texto-suave);
+  font-size: 0.9rem;
+}
