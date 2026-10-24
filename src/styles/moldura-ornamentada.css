@@ -1,0 +1,116 @@
+/* Moldura ornamentada (componente MolduraOrnamentada). Textura e canto recortados de Referencia-telas/Motor-Duelo.png. */
+.moldura-orn {
+  --orn-cor: #36b8d4;
+  --orn-cor-esc: #11566c;
+  --orn-brilho: rgba(63, 220, 240, 0.22);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  padding: 13px;
+  background-color: #1a2b38;
+  background-image: linear-gradient(rgba(34, 54, 70, 0.6), rgba(14, 26, 36, 0.72)), url('../assets/duelo/pedra-painel.jpg');
+  background-size: 100% 100%, 860px auto;
+  border: 2px solid #040a10;
+  box-shadow:
+    inset 0 0 0 1px var(--orn-cor-esc),
+    inset 0 0 0 2px #03080d,
+    0 0 0 1px var(--orn-cor-esc),
+    0 0 10px var(--orn-brilho);
+}
+/* linha pontilhada luminosa na borda de pedra */
+.moldura-orn::after {
+  content: '';
+  position: absolute;
+  inset: 4px;
+  pointer-events: none;
+  border: 2px dotted var(--orn-cor);
+  opacity: 0.7;
+}
+.moldura-orn__miolo {
+  position: relative;
+  z-index: 1;
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 0;
+  background-color: #06101a;
+  background-image: linear-gradient(rgba(4, 11, 18, 0.62), rgba(3, 8, 14, 0.74)), url('../assets/duelo/pedra-painel.jpg');
+  background-size: 100% 100%, 860px auto;
+  border: 2px solid #02060b;
+  box-shadow:
+    inset 0 0 0 1px var(--orn-cor-esc),
+    inset 0 0 18px rgba(0, 0, 0, 0.6);
+}
+.moldura-orn__canto {
+  position: absolute;
+  z-index: 2;
+  width: var(--canto-w, 38px);
+  height: var(--canto-h, 46px);
+  pointer-events: none;
+  background: url('../assets/duelo/canto-moldura.png') no-repeat center / 100% 100%;
+  image-rendering: pixelated;
+}
+.moldura-orn__canto--bl {
+  bottom: -1px;
+  left: -1px;
+}
+.moldura-orn__canto--br {
+  right: -1px;
+  bottom: -1px;
+  transform: scaleX(-1);
+}
+.moldura-orn__canto--tl {
+  top: -1px;
+  left: -1px;
+  transform: scaleY(-1);
+}
+.moldura-orn__canto--tr {
+  top: -1px;
+  right: -1px;
+  transform: scale(-1, -1);
+}
+.moldura-orn__aba {
+  position: absolute;
+  top: -11px;
+  left: 22px;
+  z-index: 3;
+  padding: 0 10px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  line-height: 20px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--orn-cor);
+  background: #07121c;
+  border: 1px solid var(--orn-cor-esc);
+}
+
+.moldura-orn--ouro {
+  --orn-cor: #f2c24a;
+  --orn-cor-esc: #8a5e12;
+  --orn-brilho: rgba(242, 194, 74, 0.28);
+}
+.moldura-orn--vermelho {
+  --orn-cor: #ff6a58;
+  --orn-cor-esc: #86261c;
+  --orn-brilho: rgba(255, 106, 88, 0.22);
+}
+.moldura-orn--azul {
+  --orn-cor: #5ab4ff;
+  --orn-cor-esc: #1c4f86;
+  --orn-brilho: rgba(90, 180, 255, 0.22);
+}
+
+@media (max-width: 700px) {
+  .moldura-orn {
+    padding: 7px;
+  }
+  .moldura-orn__canto {
+    width: 24px;
+    height: 29px;
+  }
+  .moldura-orn__aba {
+    left: 14px;
+    font-size: 0.72rem;
+  }
+}

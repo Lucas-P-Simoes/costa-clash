@@ -1,9 +1,17 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
-import type { ReactNode } from 'react'
+import { BannerTurno } from '../../components/duelo/BannerTurno'
+import { BotaoAcao } from '../../components/duelo/BotaoAcao'
+import { CabecalhoDuelo } from '../../components/duelo/CabecalhoDuelo'
 import { CartaVerso, CartaView } from '../../components/duelo/CartaView'
+import { DicaEducativa } from '../../components/duelo/DicaEducativa'
+import { FaixaTerreno } from '../../components/duelo/FaixaTerreno'
+import { IconeEscudo, IconeRelogioPixel } from '../../components/duelo/iconesDuelo'
+import { PainelJogador } from '../../components/duelo/PainelJogador'
+import { chaveZona, useEfeitosVisuais } from '../../components/duelo/efeitosVisuais'
 import { useFocoDialogo } from '../../components/duelo/useFocoDialogo'
-import { descricaoCarta, rotuloTipo } from '../../components/duelo/textoCarta'
-import { IconeCartas, IconeEspadas, OrnamentoOnda } from '../../components/ui/Icones'
+import { descricaoCarta } from '../../components/duelo/textoCarta'
+import { IconeCartas, IconeEspadas } from '../../components/ui/Icones'
+import { MolduraOrnamentada } from '../../components/ui/MolduraOrnamentada'
 import { CATALOGO } from '../../data/catalogo'
 import type { Oponente } from '../../data/oponentes'
 import {
@@ -21,9 +29,6 @@ import {
 } from '../../game'
 import type { Comando, EstadoDuelo, IdJogador, PassoIA, Posicao, UnidadeEmCampo, VisaoDuelo } from '../../game'
 import { estadoDeVisao } from '../../game/visao'
-import topoEsquerda from '../../assets/login/topo-esquerda.png'
-import topoDireita from '../../assets/login/topo-direita.png'
-import cenaMangue from '../../assets/duelo/dica-mangue.png'
 import { ResultadoDuelo } from './ResultadoDuelo'
 import './duelo.css'
 
@@ -31,6 +36,8 @@ const cat = mapaCatalogo(CATALOGO)
 
 type Modo = null | { tipo: 'zona' } | { tipo: 'alvo'; alvos: number[]; dono: IdJogador } | { tipo: 'atacar'; atacante?: number }
 interface Aviso {
+  /** Turno em que o aviso foi dado: outro turno = aviso vencido (não é mostrado). */
+  turno: number
   texto: string
   erro: boolean
 }
@@ -43,42 +50,6 @@ interface Props {
   /** Atraso (ms) entre os passos do turno da IA; 0 = sem animação. */
   atrasoIA: number
 }
-
-function IconeCoracao({ cor }: { cor: string }) {
-  return (
-    <svg className="duelo-coracao pixel-art" viewBox="0 0 9 8" aria-hidden="true" focusable="false" shapeRendering="crispEdges">
-      <path fill={cor} d="M1 0h2v1h1v1h1V1h1V0h2v1h1v3H8v1H7v1H6v1H5v1H4V7H3V6H2V5H1V4H0V1h1z" />
-    </svg>
-  )
-}
-
-function Botao({ id, variante, titulo, sub, motivo, onClick, icone }: { id: string; variante: string; titulo: string; sub: string; motivo: string | null; onClick: () => void; icone?: ReactNode }) {
-  return (
-    <div className="duelo-btn-wrap">
-      <button
-        type="button"
-        id={id}
-        className={`duelo-btn duelo-btn--${variante}`}
-        aria-disabled={motivo ? true : undefined}
-        aria-describedby={motivo ? `${id}-motivo` : undefined}
-        title={motivo ?? undefined}
-        onClick={onClick}
-      >
-        {icone ? <span className="duelo-btn__icone" aria-hidden="true">{icone}</span> : null}
-        <span className="duelo-btn__texto">
-          <strong>{titulo}</strong>
-          <small>{sub}</small>
-        </span>
-      </button>
-      {motivo ? (
-        <span id={`${id}-motivo`} className="duelo-btn__motivo">
-          {motivo}
-        </span>
-      ) : null}
-    </div>
-  )
-}
-
 
 function DialogoDesistir({ onConfirmar, onCancelar }: { onConfirmar: () => void; onCancelar: () => void }) {
   const ref = useRef<HTMLDivElement>(null)
@@ -110,7 +81,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const [sel, setSel] = useState<{ mao?: string; unidade?: number }>({})
   const [modoRaw, setModo] = useState<Modo>(null)
   const [posPend, setPosPend] = useState<Posicao>('ATAQUE')
-  const [aviso, setAviso] = useState<Aviso | null>(null)
+  const [avisoBruto, setAviso] = useState<Aviso | null>(null)
   const [confirma, setConfirma] = useState(false)
   const [foco, setFoco] = useState<string | null>(null)
   const timers = useRef<number[]>([])
@@ -128,6 +99,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const v: VisaoDuelo = useMemo(() => visaoParaJogador(estado, 'humano'), [estado])
   const plano = useMemo(() => estadoDeVisao(v), [v])
   const log = useMemo(() => logPublico(estado, 'humano'), [estado])
+  // Aviso/motivo antigo não atravessa a troca de turno (ex.: "Aguarde a sua vez." no início do turno seguinte).
+  const aviso = avisoBruto && avisoBruto.turno === estado.turno ? avisoBruto : null
   const minhaVez = estado.ativo === 'humano' && !estado.resultado && !reproduzindo
   const legais = useMemo(() => (minhaVez ? jogadasLegais(estado) : []), [estado, minhaVez])
   const ataques = useMemo(() => (minhaVez && estado.fase === 'COMBATE' ? ataquesLegais(estado) : []), [estado, minhaVez])
@@ -137,7 +110,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const soDescarte = legais.length > 0 && legais.every((c) => c.tipo === 'descartar')
 
   function dizer(texto: string, erro = false) {
-    setAviso({ texto, erro })
+    setAviso({ texto, erro, turno: estado.turno })
   }
 
   // ---------------------------------------------------------------- envio de comandos e turno da IA
@@ -399,9 +372,13 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const bannerTexto = estado.resultado ? 'Fim do duelo' : estado.ativo === 'humano' && !reproduzindo ? 'Seu turno' : 'Turno do oponente'
   const faseTxt = estado.fase === 'PRINCIPAL' ? 'Principal' : estado.fase === 'COMBATE' ? 'Combate' : estado.fase
 
+  // Efeitos visuais temporários (classes de animação) derivados dos eventos públicos novos; nunca bloqueiam o fluxo.
+  const fx = useEfeitosVisuais(log)
+
   function renderZonaUnidade(lado: IdJogador, z: number) {
     const u = (lado === 'humano' ? v.eu.campo : v.oponente.campo)[z]
     const quem = lado === 'humano' ? 'sua' : 'do oponente'
+    const chave = chaveZona(lado, z)
     const alvoValido =
       (modo?.tipo === 'alvo' && modo.dono === lado && modo.alvos.includes(z)) ||
       (modo?.tipo === 'atacar' && lado === 'oponente' && alvosAtaque.some((a) => a.alvo === z))
@@ -409,13 +386,24 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const atacantePossivel = modo?.tipo === 'atacar' && lado === 'humano' && ataques.some((a) => a.atacante === z)
     if (!u) {
       const rot = `Zona ${z + 1} ${quem}: vazia, escolher esta zona`
-      return livreEscolha ? (
-        <button key={z} type="button" className="zona zona--vazia zona--valida" data-foco="alvo" aria-label={rot} onClick={() => cliqueUnidade(lado, z)}>
-          <span className="zona__losango" aria-hidden="true" />
-        </button>
-      ) : (
+      if (livreEscolha) {
+        return (
+          <button key={z} type="button" className="zona zona--vazia zona--valida" data-foco="alvo" aria-label={rot} onClick={() => cliqueUnidade(lado, z)}>
+            <span className="zona__losango" aria-hidden="true" />
+          </button>
+        )
+      }
+      // Carta destruída: o elemento permanece até o fim da animação (classe temporária), só visual e fora da árvore de acessibilidade.
+      const fantasma = fx.destruidas.find((f) => f.lado === lado && f.zona === z)
+      const cf = fantasma ? cat.get(fantasma.cartaId) : undefined
+      return (
         <div key={z} className="zona zona--vazia" aria-hidden="true">
           <span className="zona__losango" aria-hidden="true" />
+          {cf ? (
+            <span className="zona__fantasma" data-fantasma="destruida">
+              <CartaView carta={cf} tamanho="campo" efeito="destruida" lado={lado} rotulo={`${cf.nome}, destruída`} />
+            </span>
+          ) : null}
         </div>
       )
     }
@@ -424,6 +412,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const rot = `Zona ${z + 1} ${quem}: ${c.nome}, ATK ${atk}, DEF ${def}, em ${u.posicao === 'ATAQUE' ? 'ataque' : 'defesa'}${u.atacou ? ', já atacou' : ''}${
       u.equipamentoUid ? ', equipada' : ''
     }${alvoValido ? ', alvo válido' : ''}${atacantePossivel ? ', pode atacar' : ''}`
+    const efeito = fx.atacando.includes(chave) ? 'atacando' : fx.impacto.includes(chave) ? 'impacto' : fx.entrando.includes(chave) ? 'entrando' : null
     return (
       <div key={z} className="zona">
         <CartaView
@@ -435,6 +424,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
           selecionada={lado === 'humano' && (sel.unidade === z || atacanteAtual === z)}
           destaque={alvoValido ? 'alvo' : atacantePossivel ? 'valida' : null}
           focoAlvo={alvoValido || atacantePossivel}
+          efeito={efeito}
+          lado={lado}
           rotulo={rot}
           onClick={() => cliqueUnidade(lado, z)}
         />
@@ -488,185 +479,164 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
 
   const posAtual = cartaSel?.tipo === 'unidade' ? posPend : undefined
 
+  // Números do resumo da tela de resultado (só dados públicos: vida, cartas em jogo, rodadas).
+  const dadosResultado = {
+    vidaOponente: v.oponente.lp,
+    vidaVoce: v.eu.lp,
+    emJogoOponente: v.oponente.campo.filter(Boolean).length,
+    emJogoVoce: v.eu.campo.filter(Boolean).length,
+    rodadas: Math.ceil(estado.turno / 2),
+  }
+
   return (
     <div className={`tela tela-partida${aviso?.texto ? ' tela-partida--aviso' : ''}`}>
       <div className="duelo-fundo" inert={dialogoAberto}>
-      <header className="duelo-topo">
-        <img className="duelo-topo__img duelo-topo__img--esq" src={topoEsquerda} alt="" aria-hidden="true" />
-        <img className="duelo-topo__img duelo-topo__img--dir" src={topoDireita} alt="" aria-hidden="true" />
-        <div className="duelo-topo__logo">
-          <p className="cabecalho__nome">Costa Clash</p>
-          <p className="cabecalho__subtitulo">Batalha pelo Litoral</p>
-        </div>
-        <p className="duelo-topo__frase">Conhecimento hoje, litorais vivos amanhã.</p>
+        <CabecalhoDuelo />
         <h1 className="sr-only">Duelo contra {oponente.nome}</h1>
-      </header>
 
-      <main className="duelo-corpo">
-        <section className="duelo-tabuleiro" aria-label="Tabuleiro">
-          <div className="moldura moldura--interna duelo-lado duelo-lado--oponente">
-            <div className="duelo-lado__topo">
-              <div className="duelo-nome duelo-nome--oponente">
-                <h2>{oponente.nome}</h2>
-                <p>IA do Litoral</p>
+        <main className="duelo-corpo">
+          <section className="duelo-tabuleiro" aria-label="Tabuleiro">
+            <PainelJogador
+              lado="oponente"
+              nome="Oponente"
+              subtitulo="IA do Litoral"
+              vida={v.oponente.lp}
+              rotuloVida={`Vida do oponente: ${v.oponente.lp}`}
+              rotuloContagens="Cartas do oponente"
+              baralho={v.oponente.baralhoTamanho}
+              descarte={v.oponente.descarte.length}
+              rotuloZonas="Zonas de unidade do oponente"
+              rotuloSuportes="Zonas de suporte do oponente"
+              zonas={[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('oponente', z))}
+              suportes={[0, 1, 2, 3, 4].map((z) => renderSuporte('oponente', z))}
+              vidaFx={{ dano: fx.dano.oponente, cura: fx.cura.oponente }}
+              maoOponente={
+                <div className="duelo-mao-oponente" role="group" aria-label={`Mão do oponente: ${v.oponente.maoTamanho} cartas`}>
+                  {Array.from({ length: v.oponente.maoTamanho }, (_, i) => (
+                    <CartaVerso key={i} rotulo="Carta da mão do oponente" />
+                  ))}
+                </div>
+              }
+              acao={
+                podeDireto ? (
+                  <button type="button" className="duelo-btn duelo-btn--atacar duelo-direto" data-foco="alvo" onClick={ataqueDireto}>
+                    <span className="duelo-btn__texto">
+                      <strong>Ataque direto</strong>
+                      <small>O oponente não tem unidades</small>
+                    </span>
+                  </button>
+                ) : null
+              }
+            />
+
+            <FaixaTerreno terreno={terrenoCarta} />
+
+            <PainelJogador
+              lado="voce"
+              nome="Você"
+              subtitulo="Protetor do Litoral"
+              vida={v.eu.lp}
+              rotuloVida={`Sua vida: ${v.eu.lp}`}
+              rotuloContagens="Suas cartas"
+              baralho={v.eu.baralhoTamanho}
+              descarte={v.eu.descarte.length}
+              rotuloZonas="Suas zonas de unidade"
+              rotuloSuportes="Suas zonas de suporte"
+              zonas={[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('humano', z))}
+              suportes={[0, 1, 2, 3, 4].map((z) => renderSuporte('humano', z))}
+              vidaFx={{ dano: fx.dano.humano, cura: fx.cura.humano }}
+            />
+
+            <MolduraOrnamentada as="section" tom="ciano" className="duelo-mao" aria-label={`Sua mão, ${mao.length} cartas`} classeMiolo="duelo-mao__miolo">
+              <h2 className="duelo-mao__titulo">
+                <span className="duelo-mao__icone" aria-hidden="true">
+                  <IconeCartas />
+                </span>
+                Sua mão <small>({mao.length} cartas)</small>
+              </h2>
+              <div className="duelo-mao__cartas">
+                {mao.map((m, i) => {
+                  const c = cat.get(m.cartaId)!
+                  return (
+                    <CartaView
+                      key={m.uid}
+                      carta={c}
+                      tamanho="mao"
+                      posicao={m.uid === sel.mao ? posAtual : undefined}
+                      selecionada={m.uid === sel.mao}
+                      rotulo={`Mão ${i + 1}: ${descricaoCarta(c)}${m.uid === sel.mao ? ', selecionada' : ''}`}
+                      onClick={() => escolherMao(m.uid)}
+                      inativa={!minhaVez}
+                    />
+                  )
+                })}
               </div>
-              <p className="duelo-vida duelo-vida--oponente" aria-label={`Vida do oponente: ${v.oponente.lp}`}>
-                <IconeCoracao cor="#ff5a4a" />
-                <span>Vida:</span> <strong>{v.oponente.lp}</strong>
+            </MolduraOrnamentada>
+          </section>
+
+          <aside className="duelo-lateral" aria-label="Controles do duelo">
+            <MolduraOrnamentada tom="ciano" className="duelo-comandos" classeMiolo="duelo-comandos__miolo">
+              <BannerTurno rodada={Math.ceil(estado.turno / 2)} texto={bannerTexto} fase={faseTxt} meuTurno={bannerTexto === 'Seu turno'} mudou={fx.turnoMudou} />
+
+              <div className="duelo-acoes">
+                <BotaoAcao id="b-atacar" variante="atacar" titulo={modo?.tipo === 'atacar' ? 'Cancelar ataque' : 'Atacar'} sub="Ataca uma carta do oponente" motivo={modo?.tipo === 'atacar' ? null : motivoAtacar()} onClick={atacar} icone={<IconeEspadas />} />
+                <BotaoAcao
+                  id="b-defender"
+                  variante="defender"
+                  titulo="Defender"
+                  sub={cartaSel?.tipo === 'unidade' ? `Entra em ${posPend === 'ATAQUE' ? 'ataque (toque: defesa)' : 'defesa (toque: ataque)'}` : 'Alterna a posição da unidade'}
+                  motivo={motivoDefender()}
+                  onClick={defender}
+                  icone={<IconeEscudo />}
+                />
+                <BotaoAcao id="b-usar" variante="usar" titulo="Usar carta" sub="Baixa uma carta da sua mão" motivo={motivoUsar()} onClick={usarCarta} icone={<IconeCartas />} />
+                {minhaVez && estado.fase === 'PRINCIPAL' && !estado.jogadaFeita && soDescarte ? (
+                  <BotaoAcao id="b-descartar" variante="neutro" titulo="Descartar carta" sub="Sem jogada legal: descarte uma carta" motivo={sel.mao ? null : 'Selecione a carta a descartar.'} onClick={descartar} />
+                ) : null}
+                <BotaoAcao
+                  id="b-encerrar"
+                  variante="neutro"
+                  icone={<IconeRelogioPixel />}
+                  titulo="Encerrar turno"
+                  sub="Passa a vez ao oponente"
+                  motivo={motivoEncerrar()}
+                  onClick={() => {
+                    const m = motivoEncerrar()
+                    if (m) dizer(m, true)
+                    else enviar({ tipo: 'encerrarTurno', jogador: 'humano' })
+                  }}
+                />
+              </div>
+
+              <p className={`duelo-aviso${aviso?.erro ? ' duelo-aviso--erro' : ''}`} role="status" aria-live="polite">
+                {aviso?.texto ?? ''}
               </p>
-              <ul className="duelo-contagens" aria-label="Cartas do oponente">
-                <li>Baralho: {v.oponente.baralhoTamanho}</li>
-                <li>Descarte: {v.oponente.descarte.length}</li>
-              </ul>
-              <div className="duelo-mao-oponente" role="group" aria-label={`Mão do oponente: ${v.oponente.maoTamanho} cartas`}>
-                {Array.from({ length: v.oponente.maoTamanho }, (_, i) => (
-                  <CartaVerso key={i} rotulo="Carta da mão do oponente" />
-                ))}
-              </div>
-              {podeDireto ? (
-                <button type="button" className="duelo-btn duelo-btn--atacar duelo-direto" data-foco="alvo" onClick={ataqueDireto}>
-                  <span className="duelo-btn__texto">
-                    <strong>Ataque direto</strong>
-                    <small>O oponente não tem unidades</small>
-                  </span>
-                </button>
-              ) : null}
-            </div>
-            <div className="duelo-zonas" role="group" aria-label="Zonas de unidade do oponente">
-              {[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('oponente', z))}
-            </div>
-            <div className="duelo-suportes" role="group" aria-label="Zonas de suporte do oponente">
-              {[0, 1, 2, 3, 4].map((z) => renderSuporte('oponente', z))}
-            </div>
-          </div>
 
-          <p className="duelo-terreno" aria-label="Terreno global">
-            <OrnamentoOnda className="duelo-terreno__orn" />
-            <span>
-              Terreno: <strong>{terrenoCarta ? terrenoCarta.nome.replace(/^Terreno: */, '') : 'nenhum'}</strong>
-              {terrenoCarta?.efeito ? ` (+${terrenoCarta.efeito.valor} ATK e DEF, ${terrenoCarta.efeito.alvo})` : ''}
-            </span>
-          </p>
+              <button type="button" className="duelo-desistir" id="b-desistir" onClick={() => setConfirma(true)} disabled={!!estado.resultado && !reproduzindo}>
+                Desistir
+              </button>
+            </MolduraOrnamentada>
 
-          <div className="moldura moldura--interna duelo-lado duelo-lado--voce">
-            <div className="duelo-lado__topo">
-              <div className="duelo-nome duelo-nome--voce">
-                <h2>Você</h2>
-                <p>Protetor do Litoral</p>
-              </div>
-              <p className="duelo-vida duelo-vida--voce" aria-label={`Sua vida: ${v.eu.lp}`}>
-                <IconeCoracao cor="#3fdcf0" />
-                <span>Vida:</span> <strong>{v.eu.lp}</strong>
-              </p>
-              <ul className="duelo-contagens" aria-label="Suas cartas">
-                <li>Baralho: {v.eu.baralhoTamanho}</li>
-                <li>Descarte: {v.eu.descarte.length}</li>
-              </ul>
-            </div>
-            <div className="duelo-zonas" role="group" aria-label="Suas zonas de unidade">
-              {[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('humano', z))}
-            </div>
-            <div className="duelo-suportes" role="group" aria-label="Suas zonas de suporte">
-              {[0, 1, 2, 3, 4].map((z) => renderSuporte('humano', z))}
-            </div>
-          </div>
-
-          <section className="moldura moldura--interna duelo-mao" aria-label={`Sua mão, ${mao.length} cartas`}>
-            <h2 className="duelo-mao__titulo">
-              <span className="duelo-mao__icone" aria-hidden="true">
+            <MolduraOrnamentada className="duelo-restantes-quadro" classeMiolo="duelo-restantes">
+              <span className="duelo-restantes__icone" aria-hidden="true">
                 <IconeCartas />
               </span>
-              Sua mão <small>({mao.length} cartas)</small>
-            </h2>
-            <div className="duelo-mao__cartas">
-              {mao.map((m, i) => {
-                const c = cat.get(m.cartaId)!
-                return (
-                  <CartaView
-                    key={m.uid}
-                    carta={c}
-                    tamanho="mao"
-                    posicao={m.uid === sel.mao ? posAtual : undefined}
-                    selecionada={m.uid === sel.mao}
-                    rotulo={`Mão ${i + 1}: ${descricaoCarta(c)}${m.uid === sel.mao ? ', selecionada' : ''}`}
-                    onClick={() => escolherMao(m.uid)}
-                    inativa={!minhaVez}
-                  />
-                )
-              })}
-            </div>
-          </section>
-        </section>
+              <span>Cartas restantes</span>
+              <strong aria-label={`Cartas restantes no baralho: ${v.eu.baralhoTamanho}`}>{v.eu.baralhoTamanho}</strong>
+            </MolduraOrnamentada>
 
-        <aside className="duelo-lateral" aria-label="Controles do duelo">
-          <div className="duelo-turno textura-pedra" role="status" aria-live="polite">
-            <p className="duelo-turno__rotulo">Rodada {Math.ceil(estado.turno / 2)}</p>
-            <p className="duelo-turno__texto">{bannerTexto}</p>
-            <p className="duelo-turno__fase">Fase: {faseTxt}</p>
-          </div>
+            <DicaEducativa carta={dicaCarta} />
 
-          <div className="duelo-acoes">
-            <Botao id="b-atacar" variante="atacar" titulo={modo?.tipo === 'atacar' ? 'Cancelar ataque' : 'Atacar'} sub="Ataca uma carta do oponente" motivo={modo?.tipo === 'atacar' ? null : motivoAtacar()} onClick={atacar} icone={<IconeEspadas />} />
-            <Botao
-              id="b-defender"
-              variante="defender"
-              titulo="Defender"
-              sub={cartaSel?.tipo === 'unidade' ? `Entra em ${posPend === 'ATAQUE' ? 'ataque (toque: defesa)' : 'defesa (toque: ataque)'}` : 'Alterna a posição da unidade'}
-              motivo={motivoDefender()}
-              onClick={defender}
-            />
-            <Botao id="b-usar" variante="usar" titulo="Usar carta" sub="Baixa uma carta da sua mão" motivo={motivoUsar()} onClick={usarCarta} icone={<IconeCartas />} />
-            {minhaVez && estado.fase === 'PRINCIPAL' && !estado.jogadaFeita && soDescarte ? (
-              <Botao id="b-descartar" variante="neutro" titulo="Descartar carta" sub="Sem jogada legal: descarte uma carta" motivo={sel.mao ? null : 'Selecione a carta a descartar.'} onClick={descartar} />
-            ) : null}
-            <Botao id="b-encerrar" variante="neutro" titulo="Encerrar turno" sub="Passa a vez ao oponente" motivo={motivoEncerrar()} onClick={() => {
-              const m = motivoEncerrar()
-              if (m) dizer(m, true)
-              else enviar({ tipo: 'encerrarTurno', jogador: 'humano' })
-            }} />
-          </div>
-
-          <p className={`duelo-aviso${aviso?.erro ? ' duelo-aviso--erro' : ''}`} role="status" aria-live="polite">
-            {aviso?.texto ?? ''}
-          </p>
-
-          <button type="button" className="duelo-desistir" id="b-desistir" onClick={() => setConfirma(true)} disabled={!!estado.resultado && !reproduzindo}>
-            Desistir
-          </button>
-
-          <p className="duelo-restantes">
-            <span className="duelo-restantes__icone" aria-hidden="true">
-              <IconeCartas />
-            </span>
-            <span>Cartas restantes</span>
-            <strong aria-label={`Cartas restantes no baralho: ${v.eu.baralhoTamanho}`}>{v.eu.baralhoTamanho}</strong>
-          </p>
-
-          <section className="moldura moldura--interna duelo-dica" aria-label="Dica educativa">
-            <h2>Dica educativa</h2>
-            {dicaCarta ? (
-              <>
-                <p className="duelo-dica__carta">
-                  {dicaCarta.nome} <small>({rotuloTipo(dicaCarta)})</small>
-                </p>
-                <p>{dicaCarta.educacao}</p>
-              </>
-            ) : (
-              <p>Selecione uma carta ou observe as jogadas para ver uma dica sobre o litoral.</p>
-            )}
-            <img className="duelo-dica__img" src={cenaMangue} alt="" aria-hidden="true" />
-          </section>
-
-          <section className="duelo-log" aria-label="Registro do duelo">
-            <h2>Registro</h2>
-            <ol role="log" aria-live="polite" aria-relevant="additions">
-              {log.slice(-10).map((e, i, arr) => (
-                <li key={log.length - arr.length + i}>{e.texto}</li>
-              ))}
-            </ol>
-          </section>
-        </aside>
-      </main>
+            <section className="duelo-log" aria-label="Registro do duelo">
+              <h2>Registro</h2>
+              <ol role="log" aria-live="polite" aria-relevant="additions">
+                {log.slice(-10).map((e, i, arr) => (
+                  <li key={log.length - arr.length + i}>{e.texto}</li>
+                ))}
+              </ol>
+            </section>
+          </aside>
+        </main>
       </div>
 
       {desistirVisivel ? (
@@ -680,7 +650,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       ) : null}
 
       {estado.resultado && !reproduzindo ? (
-        <ResultadoDuelo resultado={estado.resultado} nomeOponente={oponente.nome} conceitos={conceitos} onNovamente={onNovamente} onVoltar={onVoltar} />
+        <ResultadoDuelo resultado={estado.resultado} nomeOponente={oponente.nome} dados={dadosResultado} conceitos={conceitos} onNovamente={onNovamente} onVoltar={onVoltar} />
       ) : null}
     </div>
   )

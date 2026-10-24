@@ -3,7 +3,9 @@ import type { Carta } from '../../game/tipos'
 import { arteDaCarta } from '../../arte/arteDisponivel'
 import type { ArteDaCarta } from '../../arte/arteDisponivel'
 import { classificarCarta } from '../../arte/categorias'
+import { IconeEspadas } from '../ui/Icones'
 import { ArteCarta } from './ArteCarta'
+import { IconeEscudo } from './iconesDuelo'
 import { SeloCarta } from './SeloCarta'
 import { efeitoCurto, rotuloTipo, tipoArte } from './textoCarta'
 
@@ -27,6 +29,10 @@ export interface CartaViewProps {
   inativa?: boolean
   /** Ilustração real. Omitido: resolve pelo manifesto (índice do build). null: força o fallback SVG. */
   arte?: ArteDaCarta | null
+  /** Efeito visual temporário (classe `carta--fx-*`, só apresentação): entrada da mão ao campo, ataque, impacto, destruição. */
+  efeito?: 'entrando' | 'atacando' | 'impacto' | 'destruida' | null
+  /** Lado do tabuleiro (a direção das animações de entrada/ataque inverte para o oponente). */
+  lado?: 'humano' | 'oponente'
 }
 
 /** Ilustração da carta: imagem 3:4 recortada (cover) se houver arte no manifesto; senão (ou em erro de carregamento) a arte SVG por tipo. */
@@ -48,7 +54,7 @@ function ArteIlustrada({ carta, arte }: { carta: Carta; arte: ArteDaCarta | null
 }
 
 /** Carta do catálogo: moldura por categoria, selo, ilustração (ou arte SVG), placa de nome, ATK (vermelho) / DEF (azul) ou tipo + efeito curto. */
-export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', selecionada, destaque, rotulo, onClick, focoAlvo, inativa, arte }: CartaViewProps) {
+export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', selecionada, destaque, rotulo, onClick, focoAlvo, inativa, arte, efeito, lado }: CartaViewProps) {
   const unidade = carta.tipo === 'unidade'
   const visual = classificarCarta(carta)
   const ilustracao = arte === undefined ? arteDaCarta(carta.id) : arte
@@ -57,7 +63,9 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
     `carta--${tamanho}`,
     `carta--${tipoArte(carta)}`,
     `carta--cat-${visual.categoria}`,
-    posicao === 'DEFESA' ? 'carta--defesa' : '',
+    posicao === 'DEFESA' ? 'carta--defesa' : posicao === 'ATAQUE' ? 'carta--ataque' : '',
+    efeito ? `carta--fx-${efeito}` : '',
+    lado === 'oponente' ? 'carta--lado-op' : '',
     selecionada ? 'carta--selecionada' : '',
     destaque ? `carta--${destaque}` : '',
   ]
@@ -89,6 +97,7 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
       )}
       {posicao ? (
         <span className="carta__posicao" aria-hidden="true">
+          {posicao === 'ATAQUE' ? <IconeEspadas className="carta__posicao-icone" /> : <IconeEscudo className="carta__posicao-icone" />}
           {posicao === 'ATAQUE' ? 'ATQ' : 'DEF'}
         </span>
       ) : null}
@@ -106,6 +115,7 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
       type="button"
       className={classe}
       aria-label={rotulo}
+      title={carta.nome}
       data-foco={focoAlvo ? 'alvo' : undefined}
       aria-pressed={selecionada === undefined ? undefined : selecionada}
       aria-disabled={inativa || undefined}

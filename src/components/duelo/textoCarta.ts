@@ -69,3 +69,12 @@ export function descricaoCarta(c: Carta, atk?: number | null, def?: number | nul
   if (c.tipo === 'unidade') return `${c.nome}, unidade ${rotuloTipo(c).toLowerCase()}, ATK ${atk ?? c.atk}, DEF ${def ?? c.defesa}`
   return `${c.nome}, ${rotuloTipo(c).toLowerCase()}. ${efeitoCurto(c)}`
 }
+
+/** Efeito do terreno ativo em uma frase: "+300 ATK e DEF para ecossistema, nos dois lados." (null se a carta não tem efeito de terreno). */
+export function efeitoTerreno(c: Carta): string | null {
+  const e = c.efeito
+  if (!e || e.operacao !== 'field_bonus') return null
+  const alvo = e.alvo && e.alvo in ROTULO_GRUPO ? ROTULO_GRUPO[e.alvo as Grupo].toLowerCase() : 'todas as unidades'
+  const v = Math.abs(e.valor)
+  return `${e.valor < 0 ? '-' : '+'}${v} ATK e DEF para ${alvo}, nos dois lados`
+}

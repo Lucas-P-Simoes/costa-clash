@@ -83,6 +83,11 @@ Cobertura (`test:coverage`) ainda não configurada.
 
 Não alegar execução se o comando ou dependências não existirem. No início do projeto, configurar os scripts e explicar a instalação.
 
+- `src/screens/__tests__/duelo_visual.test.tsx` (jsdom, redesenho visual, 2026-10-23): `MolduraOrnamentada` (filhos no miolo, 4 cantos aria-hidden, tom, aba opcional, `as`), painéis OPONENTE/VOCÊ (avatar, vida, contagens, 5 zonas, 5 suportes, versos da mão), coluna lateral (banner aria-live, botões com ícone/subtítulo, motivo visível ligado por `aria-describedby`, dica com ícones), posição ataque/defesa (ícone + classe), faixa de terreno (+ `efeitoTerreno`), animações como classes temporárias que expiram (entrada, ataque, destruição com fantasma, dano, impacto, turno), `prefers-reduced-motion` (matchMedia simulado), ação logo após o ataque sem esperar a animação, e a tela de resultado (derrota/vitória, resumo só com números públicos, recompensas "em breve", foco inicial). `src/components/duelo/__tests__/efeitosVisuais.test.tsx`: `derivarEfeitos` pura e o hook com timers falsos (expiração, soma de lotes, limpeza ao desmontar, reduced-motion).
+- Validação visual (manual, fora do Vitest): Chrome headless via CDP em 1459x1078 (proporção da referência), 1280x720, 768x1024, 375x812 (e 360x740, 812x375), conferindo rolagem horizontal, imagens quebradas, console e rede; também sobre `npm run build` + `vite preview` (base `/costa-clash/`). Sem teste de comparação de pixels (política do projeto).
+
+- Pós-QA do redesenho (`duelo_visual.test.tsx`, grupo "Correções pós-QA"): estrutura e regras de CSS do resultado (cena em contêiner, botões sticky, `preventScroll`), CSS sem `break-word` e carta com `title`, aviso limpo ao mudar de turno (timers falsos) e motivo de botão bloqueado por teclado (foco mantido, `aria-live`). Alturas e cortes reais só por captura (Chrome headless/CDP).
+
 ## Relatório mínimo de QA
 Resultado; alterações testadas; comandos executados; contagem de testes; defeitos encontrados com reprodução; limites e riscos remanescentes.
 
