@@ -71,3 +71,7 @@
 ## Verificação anterior
 - `npm test`: 4 testes passando. `npm run typecheck`, `npm run lint` e `npm run build`: sem erros.
 - Interface não revisada visualmente nem aberta no navegador.
+
+## Arte das cartas (2026-10-23)
+- Nenhuma ilustração final foi gerada. Preparação completa (guia, 100 sujeitos, prompts, manifesto, scripts, página `?arte=1`) e 5 provisórias recortadas da referência do dono (baixa resolução, ~1,2-1,4:1). Moldura de carta por categoria com selo e placa de nome implementada. Estados do manifesto: 95 pendente, 5 provisoria. Última verificação: `npm test` 608 + 1 ignorado, typecheck, lint, build, `arte:verificar` OK. Pendente: arte final (decisão/orçamento do dono) e revisão visual.
+

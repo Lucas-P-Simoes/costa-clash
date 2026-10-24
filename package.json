@@ -15,7 +15,11 @@
     "worker:migrar:local": "wrangler d1 migrations apply DB --local --config worker/wrangler.toml",
     "worker:migrar:remoto": "wrangler d1 migrations apply DB --remote --config worker/wrangler.toml",
     "worker:typecheck": "tsc -p worker/tsconfig.json",
-    "worker:deploy": "wrangler deploy --config worker/wrangler.toml"
+    "worker:deploy": "wrangler deploy --config worker/wrangler.toml",
+    "arte:manifesto": "node scripts/arte-manifesto.mjs",
+    "arte:verificar": "node scripts/arte-verificar.mjs",
+    "arte:prompts": "node scripts/arte-prompts.mjs",
+    "arte:gerar": "node scripts/gerar-arte.mjs"
   },
   "dependencies": {
     "react": "^19.3.1",

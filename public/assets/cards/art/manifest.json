@@ -1,0 +1,1713 @@
+{
+  "versao": 1,
+  "descricao": "Manifesto das ilustrações das cartas. Gerado e sincronizado por `npm run arte:manifesto`; não editar à mão exceto observacao. Regra: arte aprovada nunca é substituída sem autorização do dono. Ver docs/ARTE_DAS_CARTAS.md.",
+  "estados": [
+    "pendente",
+    "provisoria",
+    "gerada",
+    "aprovada",
+    "rejeitada"
+  ],
+  "entradas": [
+    {
+      "id": "CC-001",
+      "nome": "Manguezal Protegido",
+      "arquivo": "001.png",
+      "estado": "provisoria",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: cena de manguezal em plano amplo, uma grande árvore de mangue ao centro com copa densa verde-amarelada e raízes escora aéreas imponentes em arco descendo até a água rasa azul-turquesa, outras árvores de mangue ao fundo, luz dourada filtrada e reflexos na água. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "a6ba7bdd67d05463b082b676e288d6efba3cb14bcf7c08fc566bc36c42024fdf",
+      "promptHashGerado": null,
+      "origem": "recorte de Referencia-telas/Estilos-de-cartas.webp",
+      "observacao": "PROVISÓRIA: recorte da referência do dono (não gerado por IA por nós), baixa resolução e proporção ~1,2:1 (não 3:4); só para avaliar o estilo. Substituir por arte final 768x1024.",
+      "verificacao": {
+        "largura": 269,
+        "altura": 225,
+        "bytes": 124914,
+        "sha256": "c8d9da5745581739599d7faaa6426026d393ce2f9f0d34c99ff9a81b9d222cdb"
+      }
+    },
+    {
+      "id": "CC-002",
+      "nome": "Restinga Preservada",
+      "arquivo": "002.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: restinga preservada em dia ensolarado, duna de areia clara com vegetação rasteira verde, arbustos e grandes flores brancas de miolo alaranjado em primeiro plano, céu azul com nuvens brancas em pixels, mata baixa ao fundo. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "b2cd175702f5f729af52eb7946ccbda62cfc098908839ac5220cc4400083a977",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-003",
+      "nome": "Recife de Coral",
+      "arquivo": "003.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: recife de coral vibrante com corais ramificados grandes em laranja, vermelho e amarelo ocupando o primeiro plano, peixes tropicais coloridos nadando entre eles, água azul profunda com raios de luz vindos da superfície. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "24766de56122621f921b39ea645f9bce44327dc60f6103122303087419c380fd",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-004",
+      "nome": "Duna Costeira",
+      "arquivo": "004.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: grandes dunas de areia dourada com cristas moldadas pelo vento, capim-de-duna e vegetação rasteira, marcas de ondulação na areia, céu azul com nuvens e o mar ao fundo. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "cbf67728d9c0e07e3795db4d72ef36ef6ec41cfeb00d461d0d5e0b6557f37cd9",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-005",
+      "nome": "Estuário Vivo",
+      "arquivo": "005.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: estuário onde um rio de água esverdeada encontra o mar azul-turquesa, manguezais nas margens, garças e peixes, linha de encontro das águas bem visível, luz dourada de fim de tarde. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "964338467dee443ddd1210a0dd6b76923fa63f0c412cc1fb66e127e2aedb3f38",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-006",
+      "nome": "Praia Natural",
+      "arquivo": "006.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: praia natural selvagem, areia clara com ondulações, ondas suaves espumando, coqueiros e vegetação nativa nas bordas, pegadas de aves na areia, sem construções. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "c1be51655f8d6e46abd4b84e0dc865a808440b87f93687fc1bad95d5ebedf813",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-007",
+      "nome": "Costão Rochoso",
+      "arquivo": "007.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: costão rochoso de pedra escura coberto de cracas, mexilhões e algas, poças de maré com estrelas-do-mar e anêmonas, ondas quebrando em espuma, céu de pôr do sol laranja e azul. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "21ef9e09fba3695b9a651f3ee25fc91a979420ab58ea342343ebb7fa8b92bd97",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-008",
+      "nome": "Pradaria Marinha",
+      "arquivo": "008.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: campo submerso de capim-marinho verde ondulando na correnteza, um cavalo-marinho e peixes pequenos entre as folhas, feixes de luz vindos da superfície, areia clara no fundo. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "86de0eee411f260cf2f29df1e24d6dfc177613d41b001ad23d7fa377a68d099c",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-009",
+      "nome": "Lagoa Costeira",
+      "arquivo": "009.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: lagoa costeira de águas calmas espelhando o céu azul, entre dunas e vegetação de restinga, garças em águas rasas, faixa de areia separando a lagoa do mar ao fundo. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "aa0fc6033d70bf1262d653c45145aa7591128ec0d62682d340b20779d09d9685",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-010",
+      "nome": "Mata Atlântica Litorânea",
+      "arquivo": "010.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: encosta de mata atlântica descendo até o mar, árvores cobertas de bromélias, orquídeas e samambaias, um tucano em um galho em primeiro plano, praia pequena e céu azul ao fundo. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "8895db3f8d9647282631f7a865770ecb84df5294978fa4cd8dc643bdab7b78d6",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-011",
+      "nome": "Manguezal de Franja",
+      "arquivo": "011.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: faixa de manguezal na beira do mar, raízes escora formando uma franja densa que dissipa a energia das ondas, espuma se desfazendo entre as raízes, mudas jovens e caranguejos no lodo. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "235ac6c4b71140b4c4f62b2112e6b66200639f8170ec48f84693efa40f789617",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-012",
+      "nome": "Marisma Costeira",
+      "arquivo": "012.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: planície de marisma com capim dourado e verde, canais de maré sinuosos refletindo o céu, aves pernaltas caminhando, sedimento escuro e úmido em primeiro plano. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "8f703694d165cde165d1833df0eee39def6db7719f125f14a1b08db2454c0590",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-013",
+      "nome": "Banco de Areia",
+      "arquivo": "013.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: banco de areia emergindo na maré baixa, linhas de ondulação desenhadas na areia, ondas chegando dos dois lados, aves marinhas descansando, céu azul com nuvens. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "2e974fd2163c285b1732c22521ce4d0a5d1979e0099d381323db0b5c12d4bbda",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-014",
+      "nome": "Ilha Costeira",
+      "arquivo": "014.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: ilha rochosa coberta de vegetação verde com paredões de pedra, ondas quebrando em espuma nas rochas escuras ao redor, céu azul com nuvens e gaivotas. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "7b53783dc0879f20d74cc35ddd30f3df4647693c5db6c42eb0447a977cd55c24",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-015",
+      "nome": "Rio de Maré",
+      "arquivo": "015.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: rio sinuoso em maré cheia entre manguezais, água prateada, marcas de maré nas raízes, uma garça no barranco, margens com vegetação densa. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "8aa8725d667a1979fdbaa7eb7f7ec8a91ca67a9b7af76366b591f4a0c3863483",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-016",
+      "nome": "Falésia Vegetada",
+      "arquivo": "016.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: falésia colorida em camadas de areia ocre e avermelhada, topo coberto de vegetação, raízes finas segurando a encosta, praia estreita embaixo com ondas suaves, céu de fim de tarde. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "f53cdb0d9de5aa51c7caa12cc9f99cc763904bf408c52e88fde5c5190da7e4a0",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-017",
+      "nome": "Berçário de Peixes",
+      "arquivo": "017.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: cardume de peixes juvenis minúsculos brilhando entre raízes submersas de mangue e algas, um peixe adulto vigiando ao fundo, luz turquesa filtrada, águas rasas e protegidas. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "5e3a1257986ad291b5665e3b4f9c127be3a2431d8e9fd40bb262c204578afddf",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-018",
+      "nome": "Tartaruga Marinha",
+      "arquivo": "018.png",
+      "estado": "provisoria",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: tartaruga marinha majestosa em primeiro plano nadando para a direita sobre um recife de coral colorido em laranja, rosa e roxo, casco verde-azulado com bordas douradas, raios de luz solar atravessando a água azul-turquesa a partir da superfície, peixes pequenos e bolhas ao redor. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "d41c5364523e9f64b78d2d52ff43ff41213378a60e3862547223b1bfe9e9efce",
+      "promptHashGerado": null,
+      "origem": "recorte de Referencia-telas/Estilos-de-cartas.webp",
+      "observacao": "PROVISÓRIA: recorte da referência do dono (não gerado por IA por nós), baixa resolução e proporção ~1,2:1 (não 3:4); só para avaliar o estilo. Substituir por arte final 768x1024.",
+      "verificacao": {
+        "largura": 267,
+        "altura": 225,
+        "bytes": 127682,
+        "sha256": "feaadd1242c2c5e7077ae98a3cf787ed0b3f2876b2ee32084f093fb38f528276"
+      }
+    },
+    {
+      "id": "CC-019",
+      "nome": "Boto-Cinza",
+      "arquivo": "019.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: boto-cinza emergindo da água, pele cinza-azulada, gotas d'água em pixels brilhantes, mar escuro e ondas ao redor, expressão curiosa. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "18513bae564423bb8459ca3b697fab7e3c966029a1a0d1cf6fdde3eacd735867",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-020",
+      "nome": "Caranguejo-Uçá",
+      "arquivo": "020.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: caranguejo-uçá grande de carapaça azulada e pinças vermelhas sobre o lodo do manguezal, olhos pedunculados atentos, raízes de mangue e buracos na lama ao redor. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "59b4161017bca104509cc23d30bc31a11f3fd7c251cbd25d35964b32ce9a4c52",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-021",
+      "nome": "Garça-Branca",
+      "arquivo": "021.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: garça-branca grande de corpo inteiro em pé na água rasa em meio a um manguezal, pescoço em S, bico dourado, raízes aéreas e folhagem verde-profunda ao redor, reflexos na água. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "31096a2092740ea6dc2f1e33bbfa5715fecbe1da93a7ca041bba864b7b11bd75",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-022",
+      "nome": "Cavalo-Marinho",
+      "arquivo": "022.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: cavalo-marinho laranja-dourado com a cauda enrolada em um fio de capim-marinho, pequenos pontos de luz flutuando, fundo azul profundo com algas. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "33727d8979b4acfe5bd896c34a1d0f0afa46c5e27f069c44d618b1d280f5d775",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-023",
+      "nome": "Peixe-Robalo",
+      "arquivo": "023.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: robalo prateado forte nadando num estuário, escamas com brilho metálico, linha lateral escura, raízes de mangue e água esverdeada ao redor. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "ce486c44abd6146892ac2f20fe3fb02820b625c5ca5826dab622f4b819d57566",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-024",
+      "nome": "Raia Costeira",
+      "arquivo": "024.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: raia costeira deslizando sobre fundo arenoso, asas ondulantes, sombra projetada na areia, feixes de luz turquesa vindos da superfície. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "a62d0004f1ed3916343755405ddac944c7be33e33c1d0a2a3f1cb13161e2fd84",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-025",
+      "nome": "Ostra de Mangue",
+      "arquivo": "025.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: ostras agarradas a raízes de mangue, uma delas entreaberta com brilho de pérola, água clara passando entre as raízes, lodo escuro e folhas verdes. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "7252f360f9efb966076d0986f42a59d3f0e66261861f2c39c3a96ed75fbef537",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-026",
+      "nome": "Coral-Cérebro",
+      "arquivo": "026.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: coral-cérebro grande com sulcos em labirinto, verde e dourado, pequenos peixes-donzela azuis ao redor, luz de superfície em feixes. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "b3d02b1beb4b72b9974198403f178740d125767ad83435a9afb1b3825fffb79c",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-027",
+      "nome": "Golfinho Costeiro",
+      "arquivo": "027.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: três golfinhos nadando em diagonal logo abaixo da superfície, água azul clara com raios de luz, um cardume pequeno de peixes dourados e recife ao fundo. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "3249081258240071491f74ab0672bb050c5a5e3d7e42dc866c55bba43bcbf56c",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-028",
+      "nome": "Ave Migratória",
+      "arquivo": "028.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: bando de aves migratórias pousando numa praia ao pôr do sol, uma ave em destaque com asas abertas ao centro, céu laranja e azul, mar calmo. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "c7704a2c48b99ba0072d873df6a7326c8af3e0e5b6ba6b94afc455580b7d4e75",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-029",
+      "nome": "Sardinha Costeira",
+      "arquivo": "029.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: cardume de sardinhas prateadas girando em espiral brilhante, luz turquesa e dourada cortando a água, silhuetas de predadores apenas sugeridas ao fundo. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "4167f0b799eaf13e179a079689531c26d9eb9b5a9950b18a5d373155fe71afe0",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-030",
+      "nome": "Estrela-do-Mar",
+      "arquivo": "030.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: estrela-do-mar laranja grande sobre rocha submersa, poça de maré com ouriços e algas, luz turquesa vinda de cima, texturas de pontos nos braços. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "7d79b8364755b2f358a896e540009744ec85878d52baf8a21ec92b8425c594b2",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-031",
+      "nome": "Pesca Artesanal",
+      "arquivo": "031.png",
+      "estado": "provisoria",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: barco de pesca artesanal de madeira com casco vermelho e azul e cabine amarela, pescador na cabine, rede de pesca colorida lançada ao mar, céu de pôr do sol laranja e roxo com gaivotas, ondas ao redor, retrato digno e respeitoso, sem caricatura. Paleta e luz: cores naturais: madeira (#8a5a2c, #5a3a1a), palha e areia (#d8c690), azul-mar (#1f6f9c), vermelho e azul desbotados de casco de barco, pôr do sol dourado e laranja refletido no mar (#f2a03a, #e86a3a, #8a5aa0). Composição: personagem ou veículo em plano médio, de frente ou três quartos, digno e expressivo, ferramentas do ofício visíveis, centralizado; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "fea8ea6e4605fa024916706369482dc9c4c9717ea16a0f8d8c30d08a22433261",
+      "promptHashGerado": null,
+      "origem": "recorte de Referencia-telas/Estilos-de-cartas.webp",
+      "observacao": "PROVISÓRIA: recorte da referência do dono (não gerado por IA por nós), baixa resolução e proporção ~1,2:1 (não 3:4); só para avaliar o estilo. Substituir por arte final 768x1024.",
+      "verificacao": {
+        "largura": 269,
+        "altura": 193,
+        "bytes": 101020,
+        "sha256": "62c78ce71393e5c3c14b8d827d007e367f5fc0a5829217944d27eabcd44b646c"
+      }
+    },
+    {
+      "id": "CC-032",
+      "nome": "Turismo Responsável",
+      "arquivo": "032.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: passarela de madeira curva e elevada atravessando vegetação costeira e coqueiros até uma praia de areia clara e mar azul, serra verde ao fundo, trilha demarcada, nenhum lixo, céu azul com nuvens. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "17942d26cc7e1f98abc07b7b2cbb8704f2d80c82b05f8245ad935f20bdbea459",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-033",
+      "nome": "Urbanização Planejada",
+      "arquivo": "033.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: orla urbana planejada em dia ensolarado, prédios altos modernos espaçados atrás de um calçadão arborizado, faixa larga de areia clara preservada, coqueiros, mar azul-turquesa com ondas, céu azul com nuvens. Paleta e luz: azul-céu e turquesa do mar (#4aa8e8, #2fc4d8), concreto claro e janelas refletindo o sol (#d8e0e8, #f2cf6e), verdes de vegetação urbana (#37b05f), areia clara (#e8d49a). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "8028d8e2be3c7d667cdd68637f6efe4caa6832e0e4793e58865f573412d76507",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-034",
+      "nome": "Pesquisa Oceanográfica",
+      "arquivo": "034.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: navio de pesquisa oceanográfica robusto com antena, mastro e guindaste, pesquisadores de colete no convés recolhendo equipamento, mar azul e céu azul claro com nuvens. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "d4acef185a6da7f820dca9233fa4e9e31c3d89256e3eb2219d5f87dad61094ae",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-035",
+      "nome": "Coleta Seletiva",
+      "arquivo": "035.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: conjunto de lixeiras coloridas (azul, verde, amarela e vermelha) numa praia limpa, uma pessoa separando recicláveis, sacos organizados, gaivotas ao fundo. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "805f55a9eee4379261753e9756ce1d12f72e90a53275c037262d42d8a28ab905",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-036",
+      "nome": "Educação Ambiental",
+      "arquivo": "036.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: educadora ambiental e jovens em círculo sobre as rochas observando uma poça de maré com lupa, estrela-do-mar e caranguejo visíveis na poça, luz dourada de lanterna. Paleta e luz: cores naturais: madeira (#8a5a2c, #5a3a1a), palha e areia (#d8c690), azul-mar (#1f6f9c), vermelho e azul desbotados de casco de barco, pôr do sol dourado e laranja refletido no mar (#f2a03a, #e86a3a, #8a5aa0). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "6421617d5bc80e4899855698583a166aac223ce30bd4f819f18c0bc022849035",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-037",
+      "nome": "Monitoramento da Água",
+      "arquivo": "037.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: técnico num píer coletando água com frasco e sonda multiparamétrica, mostrador com luz verde sem números, água turquesa translúcida. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "a55e82c0e31aa018471939fdba62466bf4045cc9338507fe068ad4572b8cba14",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-038",
+      "nome": "Fiscalização Costeira",
+      "arquivo": "038.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: fiscal ambiental de chapéu e colete em patrulha na praia, binóculo e lanterna, olhar atento, quadriciclo ao fundo, rastros sobre a areia, luz azulada com realces dourados. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: personagem ou veículo em plano médio, de frente ou três quartos, digno e expressivo, ferramentas do ofício visíveis, centralizado; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "8bc55c1cbf09e9380159806a14279ed161b971bcf6770208acb588e621c42d13",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-039",
+      "nome": "Comunidade Caiçara",
+      "arquivo": "039.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: comunidade caiçara com casas simples de madeira à beira da praia, canoas de um tronco só na areia, redes de pesca secando, pessoas de diferentes idades conversando junto a uma fogueira, retrato digno e respeitoso. Paleta e luz: cores naturais: madeira (#8a5a2c, #5a3a1a), palha e areia (#d8c690), azul-mar (#1f6f9c), vermelho e azul desbotados de casco de barco, pôr do sol dourado e laranja refletido no mar (#f2a03a, #e86a3a, #8a5aa0). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "f2f076d66081ef2deb66e9f46302cdc11ccb83e809527b5e8cc4dffa98f2af82",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-040",
+      "nome": "Restauração de Dunas",
+      "arquivo": "040.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: equipe plantando mudas de capim e vegetação de restinga numa duna, cercas baixas de madeira e passarelas protegendo o trecho, areia clara e céu azul com nuvens. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "38a989614a57918e14739a80235b99e739bba54337de557e0c676594b7b1a234",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-041",
+      "nome": "Viveiro de Mudas Nativas",
+      "arquivo": "041.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: viveiro de mudas nativas com bandejas de mudas de mangue e restinga, mãos regando, luz dourada de lamparina, folhas verdes vibrantes. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "52e2a4db2cd975767c8db827b48bc4f38e19e444b4d2c37a8ca39b64317388ad",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-042",
+      "nome": "Gestão Participativa",
+      "arquivo": "042.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: roda de pessoas diversas ao redor de uma maquete da costa sobre uma mesa de madeira, mãos apontando trechos do mapa, luz quente de lampião, litoral ao fundo. Paleta e luz: cores naturais: madeira (#8a5a2c, #5a3a1a), palha e areia (#d8c690), azul-mar (#1f6f9c), vermelho e azul desbotados de casco de barco, pôr do sol dourado e laranja refletido no mar (#f2a03a, #e86a3a, #8a5aa0). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "6ca530a7e282ffdf9e654dd2d82cc0da58120d7bd17dcb33f38e4aed0a85e916",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-043",
+      "nome": "Saneamento Integrado",
+      "arquivo": "043.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: corte transversal de uma rua costeira mostrando três redes integradas, tubulação de água limpa, tubulação de esgoto e galeria de drenagem, ligadas a uma estação de tratamento, cores turquesa e douradas. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "648ff8d7833714fb9cb633d2633dd6e0cab7cf764422168dcd102519b5ce15cf",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-044",
+      "nome": "Proteção de Nascentes",
+      "arquivo": "044.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: nascente cercada de mata nativa, água cristalina brotando entre pedras e musgo, cerca baixa de madeira protegendo o entorno, raios de sol entre as árvores. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "f20cbc539c21ab1c1b0a16f1952f9f4413c6bf7ea2a17ea7108be3e57197147a",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-045",
+      "nome": "Recuperação de Mata Ciliar",
+      "arquivo": "045.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: margem de rio sendo replantada, fileira de mudas jovens e árvores maiores com raízes segurando o barranco, rio de água clara, enxada e cestos de mudas na margem. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "2aa3b5932d3f92affe896a9ebe4d8c78a50598a94224773ba84d4077719882e0",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-046",
+      "nome": "Observatório Costeiro",
+      "arquivo": "046.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: torre de observação costeira com anemômetro, antena, painel solar e telescópio, apontada para o mar, farol distante, luzes douradas e turquesa nos instrumentos. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "91f1c1e3ab4c646502443f5d032e500951df06139ef3e72b6518d5df668507cb",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-047",
+      "nome": "Poluição do Mar",
+      "arquivo": "047.png",
+      "estado": "provisoria",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: monstro de lixo, uma montanha de garrafas plásticas coloridas, pneu, latas e sacos formando uma criatura com boca de dentes pontiagudos e olhos laranja-brasa, fumaça e céu de tempestade roxo-escuro ao fundo, entulho no chão. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "84c6bcb846b8c16969c7857af71d537f4fcf6e78942713bfb01f9005b6646837",
+      "promptHashGerado": null,
+      "origem": "recorte de Referencia-telas/Estilos-de-cartas.webp",
+      "observacao": "PROVISÓRIA: recorte da referência do dono (não gerado por IA por nós), baixa resolução e proporção ~1,2:1 (não 3:4); só para avaliar o estilo. Substituir por arte final 768x1024.",
+      "verificacao": {
+        "largura": 269,
+        "altura": 225,
+        "bytes": 122003,
+        "sha256": "1cbf84f3898831987eb3796ddf20b132c2c4c525a71598029773bb6e6b75c87f"
+      }
+    },
+    {
+      "id": "CC-048",
+      "nome": "Erosão Costeira",
+      "arquivo": "048.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: falésia viva de rocha marrom-avermelhada cuja face esconde olhos de brasa, blocos de pedra e areia desmoronando, ondas violentas espumando na base, céu de pôr do sol laranja e roxo. Paleta e luz: azuis profundos (#0b1d33, #1f6f9c), cinzas de tempestade (#6a6a72, #9a9aa4), espuma branco-azulada (#e8f4ff), energia turquesa brilhante (#3fdcf0) e céu de pôr do sol laranja e roxo (#e8803a, #8a4a90) quando houver horizonte. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "52416bec808ddc3fbe67f7f0aac5ed1cb309530ca9773627a3e42657483d10b1",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-049",
+      "nome": "Desmatamento",
+      "arquivo": "049.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura sombria de troncos cortados, tocos e galhos secos com fumaça subindo, clareira devastada ao fundo, olhos vermelho-brasa, sem glorificar a destruição. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "2cf226dd2432c987b93ba965bdf37761a3fac6b65ad629776b6afe93f20f29e7",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-050",
+      "nome": "Chuva Intensa",
+      "arquivo": "050.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: nuvem de tempestade escura com olhos de luz turquesa e raios, enxurrada de água marrom descendo por uma encosta, chuva pesada em linhas diagonais. Paleta e luz: azuis profundos (#0b1d33, #1f6f9c), cinzas de tempestade (#6a6a72, #9a9aa4), espuma branco-azulada (#e8f4ff), energia turquesa brilhante (#3fdcf0) e céu de pôr do sol laranja e roxo (#e8803a, #8a4a90) quando houver horizonte. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "b51cdb95d969fb2e25293cb80244553189411fd629484574f12717fb80d552db",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-051",
+      "nome": "Esgoto Sem Tratamento",
+      "arquivo": "051.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura viscosa de lama marrom-esverdeada com tubulação quebrada como boca, bolhas tóxicas e espuma suja, saindo de um cano em direção à água, olhos vermelho-brasa. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "200ba20cfeec76ffbe9ce1a14632bbb732a109509ea6ffa7ba511be7bf0dab9f",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-052",
+      "nome": "Lixo Plástico",
+      "arquivo": "052.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura feita de sacolas, copos, tampinhas, garrafas e fios de rede de pesca, flutuando em água escura, uma pequena tartaruga se afastando ao fundo, olhos vermelho-brasa. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "deaa0e8e702258855ed6b0cb91c4b99dc954d02e1430edeb50ebed99a56cfcfb",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-053",
+      "nome": "Ocupação Irregular",
+      "arquivo": "053.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: estrutura precária de palafitas e blocos improvisados erguida sobre uma margem instável de encosta, rachaduras e barranco cedendo, formando uma silhueta ameaçadora; representar o risco da área frágil, sem pessoas e sem culpar moradores. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "eda728b7f873af27116c2df1f7eca021d2e5a305ee4cdffb8f43f6c7970ce4b3",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-054",
+      "nome": "Pesca Predatória",
+      "arquivo": "054.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de redes de arrasto e anzóis, rede enorme como boca arrastando o fundo, peixes pequenos presos nas malhas, olhos vermelho-brasa, mar escuro. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "b8de54d745ee97dbb067e8dfd967b008273d1c6cddda139ff255bfc99ee87ef6",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-055",
+      "nome": "Assoreamento",
+      "arquivo": "055.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de lama e areia acumulada bloqueando um canal raso, bancos de lodo marrom e barcos encalhados ao fundo, olhos vermelho-brasa, água turva. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "6344a1dac4c7d276803c15d0d9e8bccdf0662cb7f7ee0e1cdf7f7a7fccab1733",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-056",
+      "nome": "Derramamento de Óleo",
+      "arquivo": "056.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura viscosa de petróleo negro com reflexos iridescentes e tentáculos se espalhando sobre a água, gotas escuras, mancha na superfície, olhos vermelho-brasa. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "242e8e8f6cebbaa904704cfe40d8bc874676f9fd583daa53f67d88d15883d2f2",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-057",
+      "nome": "Ressaca Marinha",
+      "arquivo": "057.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: grande onda azul-escura curvada em forma de criatura com olhos brancos brilhantes, crista de espuma branca em pixels e gotas voando, céu de tempestade. Paleta e luz: azuis profundos (#0b1d33, #1f6f9c), cinzas de tempestade (#6a6a72, #9a9aa4), espuma branco-azulada (#e8f4ff), energia turquesa brilhante (#3fdcf0) e céu de pôr do sol laranja e roxo (#e8803a, #8a4a90) quando houver horizonte. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "e2458cafa2e062b7ec403c83ec1b022c6a6aa17712461473957cc5ac7d1b9548",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-058",
+      "nome": "Expansão Portuária",
+      "arquivo": "058.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: colosso de guindastes, contêineres e cascos de ferro projetando sombra sobre uma baía, luzes industriais alaranjadas, olhos vermelho-brasa nas cabines dos guindastes. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "7400c845bf577f391e604ea0a39d4ad0a0f253707f25d41d1e634636740fc360",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-059",
+      "nome": "Microplásticos",
+      "arquivo": "059.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura nebulosa formada por miríades de minúsculos fragmentos coloridos de plástico suspensos na água, zooplâncton ao redor, olhos pequenos vermelho-brasa, água azul-escura. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "43fd2ede57de63649b64c627d07d586259b2088e7caf7c5cd7892c57d31b6912",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-060",
+      "nome": "Ilha de Calor Urbana",
+      "arquivo": "060.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de asfalto e concreto escaldante, ondas de calor distorcendo o ar, janelas como olhos vermelho-brasa, pouca vegetação murcha aos pés, céu alaranjado ao fundo. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "13e73c27c3f13ae6a193748b9e6485adba42580c84dffa359a9ffb9cf21d65ff",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-061",
+      "nome": "Drenagem Inadequada",
+      "arquivo": "061.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de bueiro entupido com água da rua transbordando, tampas de bueiro e lixo no corpo, rua alagada refletindo luzes, olhos vermelho-brasa. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "6789d3ee8506353b318ab87f2c43838f2e41c02c46cfc38c8aaa470e4bf5b46e",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-062",
+      "nome": "Supressão de Restinga",
+      "arquivo": "062.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de areia nua e vegetação arrancada, tocos e raízes secas no corpo, solo exposto e vento levantando areia, olhos vermelho-brasa, resto de restinga ao fundo. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "12a3c4a743460c638a66e3f6d4769a87a68ad4d3395f4a2de6dd80932a63396b",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-063",
+      "nome": "Turismo Predatório",
+      "arquivo": "063.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de lixo de praia lotada, guarda-sóis quebrados, sacos, copos e pegadas de veículos na areia, sombra pesada sobre uma duna, olhos vermelho-brasa, sem retratar turistas como vilões. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "90f48b72ba99d9a4f69f98b4cff3d0f437bf4c9ed30d3489be8b04290c248cc2",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-064",
+      "nome": "Sobrepesca",
+      "arquivo": "064.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de espinhas e ossos de peixe e redes vazias, mar esvaziado com um cardume minguado ao fundo, olhos vermelho-brasa, água escura. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "f58bda28aa00091c553b688b9aacc0cee007cffbd3b017c1625292474a816eee",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-065",
+      "nome": "Obra Sobre a Duna",
+      "arquivo": "065.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de concreto e vigas de ferro expostas esmagando uma duna, betoneira abandonada, vegetação de duna soterrada, olhos vermelho-brasa, areia desmoronando. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "79d2405bf1e88872806cf8673f85d8ac565551747b6538f689b5f5515289c8db",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-066",
+      "nome": "Canalização de Rio",
+      "arquivo": "066.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de manilhas e calhas de concreto, um rio retificado e aprisionado em canal reto, margens sem vegetação, olhos vermelho-brasa, água corrente forçada. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "a53b3e46a1fd84c8fb4d10dee47d705333390e60d5212e06522f8f9867fd868a",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-067",
+      "nome": "Invasão de Espécies",
+      "arquivo": "067.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: peixe-leão invasor listrado de vermelho e branco com nadadeiras em leque e espinhos abertos ocupando o quadro, fundo azul profundo com bolhas e pequenos peixes nativos se afastando. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "22b831e15ce39c1600bc48cfa68a5a281d3e7fb9f0dcd274c4e6e3d45ea68e4d",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-068",
+      "nome": "Contaminação Industrial",
+      "arquivo": "068.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de barris e tubulações vazando efluente verde-neon tóxico, chaminé industrial soltando fumaça ao fundo, poça brilhante no chão, olhos vermelho-brasa. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "b8db3876acaabf2a40b3b19dacdaf9b898f1df8e2f2267280f39688339673165",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-069",
+      "nome": "Dragagem Sem Controle",
+      "arquivo": "069.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: draga mecânica monstruosa com garras de aço revolvendo o fundo, nuvem densa de sedimento turvo subindo na água, olhos vermelho-brasa, peixes fugindo. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "d78043648ce99d5bf0e95e03fc67f9d6424948e49ebec5d634ea6217d4d5c76a",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-070",
+      "nome": "Branqueamento de Corais",
+      "arquivo": "070.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: coral pálido-esbranquiçado, esqueletal como osso, com poucos pontos de cor restantes, água clara demais e quente com sol forte, aparência de criatura enfraquecida de olhos vermelho-brasa. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "877f011d077854162c06eed84efd6cb7b71255fbd032ddaab705eacb3ed4659b",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-071",
+      "nome": "Elevação do Nível do Mar",
+      "arquivo": "071.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: maré alta como gigante azul-escuro se erguendo devagar, água invadindo um calçadão costeiro, linhas de nível marcadas em postes, olhos de luz turquesa. Paleta e luz: azuis profundos (#0b1d33, #1f6f9c), cinzas de tempestade (#6a6a72, #9a9aa4), espuma branco-azulada (#e8f4ff), energia turquesa brilhante (#3fdcf0) e céu de pôr do sol laranja e roxo (#e8803a, #8a4a90) quando houver horizonte. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "df3baf0b2fbfd4b61d2fe8e56a8b66047c6400d6b6fda562fb4eee9207b29e74",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-072",
+      "nome": "Descarga de Nutrientes",
+      "arquivo": "072.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: criatura de algas verde-neon em floração sobre água turva e esverdeada, espuma densa, peixes sem cor ao fundo, olhos vermelho-brasa. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "2f7564234bc1ec6d54f204c890506023378d1a9fe119a3106b685e6f00783cea",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-073",
+      "nome": "Tratamento de Esgoto",
+      "arquivo": "073.png",
+      "estado": "provisoria",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: estação de tratamento de esgoto costeira em dia ensolarado, grandes tanques circulares de água azul purificada com braços raspadores, prédios administrativos, vegetação e montanhas com baía ao fundo, céu azul com nuvens. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "803bf6309b42b02634c94742ee7244b1c469fb92a0f56cce8159c9401c364f4a",
+      "promptHashGerado": null,
+      "origem": "recorte de Referencia-telas/Estilos-de-cartas.webp",
+      "observacao": "PROVISÓRIA: recorte da referência do dono (não gerado por IA por nós), baixa resolução e proporção ~1,2:1 (não 3:4); só para avaliar o estilo. Substituir por arte final 768x1024.",
+      "verificacao": {
+        "largura": 269,
+        "altura": 195,
+        "bytes": 101908,
+        "sha256": "d1642accb20d38d5c1bab56e34bb4d1c735509d2ae5bed5ab314e66b12b2211f"
+      }
+    },
+    {
+      "id": "CC-074",
+      "nome": "Recuperação Ambiental",
+      "arquivo": "074.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: mudas jovens de mangue plantadas em fileira em água rasa ao pôr do sol dourado, reflexos alaranjados na água, brotos verdes viçosos e algumas árvores secas ao fundo mostrando a área em recuperação. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "ba25d1d216b4a7927249259e36f6e0d0bc9785f07630bb7619ccc08283e145f4",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-075",
+      "nome": "Fiscalização Ambiental",
+      "arquivo": "075.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: drone de fiscalização sobrevoando a costa com feixe turquesa, fiscais numa lancha observando, mancha suspeita na água sendo identificada, céu azul de fim de tarde. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "4ed7710b92db58c63c097b283cd6190962d8577821e2d759b9c3fd5b2f1919c3",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-076",
+      "nome": "Limpeza de Praia",
+      "arquivo": "076.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: mutirão de pessoas recolhendo resíduos numa praia ao amanhecer, sacos de lixo cheios organizados, luvas, pegadas na areia, mar limpo ao fundo. Paleta e luz: cores naturais: madeira (#8a5a2c, #5a3a1a), palha e areia (#d8c690), azul-mar (#1f6f9c), vermelho e azul desbotados de casco de barco, pôr do sol dourado e laranja refletido no mar (#f2a03a, #e86a3a, #8a5aa0). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "6f46a676650d90a67f0cdbcde208cabdcc811c28e566512684729efafc15cdf2",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-077",
+      "nome": "Alerta de Ressaca",
+      "arquivo": "077.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: torre de salva-vidas com luz de alerta âmbar e bandeira de aviso enquanto grandes ondas se formam no horizonte, areia vazia, nuvens escuras e relâmpagos distantes. Paleta e luz: azuis profundos (#0b1d33, #1f6f9c), cinzas de tempestade (#6a6a72, #9a9aa4), espuma branco-azulada (#e8f4ff), energia turquesa brilhante (#3fdcf0) e céu de pôr do sol laranja e roxo (#e8803a, #8a4a90) quando houver horizonte. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "03fbc7ce60402e1d9accaebd09242d7eb4bfadb196ace17e3cf691b990692d52",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-078",
+      "nome": "Plano Diretor Costeiro",
+      "arquivo": "078.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: maquete tridimensional da costa sobre mesa com zonas coloridas de uso do solo, compasso e régua de bronze, luz dourada de lamparina, mapa ao fundo sem escrita. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "406c3e5d88d08b711e450b17aac834977da9bb461a2a876abf815d834a30b863",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-079",
+      "nome": "Campanha Educativa",
+      "arquivo": "079.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: megafone dourado emitindo pictogramas luminosos, uma onda, uma tartaruga e uma árvore, sobre fundo azul com pessoas em silhueta ouvindo, sem letras. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "f33b8286b02f58a8e94b346ed36e99c3000995a784fd86d18f56685fb4c1376f",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-080",
+      "nome": "Mutirão Comunitário",
+      "arquivo": "080.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: pessoas de várias idades plantando mudas juntas numa praia ao amanhecer, mãos unidas segurando uma muda, cestos de mudas, luz dourada, retrato caloroso. Paleta e luz: cores naturais: madeira (#8a5a2c, #5a3a1a), palha e areia (#d8c690), azul-mar (#1f6f9c), vermelho e azul desbotados de casco de barco, pôr do sol dourado e laranja refletido no mar (#f2a03a, #e86a3a, #8a5aa0). Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "e028bfefd3ecf0b3522e3b3d23dbf837c3059de0a6e87b0fd8446afb4540d3e5",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-081",
+      "nome": "Barreira de Contenção",
+      "arquivo": "081.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: barreira flutuante laranja em arco cercando uma mancha escura na água, barcos de apoio nas pontas, boias reluzentes, mar calmo. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "2f14bc71bc89cceb262bd4192f1bf2cb81e5a314adcdf9ea83e852e13865e6af",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-082",
+      "nome": "Estudo de Impacto",
+      "arquivo": "082.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: balança dourada com uma folha verde de um lado e um prédio do outro, lupa sobre um mapa da costa ao fundo, prancheta, luz de lamparina, sem letras nem números. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "fc52a054c8f7d2aaa1478d54e50e7b68dfca484d7483bf3758ebf2974d21b4af",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-083",
+      "nome": "Monitoramento Contínuo",
+      "arquivo": "083.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: boia de monitoramento no mar com painel solar e antena, linhas luminosas de dados saindo em ondas turquesa, ondas, gráfico luminoso sem números. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "d380c26f0a8f56ea2a21a5a3c3a21c688d86dc326fc0b34a66a53882378f4b4d",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-084",
+      "nome": "Manejo da Bacia",
+      "arquivo": "084.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: vista aérea de uma bacia hidrográfica, serra coberta de mata, rio serpenteando com mata ciliar, pequenos reservatórios, desembocando no mar ao fundo, luz clara de dia. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "8142ca583a5cd6877d41be8bd46ebf3957a74350cf1f9982b22c7349690e5175",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-085",
+      "nome": "Raízes Protetoras",
+      "arquivo": "085.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: manto de raízes de mangue entrelaçadas como armadura orgânica, brilho verde e turquesa percorrendo as raízes, folhas pequenas, exposto como relíquia em destaque. Paleta e luz: metal escuro azulado (#143a52) com detalhes dourados (#e6b648) e brilho turquesa (#3fdcf0), fundo atmosférico simples. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "a4b89c0fe40db0b3bf00aac515e79cf84938173b42a4825fc7497c1bf6a63981",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-086",
+      "nome": "Tecnologia Limpa",
+      "arquivo": "086.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: módulo tecnológico compacto com painel solar, pequena turbina eólica e filtro cilíndrico, brilho turquesa, metal escuro com detalhes dourados, exposto como equipamento de coleção. Paleta e luz: metal escuro azulado (#143a52) com detalhes dourados (#e6b648) e brilho turquesa (#3fdcf0), fundo atmosférico simples. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "e92ab0553e16feb861f992c945fc0356e363f21c6e4773b90f7516eca6a4b26a",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-087",
+      "nome": "Vigilância Ambiental",
+      "arquivo": "087.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: drone de vigilância com câmera e luzes turquesa pairando sobre a costa, feixe de luz varrendo a água, binóculo preso ao corpo, céu de fim de tarde. Paleta e luz: metal escuro azulado (#143a52) com detalhes dourados (#e6b648) e brilho turquesa (#3fdcf0), fundo atmosférico simples. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "63a365e36fa1d0ec8464408491d8e7e067b20ac8621ebf1f9e0ae1d89b0d02c5",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-088",
+      "nome": "Adaptação Climática",
+      "arquivo": "088.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: casa em palafita moderna elevada sobre a maré, telhado de captação de água, jardim de mangue e muro-verde ao redor, adaptada à maré alta, luzes douradas nas janelas. Paleta e luz: metal escuro azulado (#143a52) com detalhes dourados (#e6b648) e brilho turquesa (#3fdcf0), fundo atmosférico simples. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "63239b1fd51c5687ea2c3287537fcdf0fb34874238c3b6845bb839f4e8e4d6e5",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-089",
+      "nome": "Terreno: Manguezal",
+      "arquivo": "089.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: panorama amplo de manguezal, raízes escora em primeiro plano, canais de maré e copa densa, aves em voo, água azul com brilho turquesa. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "4bde81a1983c94eb3cb5770c39122d87c3ca4de701ac1e824a9018e4f51accae",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-090",
+      "nome": "Terreno: Zona Urbana",
+      "arquivo": "090.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: orla urbana em dia ensolarado com prédios, calçadão, canais de drenagem, árvores e um trecho de praia, reflexos na água, céu azul com nuvens. Paleta e luz: azul-céu e turquesa do mar (#4aa8e8, #2fc4d8), concreto claro e janelas refletindo o sol (#d8e0e8, #f2cf6e), verdes de vegetação urbana (#37b05f), areia clara (#e8d49a). Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "cb1aebc5f36c7332493a2f8744cdcd78638776a590241a568140e4d414d0fb1f",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-091",
+      "nome": "Terreno: Mar Aberto",
+      "arquivo": "091.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: mar aberto com ondas largas e horizonte distante, cardume sob a superfície em brilho turquesa, pequeno barco ao longe, nuvens iluminadas. Paleta e luz: azuis profundos (#0b1d33, #1f6f9c), cinzas de tempestade (#6a6a72, #9a9aa4), espuma branco-azulada (#e8f4ff), energia turquesa brilhante (#3fdcf0) e céu de pôr do sol laranja e roxo (#e8803a, #8a4a90) quando houver horizonte. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "1aee05eb0108e0f28a2c8f5fc2ccfcfa80d4b259fee6dbbf37d6036b55be7ba8",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-092",
+      "nome": "Terreno: Costa Pressionada",
+      "arquivo": "092.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: costa ressecada sob pressão, solo rachado, árvores secas sem folhas, rochas escuras, sol vermelho enorme se pondo sobre o mar, céu laranja e vermelho dramático. Paleta e luz: azuis profundos (#0b1d33, #1f6f9c), cinzas de tempestade (#6a6a72, #9a9aa4), espuma branco-azulada (#e8f4ff), energia turquesa brilhante (#3fdcf0) e céu de pôr do sol laranja e roxo (#e8803a, #8a4a90) quando houver horizonte. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "71a9865b462f00d882d71ba641b4304fc552e90a435c068e2386b0becde0c8d7",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-093",
+      "nome": "Fiscalização Surpresa",
+      "arquivo": "093.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: feixe de holofote iluminando de surpresa uma mancha suspeita de despejo numa água escura, silhueta de fiscal com binóculo na margem, sombras roxas e dourado de alerta. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "f180c941da1a9244b249b13f3697bd37225645563b78fc67d0cfc01629621be6",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-094",
+      "nome": "Barreira Natural",
+      "arquivo": "094.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: parede viva de mangue e recife emergindo da água e absorvendo uma onda grande, espuma se dispersando nas raízes, brilho roxo e turquesa de proteção. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "9790f48d4ba26b5b267333becb212c0202ab641a88c1609fda93fba4c089062f",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-095",
+      "nome": "Plano de Contingência",
+      "arquivo": "095.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: mapa tático de emergência numa mesa com rota luminosa de evacuação, kit de emergência aberto e lanterna, luz dourada de alerta sobre fundo roxo-escuro, sem escrita. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "2cb00f6e86aaf9e01783c7256633429b30187504a66e43b98c56494c9f8bf731",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-096",
+      "nome": "Alerta Meteorológico",
+      "arquivo": "096.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: antena e radar de previsão do tempo com varredura luminosa, sirene de alerta e tempestade com raios se aproximando no horizonte, tons roxos e dourados. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "94e5818ed3e913313d8312e48e2878df89dd47bfaaee71d8bd00ccc8a0ffcb4e",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-097",
+      "nome": "Denúncia Comunitária",
+      "arquivo": "097.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: silhueta de pessoa fotografando um despejo suspeito na água com um celular, feixe de luz do celular iluminando a mancha, pictograma luminoso de balão de fala, tons roxos. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "7dbfddfb38bfe7bb35e41fa3c73859981ee8fddc18d4cd2112ac1a2f8bc0e0ef",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-098",
+      "nome": "Monitoramento Cidadão",
+      "arquivo": "098.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: grupo de moradores em silhueta com binóculos, cadernos e celulares registrando observações numa praia, uma ave pousada em destaque, brilho roxo e dourado. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "523151fc47223a72ca3f152a0a44f48c6bfaf16b9bbeba69d5fde733916d7db7",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-099",
+      "nome": "Proteção Emergencial",
+      "arquivo": "099.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: escudo de energia turquesa e dourada cobrindo uma enseada, barreiras de contenção flutuantes e equipe de resgate em silhueta, céu roxo-escuro. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "27cc2781968472165750b68f49190da1e705c24a29b6ebc0ba8108313500a2e2",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    },
+    {
+      "id": "CC-100",
+      "nome": "Rede de Proteção",
+      "arquivo": "100.webp",
+      "estado": "pendente",
+      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: rede luminosa tecida de fios dourados e turquesa ligando um manguezal, um recife, um barco e uma casa, nós brilhantes, fundo roxo-escuro. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
+      "promptHash": "23f052a3c00ecf87f41448539bc35d44e1282c9c04e6c3509967fc05421a5f89",
+      "promptHashGerado": null,
+      "origem": null,
+      "observacao": null,
+      "verificacao": {
+        "largura": null,
+        "altura": null,
+        "bytes": null,
+        "sha256": null
+      }
+    }
+  ]
+}

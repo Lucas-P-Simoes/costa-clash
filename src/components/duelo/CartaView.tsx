@@ -1,5 +1,10 @@
+import { useState } from 'react'
 import type { Carta } from '../../game/tipos'
+import { arteDaCarta } from '../../arte/arteDisponivel'
+import type { ArteDaCarta } from '../../arte/arteDisponivel'
+import { classificarCarta } from '../../arte/categorias'
 import { ArteCarta } from './ArteCarta'
+import { SeloCarta } from './SeloCarta'
 import { efeitoCurto, rotuloTipo, tipoArte } from './textoCarta'
 
 export interface CartaViewProps {
@@ -20,15 +25,38 @@ export interface CartaViewProps {
   focoAlvo?: boolean
   /** Se true, o botão continua focável (aria-disabled), mas o clique é ignorado. */
   inativa?: boolean
+  /** Ilustração real. Omitido: resolve pelo manifesto (índice do build). null: força o fallback SVG. */
+  arte?: ArteDaCarta | null
 }
 
-/** Carta do catálogo: nome, arte por grupo/tipo, ATK (vermelho) / DEF (azul) ou tipo + efeito curto. */
-export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', selecionada, destaque, rotulo, onClick, focoAlvo, inativa }: CartaViewProps) {
+/** Ilustração da carta: imagem 3:4 recortada (cover) se houver arte no manifesto; senão (ou em erro de carregamento) a arte SVG por tipo. */
+function ArteIlustrada({ carta, arte }: { carta: Carta; arte: ArteDaCarta | null }) {
+  const [falhou, setFalhou] = useState<string | null>(null)
+  if (!arte || falhou === arte.url) return <ArteCarta tipo={tipoArte(carta)} />
+  return (
+    <img
+      className="carta__imagem"
+      src={arte.url}
+      alt={`Ilustração da carta ${carta.nome}`}
+      loading="lazy"
+      decoding="async"
+      draggable={false}
+      data-arte={arte.estado}
+      onError={() => setFalhou(arte.url)}
+    />
+  )
+}
+
+/** Carta do catálogo: moldura por categoria, selo, ilustração (ou arte SVG), placa de nome, ATK (vermelho) / DEF (azul) ou tipo + efeito curto. */
+export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', selecionada, destaque, rotulo, onClick, focoAlvo, inativa, arte }: CartaViewProps) {
   const unidade = carta.tipo === 'unidade'
+  const visual = classificarCarta(carta)
+  const ilustracao = arte === undefined ? arteDaCarta(carta.id) : arte
   const classe = [
     'carta',
     `carta--${tamanho}`,
     `carta--${tipoArte(carta)}`,
+    `carta--cat-${visual.categoria}`,
     posicao === 'DEFESA' ? 'carta--defesa' : '',
     selecionada ? 'carta--selecionada' : '',
     destaque ? `carta--${destaque}` : '',
@@ -39,7 +67,8 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
     <>
       <span className="carta__nome">{carta.nome}</span>
       <span className="carta__arte" aria-hidden="true">
-        <ArteCarta tipo={tipoArte(carta)} />
+        <ArteIlustrada key={ilustracao?.url ?? 'svg'} carta={carta} arte={ilustracao} />
+        <SeloCarta selo={visual.selo} />
       </span>
       {unidade ? (
         <span className="carta__atributos" aria-hidden="true">

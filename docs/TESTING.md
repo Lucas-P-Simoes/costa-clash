@@ -85,3 +85,8 @@ Não alegar execução se o comando ou dependências não existirem. No início 
 
 ## Relatório mínimo de QA
 Resultado; alterações testadas; comandos executados; contagem de testes; defeitos encontrados com reprodução; limites e riscos remanescentes.
+
+### Arte das cartas (`src/arte/__tests__/`)
+- `prompts.test.ts`: 100 sujeitos (IDs = catálogo, nenhum vazio/duplicado, exemplos do dono, sem "elimina"), prompts determinísticos terminando nos negativos, sem nome da carta/ID/ATK/DEF fora dos negativos. `categorias.test.ts`: mapa categoria->cor/selo, 100 cartas classificadas, pictogramas 12x12. `manifesto.test.ts`: sincronização pura (estados preservados, aprovada intocável) e manifesto real (100 entradas, 5 provisorias + 95 pendentes, sha256 dos arquivos, sem deriva do manifesto/índice). `verificar.test.ts`: PNG/WebP temporários válidos, inválidos, duplicados, proporção, extensão, provisória só com avisos. `gerar.test.ts`: dry-run e provedor FALSO em diretório temporário (o teste confere que `public/assets/cards/art/` não muda). `integracao.test.tsx` (jsdom): CartaView com/sem arte, erro de carregamento, página `?arte=1`, copiar prompt.
+- Scripts: `npm run arte:manifesto|arte:verificar|arte:prompts|arte:gerar`. Não coberto: aparência real das molduras (verificada só por captura headless, sem revisão formal) e qualquer provedor real.
+

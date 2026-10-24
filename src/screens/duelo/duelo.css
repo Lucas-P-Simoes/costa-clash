@@ -220,36 +220,37 @@
   color: #fff;
   text-align: center;
   font: inherit;
-  background: #172536;
-  border: 3px solid #07101a;
-  box-shadow: inset 0 0 0 2px var(--c-borda, #3b5a74);
+  background: #0e1a28;
+  /* Moldura colorida por categoria (src/arte/categorias.ts) com anel escuro, como em Estilos-de-cartas.webp. */
+  border: 3px solid var(--c-borda, #3b5a74);
+  box-shadow:
+    inset 0 0 0 1px #07101a,
+    0 0 0 2px #07101a;
 }
 button.carta {
   cursor: pointer;
 }
-.carta--ecossistema {
+/* Categorias de moldura (cores de src/arte/categorias.ts). */
+.carta--cat-marinha {
+  --c-borda: #3b82d6;
+}
+.carta--cat-verde {
   --c-borda: #2f9e54;
 }
-.carta--fauna {
-  --c-borda: #e0a030;
-}
-.carta--atividade {
-  --c-borda: #d8d2b8;
-}
-.carta--impacto {
+.carta--cat-fenomeno {
   --c-borda: #c4402a;
 }
-.carta--acao {
-  --c-borda: #e6b648;
+.carta--cat-impacto {
+  --c-borda: #8a4ac4;
 }
-.carta--equipamento {
-  --c-borda: #3fdcf0;
+.carta--cat-protegida {
+  --c-borda: #8e9aa6;
 }
-.carta--terreno {
-  --c-borda: #72e8a8;
+.carta--cat-planejamento {
+  --c-borda: #e0a82e;
 }
-.carta--armadilha {
-  --c-borda: #8a5ac4;
+.carta--cat-ondas {
+  --c-borda: #2ab4e8;
 }
 .carta--campo {
   width: 100%;
@@ -265,7 +266,9 @@ button.carta {
   width: 136px;
   height: 196px;
 }
+/* Placa escura de nome na base da arte (ordem visual: arte, nome, atributos). */
 .carta__nome {
+  order: 2;
   display: block;
   padding: 2px 2px 3px;
   min-height: 2.3em;
@@ -273,25 +276,64 @@ button.carta {
   font-weight: 700;
   line-height: 1.15;
   text-transform: uppercase;
-  background: #e2dcc0;
-  color: #1a1408;
+  background: #0a1522;
+  color: #e8f4ff;
+  border: 1px solid var(--c-borda);
   overflow: hidden;
 }
 .carta--mao .carta__nome {
   font-size: 0.74rem;
 }
 .carta__arte {
+  order: 1;
+  position: relative;
   display: block;
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
   border: 2px solid #07101a;
 }
-.carta__arte svg {
+.carta__arte > svg {
   width: 100%;
   height: 100%;
 }
+.carta__imagem {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center 45%;
+  image-rendering: pixelated;
+}
+/* Selo circular (octógono) com pictograma, no canto superior esquerdo da arte. */
+.carta__selo {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 26%;
+  min-width: 18px;
+  max-width: 30px;
+  aspect-ratio: 1;
+  background: var(--c-borda);
+  clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
+}
+.carta__selo-miolo {
+  position: absolute;
+  inset: 2px;
+  padding: 17%;
+  background: #0a1522;
+  clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
+}
+.carta__selo-miolo svg {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+.carta--mini .carta__selo {
+  display: none;
+}
 .carta__atributos {
+  order: 3;
   display: flex;
   gap: 2px;
 }
@@ -324,6 +366,7 @@ button.carta {
   padding: 2px;
   font-size: 0.6rem;
   line-height: 1.15;
+  order: 3;
   background: #0b1a28;
   min-height: 2.6em;
 }
@@ -344,8 +387,9 @@ button.carta {
 }
 .carta__posicao {
   position: absolute;
-  top: 2.4em;
-  right: 3px;
+  top: 6px;
+  right: 6px;
+  z-index: 1;
   padding: 0 3px;
   font-size: 0.55rem;
   font-weight: 700;

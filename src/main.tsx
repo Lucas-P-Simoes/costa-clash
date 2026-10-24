@@ -3,10 +3,10 @@ import { createRoot } from 'react-dom/client'
 import './styles/tokens.css'
 import './styles/base.css'
 import './styles/componentes.css'
-import App from './App.tsx'
+import { Raiz } from './Raiz.tsx'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <App />
+    <Raiz />
   </StrictMode>,
 )

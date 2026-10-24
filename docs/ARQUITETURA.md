@@ -42,3 +42,6 @@ Eventos (`Evento` = dados + `turno` + `texto` em português): `turno_iniciado`, 
 - Regra de ouro: a UI só chama `aplicarComando`/`executarTurnoIAComPassos` e renderiza `visaoParaJogador(estado,'humano')` + `logPublico`; `EstadoDuelo` completo e `log` crus nunca vão ao DOM. `App.tsx` tem a tela `duelo` (volta ao Duelo Livre mantendo o adversário e a sessão).
 - API nova no motor: `logPublico(estado, jogador)`, `eventosPublicos(eventos, jogador)`, `executarTurnoIAComPassos(estado)` ({estado, eventos, passos[]}), evento `desistencia`.
 
+## Arte das cartas (2026-10-23)
+- `src/arte/`: dados e lógica puros (`sujeitos`, `prompts`, `categorias`, `manifesto`, `piloto`, `referencia`, `arteDisponivel`) e `indiceArte.json` (gerado do manifesto; decide em build se há ilustração). `scripts/arte/*.mjs`: E/S Node (manifesto, verificador, gerador com provedores plugáveis); importam os `.ts` por remoção de tipos (Node >= 22.18), por isso `src/arte` usa imports com extensão `.ts`. `public/assets/cards/art/`: manifest.json e imagens. UI: `CartaView` + `SeloCarta` (moldura/selo/placa), `src/Raiz.tsx` (rota `?arte=1`) e `src/screens/arte/`. Detalhes: `docs/ARTE_DAS_CARTAS.md`.
+
