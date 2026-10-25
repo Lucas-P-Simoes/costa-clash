@@ -32,7 +32,7 @@ export function TelaConta({ usuario, onSair, onDueloLivre }: Props) {
   }
 
   return (
-    <div className="tela">
+    <div className="tela tela-jogo">
       <CabecalhoTela titulo="Conta" />
       <main className="tela-simples__corpo">
         <MolduraPedra as="section" className="tela-simples__painel" aria-label="Sua conta">

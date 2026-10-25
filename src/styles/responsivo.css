@@ -1,0 +1,154 @@
+/* Sistema global de responsividade (importar UMA vez, em main.tsx, depois de tokens.css).
+   Ideia: a interface inteira é medida em rem; o tamanho do rem acompanha a MENOR das dimensões relativas da viewport
+   (largura e altura), com piso e teto. Nada de zoom/transform global.
+   Referência de desenho: 1440x900 => 1rem = 16px. O mesmo cálculo existe em JS (src/ui/escala.ts) para testes e documentação.
+     base = clamp(14px, min(100dvw / 90, 100dvh / 56.25), 26px)
+   - 90 e 56,25 = largura e altura de referência em rem (1440/16 e 900/16);
+   - piso 14px: abaixo disso o texto fica ilegível; a altura/largura que sobra em rem é tratada por compactação (classes/medias abaixo);
+   - teto 26px (1,625x): em 4K (3840x2160) a interface fica ~1,6x maior que na referência (não gigante), o conteúdo é centralizado
+     com largura máxima (--cc-largura-max) e o fundo preenche o resto.
+   Celular (largura <= 700px): base fixa de 16px (a rolagem vertical natural é permitida). */
+:root {
+  --cc-base: clamp(14px, min(100vw / 90, 100vh / 56.25), 26px);
+  --cc-largura-max: 110rem;
+  --cc-largura-duelo: 120rem;
+
+  /* espaçamentos */
+  --sp-1: 0.25rem;
+  --sp-2: 0.5rem;
+  --sp-3: 0.75rem;
+  --sp-4: 1rem;
+  --sp-5: 1.5rem;
+  --sp-6: 2rem;
+  --cc-gutter: clamp(0.5rem, 1.6vw, 1.75rem);
+  --cc-painel-pad: 1rem;
+
+  /* tipografia (mínimo funcional 0,75rem = 10,5px no piso: nunca abaixo disso em texto útil, ver fs-min) */
+  --fs-min: 0.8125rem;
+  --fs-corpo: 1rem;
+  --fs-subtitulo: 1.25rem;
+  --fs-titulo: 2.5rem;
+
+  /* alturas de cabeçalho/botão/rodapé (usadas pelas telas; a compactação por altura redefine) */
+  --h-cabecalho-cena: 7.25rem;
+  --h-botao: 3rem;
+  --h-botao-primario: 3.5rem;
+  --h-rodape: 2.75rem;
+
+  /* alvo de toque: nunca abaixo de 44px, mesmo com rem pequeno */
+  --cc-alvo-toque: max(44px, 2.75rem);
+
+  /* carta (proporção 3:4 fixa) */
+  --carta-razao: 0.75;
+}
+
+@supports (height: 100dvh) {
+  :root {
+    --cc-base: clamp(14px, min(100dvw / 90, 100dvh / 56.25), 26px);
+  }
+}
+
+html {
+  font-size: var(--cc-base);
+  /* campos focados não ficam sob o cabeçalho/teclado virtual */
+  scroll-padding-block: 6rem;
+  -webkit-text-size-adjust: 100%;
+}
+
+/* ---------------------------------------------------------------- celular / toque */
+@media (max-width: 700px) {
+  html {
+    --cc-base: 16px;
+    font-size: 16px;
+  }
+  :root {
+    --cc-gutter: 0.625rem;
+    --h-cabecalho-cena: 6rem;
+  }
+}
+@media (max-width: 359px) {
+  html {
+    font-size: 15px;
+  }
+}
+
+/* ---------------------------------------------------------------- layout de tela reutilizável
+   .tela-jogo reparte a altura entre cabeçalho / corpo / rodapé, SEM rolagem da página: o corpo é o único item flexível
+   (minmax(0, 1fr)) e cada filho usa min-height: 0. Rolagem interna só onde inevitável (listas, registro).
+   Em celular/altura muito baixa a tela volta a crescer com o conteúdo (rolagem vertical natural da página). */
+.tela {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+}
+@media (min-width: 701px) and (min-height: 480px) {
+  .tela-jogo {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr) auto;
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+  }
+  .tela-jogo > * {
+    min-height: 0;
+    min-width: 0;
+  }
+}
+
+/* contêiner central com largura máxima: 4K não estica a interface; o fundo da .tela preenche as laterais */
+.conteudo-central {
+  width: 100%;
+  max-width: var(--cc-largura-max);
+  margin-inline: auto;
+}
+
+/* ---------------------------------------------------------------- compactação por ALTURA (combina com a largura:
+   o rem já encolhe até o piso de 14px; abaixo disso só a altura em rem diminui, então estas faixas agem em px reais).
+   Classes utilitárias: .so-alto (some em altura < 820), .so-muito-alto (< 720), .so-folgado (some em altura < 600). */
+@media (min-width: 701px) and (max-height: 820px) {
+  :root {
+    --h-cabecalho-cena: 6.25rem;
+    --h-botao-primario: 3.25rem;
+    --cc-painel-pad: 0.75rem;
+  }
+  .oculta-h820 {
+    display: none !important;
+  }
+}
+@media (min-width: 701px) and (max-height: 720px) {
+  :root {
+    --h-cabecalho-cena: 4.5rem;
+    --h-botao: 2.75rem;
+    --h-botao-primario: 3rem;
+    --h-rodape: 2.25rem;
+  }
+  .oculta-h720 {
+    display: none !important;
+  }
+}
+@media (min-width: 701px) and (max-height: 620px) {
+  :root {
+    --h-cabecalho-cena: 2.5rem;
+    --h-botao: 2.5rem;
+    --h-botao-primario: 2.75rem;
+    --cc-painel-pad: 0.5rem;
+  }
+  .oculta-h620 {
+    display: none !important;
+  }
+}
+
+/* texto pixel art nítido: imagens e sprites não suavizam. Limitação: com rem fracionário o tamanho renderizado raramente
+   é múltiplo inteiro do pixel nativo; image-rendering: pixelated mantém bordas duras (pixels de largura 1 ou 2 device px
+   variam). Ver docs/ARQUITETURA.md. */
+img,
+canvas,
+.pixel-art {
+  image-rendering: pixelated;
+}
+
+.tela > main {
+  flex: 1 1 auto;
+}

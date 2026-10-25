@@ -1,14 +1,14 @@
 /* ===== Moldura de pedra ===== */
 .moldura {
   position: relative;
-  border: 4px solid var(--cc-contorno);
+  border: 0.25rem solid var(--cc-contorno);
   box-shadow:
-    inset 0 0 0 2px var(--cc-pedra-clara),
-    inset 0 0 0 3px var(--cc-contorno),
-    inset 0 0 0 5px var(--cc-turquesa-esc),
-    inset 0 0 28px rgba(0, 0, 0, 0.55),
-    0 0 0 2px var(--cc-turquesa-esc),
-    0 6px 0 rgba(0, 0, 0, 0.55);
+    inset 0 0 0 0.125rem var(--cc-pedra-clara),
+    inset 0 0 0 0.1875rem var(--cc-contorno),
+    inset 0 0 0 0.3125rem var(--cc-turquesa-esc),
+    inset 0 0 1.75rem rgba(0, 0, 0, 0.55),
+    0 0 0 0.125rem var(--cc-turquesa-esc),
+    0 0.375rem 0 rgba(0, 0, 0, 0.55);
 }
 
 /* cantoneiras turquesa */
@@ -16,17 +16,17 @@
   --c: var(--cc-turquesa-med);
   content: '';
   position: absolute;
-  inset: 9px;
+  inset: 0.5625rem;
   pointer-events: none;
   background:
-    linear-gradient(var(--c), var(--c)) 0 0 / 16px 3px no-repeat,
-    linear-gradient(var(--c), var(--c)) 0 0 / 3px 16px no-repeat,
-    linear-gradient(var(--c), var(--c)) 100% 0 / 16px 3px no-repeat,
-    linear-gradient(var(--c), var(--c)) 100% 0 / 3px 16px no-repeat,
-    linear-gradient(var(--c), var(--c)) 0 100% / 16px 3px no-repeat,
-    linear-gradient(var(--c), var(--c)) 0 100% / 3px 16px no-repeat,
-    linear-gradient(var(--c), var(--c)) 100% 100% / 16px 3px no-repeat,
-    linear-gradient(var(--c), var(--c)) 100% 100% / 3px 16px no-repeat;
+    linear-gradient(var(--c), var(--c)) 0 0 / 1rem 0.1875rem no-repeat,
+    linear-gradient(var(--c), var(--c)) 0 0 / 0.1875rem 1rem no-repeat,
+    linear-gradient(var(--c), var(--c)) 100% 0 / 1rem 0.1875rem no-repeat,
+    linear-gradient(var(--c), var(--c)) 100% 0 / 0.1875rem 1rem no-repeat,
+    linear-gradient(var(--c), var(--c)) 0 100% / 1rem 0.1875rem no-repeat,
+    linear-gradient(var(--c), var(--c)) 0 100% / 0.1875rem 1rem no-repeat,
+    linear-gradient(var(--c), var(--c)) 100% 100% / 1rem 0.1875rem no-repeat,
+    linear-gradient(var(--c), var(--c)) 100% 100% / 0.1875rem 1rem no-repeat;
 }
 
 .moldura--interna {
@@ -36,14 +36,15 @@
 /* ===== Botões ===== */
 .botao {
   position: relative;
+  flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 0.75rem;
   width: 100%;
-  min-height: var(--cc-alvo-toque);
-  padding: 8px 16px;
-  border: 3px solid var(--cc-contorno);
+  min-height: var(--h-botao);
+  padding: 0.5rem 1rem;
+  border: 0.1875rem solid var(--cc-contorno);
   cursor: pointer;
   text-transform: uppercase;
   letter-spacing: 0.08em;
@@ -57,79 +58,79 @@
 .botao__icone {
   display: flex;
   flex: none;
-  width: 40px;
+  width: 2.5rem;
   justify-content: center;
 }
 
 .botao__icone svg {
   width: 100%;
   height: auto;
-  max-height: 34px;
+  max-height: 2.125rem;
 }
 
 .botao--primario {
-  min-height: 56px;
+  min-height: var(--h-botao-primario);
   font-size: 1.35rem;
   color: #fff3cc;
-  text-shadow: 2px 2px 0 var(--cc-ouro-esc);
+  text-shadow: 0.125rem 0.125rem 0 var(--cc-ouro-esc);
   background: linear-gradient(180deg, #d4a23a 0%, #a87414 50%, #8a5c10 100%);
   box-shadow:
-    inset 0 0 0 2px #f2cf6e,
-    inset 0 -5px 0 rgba(60, 30, 0, 0.35),
-    0 0 0 2px var(--cc-ouro),
-    0 4px 0 rgba(0, 0, 0, 0.6);
+    inset 0 0 0 0.125rem #f2cf6e,
+    inset 0 -0.3125rem 0 rgba(60, 30, 0, 0.35),
+    0 0 0 0.125rem var(--cc-ouro),
+    0 0.25rem 0 rgba(0, 0, 0, 0.6);
 }
 
 .botao--secundario {
   color: var(--cc-texto);
   background: linear-gradient(180deg, #14283a, #0b1826);
   box-shadow:
-    inset 0 0 0 2px #1f5876,
-    inset 0 -4px 0 rgba(0, 0, 0, 0.35),
-    0 0 0 2px #17445c,
-    0 4px 0 rgba(0, 0, 0, 0.55);
+    inset 0 0 0 0.125rem #1f5876,
+    inset 0 -0.25rem 0 rgba(0, 0, 0, 0.35),
+    0 0 0 0.125rem #17445c,
+    0 0.25rem 0 rgba(0, 0, 0, 0.55);
 }
 
 .botao--link {
   display: inline-flex;
   width: auto;
   min-height: var(--cc-alvo-toque);
-  padding: 4px 8px;
+  padding: 0.25rem 0.5rem;
   border: 0;
   background: none;
   color: var(--cc-turquesa);
   font-size: 0.9rem;
   letter-spacing: 0.1em;
   text-decoration: underline;
-  text-decoration-thickness: 3px;
-  text-underline-offset: 6px;
+  text-decoration-thickness: 0.1875rem;
+  text-underline-offset: 0.375rem;
 }
 
 .botao--primario:hover:not([aria-disabled='true']) {
   filter: brightness(1.12);
   box-shadow:
-    inset 0 0 0 2px #f2cf6e,
-    inset 0 -5px 0 rgba(60, 30, 0, 0.35),
-    0 0 0 2px var(--cc-ouro),
-    0 0 18px rgba(230, 182, 72, 0.5),
-    0 4px 0 rgba(0, 0, 0, 0.6);
+    inset 0 0 0 0.125rem #f2cf6e,
+    inset 0 -0.3125rem 0 rgba(60, 30, 0, 0.35),
+    0 0 0 0.125rem var(--cc-ouro),
+    0 0 1.125rem rgba(230, 182, 72, 0.5),
+    0 0.25rem 0 rgba(0, 0, 0, 0.6);
 }
 
 .botao--secundario:hover:not([aria-disabled='true']) {
   color: #fff;
   box-shadow:
-    inset 0 0 0 2px var(--cc-turquesa-med),
-    inset 0 -4px 0 rgba(0, 0, 0, 0.35),
-    0 0 0 2px var(--cc-turquesa-med),
-    0 0 14px var(--cc-brilho),
-    0 4px 0 rgba(0, 0, 0, 0.55);
+    inset 0 0 0 0.125rem var(--cc-turquesa-med),
+    inset 0 -0.25rem 0 rgba(0, 0, 0, 0.35),
+    0 0 0 0.125rem var(--cc-turquesa-med),
+    0 0 0.875rem var(--cc-brilho),
+    0 0.25rem 0 rgba(0, 0, 0, 0.55);
 }
 
 .botao--secundario:focus-visible {
   box-shadow:
-    inset 0 0 0 2px var(--cc-turquesa),
-    0 0 0 2px var(--cc-turquesa),
-    0 0 18px var(--cc-brilho);
+    inset 0 0 0 0.125rem var(--cc-turquesa),
+    0 0 0 0.125rem var(--cc-turquesa),
+    0 0 1.125rem var(--cc-brilho);
 }
 
 .botao--link:hover {
@@ -143,11 +144,11 @@
 
 .botao__ocupado {
   display: inline-block;
-  margin: 0 18px;
-  width: 10px;
-  height: 10px;
+  margin: 0 1.125rem;
+  width: 0.625rem;
+  height: 0.625rem;
   background: currentColor;
-  box-shadow: 18px 0 0 currentColor, -18px 0 0 currentColor;
+  box-shadow: 1.125rem 0 0 currentColor, -1.125rem 0 0 currentColor;
   animation: piscar 0.9s steps(2, jump-none) infinite;
 }
 
@@ -165,13 +166,13 @@
 
 /* Espaço reservado para a mensagem de erro: o layout não desloca quando ela aparece. */
 .campo__reserva {
-  min-height: 44px;
-  padding-top: 6px;
+  min-height: 2.75rem;
+  padding-top: 0.375rem;
 }
 
 .campo__rotulo {
   display: block;
-  margin: 0 0 6px 2px;
+  margin: 0 0 0.375rem 0.125rem;
   color: var(--cc-turquesa);
   font-size: 0.95rem;
   font-weight: 700;
@@ -182,12 +183,12 @@
 .campo__caixa {
   display: flex;
   align-items: center;
-  gap: 8px;
-  min-height: 52px;
-  padding: 0 4px 0 12px;
+  gap: 0.5rem;
+  min-height: 3.25rem;
+  padding: 0 0.25rem 0 0.75rem;
   background: var(--cc-campo);
-  border: 3px solid #1a3a50;
-  box-shadow: inset 0 0 0 1px #000, inset 0 4px 10px rgba(0, 0, 0, 0.7);
+  border: 0.1875rem solid #1a3a50;
+  box-shadow: inset 0 0 0 1px #000, inset 0 0.25rem 0.625rem rgba(0, 0, 0, 0.7);
   transition: box-shadow 0.12s, border-color 0.12s;
 }
 
@@ -199,9 +200,9 @@
   border-color: var(--cc-turquesa);
   box-shadow:
     inset 0 0 0 1px #000,
-    inset 0 0 8px rgba(63, 220, 240, 0.25),
-    0 0 0 2px rgba(63, 220, 240, 0.5),
-    0 0 18px var(--cc-brilho);
+    inset 0 0 0.5rem rgba(63, 220, 240, 0.25),
+    0 0 0 0.125rem rgba(63, 220, 240, 0.5),
+    0 0 1.125rem var(--cc-brilho);
 }
 
 .campo[data-estado='erro'] .campo__caixa {
@@ -219,7 +220,7 @@
 
 .campo__icone {
   flex: none;
-  width: 26px;
+  width: 1.625rem;
 }
 
 .campo__icone svg {
@@ -230,7 +231,7 @@
 .campo__entrada {
   flex: 1;
   min-width: 0;
-  height: 46px;
+  height: 2.875rem;
   padding: 0;
   border: 0;
   outline: 0;
@@ -250,8 +251,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: max(44px, 2.75rem);
+  height: max(44px, 2.75rem);
   padding: 0;
   border: 0;
   background: transparent;
@@ -259,7 +260,7 @@
 }
 
 .campo__acao svg {
-  width: 32px;
+  width: 2rem;
   height: auto;
 }
 
@@ -269,8 +270,8 @@
 
 .campo__erro {
   margin: 0;
-  padding: 6px 8px;
-  border-left: 4px solid var(--cc-erro);
+  padding: 0.375rem 0.5rem;
+  border-left: 0.25rem solid var(--cc-erro);
   background: rgba(255, 138, 122, 0.1);
   color: var(--cc-erro);
   font-size: 0.85rem;
@@ -285,10 +286,10 @@
 
 .cabecalho__cena {
   position: relative;
-  height: clamp(96px, 11vw, 140px);
+  height: var(--h-cabecalho-cena);
   overflow: hidden;
   background: linear-gradient(180deg, #050d18, #0a2236);
-  border-bottom: 4px solid var(--cc-contorno);
+  border-bottom: 0.25rem solid var(--cc-contorno);
 }
 
 .cabecalho__imagem {
@@ -296,7 +297,7 @@
   top: 0;
   height: 100%;
   width: 34%;
-  max-width: 480px;
+  max-width: 30rem;
   object-fit: cover;
   image-rendering: pixelated;
 }
@@ -321,14 +322,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding-top: clamp(6px, 1.2vw, 14px);
+  padding-top: 0.875rem;
 }
 
 .cabecalho__marca {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(6px, 1.4vw, 18px);
+  gap: 1.125rem;
 }
 
 .cabecalho__nome,
@@ -340,31 +341,31 @@
   text-transform: uppercase;
   color: #d9ccaa;
   text-shadow:
-    -2px -2px 0 #1a1308, 2px -2px 0 #1a1308, -2px 2px 0 #1a1308, 2px 2px 0 #1a1308,
-    0 4px 0 #1a1308, 3px 5px 0 rgba(0, 0, 0, 0.7), 0 -1px 0 #f3ead0;
+    -0.125rem -0.125rem 0 #1a1308, 0.125rem -0.125rem 0 #1a1308, -0.125rem 0.125rem 0 #1a1308, 0.125rem 0.125rem 0 #1a1308,
+    0 0.25rem 0 #1a1308, 0.1875rem 0.3125rem 0 rgba(0, 0, 0, 0.7), 0 -1px 0 #f3ead0;
 }
 
 .cabecalho__nome {
-  font-size: clamp(2rem, 5vw, 4.1rem);
+  font-size: min(4.1rem, calc(var(--h-cabecalho-cena) * 0.46));
   letter-spacing: 0.04em;
 }
 
 .cabecalho__titulo {
-  font-size: clamp(1.9rem, 4.6vw, 3.9rem);
+  font-size: min(3.9rem, calc(var(--h-cabecalho-cena) * 0.44 + 0.9rem));
   letter-spacing: 0.08em;
 }
 
 .cabecalho__ornamento {
-  width: clamp(54px, 9vw, 128px);
+  width: 8rem;
   height: auto;
 }
 
 .cabecalho__subtitulo {
-  margin: 4px 0 0;
-  padding: 0 10px;
+  margin: 0.25rem 0 0;
+  padding: 0 0.625rem;
   background: rgba(4, 10, 18, 0.55);
   color: #a8c8c0;
-  font-size: clamp(0.62rem, 1.35vw, 1rem);
+  font-size: 1rem;
   letter-spacing: 0.3em;
   text-transform: uppercase;
 }
@@ -373,14 +374,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: clamp(8px, 2vw, 28px);
-  padding: clamp(6px, 1.2vw, 14px) 12px;
-  border-bottom: 4px solid var(--cc-contorno);
-  box-shadow: inset 0 -3px 0 var(--cc-turquesa-esc), inset 0 3px 0 var(--cc-pedra-clara);
+  gap: 1.75rem;
+  padding: 0.875rem 0.75rem;
+  border-bottom: 0.25rem solid var(--cc-contorno);
+  box-shadow: inset 0 -0.1875rem 0 var(--cc-turquesa-esc), inset 0 0.1875rem 0 var(--cc-pedra-clara);
 }
 
 .cabecalho__faixa .cabecalho__ornamento {
-  width: clamp(44px, 7vw, 100px);
+  width: 6.25rem;
 }
 
 /* ===== Rodapé de controles ===== */
@@ -389,11 +390,11 @@
   flex-wrap: wrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px 24px;
-  padding: 10px clamp(12px, 3vw, 40px);
-  border-top: 4px solid var(--cc-contorno);
-  box-shadow: inset 0 3px 0 var(--cc-pedra-clara), inset 0 5px 0 var(--cc-turquesa-esc);
-  font-size: clamp(0.7rem, 1.2vw, 0.9rem);
+  gap: 0.5rem 1.5rem;
+  padding: 0.625rem 2.5rem;
+  border-top: 0.25rem solid var(--cc-contorno);
+  box-shadow: inset 0 0.1875rem 0 var(--cc-pedra-clara), inset 0 0.3125rem 0 var(--cc-turquesa-esc);
+  font-size: max(var(--fs-min), 0.9rem);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -401,7 +402,7 @@
 .rodape__controles {
   display: flex;
   flex-wrap: wrap;
-  gap: 8px clamp(14px, 2.5vw, 36px);
+  gap: 0.5rem 2.25rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -411,25 +412,25 @@
 .rodape__controles li {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 .rodape__controles svg {
-  width: 28px;
+  width: 1.75rem;
   height: auto;
 }
 
 .rodape__frase {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   margin: 0;
   color: var(--cc-turquesa);
   text-align: right;
 }
 
 .rodape__frase svg {
-  width: 36px;
+  width: 2.25rem;
   height: auto;
   flex: none;
 }
@@ -439,7 +440,7 @@
     display: none;
   }
   .cabecalho__faixa .cabecalho__ornamento {
-    width: 36px;
+    width: 2.25rem;
   }
   .rodape__controles {
     display: none;
@@ -448,5 +449,97 @@
     width: 100%;
     justify-content: center;
     text-align: center;
+  }
+}
+
+/* ===== Responsivo: cabeçalho/rodapé compactos por altura e valores fluidos de tablet/celular ===== */
+@media (min-width: 701px) and (max-height: 820px) {
+  .cabecalho__faixa {
+    padding-block: 0.375rem;
+  }
+  .cabecalho__titulo {
+    font-size: 2.75rem;
+  }
+  .cabecalho__logo {
+    padding-top: 0.5rem;
+  }
+}
+@media (min-width: 701px) and (max-height: 720px) {
+  .cabecalho__subtitulo {
+    display: none;
+  }
+  .cabecalho__logo {
+    padding-top: 0.25rem;
+  }
+  .cabecalho__titulo {
+    font-size: 2rem;
+  }
+  .cabecalho__faixa {
+    padding-block: 0.125rem;
+  }
+  .rodape {
+    padding-block: 0.25rem;
+  }
+  .rodape__controles svg {
+    width: 1.5rem;
+  }
+}
+@media (min-width: 701px) and (max-height: 620px) {
+  /* logo compacto de uma linha: some só o decorativo */
+  .rodape,
+  .cabecalho__imagem,
+  .cabecalho__subtitulo,
+  .cabecalho__logo .cabecalho__ornamento {
+    display: none;
+  }
+  .cabecalho__logo {
+    padding-top: 0.125rem;
+  }
+  .cabecalho__nome {
+    font-size: 1.75rem;
+  }
+}
+@media (max-width: 1100px) {
+  .cabecalho__cena {
+    height: min(var(--h-cabecalho-cena), clamp(6rem, 11vw, 8.75rem));
+  }
+  .cabecalho__logo {
+    padding-top: clamp(0.375rem, 1.2vw, 0.875rem);
+  }
+  .cabecalho__marca {
+    gap: clamp(0.375rem, 1.4vw, 1.125rem);
+  }
+  .cabecalho__nome {
+    font-size: clamp(2rem, 5vw, 4.1rem);
+  }
+  .cabecalho__titulo {
+    font-size: clamp(1.9rem, 4.6vw, 3.9rem);
+  }
+  .cabecalho__ornamento {
+    width: clamp(3.375rem, 9vw, 8rem);
+  }
+  .cabecalho__subtitulo {
+    font-size: clamp(0.8125rem, 1.35vw, 1rem);
+  }
+  .cabecalho__faixa {
+    gap: clamp(0.5rem, 2vw, 1.75rem);
+    padding: clamp(0.375rem, 1.2vw, 0.875rem) 0.75rem;
+  }
+  .cabecalho__faixa .cabecalho__ornamento {
+    width: clamp(2.75rem, 7vw, 6.25rem);
+  }
+  .rodape {
+    padding: 0.625rem clamp(0.75rem, 3vw, 2.5rem);
+    font-size: clamp(0.8125rem, 1.2vw, 0.9rem);
+  }
+  .rodape__controles {
+    gap: 0.5rem clamp(0.875rem, 2.5vw, 2.25rem);
+  }
+}
+@media (pointer: coarse) {
+  .botao,
+  .botao--link,
+  .campo__entrada {
+    min-height: 44px;
   }
 }

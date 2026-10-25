@@ -6,12 +6,12 @@
 .criar-conta__botoes {
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  margin-top: 18px;
+  gap: 0.875rem;
+  margin-top: 1.125rem;
 }
 
 .criar-conta__nota {
-  margin: 6px 0 0;
+  margin: 0.375rem 0 0;
   color: var(--cc-texto-suave);
   font-size: 0.85rem;
   line-height: 1.4;
@@ -19,8 +19,8 @@
 
 .criar-conta__erro-geral {
   margin: 0;
-  padding: 10px 12px;
-  border: 3px solid var(--cc-erro);
+  padding: 0.625rem 0.75rem;
+  border: 0.1875rem solid var(--cc-erro);
   background: var(--cc-erro-fundo);
   color: var(--cc-erro);
   font-size: 0.9rem;

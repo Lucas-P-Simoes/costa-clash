@@ -1,5 +1,5 @@
 // QA independente: invariantes, determinismo, JSON, vazamento de informação, IA e baralhos (itens 6-9 da missão).
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { BARALHO_INICIAL } from '../../data/baralhoInicial'
 import { BARALHOS_OPONENTES } from '../../data/baralhosOponentes'
 import { CATALOGO } from '../../data/catalogo'
@@ -14,6 +14,9 @@ import { criarRng, embaralhar } from '../rng'
 import { visaoParaJogador } from '../visao'
 import { simularIAxIA } from './simular'
 import { cenario, cenarioCombate, cmd, ok, uidDe } from './util'
+
+// Simulações longas: sob carga ocasional passam de 5 s (asserções inalteradas).
+vi.setConfig({ testTimeout: 30_000 })
 
 const cat = mapaCatalogo()
 const duelo = (seed: number, a: readonly string[] = BARALHO_INICIAL, b: readonly string[] = BARALHOS_OPONENTES['porto']!): EstadoDuelo => {

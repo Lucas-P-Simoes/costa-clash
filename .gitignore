@@ -29,3 +29,7 @@ dist-ssr
 !.env.example
 .dev.vars
 .wrangler
+
+# Playwright
+test-results
+playwright-report

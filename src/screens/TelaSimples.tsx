@@ -18,7 +18,7 @@ interface Props {
 export function TelaSimples({ titulo, children, rotuloVoltar = 'Voltar ao login', onVoltar }: Props) {
   useAtalhoVoltar(onVoltar)
   return (
-    <div className="tela">
+    <div className="tela tela-jogo">
       <CabecalhoTela titulo={titulo} />
       <main className="tela-simples__corpo">
         <MolduraPedra as="section" className="tela-simples__painel">

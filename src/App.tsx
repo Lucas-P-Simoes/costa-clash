@@ -68,7 +68,7 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
   switch (tela.nome) {
     case 'restaurando':
       return (
-        <div className="tela">
+        <div className="tela tela-jogo">
           <CabecalhoTela titulo="Costa Clash" />
           <main className="tela-simples__corpo">
             <p role="status">Carregando sua sessão…</p>

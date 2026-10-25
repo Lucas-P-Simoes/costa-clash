@@ -18,7 +18,7 @@ interface Props {
 
 export function TelaLogin({ servicoAuth, focarAoMontar, aviso, onAutenticado, onCriarConta, onRecuperarSenha, onConvidado }: Props) {
   return (
-    <div className="tela tela-login">
+    <div className="tela tela-jogo tela-login">
       <CabecalhoTela titulo="Login" />
       <main className="tela-login__corpo">
         <div className="tela-login__cena-caixa" aria-hidden="true">

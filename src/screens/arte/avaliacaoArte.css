@@ -1,7 +1,7 @@
 .avarte {
-  max-width: 1200px;
+  max-width: 75rem;
   margin: 0 auto;
-  padding: 16px;
+  padding: 1rem;
   color: #e8f4ff;
   background: #07101a;
   min-height: 100dvh;
@@ -12,27 +12,27 @@
   font-size: 1.4rem;
 }
 .avarte__aviso {
-  padding: 8px 12px;
+  padding: 0.5rem 0.75rem;
   background: #3a2a08;
-  border: 2px solid #e0a82e;
+  border: 0.125rem solid #e0a82e;
 }
 .avarte__grade {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
-  gap: 16px;
-  margin: 16px 0;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 18.75rem), 1fr));
+  gap: 1rem;
+  margin: 1rem 0;
 }
 .avarte__item {
-  padding: 12px;
+  padding: 0.75rem;
   background: #0e1a28;
-  border: 2px solid #1f3a54;
+  border: 0.125rem solid #1f3a54;
   min-width: 0;
 }
 .avarte__item h2 {
   font-size: 1.05rem;
 }
 .avarte__item h3 {
-  margin: 12px 0 4px;
+  margin: 0.75rem 0 0.25rem;
   font-size: 0.9rem;
 }
 .avarte__carta {
@@ -40,15 +40,15 @@
   justify-content: center;
 }
 .avarte__carta .carta--mao {
-  width: 232px;
-  height: 330px;
+  width: 14.5rem;
+  height: 19.3333rem;
 }
 .avarte__selo {
-  margin: 8px 0 0;
-  padding: 4px 8px;
+  margin: 0.5rem 0 0;
+  padding: 0.25rem 0.5rem;
   font-weight: 700;
   text-align: center;
-  border: 2px solid;
+  border: 0.125rem solid;
 }
 .avarte__selo--pendente {
   color: #ffb0a0;
@@ -68,48 +68,49 @@
 .avarte__prompt {
   width: 100%;
   box-sizing: border-box;
-  font: 0.75rem/1.35 ui-monospace, monospace;
+  font: 0.8125rem/1.35 ui-monospace, monospace;
   color: #e8f4ff;
   background: #050b12;
   border: 1px solid #1f3a54;
 }
 .avarte__copiar {
-  margin-top: 6px;
-  padding: 6px 12px;
+  margin-top: 0.375rem;
+  min-height: 44px;
+  padding: 0.375rem 0.75rem;
   font-weight: 700;
   color: #07101a;
   background: #e0a82e;
-  border: 2px solid #07101a;
+  border: 0.125rem solid #07101a;
   cursor: pointer;
 }
 .avarte__status {
-  margin-left: 8px;
+  margin-left: 0.5rem;
   font-size: 0.8rem;
 }
 .avarte__legenda {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr));
-  gap: 8px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 16.25rem), 1fr));
+  gap: 0.5rem;
   padding: 0;
   list-style: none;
 }
 .avarte__legenda li {
   display: flex;
-  gap: 10px;
+  gap: 0.625rem;
   align-items: center;
-  padding: 6px 8px;
-  border: 3px solid;
+  padding: 0.375rem 0.5rem;
+  border: 0.1875rem solid;
   background: #0e1a28;
 }
 .avarte__selo-demo {
   position: relative;
   flex: none;
-  width: 36px;
-  height: 36px;
+  width: 2.25rem;
+  height: 2.25rem;
 }
 .avarte__selo-demo .carta__selo {
   top: 0;
   left: 0;
-  width: 36px;
+  width: 2.25rem;
   max-width: none;
 }

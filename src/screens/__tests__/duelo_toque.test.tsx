@@ -211,7 +211,7 @@ describe('Nomes por palavra e selo de posição', () => {
     expect(r.container.querySelector('.carta__nome')!.textContent).toBe('Pesquisa Oceanográfica')
   })
 
-  it('CSS: selo de posição de 10 px; deitada o chip contra-rotacionado tem o centro a >= 20 px da borda; container query do nome', () => {
+  it('CSS (em rem, escala fluida): selo de posição de 10 px de referência; deitada o chip contra-rotacionado tem o centro a >= 20 px de referência da borda; container query do nome', () => {
     const css = readFileSync(resolve(__dirname, '../duelo/duelo.css'), 'utf8')
     const trecho = (sel: string) => {
       const i = css.indexOf(`
@@ -219,10 +219,10 @@ ${sel} {`)
       expect(i, sel).toBeGreaterThanOrEqual(0)
       return css.slice(i, css.indexOf('}', i))
     }
-    expect(trecho('.carta__posicao')).toContain('font-size: 10px')
-    expect(trecho('.carta__posicao')).toContain('width: 40px')
-    expect(trecho('.carta--campo.carta--defesa .carta__posicao')).toContain('top: 15px') // 3 + (40 - 16) / 2
-    expect(css).toContain('@container carta (max-width: 107px)')
-    expect(trecho('.duelo-mao__dica')).toContain('font-size: 0.6875rem')
+    expect(trecho('.carta__posicao')).toContain('font-size: 0.625rem')
+    expect(trecho('.carta__posicao')).toContain('width: 2.5rem')
+    expect(trecho('.carta--campo.carta--defesa .carta__posicao')).toContain('top: 0.9375rem') // (3 + (40 - 16) / 2) px de referência / 16
+    expect(css).toContain('@container carta (max-width: 6.6875rem)')
+    expect(trecho('.duelo-mao__dica')).toContain('font-size: var(--fs-min)')
   })
 })

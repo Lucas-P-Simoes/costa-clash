@@ -1,10 +1,23 @@
 /* Tela do duelo (redesenho fiel a Referencia-telas/Motor-Duelo.png). Reutiliza tokens/molduras do design system e a
    MolduraOrnamentada (styles/moldura-ornamentada.css). Desktop: tudo cabe numa tela; tablet/celular: coluna única. */
 .tela-partida {
-  --topo-h: clamp(52px, 13.7dvh - 43px, 105px);
-  display: flex;
-  flex-direction: column;
-  min-height: 100dvh;
+  /* tamanhos por altura (compactação em "Tamanhos por altura" no fim do arquivo) */
+  --topo-h: 5rem;
+  --av: 3rem;
+  --fs-nome: 1.45rem;
+  --fs-vida: 2.3rem;
+  --coracao: 1.8rem;
+  --fs-turno: 2rem;
+  --fs-turno-outro: 1.65rem;
+  --fs-btn: 1.35rem;
+  --btn-h: 4rem;
+  --fs-atk: 1.2rem;
+  --fs-carta-nome: 0.8125rem;
+  --suporte: 2.6rem;
+  --gap-z: 0.55rem;
+  --gap-col: 0.625rem;
+  --lateral-w: 22.5rem;
+  --pad-moldura: 0.8125rem;
   background: radial-gradient(ellipse at 50% -10%, #0a2234 0%, #06111c 55%, #03080e 100%);
 }
 .duelo-fundo {
@@ -18,13 +31,13 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 16px;
+  gap: 1rem;
   height: var(--topo-h);
-  padding: 0 calc(var(--topo-h) * 2.64 + 8px) 0 calc(var(--topo-h) * 1.1);
+  padding: 0 calc(var(--topo-h) * 2.64 + 0.5rem) 0 calc(var(--topo-h) * 1.1);
   overflow: hidden;
   background: linear-gradient(180deg, #010a15 0%, #012b44 58%, #004a67 84%, #00101c 100%);
-  border-bottom: 3px solid #02070d;
-  box-shadow: 0 2px 0 #11566c;
+  border-bottom: 0.1875rem solid #02070d;
+  box-shadow: 0 0.125rem 0 #11566c;
 }
 .duelo-topo__cena {
   position: absolute;
@@ -62,10 +75,10 @@
   letter-spacing: 0.03em;
 }
 .duelo-topo .cabecalho__subtitulo {
-  margin: 2px 0 0;
+  margin: 0.125rem 0 0;
   padding: 0;
   background: none;
-  font-size: calc(var(--topo-h) * 0.19);
+  font-size: max(var(--fs-min), calc(var(--topo-h) * 0.19));
   letter-spacing: 0.28em;
   color: #36b4d4;
   text-shadow: 0 1px 0 #02101a;
@@ -83,25 +96,25 @@
   letter-spacing: 0.06em;
   color: #5ad8f0;
   background: linear-gradient(180deg, #0c2230, #081620);
-  border: 2px solid #1a7f9c;
-  border-radius: 3px;
-  box-shadow: 0 0 0 1px #02070d, 0 0 8px rgba(63, 220, 240, 0.3);
+  border: 0.125rem solid #1a7f9c;
+  border-radius: 0.1875rem;
+  box-shadow: 0 0 0 1px #02070d, 0 0 0.5rem rgba(63, 220, 240, 0.3);
 }
 
 /* ---------------------------------------------------------------- grade principal */
 .duelo-corpo {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) clamp(300px, 25vw, 372px);
-  gap: 10px;
+  grid-template-columns: minmax(0, 1fr) minmax(17rem, var(--lateral-w));
+  gap: var(--gap-col);
   width: 100%;
-  max-width: 1760px;
+  max-width: var(--cc-largura-duelo);
   margin: 0 auto;
-  padding: 8px 14px 12px;
+  padding: 0.5rem 0.875rem 0.75rem;
 }
 .duelo-tabuleiro {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 0.375rem;
   min-width: 0;
 }
 
@@ -110,14 +123,14 @@
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   grid-template-rows: auto minmax(0, 1fr);
-  gap: 6px 14px;
-  padding: 8px 12px 10px;
+  gap: 0.375rem 0.875rem;
+  padding: 0.5rem 0.75rem 0.625rem;
 }
 .duelo-lado__topo {
   display: flex;
   flex-wrap: wrap;
   align-items: center;
-  gap: 6px 16px;
+  gap: 0.375rem 1rem;
   min-width: 0;
 }
 .duelo-lado__campo {
@@ -126,17 +139,16 @@
 .duelo-placa {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 4px 18px 4px 6px;
+  gap: 0.625rem;
+  padding: 0.25rem 1.125rem 0.25rem 0.375rem;
   background: linear-gradient(90deg, rgba(8, 18, 28, 0.9), rgba(8, 18, 28, 0.5));
-  border: 2px solid #11566c;
-  border-radius: 4px;
+  border: 0.125rem solid #11566c;
+  border-radius: 0.25rem;
 }
 .duelo-placa--oponente {
   border-color: #86261c;
 }
 .duelo-avatar {
-  --av: clamp(38px, 5.4dvh, 58px);
   flex: none;
   display: flex;
   align-items: center;
@@ -144,7 +156,7 @@
   width: var(--av);
   height: var(--av);
   padding: calc(var(--av) * 0.2);
-  border-radius: 8px;
+  border-radius: 0.5rem;
 }
 .duelo-avatar > svg {
   width: 100%;
@@ -152,22 +164,22 @@
 }
 .duelo-avatar--oponente {
   background: radial-gradient(circle, #3a0e10 0%, #12060a 80%);
-  box-shadow: 0 0 10px rgba(255, 90, 74, 0.55), inset 0 0 0 2px #86261c;
+  box-shadow: 0 0 0.625rem rgba(255, 90, 74, 0.55), inset 0 0 0 0.125rem #86261c;
 }
 .duelo-avatar--voce {
   background: radial-gradient(circle, #0d3252 0%, #06121e 80%);
-  box-shadow: 0 0 10px rgba(63, 168, 240, 0.55), inset 0 0 0 2px #1c4f86;
+  box-shadow: 0 0 0.625rem rgba(63, 168, 240, 0.55), inset 0 0 0 0.125rem #1c4f86;
 }
 .duelo-nome h2 {
   margin: 0;
-  font-size: clamp(1rem, 2.6dvh, 1.6rem);
+  font-size: var(--fs-nome);
   line-height: 1.05;
   text-transform: uppercase;
   letter-spacing: 0.06em;
 }
 .duelo-nome p {
   margin: 1px 0 0;
-  font-size: clamp(0.6rem, 1.7dvh, 0.9rem);
+  font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #6cc0dc;
@@ -182,19 +194,19 @@
   position: relative;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 0.5rem;
   margin: 0;
-  padding: 3px 16px 3px 12px;
+  padding: 0.1875rem 1rem 0.1875rem 0.75rem;
   text-transform: uppercase;
   color: #6cc0dc;
   background: linear-gradient(180deg, #08141e, #050d15);
-  border: 2px solid #11566c;
-  border-radius: 4px;
+  border: 0.125rem solid #11566c;
+  border-radius: 0.25rem;
   box-shadow: inset 0 0 0 1px #02070d;
 }
 .duelo-vida strong {
   min-width: 2.4ch;
-  font-size: clamp(1.4rem, 4.2dvh, 2.5rem);
+  font-size: var(--fs-vida);
   font-family: var(--cc-fonte-logo);
   font-weight: 400;
   line-height: 1;
@@ -207,16 +219,16 @@
   color: #3fdcf0;
 }
 .duelo-coracao {
-  width: clamp(22px, 3.3dvh, 34px);
+  width: var(--coracao);
   height: auto;
 }
 .duelo-vida__delta {
   position: absolute;
   top: 50%;
-  right: 6px;
+  right: 0.375rem;
   margin-top: -0.6em;
   line-height: 1.2;
-  text-shadow: 0 0 3px #000, 1px 1px 0 #000;
+  text-shadow: 0 0 0.1875rem #000, 1px 1px 0 #000;
   font-family: var(--cc-fonte-logo);
   font-size: 1.2rem;
   pointer-events: none;
@@ -237,20 +249,20 @@
 .duelo-contagens {
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.125rem;
   margin: 0;
   padding: 0;
   list-style: none;
-  font-size: clamp(0.6rem, 1.6dvh, 0.8rem);
+  font-size: var(--fs-min);
   color: #8ab4c4;
   text-transform: uppercase;
 }
 .duelo-mao-oponente {
   display: flex;
-  padding-left: 8px;
+  padding-left: 0.5rem;
 }
 .duelo-mao-oponente .carta--verso {
-  margin-left: -8px;
+  margin-left: -0.5rem;
 }
 
 /* ---- zonas de unidade e faixa de suportes ---- */
@@ -259,22 +271,22 @@
   grid-row: 2;
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: clamp(6px, 1dvh, 12px);
+  gap: var(--gap-z);
   min-height: 0;
 }
 .duelo-suportes {
   grid-column: 2;
   grid-row: 1;
   display: grid;
-  grid-template-columns: repeat(5, clamp(28px, 4.4dvh, 44px));
-  gap: 4px;
+  grid-template-columns: repeat(5, var(--suporte));
+  gap: 0.25rem;
   align-self: center;
-  padding-top: 11px;
+  padding-top: 0.6875rem;
 }
 .duelo-suportes::before {
   content: 'Suportes';
   position: absolute;
-  margin-top: -13px;
+  margin-top: -0.8125rem;
   font-size: 0.6rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
@@ -301,29 +313,29 @@
   align-items: center;
   padding: 0;
   background: rgba(2, 8, 14, 0.5);
-  border: 2px dashed #1b6f89;
-  border-radius: 6px;
+  border: 0.125rem dashed #1b6f89;
+  border-radius: 0.375rem;
   color: inherit;
 }
 .suporte--vazio {
-  border-radius: 4px;
+  border-radius: 0.25rem;
   border-width: 1px;
 }
 .zona--valida {
   cursor: pointer;
   border-color: var(--cc-turquesa);
-  box-shadow: 0 0 0 2px var(--cc-brilho), 0 0 12px var(--cc-brilho);
+  box-shadow: 0 0 0 0.125rem var(--cc-brilho), 0 0 0.75rem var(--cc-brilho);
 }
 .zona__losango {
-  width: clamp(16px, 2.6dvh, 28px);
+  width: 1.4625rem;
   aspect-ratio: 1;
   transform: rotate(45deg) scale(0.75);
-  border: 3px solid #1b6f89;
+  border: 0.1875rem solid #1b6f89;
   opacity: 0.8;
 }
 .suporte .zona__losango {
   width: 40%;
-  border-width: 2px;
+  border-width: 0.125rem;
 }
 .zona__fantasma {
   position: absolute;
@@ -340,10 +352,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 0.75rem;
   margin: 0;
-  padding: 3px 12px;
-  font-size: clamp(0.7rem, 1.9dvh, 0.9rem);
+  padding: 0.1875rem 0.75rem;
+  font-size: 0.9rem;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   color: #9fb4bc;
@@ -359,14 +371,14 @@
   color: #72e8a8;
 }
 .duelo-terreno__efeito {
-  font-size: 0.85em;
+  font-size: max(var(--fs-min), 0.85em);
   text-transform: none;
   letter-spacing: 0.02em;
   color: #a4c4d0;
 }
 .duelo-terreno__orn {
   flex: none;
-  width: 34px;
+  width: 2.125rem;
   height: auto;
   opacity: 0.8;
 }
@@ -376,19 +388,19 @@
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.125rem;
   min-width: 0;
-  padding: 3px;
+  padding: 0.1875rem;
   overflow: hidden;
   color: #fff;
   text-align: center;
   font: inherit;
   background: #0e1a28;
   /* Moldura colorida por categoria (src/arte/categorias.ts) com anel escuro, como em Estilos-de-cartas.webp. */
-  border: 3px solid var(--c-borda, #3b5a74);
+  border: 0.1875rem solid var(--c-borda, #3b5a74);
   box-shadow:
     inset 0 0 0 1px #07101a,
-    0 0 0 2px #07101a;
+    0 0 0 0.125rem #07101a;
 }
 button.carta {
   cursor: pointer;
@@ -437,20 +449,23 @@ button.carta {
 /* após contra-rotacionar, o chip (40x16) ocupa 40 px de largura visual ao lado do canto que vira a borda direita:
    o centro precisa ficar a >= 20 px dessa borda => top = 3 + (40 - 16) / 2 */
 .carta--campo.carta--defesa .carta__posicao {
-  top: 15px;
-  right: 3px;
+  top: 0.9375rem;
+  right: 0.1875rem;
   transform: rotate(-90deg);
 }
 .carta--mini {
   width: 100%;
   height: 100%;
-  font-size: 0.6rem;
+  font-size: var(--fs-min);
 }
 .carta--mao {
+  --rot: rotate(0deg);
   flex: none;
-  height: 100%;
+  container: carta / inline-size;
+  /* altura limitada pela altura do painel E pela largura (5 cartas lado a lado); largura vem da proporção 3:4 */
+  height: min(100cqh, calc((100cqw - 4 * var(--gap-z)) / 3.75));
   width: auto;
-  aspect-ratio: 0.96;
+  aspect-ratio: 3 / 4;
 }
 /* Placa escura de nome na base da arte (ordem visual: arte, nome, atributos). */
 .carta__nome {
@@ -458,9 +473,9 @@ button.carta {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 1px 2px 2px;
-  min-height: calc(2.3em + 4px);
-  font-size: clamp(0.58rem, 1.45dvh, 0.74rem);
+  padding: 1px 0.125rem 0.125rem;
+  min-height: calc(2.3em + 0.25rem);
+  font-size: var(--fs-carta-nome);
   font-weight: 700;
   line-height: 1.12;
   text-transform: uppercase;
@@ -472,7 +487,7 @@ button.carta {
   display: none;
 }
 /* carta de campo estreita: usa o nome abreviado por palavra (container query pela largura da própria carta) */
-@container carta (max-width: 107px) {
+@container carta (max-width: 6.6875rem) {
   .carta__nome .nome-completo {
     display: none;
   }
@@ -487,7 +502,7 @@ button.carta {
   flex: 1 1 auto;
   min-height: 0;
   overflow: hidden;
-  border: 2px solid #07101a;
+  border: 0.125rem solid #07101a;
 }
 .carta__arte > svg {
   width: 100%;
@@ -504,18 +519,18 @@ button.carta {
 /* Selo circular (octógono) com pictograma, no canto superior esquerdo da arte. */
 .carta__selo {
   position: absolute;
-  top: 2px;
-  left: 2px;
+  top: 0.125rem;
+  left: 0.125rem;
   width: 26%;
-  min-width: 18px;
-  max-width: 30px;
+  min-width: 1.125rem;
+  max-width: 1.875rem;
   aspect-ratio: 1;
   background: var(--c-borda);
   clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
 }
 .carta__selo-miolo {
   position: absolute;
-  inset: 2px;
+  inset: 0.125rem;
   padding: 17%;
   background: #0a1522;
   clip-path: polygon(30% 0, 70% 0, 100% 30%, 100% 70%, 70% 100%, 30% 100%, 0 70%, 0 30%);
@@ -531,7 +546,7 @@ button.carta {
 .carta__atributos {
   order: 3;
   display: flex;
-  gap: 2px;
+  gap: 0.125rem;
 }
 .carta__atk,
 .carta__def {
@@ -540,7 +555,7 @@ button.carta {
   flex-direction: column;
   align-items: center;
   padding: 1px 0;
-  font-size: clamp(0.8rem, 2.2dvh, 1.2rem);
+  font-size: var(--fs-atk);
   font-weight: 700;
   line-height: 1.05;
 }
@@ -559,8 +574,8 @@ button.carta {
   display: flex;
   flex-direction: column;
   gap: 1px;
-  padding: 2px;
-  font-size: clamp(0.5rem, 1.35dvh, 0.62rem);
+  padding: 0.125rem;
+  font-size: var(--fs-min);
   line-height: 1.15;
   order: 3;
   background: #0b1a28;
@@ -576,18 +591,18 @@ button.carta {
 /* posição: selo com ícone (espadas = ataque, escudo = defesa) */
 .carta__posicao {
   position: absolute;
-  top: 5px;
-  right: 5px;
+  top: 0.3125rem;
+  right: 0.3125rem;
   z-index: 1;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 3px;
+  gap: 0.1875rem;
   box-sizing: border-box;
-  width: 40px;
-  height: 16px;
+  width: 2.5rem;
+  height: 1rem;
   padding: 0;
-  font-size: 10px;
+  font-size: 0.625rem;
   line-height: 1;
   font-weight: 700;
   background: #07101a;
@@ -595,7 +610,7 @@ button.carta {
   border: 1px solid #c43a2c;
 }
 .carta__posicao-icone {
-  width: 11px;
+  width: 0.6875rem;
   height: auto;
 }
 .carta--ataque .carta__posicao {
@@ -608,26 +623,26 @@ button.carta {
 }
 .carta--defesa {
   filter: saturate(0.8);
-  box-shadow: inset 0 0 0 1px #07101a, 0 0 0 2px #07101a, 0 0 10px rgba(58, 132, 214, 0.55);
+  box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #07101a, 0 0 0.625rem rgba(58, 132, 214, 0.55);
 }
 .carta--defesa .carta__arte {
   opacity: 0.85;
 }
 /* selecionada: brilho azul */
 .carta--selecionada {
-  outline: 3px solid #5ab4ff;
+  outline: 0.1875rem solid #5ab4ff;
   outline-offset: 1px;
-  transform: translateY(-5px) var(--rot);
-  box-shadow: inset 0 0 0 1px #07101a, 0 0 0 2px #07101a, 0 0 18px 4px rgba(90, 180, 255, 0.8);
+  transform: translateY(-0.3125rem) var(--rot);
+  box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #07101a, 0 0 1.125rem 0.25rem rgba(90, 180, 255, 0.8);
   animation: duelo-brilho 1.4s ease-in-out infinite;
 }
 .carta--alvo {
-  outline: 3px solid var(--cc-erro);
+  outline: 0.1875rem solid var(--cc-erro);
   outline-offset: 1px;
   animation: duelo-pulso 1s steps(2) infinite;
 }
 .carta--valida {
-  outline: 3px solid var(--cc-turquesa);
+  outline: 0.1875rem solid var(--cc-turquesa);
   outline-offset: 1px;
 }
 .carta[aria-disabled='true'] {
@@ -635,42 +650,42 @@ button.carta {
   cursor: default;
 }
 .carta--verso {
-  width: 34px;
-  height: 46px;
+  width: 2.125rem;
+  height: 2.875rem;
   padding: 0;
   align-items: center;
   justify-content: center;
   aspect-ratio: auto;
-  background: repeating-linear-gradient(45deg, #15395a 0 4px, #0e2640 4px 8px);
-  box-shadow: inset 0 0 0 2px var(--cc-turquesa-esc);
+  background: repeating-linear-gradient(45deg, #15395a 0 0.25rem, #0e2640 0.25rem 0.5rem);
+  box-shadow: inset 0 0 0 0.125rem var(--cc-turquesa-esc);
 }
 .suporte .carta--verso {
   width: 100%;
   height: 100%;
 }
 .carta__verso-marca {
-  width: 10px;
-  height: 10px;
+  width: 0.625rem;
+  height: 0.625rem;
   transform: rotate(45deg);
-  border: 2px solid var(--cc-turquesa-med);
+  border: 0.125rem solid var(--cc-turquesa-med);
 }
 
 /* ---- efeitos temporários (classes aplicadas por useEfeitosVisuais; removidas por timer) ---- */
 .carta--fx-entrando {
-  --entra-y: 120px;
+  --entra-y: 7.5rem;
   animation: carta-entra 0.55s cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
 .carta--lado-op.carta--fx-entrando {
-  --entra-y: -90px;
+  --entra-y: -5.625rem;
 }
 .carta--fx-atacando {
-  --ataca-y: -8px;
+  --ataca-y: -0.5rem;
   z-index: 2;
   animation: carta-ataca 0.5s ease-out;
-  box-shadow: inset 0 0 0 1px #07101a, 0 0 0 2px #ff4a3a, 0 0 18px 5px rgba(255, 74, 58, 0.9);
+  box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #ff4a3a, 0 0 1.125rem 0.3125rem rgba(255, 74, 58, 0.9);
 }
 .carta--lado-op.carta--fx-atacando {
-  --ataca-y: 8px;
+  --ataca-y: 0.5rem;
 }
 .carta--fx-impacto {
   animation: carta-impacto 0.5s ease-out;
@@ -710,13 +725,13 @@ button.carta {
     filter: brightness(2.2) saturate(1.6);
   }
   20% {
-    transform: translateX(-4px) var(--rot);
+    transform: translateX(-0.25rem) var(--rot);
   }
   40% {
-    transform: translateX(4px) var(--rot);
+    transform: translateX(0.25rem) var(--rot);
   }
   60% {
-    transform: translateX(-3px) var(--rot);
+    transform: translateX(-0.1875rem) var(--rot);
   }
   100% {
     transform: var(--rot);
@@ -753,13 +768,13 @@ button.carta {
 }
 @keyframes duelo-brilho {
   50% {
-    box-shadow: inset 0 0 0 1px #07101a, 0 0 0 2px #07101a, 0 0 26px 7px rgba(90, 180, 255, 0.95);
+    box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #07101a, 0 0 1.625rem 0.4375rem rgba(90, 180, 255, 0.95);
   }
 }
 @keyframes duelo-vida-dano {
   0% {
     transform: scale(1.12);
-    box-shadow: 0 0 18px 4px rgba(255, 74, 58, 0.95);
+    box-shadow: 0 0 1.125rem 0.25rem rgba(255, 74, 58, 0.95);
     border-color: #ff4a3a;
   }
   100% {
@@ -769,7 +784,7 @@ button.carta {
 @keyframes duelo-vida-cura {
   0% {
     transform: scale(1.1);
-    box-shadow: 0 0 18px 4px rgba(114, 232, 168, 0.9);
+    box-shadow: 0 0 1.125rem 0.25rem rgba(114, 232, 168, 0.9);
     border-color: #72e8a8;
   }
   100% {
@@ -778,11 +793,11 @@ button.carta {
 }
 @keyframes duelo-delta {
   from {
-    transform: translateY(2px);
+    transform: translateY(0.125rem);
     opacity: 1;
   }
   to {
-    transform: translateY(-6px);
+    transform: translateY(-0.375rem);
     opacity: 0;
   }
 }
@@ -791,21 +806,21 @@ button.carta {
 .duelo-mao__miolo {
   display: flex;
   flex-direction: column;
-  padding: 12px 12px 6px;
+  padding: 0.75rem 0.75rem 0.375rem;
 }
 /* título como aba sobre a borda superior (como em Motor-Duelo.png) */
 .duelo-mao__titulo {
   position: absolute;
-  top: -14px;
-  left: 44px;
+  top: -0.875rem;
+  left: 2.75rem;
   z-index: 3;
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 0.625rem;
   margin: 0;
-  padding: 0 12px 0 8px;
-  font-size: clamp(0.85rem, 2.2dvh, 1.1rem);
-  line-height: 26px;
+  padding: 0 0.75rem 0 0.5rem;
+  font-size: 1.1rem;
+  line-height: 1.625rem;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #3fdcf0;
@@ -817,59 +832,61 @@ button.carta {
   font-size: 0.8em;
 }
 .duelo-mao__icone {
-  width: clamp(22px, 3.4dvh, 34px);
+  width: 1.9125rem;
 }
 .duelo-mao__cartas {
-  flex: 1 1 auto;
+  flex: 1 1 0;
   display: flex;
-  justify-content: space-evenly;
-  gap: 8px;
+  align-items: center;
+  justify-content: center;
+  gap: var(--gap-z);
   min-height: 0;
-  padding: 6px 4px 4px;
+  padding: 0.375rem 0.25rem 0.25rem;
+  container-type: size;
 }
 
 /* ---------------------------------------------------------------- coluna lateral */
 .duelo-lateral {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
   min-width: 0;
   min-height: 0;
 }
 .duelo-comandos__miolo {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  padding: 12px 10px 10px;
+  gap: 0.5rem;
+  padding: 0.75rem 0.625rem 0.625rem;
 }
 
 /* banner TURNO */
 .duelo-turno {
   position: relative;
-  margin-top: 4px;
-  padding: 6px 10px 6px;
+  margin-top: 0.25rem;
+  padding: 0.375rem 0.625rem 0.375rem;
   text-align: center;
   background: linear-gradient(180deg, #17120a, #0c0a06);
-  border: 3px solid #f2c24a;
-  border-radius: 4px;
-  box-shadow: inset 0 0 0 2px #5a3a0c, inset 0 0 0 3px #0a0804, 0 0 12px rgba(242, 194, 74, 0.35);
+  border: 0.1875rem solid #f2c24a;
+  border-radius: 0.25rem;
+  box-shadow: inset 0 0 0 0.125rem #5a3a0c, inset 0 0 0 0.1875rem #0a0804, 0 0 0.75rem rgba(242, 194, 74, 0.35);
 }
 .duelo-turno--outro {
   border-color: #6a8aa0;
-  box-shadow: inset 0 0 0 2px #26323e, inset 0 0 0 3px #0a0804, 0 0 8px rgba(106, 138, 160, 0.3);
+  box-shadow: inset 0 0 0 0.125rem #26323e, inset 0 0 0 0.1875rem #0a0804, 0 0 0.5rem rgba(106, 138, 160, 0.3);
 }
 .duelo-turno p {
   margin: 0;
 }
 .duelo-turno__rotulo {
   position: absolute;
-  top: -15px;
-  left: 14px;
-  padding: 0 8px;
-  font-size: 0.74rem;
+  top: -0.9375rem;
+  left: 0.875rem;
+  padding: 0 0.5rem;
+  font-size: var(--fs-min);
   font-weight: 700;
   letter-spacing: 0.1em;
-  line-height: 18px;
+  line-height: 1.125rem;
   text-transform: uppercase;
   color: #3fdcf0;
   background: #07121c;
@@ -879,29 +896,29 @@ button.carta {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
+  gap: 0.75rem;
 }
 .duelo-turno__setas {
   flex: none;
-  width: clamp(22px, 3.2dvh, 32px);
+  width: 1.8rem;
   height: auto;
 }
 .duelo-turno__texto {
   font-family: var(--cc-fonte-logo);
-  font-size: clamp(1.3rem, 3.9dvh, 2.1rem);
+  font-size: var(--fs-turno);
   line-height: 1.1;
   text-transform: uppercase;
   letter-spacing: 0.06em;
   color: #f6c94c;
-  text-shadow: 2px 2px 0 #5a3a0c;
+  text-shadow: 0.125rem 0.125rem 0 #5a3a0c;
 }
 .duelo-turno--outro .duelo-turno__texto {
   color: #b8d0e0;
-  text-shadow: 2px 2px 0 #26323e;
-  font-size: clamp(1.1rem, 3.2dvh, 1.7rem);
+  text-shadow: 0.125rem 0.125rem 0 #26323e;
+  font-size: var(--fs-turno-outro);
 }
 .duelo-turno__fase {
-  font-size: 0.68rem;
+  font-size: var(--fs-min);
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #a4c4d0;
@@ -912,7 +929,7 @@ button.carta {
 @keyframes duelo-turno-destaque {
   0% {
     transform: scale(1.06);
-    box-shadow: 0 0 26px 8px rgba(242, 194, 74, 0.85);
+    box-shadow: 0 0 1.625rem 0.5rem rgba(242, 194, 74, 0.85);
   }
   100% {
     transform: none;
@@ -923,48 +940,48 @@ button.carta {
 .duelo-acoes {
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 0.5rem;
 }
 .duelo-btn-wrap {
   position: relative;
   display: flex;
   flex-direction: column;
-  gap: 2px;
+  gap: 0.125rem;
 }
 .duelo-btn {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 0.75rem;
   width: 100%;
-  min-height: clamp(48px, 7.2dvh, 74px);
-  padding: 6px 14px;
+  min-height: var(--btn-h);
+  padding: 0.375rem 0.875rem;
   cursor: pointer;
   text-align: left;
   text-transform: uppercase;
   color: #fff;
-  border: 3px solid #05090e;
-  border-radius: 4px;
+  border: 0.1875rem solid #05090e;
+  border-radius: 0.25rem;
   background: linear-gradient(180deg, var(--b1), var(--b2));
-  box-shadow: inset 0 0 0 2px var(--b3), inset 0 0 0 4px #05090e, 0 0 10px var(--b4, transparent);
+  box-shadow: inset 0 0 0 0.125rem var(--b3), inset 0 0 0 0.25rem #05090e, 0 0 0.625rem var(--b4, transparent);
 }
 .duelo-btn:focus-visible,
 .duelo-desistir:focus-visible,
 .carta:focus-visible,
 .zona--valida:focus-visible {
-  outline: 3px solid var(--cc-ouro);
-  outline-offset: 2px;
+  outline: 0.1875rem solid var(--cc-ouro);
+  outline-offset: 0.125rem;
 }
 .duelo-btn__icone {
   flex: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: clamp(28px, 4.6dvh, 44px);
+  width: 2.5875rem;
 }
 .duelo-btn__icone > svg {
   width: 100%;
   height: auto;
-  max-height: clamp(26px, 4.6dvh, 44px);
+  max-height: 2.5875rem;
 }
 .duelo-btn__texto {
   display: flex;
@@ -972,12 +989,12 @@ button.carta {
   min-width: 0;
 }
 .duelo-btn__texto strong {
-  font-size: clamp(1rem, 2.7dvh, 1.4rem);
+  font-size: var(--fs-btn);
   line-height: 1.1;
   letter-spacing: 0.06em;
 }
 .duelo-btn__texto small {
-  font-size: clamp(0.6rem, 1.55dvh, 0.76rem);
+  font-size: var(--fs-min);
   line-height: 1.2;
   text-transform: none;
   color: rgba(255, 255, 255, 0.86);
@@ -1020,7 +1037,7 @@ button.carta {
 }
 /* Bloqueado: o motivo ocupa o lugar do subtítulo (sem mudar a altura do botão) e continua ligado por aria-describedby. */
 .duelo-btn__motivo {
-  font-size: clamp(0.58rem, 1.4dvh, 0.7rem);
+  font-size: var(--fs-min);
   line-height: 1.15;
   color: #ffb4a8;
 }
@@ -1030,12 +1047,12 @@ button.carta {
 }
 .duelo-direto {
   width: auto;
-  min-height: 44px;
+  min-height: max(44px, 2.75rem);
 }
 .duelo-aviso {
   min-height: 2.4em;
   margin: 0;
-  font-size: 0.8rem;
+  font-size: var(--fs-min);
   line-height: 1.25;
   color: var(--cc-texto);
 }
@@ -1046,17 +1063,17 @@ button.carta {
   color: var(--cc-erro);
 }
 .duelo-desistir {
-  min-height: 44px;
-  padding: 6px 12px;
+  min-height: max(44px, 2.75rem);
+  padding: 0.375rem 0.75rem;
   cursor: pointer;
   font-weight: 700;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #ffb0a4;
   background: linear-gradient(180deg, #3a1612, #1c0a0a);
-  border: 3px solid #05090e;
-  border-radius: 4px;
-  box-shadow: inset 0 0 0 2px #86261c, inset 0 0 0 4px #05090e;
+  border: 0.1875rem solid #05090e;
+  border-radius: 0.25rem;
+  box-shadow: inset 0 0 0 0.125rem #86261c, inset 0 0 0 0.25rem #05090e;
 }
 .duelo-desistir:disabled {
   opacity: 0.4;
@@ -1067,58 +1084,58 @@ button.carta {
 .duelo-restantes-quadro,
 .duelo-comandos,
 .duelo-dica {
-  --canto-w: 24px;
-  --canto-h: 29px;
+  --canto-w: 1.5rem;
+  --canto-h: 1.8125rem;
 }
 .duelo-restantes-quadro {
-  padding: 8px;
+  padding: 0.5rem;
 }
 .duelo-restantes {
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 4px 12px;
+  gap: 0.625rem;
+  padding: 0.25rem 0.75rem;
   text-transform: uppercase;
   letter-spacing: 0.04em;
   color: #3fdcf0;
 }
 .duelo-restantes span:nth-child(2) {
   flex: 1;
-  font-size: clamp(0.75rem, 1.9dvh, 0.95rem);
+  font-size: 0.95rem;
 }
 .duelo-restantes__icone {
-  width: clamp(28px, 4dvh, 40px);
+  width: 2.25rem;
 }
 .duelo-restantes strong {
   min-width: 2.4ch;
-  padding: 0 8px;
+  padding: 0 0.5rem;
   text-align: center;
   font-family: var(--cc-fonte-logo);
   font-weight: 400;
-  font-size: clamp(1.4rem, 3.8dvh, 2.1rem);
+  font-size: 2.1rem;
   color: #3fdcf0;
-  border: 2px solid #11566c;
-  border-radius: 4px;
+  border: 0.125rem solid #11566c;
+  border-radius: 0.25rem;
   background: #050d15;
 }
 
 /* dica educativa */
 .duelo-dica {
-  flex: 1 1 150px;
-  min-height: 150px;
+  flex: 1 1 9.375rem;
+  min-height: 9.375rem;
 }
 .duelo-dica__miolo {
   display: flex;
   flex-direction: column;
-  padding: 6px 10px 8px;
+  padding: 0.375rem 0.625rem 0.5rem;
 }
 .duelo-dica__titulo {
   display: flex;
   align-items: center;
   flex: none;
-  gap: 8px;
-  margin: 0 0 4px;
-  font-size: clamp(0.8rem, 2dvh, 1rem);
+  gap: 0.5rem;
+  margin: 0 0 0.25rem;
+  font-size: 1rem;
   letter-spacing: 0.06em;
   text-transform: uppercase;
   color: #3fdcf0;
@@ -1127,35 +1144,38 @@ button.carta {
   flex: 1;
 }
 .duelo-dica__icone {
-  width: 28px;
+  width: 1.75rem;
   height: auto;
 }
 .duelo-dica__lampada {
-  width: 18px;
+  width: 1.125rem;
   height: auto;
 }
 .duelo-dica__texto {
   flex: 0 0 auto;
   max-height: 6.2em;
   overflow-y: auto;
-  font-size: clamp(0.72rem, 1.85dvh, 0.9rem);
+  font-size: 0.9rem;
   line-height: 1.3;
 }
 .duelo-dica__texto p {
-  margin: 0 0 4px;
+  margin: 0 0 0.25rem;
+}
+.duelo-dica__carta small {
+  font-size: max(var(--fs-min), 0.8em);
 }
 .duelo-dica__carta {
   font-weight: 700;
   color: var(--cc-ouro);
 }
 .duelo-dica__img {
-  flex: 1 1 56px;
-  min-height: 40px;
+  flex: 1 1 3.5rem;
+  min-height: 2.5rem;
   width: 100%;
-  margin-top: 4px;
+  margin-top: 0.25rem;
   object-fit: cover;
   object-position: center 60%;
-  border: 2px solid #05090e;
+  border: 0.125rem solid #05090e;
   box-shadow: 0 0 0 1px #11566c;
   image-rendering: pixelated;
 }
@@ -1168,14 +1188,14 @@ button.carta {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 1rem;
   background: rgba(2, 6, 12, 0.84);
 }
 .duelo-dialogo {
   width: 100%;
-  max-width: 520px;
+  max-width: 32.5rem;
   max-height: 92dvh;
-  padding: 22px 22px 18px;
+  padding: 1.375rem 1.375rem 1.125rem;
   overflow-y: auto;
   text-align: center;
 }
@@ -1188,43 +1208,43 @@ button.carta {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: var(--cc-ouro);
-  text-shadow: 3px 3px 0 var(--cc-ouro-esc);
+  text-shadow: 0.1875rem 0.1875rem 0 var(--cc-ouro-esc);
 }
 .duelo-dialogo__titulo--pequeno {
-  margin-bottom: 6px;
+  margin-bottom: 0.375rem;
   font-size: 1.8rem;
 }
 .duelo-dialogo__motivo {
-  margin: 0 0 12px;
+  margin: 0 0 0.75rem;
 }
 .duelo-dialogo__sub {
   display: flex;
   align-items: center;
-  gap: 8px;
-  margin: 8px 0 4px;
+  gap: 0.5rem;
+  margin: 0.5rem 0 0.25rem;
   font-size: 0.95rem;
   text-transform: uppercase;
   color: var(--cc-turquesa);
 }
 .duelo-dialogo__sub-icone {
-  width: 26px;
+  width: 1.625rem;
   height: auto;
 }
 .duelo-dialogo__lista {
-  margin: 0 0 8px;
-  padding-left: 18px;
+  margin: 0 0 0.5rem;
+  padding-left: 1.125rem;
   text-align: left;
   font-size: 0.85rem;
 }
 .duelo-dialogo__breve {
-  margin: 8px 0 0;
-  font-size: 0.78rem;
+  margin: 0.5rem 0 0;
+  font-size: var(--fs-min);
   color: var(--cc-texto-suave);
 }
 .duelo-dialogo__botoes {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 0.625rem;
 }
 
 /* ---- tela de resultado (estilo Tela-derrota / Tela-recompensa) ---- */
@@ -1236,21 +1256,21 @@ button.carta {
   display: grid;
   grid-template-columns: minmax(0, 0.8fr) minmax(0, 1.6fr);
   grid-template-rows: auto auto auto;
-  gap: 12px 16px;
+  gap: 0.75rem 1rem;
   width: 100%;
-  max-width: 980px;
+  max-width: 61.25rem;
   max-height: 96dvh;
-  padding: 14px 16px 16px;
+  padding: 0.875rem 1rem 1rem;
   overflow-y: auto;
   background: linear-gradient(180deg, #08151f, #040b12);
-  border: 3px solid #02070d;
-  box-shadow: 0 0 0 2px #11566c, 0 0 28px rgba(63, 220, 240, 0.25);
+  border: 0.1875rem solid #02070d;
+  box-shadow: 0 0 0 0.125rem #11566c, 0 0 1.75rem rgba(63, 220, 240, 0.25);
 }
 .duelo-dialogo--vitoria {
-  box-shadow: 0 0 0 2px #a87414, 0 0 28px rgba(242, 194, 74, 0.3);
+  box-shadow: 0 0 0 0.125rem #a87414, 0 0 1.75rem rgba(242, 194, 74, 0.3);
 }
 .duelo-dialogo--derrota {
-  box-shadow: 0 0 0 2px #86261c, 0 0 28px rgba(255, 90, 74, 0.25);
+  box-shadow: 0 0 0 0.125rem #86261c, 0 0 1.75rem rgba(255, 90, 74, 0.25);
 }
 /* contêiner de altura própria: a imagem (retrato ou paisagem) nunca estica a grade do diálogo */
 .duelo-resultado__cena {
@@ -1259,7 +1279,7 @@ button.carta {
   grid-row: 2;
   min-height: 0;
   overflow: hidden;
-  border: 2px solid #02070d;
+  border: 0.125rem solid #02070d;
   box-shadow: 0 0 0 1px #11566c;
 }
 .duelo-resultado__cena-img {
@@ -1276,23 +1296,23 @@ button.carta {
   grid-row: 1;
 }
 .duelo-resultado__placa-miolo {
-  padding: 8px 12px 10px;
+  padding: 0.5rem 0.75rem 0.625rem;
   text-align: center;
 }
 .duelo-resultado .duelo-dialogo__titulo {
-  font-size: clamp(2.6rem, 8dvh, 4.6rem);
+  font-size: 4.5rem;
 }
 .duelo-dialogo--derrota .duelo-dialogo__titulo {
   color: #ff4a3a;
-  text-shadow: 3px 3px 0 #4a120c;
+  text-shadow: 0.1875rem 0.1875rem 0 #4a120c;
 }
 .duelo-dialogo--empate .duelo-dialogo__titulo {
   color: var(--cc-turquesa);
-  text-shadow: 3px 3px 0 var(--cc-turquesa-esc);
+  text-shadow: 0.1875rem 0.1875rem 0 var(--cc-turquesa-esc);
 }
 .duelo-resultado__frase {
-  margin: 4px 0 0;
-  font-size: clamp(0.7rem, 1.8dvh, 0.95rem);
+  margin: 0.25rem 0 0;
+  font-size: 0.95rem;
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: #b8d0d8;
@@ -1302,19 +1322,19 @@ button.carta {
   grid-row: 2;
   display: grid;
   grid-template-columns: minmax(0, 1.25fr) minmax(0, 1fr);
-  gap: 12px;
+  gap: 0.75rem;
   min-width: 0;
 }
 .duelo-resultado__texto-miolo,
 .duelo-resultado__resumo-miolo {
-  padding: 10px 12px;
+  padding: 0.625rem 0.75rem;
   text-align: left;
 }
 .duelo-resultado__texto-miolo .duelo-dialogo__motivo {
   font-size: 1rem;
 }
 .duelo-resultado__resumo-titulo {
-  margin: 0 0 6px;
+  margin: 0 0 0.375rem;
   font-size: 0.9rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
@@ -1324,9 +1344,9 @@ button.carta {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
   align-items: center;
-  gap: 6px;
-  margin-bottom: 6px;
-  font-size: 0.78rem;
+  gap: 0.375rem;
+  margin-bottom: 0.375rem;
+  font-size: var(--fs-min);
   text-transform: uppercase;
   text-align: center;
   color: #a4c4d0;
@@ -1343,15 +1363,15 @@ button.carta {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) 1fr 1fr;
   align-items: center;
-  gap: 6px;
-  padding: 5px 6px;
-  font-size: 0.8rem;
+  gap: 0.375rem;
+  padding: 0.3125rem 0.375rem;
+  font-size: var(--fs-min);
   border-top: 1px solid #11566c;
 }
 .duelo-resultado__linha dt {
   display: flex;
   align-items: center;
-  gap: 6px;
+  gap: 0.375rem;
   color: #a4c4d0;
 }
 .duelo-resultado__linha dd {
@@ -1372,68 +1392,19 @@ button.carta {
 }
 .duelo-resultado__icone {
   flex: none;
-  width: 18px;
+  width: 1.125rem;
   height: auto;
 }
 .duelo-resultado .duelo-dialogo__botoes {
   grid-column: 1 / -1;
   grid-row: 3;
   flex-direction: row;
-  gap: 12px;
+  gap: 0.75rem;
 }
 .duelo-resultado .duelo-dialogo__botoes > * {
   flex: 1 1 0;
 }
 
-/* ---------------------------------------------------------------- desktop baixo: tudo cabe numa tela */
-@media (min-width: 1101px) {
-  .tela-partida {
-    height: 100dvh;
-    min-height: 600px;
-  }
-  .duelo-corpo {
-    flex: 1 1 auto;
-    min-height: 0;
-  }
-  .duelo-tabuleiro {
-    min-height: 0;
-  }
-  .duelo-lado {
-    flex: 1.25 1 0;
-    min-height: 0;
-  }
-  .duelo-mao {
-    flex: 1 1 0;
-    min-height: 0;
-  }
-  .duelo-terreno {
-    flex: none;
-  }
-  .duelo-lateral {
-    overflow-y: auto;
-    scrollbar-width: thin;
-  }
-  .duelo-lateral > * {
-    flex-shrink: 0;
-  }
-  .duelo-lateral > .duelo-dica {
-    flex-shrink: 1;
-  }
-  /* ENCERRAR TURNO e DESISTIR lado a lado */
-  .duelo-btn-wrap--bloqueado .duelo-btn__motivo {
-    position: absolute;
-    right: 8px;
-    bottom: 5px;
-    left: calc(clamp(28px, 4.6dvh, 44px) + 28px);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .duelo-btn-wrap--bloqueado .duelo-btn__texto strong {
-    margin-bottom: 1.5em;
-  }
-}
 
 /* ---------------------------------------------------------------- tablet */
 @media (max-width: 899px) {
@@ -1444,9 +1415,9 @@ button.carta {
     justify-content: center;
   }
 }
-@media (max-width: 1100px) {
+@media (max-width: 899px), (max-height: 559px) {
   .tela-partida {
-    --topo-h: 72px;
+    --topo-h: 4.5rem;
   }
   .duelo-corpo {
     grid-template-columns: minmax(0, 1fr);
@@ -1458,12 +1429,12 @@ button.carta {
   .duelo-zonas {
     grid-column: 1;
     grid-row: auto;
-    gap: 8px;
+    gap: 0.5rem;
   }
   .duelo-suportes {
     grid-column: 1;
     grid-row: auto;
-    grid-template-columns: repeat(5, 48px);
+    grid-template-columns: repeat(5, max(44px, 3rem));
     justify-content: center;
     padding-top: 0;
   }
@@ -1475,13 +1446,13 @@ button.carta {
   }
   .duelo-mao__cartas {
     justify-content: flex-start;
-    gap: 10px;
+    gap: 0.625rem;
     overflow-x: auto;
   }
   .carta--mao {
-    width: clamp(112px, 17vw, 150px);
+    width: 9.375rem;
     height: auto;
-    aspect-ratio: 0.72;
+    aspect-ratio: 3 / 4;
   }
   .duelo-lateral {
     display: grid;
@@ -1497,10 +1468,10 @@ button.carta {
   }
   .duelo-dica__img {
     flex: none;
-    height: 110px;
+    height: 6.875rem;
   }
   .tela-partida {
-    padding-bottom: 96px;
+    padding-bottom: 6rem;
   }
   .duelo-acoes {
     position: fixed;
@@ -1511,21 +1482,21 @@ button.carta {
     display: grid;
     grid-auto-flow: column;
     grid-auto-columns: minmax(0, 1fr);
-    gap: 4px;
-    padding: 6px;
+    gap: 0.25rem;
+    padding: 0.375rem;
     background: var(--cc-fundo-0);
-    border-top: 4px solid var(--cc-turquesa-esc);
+    border-top: 0.25rem solid var(--cc-turquesa-esc);
   }
   .duelo-btn {
     flex-direction: column;
     justify-content: center;
-    min-height: 60px;
-    padding: 4px 2px;
+    min-height: 3.75rem;
+    padding: 0.25rem 0.125rem;
     text-align: center;
-    gap: 2px;
+    gap: 0.125rem;
   }
   .duelo-btn__icone > svg {
-    max-height: 22px;
+    max-height: 1.375rem;
   }
   .duelo-btn__texto small,
   .duelo-btn__motivo {
@@ -1536,28 +1507,28 @@ button.carta {
     letter-spacing: 0.02em;
   }
   .duelo-btn--compacto {
-    min-height: 60px;
+    min-height: 3.75rem;
   }
   .duelo-comandos__miolo {
-    gap: 6px;
+    gap: 0.375rem;
   }
   /* o aviso (motivos/erros) fica visível logo acima da barra, sem precisar rolar */
   .duelo-aviso {
     position: fixed;
-    right: 8px;
-    bottom: 86px;
-    left: 8px;
+    right: 0.5rem;
+    bottom: 5.375rem;
+    left: 0.5rem;
     z-index: 31;
     min-height: 0;
-    padding: 6px 10px;
+    padding: 0.375rem 0.625rem;
     background: #08131f;
-    border: 2px solid var(--cc-turquesa-esc);
+    border: 0.125rem solid var(--cc-turquesa-esc);
   }
   .duelo-aviso:empty {
     display: none;
   }
   .tela-partida--aviso {
-    padding-bottom: 176px;
+    padding-bottom: 11rem;
   }
   .duelo-resultado {
     grid-template-columns: minmax(0, 1fr);
@@ -1573,12 +1544,12 @@ button.carta {
 /* ---------------------------------------------------------------- celular */
 @media (max-width: 700px) {
   .tela-partida {
-    --topo-h: 56px;
-    padding-bottom: 96px;
+    --topo-h: 3.5rem;
+    padding-bottom: 6rem;
   }
   .duelo-topo {
-    padding-left: 48px;
-    padding-right: 76px;
+    padding-left: 3rem;
+    padding-right: 4.75rem;
     justify-content: center;
   }
   .duelo-topo__frase {
@@ -1588,21 +1559,21 @@ button.carta {
     display: none;
   }
   .duelo-corpo {
-    padding: 8px 8px 16px;
-    gap: 10px;
+    padding: 0.5rem 0.5rem 1rem;
+    gap: 0.625rem;
   }
   .duelo-lado__miolo {
-    padding: 6px 6px 8px;
+    padding: 0.375rem 0.375rem 0.5rem;
   }
   .duelo-zonas,
   .duelo-suportes {
-    gap: 4px;
+    gap: 0.25rem;
   }
   .duelo-lado__topo {
-    gap: 4px 8px;
+    gap: 0.25rem 0.5rem;
   }
   .duelo-placa {
-    padding-right: 10px;
+    padding-right: 0.625rem;
   }
   .duelo-nome h2 {
     font-size: 0.95rem;
@@ -1614,20 +1585,19 @@ button.carta {
     grid-template-columns: minmax(0, 1fr);
   }
   .duelo-btn__texto strong {
-    font-size: 0.72rem;
+    font-size: 0.75rem;
   }
-  .carta--campo .carta__arte,
-  .carta--mini .carta__arte {
+  .carta--campo .carta__arte {
     display: none;
   }
-  /* campo rola na horizontal dentro do painel (não a página): zonas largas o bastante para nome por palavra e ATK/DEF >= 11px */
+  /* campo rola na horizontal dentro do painel (não a página): zonas largas o bastante para nome por palavra e ATK/DEF >= 0.6875rem */
   .duelo-zonas {
-    grid-template-columns: repeat(5, minmax(96px, 1fr));
+    grid-template-columns: repeat(5, minmax(6rem, 1fr));
     overflow-x: auto;
-    padding-bottom: 4px;
+    padding-bottom: 0.25rem;
   }
   .carta--campo .carta__nome {
-    font-size: 0.62rem;
+    font-size: max(11px, 0.6875rem);
     min-height: 0;
     flex: 1;
     padding: 1px;
@@ -1645,7 +1615,7 @@ button.carta {
     flex: none;
   }
   .carta--campo {
-    padding: 2px;
+    padding: 0.125rem;
     gap: 1px;
   }
   .carta--campo .carta__atk small,
@@ -1670,22 +1640,22 @@ button.carta {
     overflow-wrap: normal;
   }
   .duelo-suportes {
-    grid-template-columns: repeat(5, 48px);
+    grid-template-columns: repeat(5, max(44px, 3rem));
   }
   .carta__posicao {
     top: auto;
     bottom: 1.6em;
   }
   .carta--mao {
-    width: 118px;
-    height: 176px;
-    aspect-ratio: auto;
+    width: 7.375rem;
+    height: auto;
+    aspect-ratio: 3 / 4;
   }
   .carta--mao .carta__efeito span {
     display: none;
   }
   .carta--mao .carta__nome {
-    font-size: 0.7rem;
+    font-size: 0.75rem;
   }
   .duelo-dialogo__titulo {
     font-size: 2.2rem;
@@ -1724,102 +1694,56 @@ button.carta {
 }
 
 /* ---------------------------------------------------------------- paisagem baixa: barra e aviso compactos */
-@media (max-height: 500px) and (max-width: 1100px) {
+@media (max-height: 559px) {
   .tela-partida {
-    padding-bottom: 72px;
+    padding-bottom: 4.5rem;
   }
   .tela-partida--aviso {
-    padding-bottom: 112px;
+    padding-bottom: 7rem;
   }
   .duelo-btn,
   .duelo-btn--compacto {
-    min-height: 44px;
+    min-height: max(44px, 2.75rem);
   }
   .duelo-acoes {
-    padding: 4px;
+    padding: 0.25rem;
   }
   .duelo-aviso {
-    bottom: 58px;
-    padding: 3px 8px;
-    font-size: 0.75rem;
+    bottom: 3.625rem;
+    padding: 0.1875rem 0.5rem;
+    font-size: var(--fs-min);
   }
 }
 
-/* ---------------------------------------------------------------- desktop de pouca altura (ex.: 1280x720) */
-@media (min-width: 1101px) and (max-height: 860px) {
-  .tela-partida .moldura-orn {
-    padding: 8px;
-  }
-  .duelo-corpo {
-    padding-top: 6px;
-    padding-bottom: 8px;
-  }
-  .duelo-lado__miolo {
-    padding: 4px 10px 6px;
-    gap: 4px 12px;
-  }
-  .duelo-comandos__miolo {
-    padding: 12px 8px 8px;
-    gap: 6px;
-  }
-  .duelo-acoes {
-    gap: 6px;
-  }
-}
 
-@media (min-width: 1101px) and (max-height: 760px) {
-  .duelo-btn {
-    min-height: 44px;
-    padding-top: 3px;
-    padding-bottom: 3px;
-  }
-  .duelo-btn-wrap--bloqueado .duelo-btn__motivo {
-    bottom: 3px;
-  }
-  .duelo-btn-wrap--bloqueado .duelo-btn__texto strong {
-    margin-bottom: 1.3em;
-  }
-  .duelo-desistir {
-    min-height: 34px;
-    padding-top: 2px;
-    padding-bottom: 2px;
-  }
-  .duelo-turno {
-    padding-top: 3px;
-    padding-bottom: 3px;
-  }
-  .duelo-dica {
-    min-height: 130px;
-  }
-}
 
 /* ---------------------------------------------------------------- correções pós-QA (D1 a D6) */
 /* D1: botões do resultado sempre visíveis (grudados na base do diálogo rolável) */
 .duelo-resultado .duelo-dialogo__botoes {
   position: sticky;
-  bottom: -16px;
+  bottom: -1rem;
   z-index: 4;
-  margin: 0 -16px -16px;
-  padding: 10px 16px 16px;
+  margin: 0 -1rem -1rem;
+  padding: 0.625rem 1rem 1rem;
   background: linear-gradient(rgba(4, 11, 18, 0), #040b12 22%);
 }
 @media (max-height: 800px) {
   .duelo-resultado {
-    gap: 8px 14px;
-    padding-top: 10px;
+    gap: 0.5rem 0.875rem;
+    padding-top: 0.625rem;
   }
   .duelo-resultado__placa-miolo {
-    padding: 4px 12px 6px;
+    padding: 0.25rem 0.75rem 0.375rem;
   }
   .duelo-resultado .duelo-dialogo__titulo {
-    font-size: clamp(2rem, 7dvh, 3.4rem);
+    font-size: 3.4rem;
   }
   .duelo-resultado__texto-miolo,
   .duelo-resultado__resumo-miolo {
-    padding: 6px 10px;
+    padding: 0.375rem 0.625rem;
   }
   .duelo-dialogo__lista {
-    font-size: 0.8rem;
+    font-size: var(--fs-min);
   }
 }
 @media (max-height: 520px) {
@@ -1836,7 +1760,7 @@ button.carta {
     grid-column: 1 / -1;
   }
   .duelo-resultado .duelo-dialogo__botoes {
-    padding-top: 6px;
+    padding-top: 0.375rem;
   }
 }
 
@@ -1848,27 +1772,14 @@ button.carta {
 
 /* D3: alvos maiores; D4: registro legível no desktop baixo */
 .duelo-suportes {
-  grid-template-columns: repeat(5, clamp(40px, 4.6dvh, 46px));
+  grid-template-columns: repeat(5, 2.5875rem);
 }
 .duelo-desistir {
-  min-height: 44px;
+  min-height: max(44px, 2.75rem);
 }
-@media (min-width: 1101px) and (max-height: 800px) {
-  .duelo-desistir {
-    min-height: 40px;
-  }
-  .duelo-dica__img {
-    display: none;
-  }
-  .duelo-lateral > .duelo-dica {
-    flex: 0 0 auto;
-    min-height: 0;
-    order: 2;
-  }
-}
-@media (max-width: 1100px) {
+@media (max-width: 899px), (max-height: 559px) {
   .duelo-suportes {
-    grid-template-columns: repeat(5, 48px);
+    grid-template-columns: repeat(5, max(44px, 3rem));
   }
 }
 
@@ -1878,12 +1789,12 @@ button.carta {
     aspect-ratio: 1 / 1.3;
   }
   .carta__posicao {
-    top: 2px;
+    top: 0.125rem;
     bottom: auto;
-    right: 2px;
+    right: 0.125rem;
   }
   .carta--campo .carta__nome {
-    padding-top: 10px;
+    padding-top: 0.625rem;
   }
 }
 .carta__nome {
@@ -1893,7 +1804,7 @@ button.carta {
 /* D6: o delta de vida aparece ao lado da caixa (não sobre o valor nem cortado pela borda do painel) */
 .duelo-vida__delta {
   right: auto;
-  left: calc(100% + 6px);
+  left: calc(100% + 0.375rem);
   z-index: 4;
 }
 
@@ -1918,12 +1829,12 @@ button.carta {
 .duelo-arrasto-fantasma {
   position: fixed;
   z-index: 70;
-  width: 112px;
-  height: 132px;
+  width: 7rem;
+  height: 9.3333rem;
   pointer-events: none;
   opacity: 0.93;
   transform: translate(-50%, -60%) rotate(-3deg);
-  filter: drop-shadow(0 8px 10px rgba(0, 0, 0, 0.7));
+  filter: drop-shadow(0 0.5rem 0.625rem rgba(0, 0, 0, 0.7));
 }
 .duelo-arrasto-fantasma .carta--mao {
   width: 100%;
@@ -1934,33 +1845,33 @@ button.carta {
 /* destinos válidos: destaque azul com pulso discreto */
 .zona--drop {
   border-color: #5ab4ff;
-  outline: 2px solid rgba(90, 180, 255, 0.85);
+  outline: 0.125rem solid rgba(90, 180, 255, 0.85);
   outline-offset: 1px;
   background-color: rgba(90, 180, 255, 0.1);
-  box-shadow: 0 0 12px rgba(90, 180, 255, 0.55);
+  box-shadow: 0 0 0.75rem rgba(90, 180, 255, 0.55);
   animation: duelo-destino 1.1s ease-in-out infinite;
 }
 .zona--drop.zona--sobre {
-  outline-width: 3px;
+  outline-width: 0.1875rem;
   background-color: rgba(90, 180, 255, 0.28);
-  box-shadow: 0 0 20px 3px rgba(90, 180, 255, 0.9);
+  box-shadow: 0 0 1.25rem 0.1875rem rgba(90, 180, 255, 0.9);
 }
 .duelo-lado--drop {
-  box-shadow: 0 0 0 1px #5ab4ff, 0 0 18px rgba(90, 180, 255, 0.55);
+  box-shadow: 0 0 0 1px #5ab4ff, 0 0 1.125rem rgba(90, 180, 255, 0.55);
 }
 @keyframes duelo-destino {
   50% {
-    box-shadow: 0 0 20px 3px rgba(90, 180, 255, 0.85);
+    box-shadow: 0 0 1.25rem 0.1875rem rgba(90, 180, 255, 0.85);
   }
 }
 .duelo-mao__dica {
   position: absolute;
   top: 0;
-  right: 46px;
+  right: 2.875rem;
   z-index: 2;
   margin: 0;
-  font-size: 0.6875rem;
-  line-height: 13px;
+  font-size: var(--fs-min);
+  line-height: 0.8125rem;
   color: #6aa8c0;
 }
 @media (max-height: 520px) and (orientation: landscape) and (max-width: 1100px) {
@@ -1971,7 +1882,7 @@ button.carta {
 @media (max-width: 700px) {
   .duelo-mao__dica {
     position: static;
-    padding: 0 4px 4px;
+    padding: 0 0.25rem 0.25rem;
     text-align: right;
   }
 }
@@ -1979,4 +1890,316 @@ button.carta {
   .zona--drop {
     animation: none;
   }
+}
+
+/* ================================================================ DESKTOP (largura >= 1101px): a tela inteira cabe na viewport
+   Altura repartida por grid/flex (sem min-height: 100dvh); só o necessário rola por dentro. Cartas 3:4 (campo e mão). */
+@media (min-width: 900px) and (min-height: 560px) {
+  .tela-partida {
+    display: grid;
+    grid-template-rows: auto minmax(0, 1fr);
+    height: 100vh;
+    height: 100dvh;
+    min-height: 0;
+  }
+  .duelo-fundo > * {
+    min-height: 0;
+  }
+  .duelo-corpo {
+    min-height: 0;
+    padding: 0.5rem var(--cc-gutter) 0.625rem;
+  }
+  .duelo-tabuleiro,
+  .duelo-lateral {
+    min-height: 0;
+  }
+  .duelo-lado {
+    flex: 1.2 1 0;
+    min-height: 0;
+  }
+  .duelo-mao {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .duelo-terreno {
+    flex: none;
+  }
+  .duelo-lateral > * {
+    flex: none;
+  }
+  .duelo-lateral > .duelo-dica {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  .duelo-dica__miolo {
+    min-height: 0;
+    overflow: hidden;
+  }
+  .duelo-dica__texto {
+    flex: 0 1 auto;
+    min-height: 0;
+  }
+  .duelo-dica__img {
+    flex: 1 1 0;
+    min-height: 0;
+  }
+  /* motivo do bloqueio dentro do botão (2 linhas) */
+  .duelo-btn-wrap--bloqueado .duelo-btn__motivo {
+    position: absolute;
+    right: 0.5rem;
+    bottom: 0.25rem;
+    left: calc(var(--btn-h) * 0.9 + 1.5rem);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+  .duelo-btn-wrap--bloqueado .duelo-btn__texto strong {
+    margin-bottom: 1.5em;
+  }
+  .duelo-btn__icone {
+    width: calc(var(--btn-h) * 0.62);
+  }
+  .duelo-btn__icone > svg {
+    max-height: calc(var(--btn-h) * 0.62);
+  }
+}
+@media (min-width: 900px) and (min-height: 560px) and (max-height: 900px) {
+  .tela-partida {
+    --topo-h: 4.5rem;
+    --av: 2.75rem;
+    --fs-nome: 1.3rem;
+    --fs-vida: 2.1rem;
+    --coracao: 1.6rem;
+    --fs-turno: 1.8rem;
+    --fs-btn: 1.2rem;
+    --btn-h: 3.6rem;
+    --suporte: 2.4rem;
+    --gap-z: 0.45rem;
+  }
+}
+@media (min-width: 900px) and (min-height: 560px) and (max-height: 820px) {
+  .tela-partida {
+    --topo-h: 4rem;
+    --av: 2.5rem;
+    --fs-nome: 1.15rem;
+    --fs-vida: 1.8rem;
+    --coracao: 1.4rem;
+    --fs-turno: 1.55rem;
+    --fs-turno-outro: 1.3rem;
+    --fs-btn: 1.1rem;
+    --btn-h: 3.2rem;
+    --fs-atk: 1.05rem;
+    --suporte: 2.2rem;
+    --pad-moldura: 0.5rem;
+    --gap-z: 0.375rem;
+  }
+  .duelo-lado__miolo {
+    padding: 0.25rem 0.5rem 0.375rem;
+    gap: 0.25rem 0.75rem;
+  }
+  .duelo-dica__img {
+    display: none;
+  }
+  .duelo-corpo {
+    padding-top: 0.375rem;
+    padding-bottom: 0.375rem;
+  }
+  .duelo-comandos__miolo {
+    padding: 0.875rem 0.5rem 0.5rem;
+    gap: 0.375rem;
+  }
+  .duelo-acoes {
+    gap: 0.375rem;
+  }
+  .duelo-mao__dica {
+    display: none;
+  }
+}
+@media (min-width: 900px) and (min-height: 560px) and (max-height: 720px) {
+  .tela-partida {
+    --topo-h: 3.25rem;
+    --av: 2.25rem;
+    --fs-nome: 1.05rem;
+    --fs-vida: 1.5rem;
+    --coracao: 1.2rem;
+    --fs-turno: 1.35rem;
+    --fs-turno-outro: 1.15rem;
+    --fs-btn: 1rem;
+    --btn-h: 2.75rem;
+    --fs-atk: 0.95rem;
+    --suporte: 2rem;
+    --pad-moldura: 0.375rem;
+  }
+  .duelo-topo__frase,
+  .duelo-topo .cabecalho__subtitulo {
+    display: none;
+  }
+  .duelo-btn__texto small,
+  .duelo-btn-wrap--bloqueado .duelo-btn__motivo {
+    display: none;
+  }
+  .duelo-btn-wrap--bloqueado .duelo-btn__texto strong {
+    margin-bottom: 0;
+  }
+  .duelo-nome p {
+    display: none;
+  }
+  .duelo-contagens {
+    flex-direction: row;
+    gap: 0.5rem;
+  }
+  .duelo-turno__fase {
+    display: none;
+  }
+  .duelo-restantes {
+    padding-block: 0.125rem;
+  }
+}
+@media (min-width: 900px) and (min-height: 560px) and (max-height: 620px) {
+  .tela-partida {
+    --topo-h: 2.5rem;
+    --av: 2rem;
+    --btn-h: 2.5rem;
+    --suporte: 1.75rem;
+    --fs-vida: 1.3rem;
+  }
+  .duelo-topo .cabecalho__nome {
+    font-size: 1.5rem;
+  }
+  .carta--campo .carta__arte,
+  .carta--mao .carta__arte {
+    display: none;
+  }
+  .duelo-desistir {
+    min-height: 2rem;
+  }
+  .duelo-dica {
+    display: none;
+  }
+}
+
+/* tablet/celular: a mão não é contêiner de tamanho (a altura vem do conteúdo) */
+@media (max-width: 899px), (max-height: 559px) {
+  .duelo-mao__cartas {
+    container-type: normal;
+  }
+}
+
+/* ---- efeito na carta da mão: no máximo 2 linhas, só quando a carta é larga o bastante ---- */
+.carta--mao .carta__efeito > span {
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+@container carta (max-width: 6.75rem) {
+  .carta--mao .carta__efeito > span {
+    display: none;
+  }
+}
+
+/* ---- suporte (carta mini): só o ícone/arte e a categoria; nome e tipo vão no tooltip, no rótulo acessível e na dica ---- */
+@media all {
+  .carta--mini .carta__nome,
+  .carta--mini .carta__efeito {
+    display: none;
+  }
+  .carta--mini .carta__selo {
+    display: block;
+    top: 50%;
+    left: 50%;
+    width: 62%;
+    min-width: 0;
+    max-width: none;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* mão: espaço para tipo + 2 linhas de efeito */
+.carta--mao .carta__efeito {
+  min-height: 4.2em;
+}
+/* carta de campo estreita: selo de posição só com o ícone (o texto ATQ/DEF fica no rótulo acessível) */
+@container carta (max-width: 5.5rem) {
+  .carta__posicao {
+    width: 1.5rem;
+    font-size: 0;
+    gap: 0;
+  }
+}
+@media (min-width: 900px) and (min-height: 560px) and (max-height: 680px) {
+  .duelo-mao {
+    flex: 0.8 1 0;
+  }
+}
+
+/* ================================================================ correções da revisão de QA (B1, B2, B3, M1, M2)
+   B1 tablet/celular (coluna única): a mão tem altura natural (cartas inteiras, rolagem horizontal interna se precisar);
+   flex-basis 0 / container size colapsavam a mão em contêiner de altura automática. */
+@media (max-width: 899px), (max-height: 559px) {
+  .duelo-mao {
+    flex: none;
+  }
+  .duelo-mao__cartas {
+    flex: 0 0 auto;
+    min-height: auto;
+    container-type: normal;
+    align-items: flex-start;
+  }
+  .carta--mao {
+    flex: none;
+  }
+  /* B2: a barra fixa sai do contexto de empilhamento do miolo (z-index:1) e passa a competir no contexto raiz */
+  .duelo-comandos .duelo-comandos__miolo {
+    position: static;
+    z-index: auto;
+  }
+}
+/* o motivo do bloqueio é só texto: nunca intercepta o clique do botão (continua focável/clicável para exibir o aviso) */
+.duelo-btn__motivo {
+  pointer-events: none;
+}
+
+/* B3: ATK/DEF nunca cortados. Prioridade da carta: faixa ATK/DEF primeiro; nome e arte encolhem (nome pode truncar). */
+.carta__atributos {
+  flex: none;
+}
+.carta__atk small,
+.carta__def small {
+  font-size: max(10px, 0.625rem);
+}
+@media (min-width: 900px) and (min-height: 560px) and (max-height: 680px) {
+  .carta__nome {
+    flex-shrink: 1;
+    min-height: 0;
+    overflow: hidden;
+  }
+  .carta--campo .carta__arte,
+  .carta--mao .carta__arte {
+    display: none;
+  }
+  .carta__atk small,
+  .carta__def small {
+    display: none;
+  }
+  .carta__atk,
+  .carta__def {
+    padding: 0;
+    line-height: 1;
+  }
+}
+/* aviso reservado no desktop: a coluna lateral não se desloca quando a mensagem aparece */
+@media (min-width: 900px) and (min-height: 560px) {
+  .duelo-aviso:empty {
+    min-height: 2.4em;
+  }
+}
+
+/* números ATK/DEF acompanham a largura da carta (4 dígitos sempre cabem); o teto vem do tamanho de referência */
+.carta__atk,
+.carta__def {
+  font-size: min(var(--fs-atk), 16.5cqw);
 }

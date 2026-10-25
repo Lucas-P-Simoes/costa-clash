@@ -46,7 +46,15 @@ Vitest para lógica TypeScript. Testes de componentes com React Testing Library 
 `npm run typecheck` — `tsc -b`.
 `npm run lint` — oxlint.
 `npm run build` — typecheck + build de produção.
+`npm run test:e2e` — testes de viewport no Chrome do sistema (ver abaixo); `npm run e2e:matriz` — matriz e capturas.
 Cobertura (`test:coverage`) ainda não configurada.
+
+### Testes de viewport/layout (e2e, Playwright)
+- `npm run test:e2e` roda `e2e/tests/viewport.spec.ts` com `@playwright/test` usando o **Chrome instalado no sistema** (`channel: 'chrome'`; nenhum navegador é baixado) e sobe o `vite` na porta 5199 (reaproveita um servidor já aberto). Não faz parte de `npm test`: o vitest ignora `e2e/` (`vite.config.ts`) e o CI atual continua igual (sem Chrome).
+- Percorre 12 telas (login, criar conta, recuperar, conta, convidado, Duelo Livre, duelo, duelo com cartas em campo, resultado vitória/derrota/empate, ?arte=1) x 13 viewports (3840x2030, 1920x1000, 1366x650, 1280x600, 1100x640, 1024x600, 1280x610@1.5, 768x1024, 820x1180, 390x844@3, 375x812@3, 812x375@3, 320x568@2) e confere: sem rolagem horizontal; em desktop sem rolagem vertical, controles dentro da viewport e sem sobreposição, fonte >= 11px; cartas 3:4; imagens sem distorção; alvos >= 44px em toque; texto de carta não cortado (exceto altura <= 680). Nas telas de duelo confere ainda: mão com altura natural 3:4, dentro do painel e sem sobreposição; clique no centro de cada botão de ação (`elementFromPoint`, em vários scrolls) chega ao próprio botão; ATK/DEF sem corte; rótulos ATK/DEF >= 10px. Também testa zoom 125/150% (viewport CSS + dpr), redimensionamento dinâmico (`Emulation.setDeviceMetricsOverride` sem recarregar) e retrato/paisagem.
+- Telas difíceis de alcançar (conta com serviço falso, duelo com unidades em ataque/defesa e suportes, resultados) vêm do **harness** `e2e/harness.html` (só no servidor de desenvolvimento; fora do build); nenhuma API real é chamada.
+- Matriz completa e capturas: `npm run e2e:matriz -- --out <pasta> --vps todas --shots 1920x1080,...` (gera `matriz.md/json` e PNGs; `e2e/scripts/inspecionar.ts` avalia uma expressão em uma cena). O Chrome precisa estar instalado; em outra máquina use `E2E_BASE` para apontar o servidor.
+- Funções puras: `src/ui/__tests__/escala.test.ts` (fórmula da escala, piso/teto, sincronia com o CSS) e `ajusteTeclado.test.ts`.
 
 ### Duelo Livre (seleção de adversário)
 - `src/data/__tests__/oponentes.test.ts` (node): 16 adversários únicos na ordem da referência, dificuldade 1-3, arquivos de retrato existentes (via `import.meta.glob`), Ressaca padrão, descrições sem "elimina".

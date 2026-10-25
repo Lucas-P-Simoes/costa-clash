@@ -46,7 +46,7 @@ export function TelaDuelo({ oponenteId, usuario, onVoltar, seedInicial, atrasoIA
   if (!oponente || !criado.ok) {
     const erros = criado.ok ? [] : criado.erros
     return (
-      <div className="tela">
+      <div className="tela tela-jogo">
         <CabecalhoTela titulo="Duelo" />
         <main className="tela-simples__corpo">
           <p role="alert">Não foi possível iniciar o duelo. {erros.join(' ')}</p>

@@ -11,12 +11,11 @@ body {
   background: var(--cc-fundo-0);
   color: var(--cc-texto);
   font-family: var(--cc-fonte-pixel);
-  font-size: 16px;
   line-height: 1.4;
-  overflow-x: hidden;
 }
 
 #root {
+  min-height: 100vh;
   min-height: 100dvh;
 }
 

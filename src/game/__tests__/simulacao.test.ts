@@ -1,7 +1,10 @@
-import { describe, expect, it } from 'vitest'
+import { describe, expect, it, vi } from 'vitest'
 import { BARALHOS_SIMULACAO, simularIAxIA } from './simular'
 
 // 17 baralhos (inicial + 16 oponentes); cada um joga como humano e como oponente ao longo das partidas.
+// Simulações longas: sob carga ocasional passam de 5 s (asserções inalteradas).
+vi.setConfig({ testTimeout: 30_000 })
+
 const N = BARALHOS_SIMULACAO.length
 
 describe('simulação IA x IA: nenhuma partida trava', () => {

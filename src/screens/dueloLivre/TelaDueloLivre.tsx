@@ -46,7 +46,7 @@ export function TelaDueloLivre({ usuario, onVoltar, onDuelo, oponenteInicialId }
   }
 
   return (
-    <div className="tela tela-duelo">
+    <div className="tela tela-jogo tela-duelo">
       <CabecalhoTela titulo="Duelo Livre" />
       <main className="tela-duelo__corpo">
         <div className="tela-duelo__grade">

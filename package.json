@@ -19,7 +19,9 @@
     "arte:manifesto": "node scripts/arte-manifesto.mjs",
     "arte:verificar": "node scripts/arte-verificar.mjs",
     "arte:prompts": "node scripts/arte-prompts.mjs",
-    "arte:gerar": "node scripts/gerar-arte.mjs"
+    "arte:gerar": "node scripts/gerar-arte.mjs",
+    "test:e2e": "playwright test",
+    "e2e:matriz": "node e2e/scripts/matriz.ts"
   },
   "dependencies": {
     "react": "^19.3.1",
@@ -27,6 +29,7 @@
   },
   "devDependencies": {
     "@cloudflare/workers-types": "^5.20261022.1",
+    "@playwright/test": "^1.64.1",
     "@testing-library/dom": "^10.4.2",
     "@testing-library/react": "^16.3.3",
     "@types/node": "^24.19.2",

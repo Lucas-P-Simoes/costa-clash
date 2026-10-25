@@ -139,7 +139,7 @@ export function TelaCriarConta({ servicoAuth, onAutenticado, onVoltar }: Props) 
   const tipoSenha = mostrarSenha ? 'text' : 'password'
 
   return (
-    <div className="tela">
+    <div className="tela tela-jogo">
       <CabecalhoTela titulo="Criar conta" />
       <main className="tela-simples__corpo">
         <MolduraPedra as="section" className="tela-simples__painel" aria-label="Criar conta">
