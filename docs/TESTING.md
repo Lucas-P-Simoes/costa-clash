@@ -88,6 +88,10 @@ Não alegar execução se o comando ou dependências não existirem. No início 
 
 - Pós-QA do redesenho (`duelo_visual.test.tsx`, grupo "Correções pós-QA"): estrutura e regras de CSS do resultado (cena em contêiner, botões sticky, `preventScroll`), CSS sem `break-word` e carta com `title`, aviso limpo ao mudar de turno (timers falsos) e motivo de botão bloqueado por teclado (foco mantido, `aria-live`). Alturas e cortes reais só por captura (Chrome headless/CDP).
 
+- `src/screens/__tests__/duelo_arrasto.test.tsx` (jsdom; eventos `pointerdown/move/up` e `document.elementFromPoint` simulado): arrastar unidade/armadilha/equipamento/ação com alvo/terreno/cura, resultado igual ao do fluxo por botão (comparação do tabuleiro e do log), posição pendente (defesa), destaques e fantasma durante o arrasto, zona ocupada e fora do campo (motivo, estado intacto), Esc, bloqueios (jogada feita, IA), clique simples e clique após o arrasto, dica e desmontagem. Carta deitada: `duelo_visual.test` (`data-posicao`, regras de CSS da rotação/transição/reduced-motion, fantasma deitado) e `efeitosVisuais.test` (posição do fantasma). Toque real e geometria da carta deitada: só por captura (CDP `Input.dispatchMouseEvent`/`dispatchTouchEvent`).
+
+- `src/screens/__tests__/duelo_toque.test.tsx`: pressão longa por toque (timers falsos), cancelamento por movimento antes do prazo, tolerância de 8 px, soltar sem mover, toque curto, bloqueios, `touchmove` cancelado só com arrasto ativo, limiar de 10 px do mouse, dica por `(pointer: coarse)`, tela baixa em paisagem, `nomeCurto`/nomes por container query e CSS do selo de posição. Validação por CDP (fora do Vitest): rolagem da página por toque sobre a mão, pressão longa + arrasto e 72 unidades x 2 posições x 6 viewports sem nome nem selo cortados.
+
 ## Relatório mínimo de QA
 Resultado; alterações testadas; comandos executados; contagem de testes; defeitos encontrados com reprodução; limites e riscos remanescentes.
 

@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
-import type { Evento, IdJogador } from '../../game'
+import type { Evento, IdJogador, Posicao } from '../../game'
 
 /** Duração (ms) dos efeitos temporários; menor que o atraso entre passos da IA (700 ms). */
 export const DURACAO_EFEITO_MS = 600
@@ -8,6 +8,8 @@ export interface Fantasma {
   lado: IdJogador
   zona: number
   cartaId: string
+  /** Posição da unidade antes de cair (o fantasma é desenhado em pé ou deitado como ela estava). */
+  posicao: Posicao
 }
 
 /** Efeitos visuais temporários derivados de eventos públicos. Chaves de zona: `${lado}:${zona}`. */
@@ -45,7 +47,7 @@ export function semEfeitos(e: EfeitosVisuais): boolean {
 }
 
 /** Função pura: eventos públicos novos -> efeitos visuais. Não decide nada do jogo; só apresentação. */
-export function derivarEfeitos(novos: readonly Evento[]): EfeitosVisuais {
+export function derivarEfeitos(novos: readonly Evento[], posicoes: Readonly<Record<string, Posicao>> = {}): EfeitosVisuais {
   const r: EfeitosVisuais = { entrando: [], atacando: [], impacto: [], dano: {}, cura: {}, destruidas: [], turnoMudou: false }
   for (const e of novos) {
     switch (e.tipo) {
@@ -63,7 +65,7 @@ export function derivarEfeitos(novos: readonly Evento[]): EfeitosVisuais {
         r.cura[e.jogador] = (r.cura[e.jogador] ?? 0) + e.valor
         break
       case 'unidade_destruida':
-        r.destruidas.push({ lado: e.jogador, zona: e.zona, cartaId: e.carta.cartaId })
+        r.destruidas.push({ lado: e.jogador, zona: e.zona, cartaId: e.carta.cartaId, posicao: posicoes[chaveZona(e.jogador, e.zona)] ?? 'ATAQUE' })
         break
       case 'turno_iniciado':
         r.turnoMudou = true
@@ -99,21 +101,28 @@ export function movimentoReduzido(): boolean {
  * Nunca altera o fluxo: o estado do jogo já foi atualizado; os efeitos expiram sozinhos por um timer
  * limpo ao desmontar. Com `prefers-reduced-motion: reduce` não há efeitos (nenhuma classe temporária).
  */
-export function useEfeitosVisuais(log: readonly Evento[], duracao: number = DURACAO_EFEITO_MS): EfeitosVisuais {
+export function useEfeitosVisuais(log: readonly Evento[], posicoes: Readonly<Record<string, Posicao>> = {}, duracao: number = DURACAO_EFEITO_MS): EfeitosVisuais {
   const [fx, setFx] = useState<EfeitosVisuais>(SEM_EFEITOS)
   const vistos = useRef(log.length)
   const timer = useRef<number | undefined>(undefined)
+  // posições das unidades na renderização anterior (a unidade destruída já saiu da visão atual)
+  const posAnteriores = useRef<Readonly<Record<string, Posicao>>>(posicoes)
 
   useEffect(() => {
     const novos = log.slice(vistos.current)
     vistos.current = log.length
     if (novos.length === 0 || movimentoReduzido()) return
-    const d = derivarEfeitos(novos)
+    const d = derivarEfeitos(novos, posAnteriores.current)
     if (semEfeitos(d)) return
     setFx((atual) => unir(atual, d))
     window.clearTimeout(timer.current)
     timer.current = window.setTimeout(() => setFx(SEM_EFEITOS), duracao)
   }, [log, duracao])
+
+  // roda depois do efeito acima (ordem de declaração): guarda as posições desta renderização para a próxima
+  useEffect(() => {
+    posAnteriores.current = posicoes
+  })
 
   useEffect(
     () => () => {

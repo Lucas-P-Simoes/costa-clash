@@ -162,6 +162,31 @@ describe('Posição ataque/defesa representada visualmente', () => {
     expect(def.querySelector('.carta__posicao')!.textContent).toBe('DEF')
     // continua exposto também por texto acessível
     expect(def.getAttribute('aria-label')).toContain('em defesa')
+    expect(atq.getAttribute('data-posicao')).toBe('ATAQUE')
+    expect(def.getAttribute('data-posicao')).toBe('DEFESA')
+  })
+
+  it('defesa = carta DEITADA (rotate 90) por CSS, com transição curta; o selo de posição não gira; reduced-motion sem transição', () => {
+    const css = readFileSync(resolve(__dirname, '../duelo/duelo.css'), 'utf8')
+    const trecho = (sel: string) => {
+      const i = css.indexOf(`${sel} {`)
+      expect(i, sel).toBeGreaterThanOrEqual(0)
+      return css.slice(i, css.indexOf('}', i))
+    }
+    expect(trecho('.carta--campo.carta--defesa')).toContain('--rot: rotate(90deg)')
+    expect(trecho('.carta--campo.carta--defesa')).toContain('height: min(100cqh, 100cqw)')
+    expect(trecho('.carta--campo')).toContain('transform: var(--rot)')
+    expect(trecho('.carta--campo')).toContain('transition: transform 0.25s')
+    expect(trecho('.carta--campo.carta--defesa .carta__posicao')).toContain('rotate(-90deg)')
+    expect(trecho('.zona')).toContain('container-type: size')
+    const reduzido = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'))
+    expect(reduzido.slice(0, reduzido.indexOf('/* ----'))).toMatch(/\.carta--campo \{\s*transition: none/)
+    // rótulo acessível continua dizendo a posição, também para a unidade do oponente
+    cleanup()
+    montar({ oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA' }], mao: ['CC-001'] } })
+    const op = q('.duelo-lado--oponente .zona .carta')
+    expect(op.className).toContain('carta--defesa')
+    expect(op.getAttribute('aria-label')).toContain('em defesa')
   })
 })
 
@@ -324,6 +349,20 @@ describe('Tela de resultado (estilo Tela-derrota / Tela-recompensa)', () => {
     expect(onNovamente).toHaveBeenCalled()
     fireEvent.click(within(d).getByRole('button', { name: 'Voltar' }))
     expect(onVoltar).toHaveBeenCalled()
+  })
+})
+
+describe('Fantasma da carta destruída em defesa', () => {
+  it('é desenhado deitado, como a unidade estava', () => {
+    vi.useFakeTimers()
+    montar({ jogadaFeita: true, humano: { campo: ['CC-071'] }, oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA' }], mao: ['CC-001'] } })
+    fireEvent.click(botao(/^Atacar/))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Elevação.*pode atacar/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido.*alvo válido/ }))
+    const f = q('.duelo-lado--oponente [data-fantasma="destruida"] .carta')
+    expect(f.className).toContain('carta--defesa')
+    expect(f.className).toContain('carta--fx-destruida')
+    expect(f.getAttribute('data-posicao')).toBe('DEFESA')
   })
 })
 

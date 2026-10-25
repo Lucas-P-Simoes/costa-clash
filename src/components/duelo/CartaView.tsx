@@ -7,7 +7,7 @@ import { IconeEspadas } from '../ui/Icones'
 import { ArteCarta } from './ArteCarta'
 import { IconeEscudo } from './iconesDuelo'
 import { SeloCarta } from './SeloCarta'
-import { efeitoCurto, rotuloTipo, tipoArte } from './textoCarta'
+import { efeitoCurto, nomeCurto, rotuloTipo, tipoArte } from './textoCarta'
 
 export interface CartaViewProps {
   carta: Carta
@@ -33,6 +33,10 @@ export interface CartaViewProps {
   efeito?: 'entrando' | 'atacando' | 'impacto' | 'destruida' | null
   /** Lado do tabuleiro (a direção das animações de entrada/ataque inverte para o oponente). */
   lado?: 'humano' | 'oponente'
+  /** Pointer Events (arrastar da mão ao campo). */
+  onPointerDown?: (e: React.PointerEvent<HTMLButtonElement>) => void
+  /** Carta da mão em arrasto: esmaecida (volta ao normal se cancelar). */
+  arrastando?: boolean
 }
 
 /** Ilustração da carta: imagem 3:4 recortada (cover) se houver arte no manifesto; senão (ou em erro de carregamento) a arte SVG por tipo. */
@@ -54,8 +58,9 @@ function ArteIlustrada({ carta, arte }: { carta: Carta; arte: ArteDaCarta | null
 }
 
 /** Carta do catálogo: moldura por categoria, selo, ilustração (ou arte SVG), placa de nome, ATK (vermelho) / DEF (azul) ou tipo + efeito curto. */
-export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', selecionada, destaque, rotulo, onClick, focoAlvo, inativa, arte, efeito, lado }: CartaViewProps) {
+export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', selecionada, destaque, rotulo, onClick, focoAlvo, inativa, arte, efeito, lado, onPointerDown, arrastando }: CartaViewProps) {
   const unidade = carta.tipo === 'unidade'
+  const curto = tamanho === 'campo' ? nomeCurto(carta.nome) : carta.nome
   const visual = classificarCarta(carta)
   const ilustracao = arte === undefined ? arteDaCarta(carta.id) : arte
   const classe = [
@@ -65,6 +70,8 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
     `carta--cat-${visual.categoria}`,
     posicao === 'DEFESA' ? 'carta--defesa' : posicao === 'ATAQUE' ? 'carta--ataque' : '',
     efeito ? `carta--fx-${efeito}` : '',
+    arrastando ? 'carta--arrastando' : '',
+    onPointerDown ? 'carta--arrastavel' : '',
     lado === 'oponente' ? 'carta--lado-op' : '',
     selecionada ? 'carta--selecionada' : '',
     destaque ? `carta--${destaque}` : '',
@@ -73,7 +80,18 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
     .join(' ')
   const conteudo = (
     <>
-      <span className="carta__nome">{carta.nome}</span>
+      <span className="carta__nome">
+        {curto !== carta.nome ? (
+          <>
+            <span className="nome-completo">{carta.nome}</span>
+            <span className="nome-curto" aria-hidden="true">
+              {curto}
+            </span>
+          </>
+        ) : (
+          carta.nome
+        )}
+      </span>
       <span className="carta__arte" aria-hidden="true">
         <ArteIlustrada key={ilustracao?.url ?? 'svg'} carta={carta} arte={ilustracao} />
         <SeloCarta selo={visual.selo} />
@@ -105,7 +123,7 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
   )
   if (!onClick) {
     return (
-      <div className={classe} role="img" aria-label={rotulo}>
+      <div className={classe} role="img" aria-label={rotulo} data-posicao={posicao}>
         {conteudo}
       </div>
     )
@@ -115,6 +133,8 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
       type="button"
       className={classe}
       aria-label={rotulo}
+      data-posicao={posicao}
+      onPointerDown={onPointerDown}
       title={carta.nome}
       data-foco={focoAlvo ? 'alvo' : undefined}
       aria-pressed={selecionada === undefined ? undefined : selecionada}

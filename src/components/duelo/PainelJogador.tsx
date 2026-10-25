@@ -26,17 +26,20 @@ interface Props {
   acao?: ReactNode
   /** Efeitos temporários da vida (pulso de dano/cura com o valor). */
   vidaFx?: { dano?: number; cura?: number } | null
+  /** Destino de arrasto "campo" (ações sem alvo): destaca o painel. */
+  drop?: boolean
+  dataDestino?: string
 }
 
 /**
  * Painel de um lado do tabuleiro: placa com avatar e identificação, VIDA com coração, contagens (baralho/descarte),
  * as 5 zonas de unidade e a faixa de 5 suportes. Só apresentação: zonas e suportes chegam prontos.
  */
-export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloContagens, baralho, descarte, rotuloZonas, rotuloSuportes, zonas, suportes, maoOponente, acao, vidaFx }: Props) {
+export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloContagens, baralho, descarte, rotuloZonas, rotuloSuportes, zonas, suportes, maoOponente, acao, vidaFx, drop, dataDestino }: Props) {
   const oponente = lado === 'oponente'
   const efeitoVida = vidaFx?.dano ? ' duelo-vida--dano' : vidaFx?.cura ? ' duelo-vida--cura' : ''
   return (
-    <MolduraOrnamentada tom="ciano" className={`duelo-lado duelo-lado--${lado}`} classeMiolo="duelo-lado__miolo">
+    <MolduraOrnamentada tom="ciano" className={`duelo-lado duelo-lado--${lado}${drop ? ' duelo-lado--drop' : ''}`} classeMiolo="duelo-lado__miolo" data-destino={dataDestino}>
       <div className="duelo-lado__topo">
         <div className={`duelo-placa duelo-placa--${lado}`}>
           <span className={`duelo-avatar duelo-avatar--${lado}`} aria-hidden="true">

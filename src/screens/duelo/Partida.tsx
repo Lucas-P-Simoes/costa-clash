@@ -177,19 +177,21 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   }
 
   // ---------------------------------------------------------------- motivos (botões desabilitados)
-  function motivoUsar(): string | null {
+  function motivoUsarDe(uid: string | undefined): string | null {
+    const carta = uid ? cat.get(mao.find((c) => c.uid === uid)?.cartaId ?? '') : undefined
     if (!minhaVez) return 'Aguarde a sua vez.'
     if (estado.fase !== 'PRINCIPAL') return 'A jogada da mão só vale na fase principal.'
     if (estado.jogadaFeita) return 'Você já fez a jogada da mão neste turno.'
-    if (!cartaSel || !sel.mao) return 'Selecione uma carta da mão.'
-    if (legais.some((c) => c.tipo === 'jogarCarta' && c.uid === sel.mao)) return null
+    if (!carta || !uid) return 'Selecione uma carta da mão.'
+    if (legais.some((c) => c.tipo === 'jogarCarta' && c.uid === uid)) return null
     if (soDescarte) return 'Nenhuma carta pode ser jogada agora: use DESCARTAR CARTA.'
-    if (cartaSel.tipo === 'acao') {
-      const a = analisarAcao(estado, 'humano', cartaSel, cat)
+    if (carta.tipo === 'acao') {
+      const a = analisarAcao(estado, 'humano', carta, cat)
       if (a.bloqueio) return a.bloqueio
     }
-    return validarJogarCarta(estado, cat, { tipo: 'jogarCarta', jogador: 'humano', uid: sel.mao }) ?? 'Esta carta não pode ser jogada agora.'
+    return validarJogarCarta(estado, cat, { tipo: 'jogarCarta', jogador: 'humano', uid }) ?? 'Esta carta não pode ser jogada agora.'
   }
+  const motivoUsar = () => motivoUsarDe(sel.mao)
 
   function motivoAtacar(): string | null {
     if (!minhaVez) return 'Aguarde a sua vez.'
@@ -335,11 +337,263 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     }
   }
 
+  // ---------------------------------------------------------------- arrastar a carta da mão até o campo (Pointer Events)
+  // Alternativa ao clique: usa os MESMOS caminhos do botão USAR CARTA (`enviar` -> `aplicarComando`, validações do motor).
+  // Clique simples continua selecionando (limiar de arrasto de 6 px).
+  // mouse/caneta: arrasto imediato após 10 px. TOQUE: só após pressão longa (~240 ms parado, tolerância 8 px) para a página continuar rolando.
+  interface EstadoArrasto {
+    uid: string
+    id: number
+    px: number
+    py: number
+    ativo: boolean
+    toque: boolean
+    /** Último ponto conhecido (toque, antes de armar) e ponto em que armou. */
+    x: number
+    y: number
+    ax: number
+    ay: number
+    moveu: boolean
+    timer: number | undefined
+  }
+  const LIMIAR_MOUSE = 10
+  const LIMIAR_TOQUE = 8
+  const PRESSAO_LONGA_MS = 240
+  const arrRef = useRef<EstadoArrasto | null>(null)
+  const baixaPaisagem = () => typeof window.matchMedia === 'function' && window.matchMedia('(max-height: 520px) and (orientation: landscape) and (max-width: 1100px)').matches
+  const [telaToque] = useState(() => typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches)
+  const [telaBaixa] = useState(() => baixaPaisagem())
+  /** O clique sintetizado logo após soltar um arrasto não deve alternar a seleção: engole só o próximo clique (capture), removido no próximo ciclo. */
+  const engolirRef = useRef<((ev: Event) => void) | null>(null)
+  function pararDeEngolirClique() {
+    if (engolirRef.current) window.removeEventListener('click', engolirRef.current, true)
+    engolirRef.current = null
+  }
+  function suprimirProximoClique() {
+    pararDeEngolirClique()
+    const engolir = (ev: Event) => {
+      ev.stopPropagation()
+      ev.preventDefault()
+      pararDeEngolirClique()
+    }
+    engolirRef.current = engolir
+    window.addEventListener('click', engolir, true)
+    window.setTimeout(() => engolirRef.current === engolir && pararDeEngolirClique(), 0)
+  }
+  const [arr, setArr] = useState<{ uid: string; x: number; y: number; sobre: string | null } | null>(null)
+
+  function cartaDoUid(uid: string | undefined) {
+    return uid ? cat.get(mao.find((c) => c.uid === uid)?.cartaId ?? '') : undefined
+  }
+
+  function bloqueioArrasto(uid: string): string | null {
+    if (baixaPaisagem()) return 'Arrastar não está disponível nesta tela baixa: selecione a carta e use USAR CARTA.'
+    if (!minhaVez) return 'Aguarde a sua vez.'
+    return motivoUsarDe(uid)
+  }
+
+  /** Destino -> executar (ou motivo). Chaves: zona:humano:z (unidade livre), unidade:lado:z, suporte:humano:z, terreno, campo. */
+  function avaliarDestino(uid: string, key: string | null): { valido: boolean; motivo: string; cmd?: Comando } {
+    const c = cartaDoUid(uid)
+    if (!c) return { valido: false, motivo: 'Carta indisponível.' }
+    const [tipo, lado, zStr] = (key ?? '').split(':')
+    const z = Number(zStr)
+    const proprio = lado === 'humano'
+    const tentar = (cmd: Comando & { tipo: 'jogarCarta' }, rotulo: string) => {
+      const erro = validarJogarCarta(estado, cat, cmd)
+      return erro ? { valido: false, motivo: erro } : { valido: true, motivo: rotulo, cmd }
+    }
+    if (c.tipo === 'unidade') {
+      if (proprio && (tipo === 'zona' || tipo === 'unidade')) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid, zona: z, posicao: posPend }, '')
+      return { valido: false, motivo: 'Solte a unidade em uma zona livre do seu campo.' }
+    }
+    if (c.tipo === 'armadilha') {
+      if (proprio && tipo === 'suporte') return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid, zona: z }, '')
+      return { valido: false, motivo: 'Solte a armadilha em uma zona de suporte livre.' }
+    }
+    const a = analisarAcao(estado, 'humano', c, cat)
+    if (a.exigeAlvo && a.donoAlvo) {
+      if (tipo === 'unidade' && lado === a.donoAlvo && a.alvos.includes(z)) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid, alvo: z }, '')
+      return { valido: false, motivo: 'Solte sobre uma unidade alvo válida (destacada).' }
+    }
+    if (key === 'terreno' || key === 'campo' || (proprio && (tipo === 'zona' || tipo === 'unidade' || tipo === 'suporte'))) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid }, '')
+    return { valido: false, motivo: 'Solte a carta sobre o seu campo ou sobre o terreno.' }
+  }
+
+  function destinosValidos(uid: string): Set<string> {
+    const s = new Set<string>()
+    const c = cartaDoUid(uid)
+    if (!c) return s
+    const cand: string[] = []
+    if (c.tipo === 'unidade') [0, 1, 2, 3, 4].forEach((z) => !v.eu.campo[z] && cand.push('zona:humano:' + z))
+    else if (c.tipo === 'armadilha') [0, 1, 2, 3, 4].forEach((z) => !v.eu.suporte[z] && cand.push('suporte:humano:' + z))
+    else {
+      const a = analisarAcao(estado, 'humano', c, cat)
+      if (a.exigeAlvo && a.donoAlvo) a.alvos.forEach((z) => cand.push('unidade:' + a.donoAlvo + ':' + z))
+      else cand.push('terreno', 'campo')
+    }
+    cand.forEach((k) => avaliarDestino(uid, k).valido && s.add(k))
+    return s
+  }
+
+  function destinoSob(x: number, y: number): string | null {
+    const el = typeof document.elementFromPoint === 'function' ? document.elementFromPoint(x, y) : null
+    return el?.closest<HTMLElement>('[data-destino]')?.dataset.destino ?? null
+  }
+
+  /** Campo com rolagem horizontal interna (celular): perto das bordas, rola enquanto o ponteiro se move. */
+  function autoRolar(e: PointerEvent) {
+    const cont = document.querySelector<HTMLElement>('.duelo-lado--voce .duelo-zonas')
+    if (!cont) return
+    const r = cont.getBoundingClientRect()
+    if (e.clientY < r.top - 40 || e.clientY > r.bottom + 40) return
+    if (e.clientX < r.left + 40) cont.scrollLeft -= 16
+    else if (e.clientX > r.right - 40) cont.scrollLeft += 16
+  }
+
+  const ouvintes = useRef({
+    mover: (e: PointerEvent) => apiArrasto.current.mover(e),
+    soltar: (e: PointerEvent) => apiArrasto.current.soltar(e),
+    cancelar: () => apiArrasto.current.cancelar(),
+  })
+  const apiArrasto = useRef<{ mover: (e: PointerEvent) => void; soltar: (e: PointerEvent) => void; cancelar: () => void }>({ mover: () => {}, soltar: () => {}, cancelar: () => {} })
+
+  function pararOuvintes() {
+    window.removeEventListener('pointermove', ouvintes.current.mover)
+    window.removeEventListener('pointerup', ouvintes.current.soltar)
+    window.removeEventListener('pointercancel', ouvintes.current.cancelar)
+  }
+
+  function limparTimerArrasto() {
+    if (arrRef.current?.timer !== undefined) window.clearTimeout(arrRef.current.timer)
+  }
+
+  function cancelarArrasto() {
+    limparTimerArrasto()
+    pararOuvintes()
+    arrRef.current = null
+    setArr(null)
+  }
+
+  /** Toque: o dedo ficou parado o bastante => entra em modo arrasto (feedback imediato: fantasma + zonas destacadas + vibração leve). */
+  function armarToque(a: EstadoArrasto) {
+    if (arrRef.current !== a || a.ativo) return
+    const bloqueio = bloqueioArrasto(a.uid)
+    if (bloqueio) {
+      pararOuvintes()
+      arrRef.current = null
+      dizer(bloqueio, true)
+      return
+    }
+    a.ativo = true
+    a.ax = a.x
+    a.ay = a.y
+    setModo(null)
+    setAviso(null)
+    setFoco(null)
+    setSel({ mao: a.uid })
+    try {
+      if (typeof navigator !== 'undefined' && typeof navigator.vibrate === 'function') navigator.vibrate(12)
+    } catch {
+      /* vibração é opcional */
+    }
+    setArr({ uid: a.uid, x: a.x, y: a.y, sobre: destinoSob(a.x, a.y) })
+  }
+
+  function iniciarPointer(uid: string, e: { pointerId: number; pointerType: string; button: number; clientX: number; clientY: number; isPrimary?: boolean }) {
+    if ((e.pointerType === 'mouse' && e.button !== 0) || e.isPrimary === false) return
+    pararDeEngolirClique() // um novo toque/clique nunca é engolido
+    pararOuvintes()
+    const a: EstadoArrasto = { uid, id: e.pointerId, px: e.clientX, py: e.clientY, ativo: false, toque: e.pointerType === 'touch', x: e.clientX, y: e.clientY, ax: e.clientX, ay: e.clientY, moveu: false, timer: undefined }
+    arrRef.current = a
+    if (a.toque) a.timer = window.setTimeout(() => armarToque(a), PRESSAO_LONGA_MS)
+    window.addEventListener('pointermove', ouvintes.current.mover)
+    window.addEventListener('pointerup', ouvintes.current.soltar)
+    window.addEventListener('pointercancel', ouvintes.current.cancelar)
+  }
+
+  function moverArrasto(e: PointerEvent) {
+    const a = arrRef.current
+    if (!a || e.pointerId !== a.id) return
+    a.x = e.clientX
+    a.y = e.clientY
+    if (!a.ativo) {
+      const d = Math.hypot(e.clientX - a.px, e.clientY - a.py)
+      if (a.toque) {
+        // moveu antes da pressão longa: é rolagem/gesto normal, não arrasto
+        if (d > LIMIAR_TOQUE) cancelarArrasto()
+        return
+      }
+      if (d < LIMIAR_MOUSE) return
+      const bloqueio = bloqueioArrasto(a.uid)
+      if (bloqueio) {
+        pararOuvintes()
+        arrRef.current = null
+        suprimirProximoClique()
+        dizer(bloqueio, true)
+        return
+      }
+      a.ativo = true
+      setModo(null)
+      setAviso(null)
+      setFoco(null)
+      setSel({ mao: a.uid })
+    }
+    if (a.toque && !a.moveu && Math.hypot(e.clientX - a.ax, e.clientY - a.ay) > 6) a.moveu = true
+    autoRolar(e)
+    setArr({ uid: a.uid, x: e.clientX, y: e.clientY, sobre: destinoSob(e.clientX, e.clientY) })
+  }
+
+  function soltarArrasto(e: PointerEvent) {
+    const a = arrRef.current
+    if (!a || e.pointerId !== a.id) return
+    limparTimerArrasto()
+    pararOuvintes()
+    arrRef.current = null
+    if (!a.ativo) return // clique simples: segue o fluxo normal de seleção
+    suprimirProximoClique()
+    setArr(null)
+    if (a.toque && !a.moveu) return // pressão longa solta sem mover: não joga (a carta fica selecionada)
+    const r = avaliarDestino(a.uid, destinoSob(e.clientX, e.clientY))
+    if (r.cmd) enviar(r.cmd)
+    else dizer(r.motivo, true)
+  }
+
+  useEffect(() => {
+    apiArrasto.current = { mover: moverArrasto, soltar: soltarArrasto, cancelar: cancelarArrasto }
+  })
+  useEffect(
+    () => () => {
+      limparTimerArrasto()
+      pararOuvintes()
+      pararDeEngolirClique()
+    },
+    [], // eslint-disable-line react-hooks/exhaustive-deps
+  )
+  // Toque: com o arrasto ativo a página não pode rolar. touchmove NÃO passivo só na área da mão e só com arrasto ativo (senão a rolagem é normal).
+  useEffect(() => {
+    const el = document.querySelector<HTMLElement>('.duelo-mao')
+    if (!el) return
+    const travar = (ev: Event) => {
+      if (arrRef.current?.ativo && ev.cancelable) ev.preventDefault()
+    }
+    el.addEventListener('touchmove', travar, { passive: false })
+    el.addEventListener('contextmenu', travar) // menu de pressão longa do navegador atrapalharia o arrasto
+    return () => {
+      el.removeEventListener('touchmove', travar)
+      el.removeEventListener('contextmenu', travar)
+    }
+  }, [])
+
+  const validos = useMemo(() => (arr ? destinosValidos(arr.uid) : new Set<string>()), [arr?.uid, estado, posPend]) // eslint-disable-line react-hooks/exhaustive-deps
+  const classeDrop = (key: string) => (validos.has(key) ? ' zona--drop' + (arr?.sobre === key ? ' zona--sobre' : '') : '')
+
   // Esc: fecha/cancela por camadas; sem nada aberto, pede confirmação para abandonar.
   useEffect(() => {
     const aoTeclar = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
-      if (estado.resultado && !reproduzindo) onVoltar()
+      if (arrRef.current) cancelarArrasto() // arrasto em curso: Esc só cancela o arrasto
+      else if (estado.resultado && !reproduzindo) onVoltar()
       else if (confirma) setConfirma(false)
       else if (modo) {
         setModo(null)
@@ -373,12 +627,21 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const faseTxt = estado.fase === 'PRINCIPAL' ? 'Principal' : estado.fase === 'COMBATE' ? 'Combate' : estado.fase
 
   // Efeitos visuais temporários (classes de animação) derivados dos eventos públicos novos; nunca bloqueiam o fluxo.
-  const fx = useEfeitosVisuais(log)
+  const posicoes = useMemo(() => {
+    const m: Record<string, Posicao> = {}
+    v.eu.campo.forEach((u, z) => u && (m[chaveZona('humano', z)] = u.posicao))
+    v.oponente.campo.forEach((u, z) => u && (m[chaveZona('oponente', z)] = u.posicao))
+    return m
+  }, [v])
+  const fx = useEfeitosVisuais(log, posicoes)
 
   function renderZonaUnidade(lado: IdJogador, z: number) {
     const u = (lado === 'humano' ? v.eu.campo : v.oponente.campo)[z]
     const quem = lado === 'humano' ? 'sua' : 'do oponente'
     const chave = chaveZona(lado, z)
+    const keyDestino = (u ? 'unidade:' : 'zona:') + lado + ':' + z
+    const drop = classeDrop(keyDestino)
+    const dropAttr = drop ? ({ 'aria-dropeffect': 'move' } as const) : {}
     const alvoValido =
       (modo?.tipo === 'alvo' && modo.dono === lado && modo.alvos.includes(z)) ||
       (modo?.tipo === 'atacar' && lado === 'oponente' && alvosAtaque.some((a) => a.alvo === z))
@@ -388,7 +651,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       const rot = `Zona ${z + 1} ${quem}: vazia, escolher esta zona`
       if (livreEscolha) {
         return (
-          <button key={z} type="button" className="zona zona--vazia zona--valida" data-foco="alvo" aria-label={rot} onClick={() => cliqueUnidade(lado, z)}>
+          <button key={z} type="button" className={'zona zona--vazia zona--valida' + drop} data-destino={keyDestino} {...dropAttr} data-foco="alvo" aria-label={rot} onClick={() => cliqueUnidade(lado, z)}>
             <span className="zona__losango" aria-hidden="true" />
           </button>
         )
@@ -397,11 +660,11 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       const fantasma = fx.destruidas.find((f) => f.lado === lado && f.zona === z)
       const cf = fantasma ? cat.get(fantasma.cartaId) : undefined
       return (
-        <div key={z} className="zona zona--vazia" aria-hidden="true">
+        <div key={z} className={'zona zona--vazia' + drop} data-destino={lado === 'humano' ? keyDestino : undefined} {...dropAttr} aria-hidden="true">
           <span className="zona__losango" aria-hidden="true" />
           {cf ? (
             <span className="zona__fantasma" data-fantasma="destruida">
-              <CartaView carta={cf} tamanho="campo" efeito="destruida" lado={lado} rotulo={`${cf.nome}, destruída`} />
+              <CartaView carta={cf} tamanho="campo" posicao={fantasma!.posicao} efeito="destruida" lado={lado} rotulo={`${cf.nome}, destruída`} />
             </span>
           ) : null}
         </div>
@@ -414,7 +677,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     }${alvoValido ? ', alvo válido' : ''}${atacantePossivel ? ', pode atacar' : ''}`
     const efeito = fx.atacando.includes(chave) ? 'atacando' : fx.impacto.includes(chave) ? 'impacto' : fx.entrando.includes(chave) ? 'entrando' : null
     return (
-      <div key={z} className="zona">
+      <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
         <CartaView
           carta={c}
           atk={atk}
@@ -437,21 +700,25 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const s = (lado === 'humano' ? v.eu.suporte : v.oponente.suporte)[z]
     const quem = lado === 'humano' ? 'sua' : 'do oponente'
     const livre = modo?.tipo === 'zona' && lado === 'humano' && cartaSel?.tipo === 'armadilha' && !s
+    const keyS = 'suporte:' + lado + ':' + z
+    const dropS = lado === 'humano' ? classeDrop(keyS) : ''
+    const dataS = lado === 'humano' ? keyS : undefined
+    const dropSAttr = dropS ? ({ 'aria-dropeffect': 'move' } as const) : {}
     if (!s) {
       const rot = `Suporte ${z + 1} ${quem}: vazio, escolher esta zona`
       return livre ? (
-        <button key={z} type="button" className="suporte suporte--vazio zona--valida" data-foco="alvo" aria-label={rot} onClick={() => cliqueSuporte(lado, z)}>
+        <button key={z} type="button" className={'suporte suporte--vazio zona--valida' + dropS} data-destino={dataS} {...dropSAttr} data-foco="alvo" aria-label={rot} onClick={() => cliqueSuporte(lado, z)}>
           <span className="zona__losango" aria-hidden="true" />
         </button>
       ) : (
-        <div key={z} className="suporte suporte--vazio" aria-hidden="true">
+        <div key={z} className={'suporte suporte--vazio' + dropS} data-destino={dataS} {...dropSAttr} aria-hidden="true">
           <span className="zona__losango" aria-hidden="true" />
         </div>
       )
     }
     if ('oculta' in s && s.oculta) {
       return (
-        <div key={z} className="suporte">
+        <div key={z} className="suporte" data-destino={dataS}>
           <CartaVerso rotulo={`Suporte ${z + 1} ${quem}: carta virada para baixo`} />
         </div>
       )
@@ -460,7 +727,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const c = cat.get(full.cartaId)!
     const extra = full.tipo === 'armadilha' ? ', armadilha virada (visível só para você)' : ', equipamento'
     return (
-      <div key={z} className="suporte">
+      <div key={z} className={'suporte' + dropS} data-destino={dataS} {...dropSAttr}>
         <CartaView carta={c} tamanho="mini" rotulo={`Suporte ${z + 1} ${quem}: ${c.nome}${extra}`} onClick={() => cliqueSuporte(lado, z)} />
       </div>
     )
@@ -489,7 +756,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   }
 
   return (
-    <div className={`tela tela-partida${aviso?.texto ? ' tela-partida--aviso' : ''}`}>
+    <div className={`tela tela-partida${aviso?.texto ? ' tela-partida--aviso' : ''}${arr ? ' tela-partida--arrastando' : ''}`}>
       <div className="duelo-fundo" inert={dialogoAberto}>
         <CabecalhoDuelo />
         <h1 className="sr-only">Duelo contra {oponente.nome}</h1>
@@ -529,7 +796,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               }
             />
 
-            <FaixaTerreno terreno={terrenoCarta} />
+            <FaixaTerreno terreno={terrenoCarta} drop={validos.has('terreno') ? (arr?.sobre === 'terreno' ? 'sobre' : 'valido') : null} />
 
             <PainelJogador
               lado="voce"
@@ -545,6 +812,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               zonas={[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('humano', z))}
               suportes={[0, 1, 2, 3, 4].map((z) => renderSuporte('humano', z))}
               vidaFx={{ dano: fx.dano.humano, cura: fx.cura.humano }}
+              drop={validos.has('campo')}
+              dataDestino="campo"
             />
 
             <MolduraOrnamentada as="section" tom="ciano" className="duelo-mao" aria-label={`Sua mão, ${mao.length} cartas`} classeMiolo="duelo-mao__miolo">
@@ -554,6 +823,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
                 </span>
                 Sua mão <small>({mao.length} cartas)</small>
               </h2>
+              {telaBaixa ? null : <p className="duelo-mao__dica">{telaToque ? 'Segure e arraste a carta até o campo, ou use USAR CARTA' : 'Arraste a carta até o campo ou use USAR CARTA'}</p>}
               <div className="duelo-mao__cartas">
                 {mao.map((m, i) => {
                   const c = cat.get(m.cartaId)!
@@ -566,6 +836,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
                       selecionada={m.uid === sel.mao}
                       rotulo={`Mão ${i + 1}: ${descricaoCarta(c)}${m.uid === sel.mao ? ', selecionada' : ''}`}
                       onClick={() => escolherMao(m.uid)}
+                      onPointerDown={(e) => iniciarPointer(m.uid, e)}
+                      arrastando={arr?.uid === m.uid}
                       inativa={!minhaVez}
                     />
                   )
@@ -627,8 +899,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
 
             <DicaEducativa carta={dicaCarta} />
 
-            <section className="duelo-log" aria-label="Registro do duelo">
-              <h2>Registro</h2>
+            {/* Registro oculto visualmente: continua anunciado a leitores de tela (aria-live). */}
+            <section className="sr-only" aria-label="Registro do duelo">
               <ol role="log" aria-live="polite" aria-relevant="additions">
                 {log.slice(-10).map((e, i, arr) => (
                   <li key={log.length - arr.length + i}>{e.texto}</li>
@@ -638,6 +910,12 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
           </aside>
         </main>
       </div>
+
+      {arr && cartaDoUid(arr.uid) ? (
+        <div className="duelo-arrasto-fantasma" aria-hidden="true" style={{ left: arr.x, top: arr.y }}>
+          <CartaView carta={cartaDoUid(arr.uid)!} tamanho="mao" rotulo="Carta sendo arrastada" />
+        </div>
+      ) : null}
 
       {desistirVisivel ? (
         <DialogoDesistir

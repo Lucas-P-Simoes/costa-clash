@@ -52,9 +52,23 @@ describe('derivarEfeitos (função pura)', () => {
     ])
     expect(r.dano).toEqual({ oponente: 500 })
     expect(r.cura).toEqual({ humano: 500 })
-    expect(r.destruidas).toEqual([{ lado: 'oponente', zona: 4, cartaId: 'CC-003' }])
+    expect(r.destruidas).toEqual([{ lado: 'oponente', zona: 4, cartaId: 'CC-003', posicao: 'ATAQUE' }])
     expect(r.turnoMudou).toBe(true)
     expect(semEfeitos(r)).toBe(false)
+  })
+})
+
+describe('fantasma herda a posição', () => {
+  const destruida = ev({ tipo: 'unidade_destruida', jogador: 'humano', zona: 1, carta: { uid: 'u', cartaId: 'CC-003' } })
+  it('usa a posição conhecida da zona (defesa = deitada); sem informação, ataque', () => {
+    expect(derivarEfeitos([destruida], { 'humano:1': 'DEFESA' }).destruidas[0].posicao).toBe('DEFESA')
+    expect(derivarEfeitos([destruida], { 'oponente:1': 'DEFESA' }).destruidas[0].posicao).toBe('ATAQUE')
+  })
+
+  it('o hook usa as posições da renderização anterior (a unidade já saiu da visão atual)', () => {
+    const { result, rerender } = renderHook(({ log, pos }) => useEfeitosVisuais(log, pos), { initialProps: { log: [] as Evento[], pos: { 'humano:1': 'DEFESA' } as Record<string, 'ATAQUE' | 'DEFESA'> } })
+    rerender({ log: [destruida], pos: {} })
+    expect(result.current.destruidas[0].posicao).toBe('DEFESA')
   })
 })
 

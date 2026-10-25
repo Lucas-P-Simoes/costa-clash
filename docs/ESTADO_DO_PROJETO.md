@@ -11,6 +11,10 @@
 
 - Correções pós-QA do redesenho (D1–D6) aplicadas em 2026-10-23: resultado cabe em 1280x720/1366x768/812x375, nomes por palavra, alvos de toque >=40/44 px, registro visível no desktop baixo, aviso vencido some na troca de turno. `npm test` 639 passaram + 1 ignorado; typecheck, worker:typecheck, lint e build OK. Detalhes: HANDOFF.
 
+- 2026-10-23: unidade em defesa agora aparece deitada (90°; carta de campo 3:4 em contêiner de zona) e a carta da mão pode ser arrastada ao campo (Pointer Events, mesmo caminho do USAR CARTA; clique/teclado continuam). `npm test` 661 passaram + 1 ignorado; typecheck, worker:typecheck, lint e build OK. Toque só validado por emulação. Detalhes: HANDOFF.
+
+- 2026-10-24: correções do QA da carta deitada/arrasto: arrasto por toque só após pressão longa (a página rola normalmente sobre a mão; limiar de 10 px no mouse), nomes de carta de campo sem letras cortadas (abreviação por palavra em cartas estreitas; 0 cortes em 72 unidades x 6 viewports), selo de posição legível (10 px), arrasto desligado em celular de paisagem baixa. `npm test` 680 passaram + 1 ignorado; typecheck, worker:typecheck, lint e build OK. Toque real não validado.
+
 ## Tela do duelo (fase B, 2026-10-22, DEV; sem QA da UI nem revisão visual do dono)
 - A tela do duelo existe e está ligada ao botão DUELO do Duelo Livre (adversário escolhido, baralho do perfil ou inicial). Detalhes, decisões, diferenças vs. a referência e riscos: `docs/HANDOFF.md` (primeira seção). Correções do QA do motor (QA-1/2/3, `logPublico`) aplicadas.
 - Correções pós-QA D1-D13 aplicadas (ver HANDOFF). `npm test`: 533 passaram + 1 ignorado (32 arquivos); typecheck, worker:typecheck, lint, build sem erros. Verificado no navegador embutido em 1448/1280/768/375/360 px (sem rolagem horizontal) e um duelo completo jogado por script. Revisão estética e dispositivos reais: pendentes (dono).
