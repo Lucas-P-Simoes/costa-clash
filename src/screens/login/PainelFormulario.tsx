@@ -106,11 +106,11 @@ export function PainelFormulario({ servicoAuth = servicoAuthNaoConfigurado, foca
       <div className="painel-form__emblema">
         <IconeOndaEmblema />
       </div>
-      <h2 id={`${idBase}-titulo`} className="sr-only">
-        Entrar na sua conta
-      </h2>
       <MolduraPedra variante="interna" className="painel-form__miolo">
-        <form onSubmit={aoEnviar} noValidate aria-busy={carregando || undefined}>
+        <h1 id={`${idBase}-titulo`} className="painel-form__titulo">
+          Login
+        </h1>
+        <form onSubmit={aoEnviar} noValidate aria-labelledby={`${idBase}-titulo`} aria-busy={carregando || undefined}>
           <CampoRetro
             id={idEmail}
             rotulo="E-mail"

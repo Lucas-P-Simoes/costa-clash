@@ -7,6 +7,8 @@
 
 - **Modo convidado REMOVIDO (decisão do dono, 2026-10-25)**: jogar exige conta (Login -> Conta -> Duelo livre). Também removidos o conjunto de controles decorativos do rodapé e os ornamentos do título só no login. Pendências agravadas: política de privacidade/LGPD e recuperação de senha (ainda placeholder). Detalhes em `docs/HANDOFF.md`.
 
+- Login: o título "Login" (h1) fica dentro do painel do formulário, acima de E-MAIL; o cabeçalho do login tem só logo/subtítulo (2026-10-25).
+
 ## Responsividade global (2026-10-25, DEV; sem QA nem revisão visual do dono)
 - Escala fluida (`html { font-size: clamp(14px, min(100dvw/90, 100dvh/56.25), 26px) }`), tokens e layout `.tela-jogo` em `src/styles/responsivo.css`; todas as telas migradas para rem e compactação por altura. Desktop (>= 1024x560 sem toque): login, criar conta, conta, recuperar, Duelo Livre, duelo e resultado cabem sem rolagem da página em 24 viewports medidos (inclui 4K, alturas efetivas, zoom 125/150%); celular/tablet retrato rolam naturalmente. `npm run test:e2e` (Playwright + Chrome do sistema) guarda isso. Revisão de QA (mão colapsada, barra de ações coberta, ATK/DEF cortados) corrigida e coberta pelo e2e (159 testes; matriz de 34 viewports sem falhas). Detalhes e matriz em `docs/HANDOFF.md`. Menu principal, seleção de cartas, montagem de baralho e coleção ainda não existem.
 

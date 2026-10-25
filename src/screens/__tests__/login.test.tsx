@@ -157,10 +157,18 @@ describe('Navegação por estado', () => {
     expect(document.activeElement).toBe(campoEmail())
   })
 
-  it('login: o título não tem ornamentos laterais e o rodapé não tem os controles decorativos', () => {
+  it('login: o h1 "Login" fica dentro do painel, rotula o formulário e o cabeçalho não tem faixa de título', () => {
     render(<App />)
-    const faixa = screen.getByRole('heading', { level: 1, name: 'Login' }).parentElement!
-    expect(faixa.querySelector('svg')).toBeNull()
+    const h1 = screen.getByRole('heading', { level: 1, name: 'Login' })
+    expect(screen.getAllByRole('heading', { level: 1 })).toHaveLength(1)
+    const form = document.querySelector('form')!
+    expect(h1.closest('.painel-form')).toBeTruthy()
+    expect(h1.closest('header')).toBeNull()
+    expect(form.getAttribute('aria-labelledby')).toBe(h1.id)
+    expect(document.querySelector('header .cabecalho__faixa')).toBeNull()
+    expect(document.querySelector('header')!.textContent).toContain('Costa Clash')
+    expect(h1.compareDocumentPosition(campoEmail()) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
+    expect(h1.querySelector('svg')).toBeNull()
     const rodape = document.querySelector('footer.rodape')!
     expect(rodape.textContent).toMatch(/Conhecimento também protege os nossos mares/i)
     expect(rodape.querySelector('ul')).toBeNull()

@@ -333,7 +333,8 @@
 }
 
 .cabecalho__nome,
-.cabecalho__titulo {
+.cabecalho__titulo,
+.painel-form__titulo {
   margin: 0;
   font-family: var(--cc-fonte-logo);
   font-weight: 400;
