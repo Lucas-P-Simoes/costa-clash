@@ -11,7 +11,7 @@ import { Partida } from './Partida'
 
 interface Props {
   oponenteId: string
-  /** Usuário logado: usa o baralho do perfil; ausente (convidado) usa o baralho inicial. */
+  /** Usuário logado: usa o baralho do perfil; ausente (ou perfil sem baralho) usa o baralho inicial. */
   usuario?: UsuarioAutenticado
   onVoltar: () => void
   /** Seed da primeira partida (testes/depuração); padrão: relógio. */

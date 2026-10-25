@@ -4,9 +4,7 @@ import {
   circulo,
   GRADE_CADEADO,
   GRADE_CONCHA,
-  GRADE_DPAD,
   GRADE_ESPADAS,
-  GRADE_GRUPO,
   GRADE_LIVRO,
   GRADE_OLHO,
   GRADE_OLHO_CORTADO,
@@ -15,7 +13,6 @@ import {
   GRADE_PESSOA_MAIS,
   GRADE_TARTARUGA,
   GRADE_VOLTAR,
-  GRADE_X,
 } from './grades'
 
 interface Props {
@@ -111,36 +108,6 @@ export function IconeEspadas({ className }: Props) {
 
 export function IconePessoaMais({ className }: Props) {
   return <PixelArt className={className} grade={GRADE_PESSOA_MAIS} paleta={{ X: '#7fc4e0', P: '#e8f8ff' }} />
-}
-
-export function IconeGrupo({ className }: Props) {
-  return <PixelArt className={className} grade={GRADE_GRUPO} paleta={{ X: '#7fc4e0' }} />
-}
-
-export function IconeDpad({ className }: Props) {
-  return <PixelArt className={className} grade={GRADE_DPAD} paleta={{ X: '#8aa4b4' }} />
-}
-
-export function IconeBotaoX({ className }: Props) {
-  return (
-    <svg className={`pixel-art ${className ?? ''}`} viewBox="0 0 15 15" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
-      <PixelArtRaw grade={circulo(15, 1, 'A', 'M')} paleta={{ A: '#7fb4e0', M: '#102a48' }} />
-      <g transform="translate(2 2)">
-        <PixelArtRaw grade={GRADE_X} paleta={{ A: '#9fd0f0' }} />
-      </g>
-    </svg>
-  )
-}
-
-export function IconeBotaoO({ className }: Props) {
-  return (
-    <svg className={`pixel-art ${className ?? ''}`} viewBox="0 0 15 15" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
-      <PixelArtRaw grade={circulo(15, 1, 'A', 'M')} paleta={{ A: '#ff5a4a', M: '#2a0e12' }} />
-      <g transform="translate(3 3)">
-        <PixelArtRaw grade={circulo(9, 2, 'A', 'M')} paleta={{ A: '#ff6a5a', M: '#2a0e12' }} />
-      </g>
-    </svg>
-  )
 }
 
 export function IconeVoltar({ className }: Props) {

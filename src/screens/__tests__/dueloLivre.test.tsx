@@ -132,7 +132,7 @@ describe('Tela Duelo Livre: ações', () => {
     expect(within(painel()).getByRole('status').textContent).toBe('')
   })
 
-  it('BARALHO: logado sem dado de baralho e convidado mostram "Em breve"', () => {
+  it('BARALHO: logado sem dado de baralho e sem usuário mostram "Em breve"', () => {
     const { unmount } = render(<TelaDueloLivre onDuelo={() => {}} usuario={{ id: 'x', email: 'a@b.co' }} onVoltar={() => {}} />)
     fireEvent.click(botao('Baralho'))
     expect(within(painel()).getByRole('status').textContent).toMatch(/^Em breve/)
@@ -153,16 +153,22 @@ describe('Tela Duelo Livre: ações', () => {
 })
 
 describe('Integração com o App', () => {
-  it('convidado: abre o Duelo Livre e volta (botão e Esc) para a tela de convidado', () => {
-    render(<App servicoAuth={{ entrar: vi.fn() }} />)
-    fireEvent.click(botao('Jogar como convidado'))
+  it('conta (serviço falso): abre o Duelo Livre e volta (botão e Esc) para a Conta, sem rodapé de controles', async () => {
+    const servico: ServicoAuth = { entrar: vi.fn().mockResolvedValue({ ok: true, usuario }) }
+    render(<App servicoAuth={servico} />)
+    fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'ana@exemplo.com' } })
+    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senha-valida-1' } })
+    fireEvent.submit(document.querySelector('form')!)
+    await screen.findByText(/Conectado como ana@exemplo.com/)
     fireEvent.click(botao('Duelo livre'))
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(document.querySelector('footer.rodape ul')).toBeNull()
+    expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' }).parentElement!.querySelectorAll('svg').length).toBe(2)
     fireEvent.click(botao('Voltar'))
-    expect(screen.getByRole('heading', { level: 1, name: 'Convidado' })).toBeTruthy()
+    expect(screen.getByText(/Conectado como ana@exemplo.com/)).toBeTruthy()
     fireEvent.click(botao('Duelo livre'))
     fireEvent.keyDown(window, { key: 'Escape' })
-    expect(screen.getByRole('heading', { level: 1, name: 'Convidado' })).toBeTruthy()
+    expect(screen.getByText(/Conectado como ana@exemplo.com/)).toBeTruthy()
   })
 
   it('conta: abre o Duelo Livre, mostra o baralho do perfil e volta ainda logado', async () => {

@@ -3,7 +3,7 @@
 Estado: implementado e testado localmente (2026-10-22, DEV). **Nada foi provisionado na Cloudflare** e nenhum deploy foi feito; os passos do dono estão na seção 7.
 
 ## 1. Arquitetura
-- **Front** (GitHub Pages, `https://lucas-p-simoes.github.io/costa-clash/`): React/Vite. Fala com a API via `VITE_API_URL`. Sem a variável, o serviço padrão é `servicoAuthNaoConfigurado` (nunca simula sucesso; convidado segue funcionando).
+- **Front** (GitHub Pages, `https://lucas-p-simoes.github.io/costa-clash/`): React/Vite. Fala com a API via `VITE_API_URL`. Sem a variável, o serviço padrão é `servicoAuthNaoConfigurado` (nunca simula sucesso; sem a variável não é possível entrar nem jogar: o modo convidado foi removido).
 - **API**: Cloudflare Worker em `worker/` (TypeScript) + banco **D1** (binding `DB`). Roteamento manual em `worker/src/app.ts`, rotas em `rotas.ts`, SQL em `dados.ts`, criptografia em `cripto.ts`, limite de tentativas em `limite.ts`, CORS/cabeçalhos/corpo em `http.ts`.
 - **Reuso sem duplicar**: o worker importa `src/data/cartas.json` (catálogo) e `src/auth/validacao.ts` (mesmas regras de e-mail/senha do front) por import relativo; o bundler do wrangler resolve (verificado com `wrangler dev --local`).
 - **Servidor é a autoridade da coleção**: não existe endpoint que aumente a coleção. A coleção só é escrita no cadastro (coleção inicial). A futura recompensa por derrotar oponente será uma rota própria no servidor (não implementada).

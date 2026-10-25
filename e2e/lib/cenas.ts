@@ -7,7 +7,6 @@ export type Cena =
   | 'criarConta'
   | 'recuperar'
   | 'conta'
-  | 'convidado'
   | 'dueloLivre'
   | 'duelo'
   | 'dueloCampo'
@@ -16,7 +15,7 @@ export type Cena =
   | 'resultadoEmpate'
   | 'arte'
 
-export const CENAS: Cena[] = ['login', 'criarConta', 'recuperar', 'conta', 'convidado', 'dueloLivre', 'duelo', 'dueloCampo', 'resultadoVitoria', 'resultadoDerrota', 'resultadoEmpate', 'arte']
+export const CENAS: Cena[] = ['login', 'criarConta', 'recuperar', 'conta', 'dueloLivre', 'duelo', 'dueloCampo', 'resultadoVitoria', 'resultadoDerrota', 'resultadoEmpate', 'arte']
 
 const HARNESS: Partial<Record<Cena, string>> = {
   conta: 'conta',
@@ -42,21 +41,20 @@ export async function abrirCena(page: Page, cena: Cena): Promise<void> {
     if (cena === 'conta') await page.getByRole('heading', { name: 'Conta', exact: true }).waitFor()
     else if (cena === 'dueloCampo') await page.locator('.carta--campo').first().waitFor()
     else await page.getByRole('dialog').waitFor()
+  } else if (cena === 'dueloLivre' || cena === 'duelo') {
+    // Jogar exige conta: entra pelo harness (serviço de auth FALSO, sem rede) e navega pela UI.
+    await page.goto(`${BASE}e2e/harness.html?cena=conta`)
+    await page.getByRole('heading', { name: 'Conta', exact: true }).waitFor()
+    await page.getByRole('button', { name: 'Duelo livre' }).click()
+    if (cena === 'duelo') {
+      await page.getByRole('button', { name: 'Duelo', exact: true }).click()
+      await page.locator('.tela-partida').waitFor()
+    }
   } else {
     await page.goto(BASE)
     await page.getByRole('button', { name: 'Entrar' }).waitFor()
     if (cena === 'criarConta') await page.getByRole('button', { name: 'Criar conta' }).click()
     else if (cena === 'recuperar') await page.getByRole('button', { name: 'Esqueci a senha' }).click()
-    else if (cena !== 'login') {
-      await page.getByRole('button', { name: 'Jogar como convidado' }).click()
-      if (cena !== 'convidado') {
-        await page.getByRole('button', { name: 'Duelo livre' }).click()
-        if (cena === 'duelo') {
-          await page.getByRole('button', { name: 'Duelo', exact: true }).click()
-          await page.locator('.tela-partida').waitFor()
-        }
-      }
-    }
   }
   await aguardarEstavel(page)
 }

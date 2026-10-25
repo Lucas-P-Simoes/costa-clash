@@ -305,9 +305,13 @@ describe('Integração com o Duelo Livre', () => {
     colecao: [],
   }
 
-  it('convidado: DUELO abre o duelo com o baralho inicial e VOLTAR retorna ao Duelo Livre mantendo o adversário', () => {
-    render(<App servicoAuth={{ entrar: vi.fn() }} />)
-    fireEvent.click(botao('Jogar como convidado'))
+  it('logado sem baralho no perfil: DUELO usa o baralho inicial e VOLTAR retorna ao Duelo Livre mantendo o adversário', async () => {
+    const servico: ServicoAuth = { entrar: vi.fn().mockResolvedValue({ ok: true, usuario: { id: 'u2', email: 'bia@exemplo.com' } }) }
+    render(<App servicoAuth={servico} />)
+    fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'bia@exemplo.com' } })
+    fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senha-valida-1' } })
+    fireEvent.submit(document.querySelector('form')!)
+    await screen.findByText(/Conectado como bia@exemplo.com/)
     fireEvent.click(botao('Duelo livre'))
     fireEvent.click(screen.getByRole('radio', { name: 'Porto' }))
     fireEvent.click(botao('Duelo'))

@@ -1,20 +1,9 @@
-import { IconeBotaoO, IconeBotaoX, IconeDpad, OrnamentoOnda } from './Icones'
+import { OrnamentoOnda } from './Icones'
 
-/** Rodapé com dicas de controle (decorativas) e a frase de marca. */
+/** Rodapé com a frase de marca e o ornamento de onda. */
 export function RodapeControles() {
   return (
     <footer className="rodape textura-pedra">
-      <ul className="rodape__controles" aria-label="Controles do jogo">
-        <li>
-          <IconeDpad /> Selecionar
-        </li>
-        <li>
-          <IconeBotaoX /> Confirmar
-        </li>
-        <li>
-          <IconeBotaoO /> Voltar
-        </li>
-      </ul>
       <p className="rodape__frase">
         Conhecimento também protege os nossos mares.
         <OrnamentoOnda />

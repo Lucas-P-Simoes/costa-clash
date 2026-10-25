@@ -11,7 +11,7 @@ import { OPONENTES, OPONENTE_PADRAO_ID, buscarOponente } from '../../data/oponen
 import './dueloLivre.css'
 
 interface Props {
-  /** Usuário logado (resumo do baralho vem do perfil já carregado); ausente = convidado. */
+  /** Usuário logado (resumo do baralho vem do perfil já carregado); ausente: sem resumo de baralho. */
   usuario?: UsuarioAutenticado
   onVoltar: () => void
   /** Inicia o duelo contra o adversário selecionado. */

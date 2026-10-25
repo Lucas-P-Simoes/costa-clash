@@ -52,10 +52,10 @@ export interface ServicoAuth {
 }
 
 export const MENSAGEM_AUTH_NAO_CONFIGURADA =
-  'Login com conta ainda não está disponível. Você pode jogar como convidado.'
+  'Login com conta ainda não está disponível.'
 export const MENSAGEM_RECONEXAO = 'Não foi possível reconectar à sua conta; tente novamente.'
 export const MENSAGEM_CADASTRO_NAO_CONFIGURADO =
-  'Criar conta ainda não está disponível. Você pode jogar como convidado.'
+  'Criar conta ainda não está disponível.'
 
 const naoConfigurado = (mensagem: string) =>
   Promise.resolve({ ok: false as const, codigo: 'nao_configurado' as const, mensagem })

@@ -6,7 +6,7 @@ import { validarEmail, validarLogin, validarSenha } from '../../auth/validacao'
 import type { ErrosLogin } from '../../auth/validacao'
 import { BotaoRetro } from '../../components/ui/BotaoRetro'
 import { CampoRetro } from '../../components/ui/CampoRetro'
-import { IconeCadeado, IconeEspadas, IconeGrupo, IconeOlho, IconeOndaEmblema, IconePessoaMais } from '../../components/ui/Icones'
+import { IconeCadeado, IconeEspadas, IconeOlho, IconeOndaEmblema, IconePessoaMais } from '../../components/ui/Icones'
 import { MolduraPedra } from '../../components/ui/MolduraPedra'
 
 const MENSAGEM_FALHA_INESPERADA = 'Não foi possível entrar agora. Tente novamente em instantes.'
@@ -20,10 +20,9 @@ interface Props {
   onAutenticado: (usuario: UsuarioAutenticado) => void
   onCriarConta: () => void
   onRecuperarSenha: () => void
-  onConvidado: () => void
 }
 
-export function PainelFormulario({ servicoAuth = servicoAuthNaoConfigurado, focarAoMontar = false, aviso, onAutenticado, onCriarConta, onRecuperarSenha, onConvidado }: Props) {
+export function PainelFormulario({ servicoAuth = servicoAuthNaoConfigurado, focarAoMontar = false, aviso, onAutenticado, onCriarConta, onRecuperarSenha }: Props) {
   const idBase = useId()
   const idEmail = `${idBase}-email`
   const idSenha = `${idBase}-senha`
@@ -173,9 +172,6 @@ export function PainelFormulario({ servicoAuth = servicoAuthNaoConfigurado, foca
             </BotaoRetro>
             <BotaoRetro icone={<IconePessoaMais />} ocupado={carregando} onClick={onCriarConta}>
               Criar conta
-            </BotaoRetro>
-            <BotaoRetro icone={<IconeGrupo />} ocupado={carregando} onClick={onConvidado}>
-              Jogar como convidado
             </BotaoRetro>
             <div className="painel-form__link">
               <BotaoRetro variante="link" ocupado={carregando} onClick={onRecuperarSenha}>

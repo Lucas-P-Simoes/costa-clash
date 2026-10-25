@@ -43,34 +43,6 @@ export const GRADE_ESPADAS: Grade = (() => {
   return juntar(m)
 })()
 
-export const GRADE_X: Grade = (() => {
-  const n = 11
-  const m = matriz(n)
-  for (let i = 1; i < n - 1; i++) {
-    m[i][i] = 'A'
-    m[i][n - 1 - i] = 'A'
-    if (i + 1 < n - 1) m[i][i + 1] = 'A'
-    if (n - 2 - i > 0) m[i][n - 2 - i] = 'A'
-  }
-  return juntar(m)
-})()
-
-export const GRADE_DPAD: Grade = [
-  '....XXXXX....',
-  '....X...X....',
-  '....X...X....',
-  '....X...X....',
-  'XXXXX...XXXXX',
-  'X...........X',
-  'X...........X',
-  'X...........X',
-  'XXXXX...XXXXX',
-  '....X...X....',
-  '....X...X....',
-  '....X...X....',
-  '....XXXXX....',
-]
-
 export const GRADE_CADEADO: Grade = [
   '...XXXXXX...',
   '..XX....XX..',
@@ -136,17 +108,6 @@ export const GRADE_PESSOA_MAIS: Grade = [
   '.XXXXXXXXXX....P..',
   '.XXXXXXXXXX....P..',
 ]
-
-export const GRADE_GRUPO: Grade = (() => {
-  const L = ['..XX..', '.XXXX.', '.XXXX.', '..XX..', 'XXXXXX', 'XXXXXX', 'XXXXXX']
-  const C = ['..XXXX..', '.XXXXXX.', '.XXXXXX.', '.XXXXXX.', '..XXXX..', 'XXXXXXXX', 'XXXXXXXX', 'XXXXXXXX', 'XXXXXXXX']
-  const linhas: string[] = []
-  for (let y = 0; y < C.length; y++) {
-    const lado = y >= 2 ? L[y - 2] : '......'
-    linhas.push(lado + C[y] + lado)
-  }
-  return linhas
-})()
 
 export const GRADE_TARTARUGA: Grade = [
   '...XXXXX....',

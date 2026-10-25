@@ -1,4 +1,4 @@
-/* Telas simples (conta, convidado, recuperar senha, criar conta): painel centralizado que cabe na viewport.
+/* Telas simples (conta, recuperar senha, criar conta): painel centralizado que cabe na viewport.
    `margin: auto` no painel centraliza sem cortar o topo; se faltar altura, só o corpo rola (localizado). */
 .tela-simples__corpo {
   flex: 1;

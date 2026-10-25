@@ -3,7 +3,8 @@ import topoDireita from '../../assets/login/topo-direita.png'
 import { OrnamentoOnda } from './Icones'
 
 /** Logo Costa Clash + faixa de título da tela (h1). Reutilizável nas próximas telas. */
-export function CabecalhoTela({ titulo }: { titulo: string }) {
+/** `semOrnamentos` remove as ondas laterais do título (usado só no login); o título segue centralizado. */
+export function CabecalhoTela({ titulo, semOrnamentos = false }: { titulo: string; semOrnamentos?: boolean }) {
   return (
     <header className="cabecalho">
       <div className="cabecalho__cena">
@@ -19,9 +20,9 @@ export function CabecalhoTela({ titulo }: { titulo: string }) {
         </div>
       </div>
       <div className="cabecalho__faixa textura-pedra">
-        <OrnamentoOnda className="cabecalho__ornamento" />
+        {semOrnamentos ? null : <OrnamentoOnda className="cabecalho__ornamento" />}
         <h1 className="cabecalho__titulo">{titulo}</h1>
-        <OrnamentoOnda className="cabecalho__ornamento" espelhado />
+        {semOrnamentos ? null : <OrnamentoOnda className="cabecalho__ornamento" espelhado />}
       </div>
     </header>
   )

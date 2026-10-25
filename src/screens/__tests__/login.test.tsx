@@ -22,7 +22,9 @@ describe('Tela de login', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Login' })).toBeTruthy()
     expect(campoEmail()).toBeTruthy()
     expect(campoSenha().type).toBe('password')
-    for (const n of ['Entrar', 'Criar conta', 'Jogar como convidado', 'Esqueci a senha']) expect(botao(n)).toBeTruthy()
+    for (const n of ['Entrar', 'Criar conta', 'Esqueci a senha']) expect(botao(n)).toBeTruthy()
+    expect(screen.queryByRole('button', { name: /convidado/i })).toBeNull()
+    expect(document.body.textContent).not.toMatch(/convidado/i)
     for (const t of ['Aprenda', 'Jogue', 'Proteja']) expect(screen.getByRole('heading', { name: t })).toBeTruthy()
   })
 
@@ -143,7 +145,6 @@ describe('Regressões de QA', () => {
 
 describe('Navegação por estado', () => {
   it.each([
-    ['Jogar como convidado', 'Convidado', /jogando como convidado/],
     ['Esqueci a senha', 'Recuperar senha', /não está disponível/],
   ])('%s abre a tela provisória e volta ao login', (rotulo, titulo, texto) => {
     render(<App />)
@@ -154,6 +155,36 @@ describe('Navegação por estado', () => {
     fireEvent.click(botao('Voltar ao login'))
     expect(screen.getByRole('heading', { level: 1, name: 'Login' })).toBeTruthy()
     expect(document.activeElement).toBe(campoEmail())
+  })
+
+  it('login: o título não tem ornamentos laterais e o rodapé não tem os controles decorativos', () => {
+    render(<App />)
+    const faixa = screen.getByRole('heading', { level: 1, name: 'Login' }).parentElement!
+    expect(faixa.querySelector('svg')).toBeNull()
+    const rodape = document.querySelector('footer.rodape')!
+    expect(rodape.textContent).toMatch(/Conhecimento também protege os nossos mares/i)
+    expect(rodape.querySelector('ul')).toBeNull()
+    expect(screen.queryByLabelText('Controles do jogo')).toBeNull()
+    for (const t of ['Selecionar', 'Confirmar']) expect(rodape.textContent).not.toContain(t)
+  })
+
+  it('outras telas mantêm os ornamentos do título; sem texto de convidado nas telas provisórias', () => {
+    render(<App />)
+    fireEvent.click(botao('Criar conta'))
+    const faixa = screen.getByRole('heading', { level: 1, name: /Criar conta/ }).parentElement!
+    expect(faixa.querySelectorAll('svg').length).toBe(2)
+    expect(document.querySelector('footer.rodape ul')).toBeNull()
+    expect(document.body.textContent).not.toMatch(/convidado/i)
+    fireEvent.click(botao('Voltar ao login'))
+    fireEvent.click(botao('Esqueci a senha'))
+    expect(document.body.textContent).not.toMatch(/convidado/i)
+  })
+
+  it('serviço não configurado: mensagem coerente, sem citar convidado', async () => {
+    render(<App />)
+    preencher('a@b.co', 'segredo')
+    enviar()
+    expect(await screen.findByText('Login com conta ainda não está disponível.')).toBeTruthy()
   })
 
   it('Esc volta ao login a partir de uma tela provisória', () => {

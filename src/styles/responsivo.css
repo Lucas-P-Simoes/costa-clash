@@ -33,7 +33,7 @@
   --h-cabecalho-cena: 7.25rem;
   --h-botao: 3rem;
   --h-botao-primario: 3.5rem;
-  --h-rodape: 2.75rem;
+  --h-rodape: 2.25rem;
 
   /* alvo de toque: nunca abaixo de 44px, mesmo com rem pequeno */
   --cc-alvo-toque: max(44px, 2.75rem);
@@ -122,7 +122,7 @@ html {
     --h-cabecalho-cena: 4.5rem;
     --h-botao: 2.75rem;
     --h-botao-primario: 3rem;
-    --h-rodape: 2.25rem;
+    --h-rodape: 2rem;
   }
   .oculta-h720 {
     display: none !important;

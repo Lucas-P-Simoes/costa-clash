@@ -8,16 +8,15 @@ import { TelaDueloLivre } from './screens/dueloLivre/TelaDueloLivre'
 import { TelaDuelo } from './screens/duelo/TelaDuelo'
 import { TelaCriarConta } from './screens/criarConta/TelaCriarConta'
 import { TelaLogin } from './screens/login/TelaLogin'
-import { ConvidadoInicio, RecuperarSenhaPlaceholder } from './screens/Placeholders'
+import { RecuperarSenhaPlaceholder } from './screens/Placeholders'
 
 type Tela =
   | { nome: 'restaurando' }
   | { nome: 'login' }
   | { nome: 'criarConta' }
   | { nome: 'recuperarSenha' }
-  | { nome: 'convidado' }
   | { nome: 'conta'; usuario: UsuarioAutenticado }
-  | { nome: 'dueloLivre'; usuario?: UsuarioAutenticado; oponenteId?: string } // sem usuário = veio do convidado
+  | { nome: 'dueloLivre'; usuario?: UsuarioAutenticado; oponenteId?: string }
   | { nome: 'duelo'; oponenteId: string; usuario?: UsuarioAutenticado }
 
 // Navegação por estado simples (sem react-router). `servicoAuth` é injetável para testes;
@@ -85,8 +84,6 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
       )
     case 'recuperarSenha':
       return <RecuperarSenhaPlaceholder onVoltar={irParaLogin} />
-    case 'convidado':
-      return <ConvidadoInicio onVoltar={irParaLogin} onDueloLivre={() => setTela({ nome: 'dueloLivre' })} />
     case 'conta':
       return <TelaConta usuario={tela.usuario} onSair={sair} onDueloLivre={() => setTela({ nome: 'dueloLivre', usuario: tela.usuario })} />
     case 'dueloLivre': {
@@ -95,7 +92,7 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
         <TelaDueloLivre
           usuario={usuario}
           oponenteInicialId={tela.oponenteId}
-          onVoltar={() => setTela(usuario ? { nome: 'conta', usuario } : { nome: 'convidado' })}
+          onVoltar={() => setTela(usuario ? { nome: 'conta', usuario } : { nome: 'login' })}
           onDuelo={(oponenteId) => setTela({ nome: 'duelo', oponenteId, usuario })}
         />
       )
@@ -113,7 +110,6 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
           onAutenticado={(usuario) => setTela({ nome: 'conta', usuario })}
           onCriarConta={() => setTela({ nome: 'criarConta' })}
           onRecuperarSenha={() => setTela({ nome: 'recuperarSenha' })}
-          onConvidado={() => setTela({ nome: 'convidado' })}
         />
       )
   }
