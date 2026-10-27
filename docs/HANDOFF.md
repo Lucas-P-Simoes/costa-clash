@@ -1,5 +1,20 @@
 # Handoff — continuidade entre Codex e Claude Code
 
+## Login direto no Duelo Livre (coordenador Codex; DEV `/root/direct_duel_free_dev` → QA `/root/direct_duel_free_qa`, 2026-10-27; APROVADA E PUBLICADA)
+- **Resultado:** login, restauração de sessão e cadastro abrem diretamente o Duelo Livre. `App.tsx` não possui mais estado/case de Conta. Voltar de uma partida preserva usuário, baralho e adversário.
+- **Saída:** no Duelo Livre autenticado, VOLTAR virou SAIR. O botão chama `ServicoAuth.sair` e volta ao login mesmo se a chamada remota falhar. Esc não desconecta; usos independentes que fornecem `onVoltar` mantêm VOLTAR + Esc.
+- **Conta preservada:** `TelaConta` não foi apagada, mas ficou sem entrada na navegação. A recuperação de senha publicada continua sendo o placeholder anterior; o trabalho local de recuperação por código e migração 0002 permaneceu fora desta publicação.
+- **Coordenação:** DEV `/root/direct_duel_free_dev` e QA `/root/direct_duel_free_qa` concluíram em sequência. Na árvore completa, 94/94 testes focados, suíte 788+1, E2E 254/254, typechecks, lint e build passaram.
+- **Publicação seletiva:** commit `143890b0010e1d0c6b52e84f87f227857f46bd88`. O snapshot exato exportado do índice passou com 738 testes + 1 ignorado, E2E Chrome 148/148, ambos os typechecks, lint e build com a mesma `VITE_API_URL` do GitHub. Workflow `40595259575` concluiu build e deploy; a página e o bundle `index-WVsUZNjQ.js` responderam HTTP 200.
+- **Limites:** sem revisão visual humana, dispositivo físico, Safari, Firefox ou leitor de tela real.
+
+## Correção da ampliação automática da primeira carta (coordenador Codex; DEV `/root/auto_focus_preview_dev` → QA `/root/auto_focus_preview_qa`, 2026-10-27; APROVADA E PUBLICADA)
+- **Problema e correção:** o foco programático devolvido à primeira carta após o turno da IA era tratado como inspeção do usuário. `Partida.tsx` agora consome apenas esse pedido interno, sem abrir a carta grande nem selecioná-la; o foco continua na mão por acessibilidade.
+- **Regressão:** o teste percorre jogada humana, turno completo da IA e retorno do foco; foco posterior do jogador, hover, toque, seleção, arrasto e Escape permanecem cobertos.
+- **Coordenação:** DEV `/root/auto_focus_preview_dev` e QA `/root/auto_focus_preview_qa` concluíram em sequência, sem retorno por defeito.
+- **Publicação:** incluída no commit `143890b0010e1d0c6b52e84f87f227857f46bd88` e no workflow GitHub Pages `40595259575`, ambos concluídos. O smoke test publicado respondeu HTTP 200.
+- **Limites:** sem revisão visual humana ou dispositivo físico.
+
 ## DEF adversária deitada + colocação oculta pela IA (coordenador Codex; DEV `/root/opponent_defense_ai_dev` → QA `/root/opponent_defense_ai_qa`, 2026-10-27; APROVADA E PUBLICADA)
 - **Pedido e resultado:** a carta do adversário segue a mesma lógica visual da humana: em DEFESA fica deitada com rotação de 90°, aberta ou oculta; em ATAQUE fica em pé. Foi removido somente o override CSS que forçava a DEF adversária a permanecer vertical.
 - **Política da IA:** `decidirComando` continua determinístico e usa as quatro jogadas legais de unidade já fornecidas pelo motor. Com vantagem atual, seleciona ATAQUE virada para cima; sem vantagem, seleciona DEFESA virada para baixo. A troca posterior de posição preserva `viradaParaBaixo`; a revelação continua ocorrendo apenas pelos caminhos já definidos, como o cálculo de combate.

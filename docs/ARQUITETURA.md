@@ -10,7 +10,7 @@
 
 Separar conteúdo educativo, motor de jogo e UI. Qualquer arquivo/stack aqui é proposta até a inicialização real do projeto.
 
-- Duelo Livre: dados em `src/data/oponentes.ts` (16 adversários; só apresentação, sem baralhos); retratos em `src/assets/oponentes/` (resolvidos por `import.meta.glob`); UI reutilizável em `src/components/ui/{GradeOponentes,navegacaoGrade,PainelOponente,MedidorDificuldade}` e tela em `src/screens/dueloLivre/`. `App.tsx` ganhou o estado `dueloLivre` (com `usuario` quando vem da Conta; sem usuário só em teste de componente; o modo convidado foi removido).
+- Duelo Livre: dados em `src/data/oponentes.ts` (16 adversários; só apresentação, sem baralhos); retratos em `src/assets/oponentes/` (resolvidos por `import.meta.glob`); UI reutilizável em `src/components/ui/{GradeOponentes,navegacaoGrade,PainelOponente,MedidorDificuldade}` e tela em `src/screens/dueloLivre/`. `App.tsx` abre `dueloLivre` diretamente após login, restauração de sessão ou cadastro; `usuario` transporta perfil/baralho. Sem usuário, essa tela só é usada em teste de componente. A antiga `TelaConta` permanece no código, mas saiu da navegação.
 
 ## Motor de duelo (implementado, 2026-10-22; fase A, sem UI)
 Módulos em `src/game/` (todos puros; sem React/DOM/localStorage/`Math.random`; estado imutável e serializável em JSON):
