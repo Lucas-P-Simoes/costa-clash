@@ -206,6 +206,7 @@ describe('Posição ataque/defesa representada visualmente', () => {
     expect(trecho('.carta--campo')).toContain('transition: transform 0.25s')
     expect(trecho('.carta--campo.carta--defesa .carta__posicao')).toContain('rotate(-90deg)')
     expect(trecho('.zona')).toContain('container-type: size')
+    expect(css).not.toContain('.duelo-lado--oponente .carta--campo.carta--defesa')
     const reduzido = css.slice(css.indexOf('@media (prefers-reduced-motion: reduce)'))
     expect(reduzido.slice(0, reduzido.indexOf('/* ----'))).toMatch(/\.carta--campo \{\s*transition: none/)
     // rótulo acessível continua dizendo a posição, também para a unidade do oponente

@@ -99,6 +99,8 @@ function avaliar(e: EstadoDuelo, cat: Catalogo, eu: IdJogador, cmd: ComandoJogar
     const def = Math.max(0, (carta.defesa ?? 0) + bt)
     const desejada: Posicao = temVantagem(atk, inim) ? 'ATAQUE' : 'DEFESA'
     if (cmd.posicao !== desejada) return null
+    const faceOculta = desejada === 'DEFESA'
+    if ((cmd.viradaParaBaixo ?? false) !== faceOculta) return null
     return vence(atk, inim)
       ? { cmd, nivel: 0, chave: [atk, def], cartaId: carta.id }
       : { cmd, nivel: 2, chave: [def, atk], cartaId: carta.id }

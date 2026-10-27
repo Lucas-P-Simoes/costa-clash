@@ -277,10 +277,11 @@ describe('inspeção no campo e ocultação', () => {
     }
   })
 
-  it('mantém a defesa do oponente vertical por CSS e o chip DEF legível', () => {
+  it('deita a defesa do oponente como a do jogador e mantém o chip DEF legível', () => {
     const css = readFileSync(resolve(__dirname, '../duelo/duelo.css'), 'utf8')
-    expect(css).toMatch(/\.duelo-lado--oponente \.carta--campo\.carta--defesa\s*\{[^}]*--rot:\s*rotate\(0deg\);[^}]*height:\s*min\(100cqh,/s)
-    expect(css).toMatch(/\.duelo-lado--oponente \.carta--campo\.carta--defesa \.carta__posicao\s*\{[^}]*transform:\s*none;/s)
+    expect(css).toMatch(/\.carta--campo\.carta--defesa\s*\{[^}]*--rot:\s*rotate\(90deg\);[^}]*height:\s*min\(100cqh,\s*100cqw\);/s)
+    expect(css).toMatch(/\.carta--campo\.carta--defesa \.carta__posicao\s*\{[^}]*transform:\s*rotate\(-90deg\);/s)
+    expect(css).not.toContain('.duelo-lado--oponente .carta--campo.carta--defesa')
   })
 
   it('mostra os chips públicos DEF e ATQ também nos versos adversários', () => {

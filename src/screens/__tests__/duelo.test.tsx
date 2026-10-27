@@ -213,7 +213,8 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     fireEvent.click(botao(/Encerrar turno/))
     expect(screen.getByText('Seu turno')).toBeTruthy()
     expect(document.querySelector('.duelo-turno__rotulo')!.textContent).toBe('Rodada 3')
-    expect(screen.getByText(/Oponente invoca/)).toBeTruthy() // evento público do turno da IA no registro
+    expect(screen.getByText('Oponente coloca uma unidade virada para baixo em defesa.')).toBeTruthy() // evento público sanitizado do turno da IA
+    expect(screen.queryByText(/Oponente invoca/)).toBeNull()
     expect(screen.getByLabelText(/Cartas restantes no baralho: 25/)).toBeTruthy()
   })
 

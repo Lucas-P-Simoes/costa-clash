@@ -112,7 +112,7 @@ describe('escolha da jogada (§9)', () => {
   it('1º: unidade capaz de vencer combate (e a coloca em ATAQUE quando há vantagem)', () => {
     const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-047', 'CC-077', 'CC-093'] }, humano: { campo: ['CC-007'] } })
     const c = decide(e)
-    expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-047'), posicao: 'ATAQUE' }) // 1800 > 1700
+    expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-047'), posicao: 'ATAQUE', viradaParaBaixo: false }) // 1800 > 1700
   })
 
   it('entre as que vencem, a de maior ATK; empate total por ID/uid crescente', () => {
@@ -135,7 +135,7 @@ describe('escolha da jogada (§9)', () => {
 
   it('3º: sem vitória possível nem ação eficaz, a unidade de maior DEFESA, em DEFESA', () => {
     const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-013', 'CC-004', 'CC-093'] }, humano: { campo: ['CC-056'] } })
-    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-004'), posicao: 'DEFESA' })
+    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-004'), posicao: 'DEFESA', viradaParaBaixo: true })
   })
 
   it('4º: armadilha só depois de unidades e ações eficazes; entre armadilhas, ID crescente', () => {

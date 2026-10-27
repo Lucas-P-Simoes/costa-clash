@@ -467,17 +467,6 @@ button.carta {
   right: var(--posicao-recuo);
   transform: rotate(-90deg);
 }
-/* O campo do adversário é lido de frente para o jogador: até em DEFESA a carta
-   permanece vertical; o chip DEF já comunica a posição sem girar o conteúdo. */
-.duelo-lado--oponente .carta--campo.carta--defesa {
-  --rot: rotate(0deg);
-  height: min(100cqh, calc(100cqw * 1.3333));
-}
-.duelo-lado--oponente .carta--campo.carta--defesa .carta__posicao {
-  top: var(--posicao-recuo);
-  right: var(--posicao-recuo);
-  transform: none;
-}
 .carta--mini {
   width: 100%;
   height: 100%;
