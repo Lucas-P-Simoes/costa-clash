@@ -24,7 +24,9 @@ describe('arteDaCarta (manifesto importado no build)', () => {
   it('só cartas do índice; usa a base do Vite; ignora estados não exibíveis', () => {
     expect(arteDaCarta('CC-001')).toMatchObject({ estado: 'provisoria' })
     expect(arteDaCarta('CC-001')!.url).toMatch(/assets\/cards\/art\/001\.png$/)
-    expect(arteDaCarta('CC-002')).toBeNull()
+    expect(arteDaCarta('CC-002')).toMatchObject({ estado: 'gerada' })
+    expect(arteDaCarta('CC-002')!.url).toMatch(/assets\/cards\/art\/002\.webp$/)
+    expect(arteDaCarta('CC-002', {})).toBeNull()
     expect(arteDaCarta('CC-001', { 'CC-001': { arquivo: '001.webp', estado: 'rejeitada' } })).toBeNull()
     expect(arteDaCarta('CC-001', { 'CC-001': { arquivo: '001.webp', estado: 'aprovada' } }, '/x/')).toEqual({ url: '/x/assets/cards/art/001.webp', estado: 'aprovada' })
   })
@@ -44,7 +46,7 @@ describe('CartaView com e sem ilustração', () => {
   })
 
   it('carta sem arte usa o SVG de fallback, sem imagem', () => {
-    const { container } = ver('CC-002')
+    const { container } = ver('CC-002', null)
     expect(container.querySelector('img')).toBeNull()
     expect(container.querySelector('.carta__arte > svg')).toBeTruthy()
     expect(container.querySelector('.carta--cat-protegida')).toBeTruthy()
@@ -81,7 +83,7 @@ describe('página de avaliação (?arte=1)', () => {
     expect(screen.getAllByText('Copiar prompt')).toHaveLength(5)
     expect(screen.getAllByText(/768x1024/).length).toBeGreaterThan(5)
     expect((screen.getByLabelText('Prompt da carta Tartaruga Marinha') as HTMLTextAreaElement).value).toBe(montarPrompt(carta('CC-018')))
-    expect(screen.getByText(/Nenhuma ilustração final foi gerada/)).toBeTruthy()
+    expect(screen.getByText(/95 ilustrações geradas/)).toBeTruthy()
   })
 
   it('sem arte mostra o fallback com o selo PENDENTE — sem arte gerada, sem inventar imagem', () => {

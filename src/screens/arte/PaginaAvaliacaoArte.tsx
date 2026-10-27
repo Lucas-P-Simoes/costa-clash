@@ -74,8 +74,8 @@ export function PaginaAvaliacaoArte({ arteDe = arteDaCarta }: { arteDe?: (id: st
     <main className="avarte">
       <h1>Avaliação do estilo das ilustrações (desenvolvimento)</h1>
       <p className="avarte__aviso" role="note">
-        Nenhuma ilustração final foi gerada. As cartas com arte abaixo usam recortes PROVISÓRIOS da referência de estilo do dono (Estilos-de-cartas.webp), em baixa
-        resolução e fora de 3:4, só para avaliar estilo e moldura. As demais 95 cartas continuam com a arte SVG de fallback.
+        O catálogo tem 95 ilustrações geradas aguardando aprovação do dono. As 5 cartas piloto abaixo continuam usando recortes PROVISÓRIOS da referência de estilo
+        (Estilos-de-cartas.webp), em baixa resolução e fora de 3:4, para comparar o estilo e a moldura antes de substituí-las.
       </p>
       <section aria-labelledby="avarte-legenda">
         <h2 id="avarte-legenda">Molduras e selos por categoria</h2>

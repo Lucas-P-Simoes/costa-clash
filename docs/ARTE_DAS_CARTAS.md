@@ -1,6 +1,6 @@
 # Arte das cartas — guia de estilo, geração e integração
 
-> **NENHUMA ilustração final foi gerada.** Este ambiente não tem serviço de geração de imagens. Existem apenas (a) prompts e infraestrutura prontos e (b) 5 arquivos **provisórios**, que são **recortes da referência do dono** (`Referencia-telas/Estilos-de-cartas.webp`), em baixa resolução, só para avaliar o estilo. Nada aqui foi gerado por IA por nós.
+> **Catálogo ilustrado em 2026-10-25.** Foram geradas 95 ilustrações novas com o ImageGen integrado ao Codex, usando os prompts individuais do catálogo e as 5 imagens existentes apenas como referência de estilo. As novas artes estão no estado **gerada** (aguardam aprovação do dono). Os 5 arquivos originais continuam **provisórios**, sem alteração.
 
 ## 1. Estilo obrigatório (referência principal: `Estilos-de-cartas.webp`)
 Pixel art retrô estilo PlayStation 1 / 16-bit moderno, aparência de carta colecionável:
@@ -71,19 +71,21 @@ Textos completos e hex em `PALETAS` (`src/arte/prompts.ts`).
 ## 6. Estados e regras do manifesto
 `pendente | provisoria | gerada | aprovada | rejeitada`.
 - **provisoria** (novo): recorte/rascunho só para avaliar estilo, nunca final; o verificador aceita com avisos de resolução/proporção. Hoje: as 5 pilotos (`origem = "recorte de Referencia-telas/Estilos-de-cartas.webp"`).
-- **gerada**: arquivo existe, aguarda aprovação. **aprovada**: só o dono; **nunca é substituída** (o gerador a pula mesmo com `--forcar`; o sincronizador mantém o registro e acusa erro se o arquivo mudar; o verificador falha se o sha256 mudar). Aprovar: `npm run arte:manifesto -- --marcar CC-018 --estado aprovada --autorizado-pelo-dono`.
+- **gerada**: arquivo existe, aguarda aprovação. Hoje: 95 cartas. **aprovada**: só o dono; **nunca é substituída** (o gerador a pula mesmo com `--forcar`; o sincronizador mantém o registro e acusa erro se o arquivo mudar; o verificador falha se o sha256 mudar). Aprovar: `npm run arte:manifesto -- --marcar CC-002 --estado aprovada --autorizado-pelo-dono`.
 - Colocou arquivo novo manualmente? `arte:manifesto` marca `gerada` e registra sha256/dimensões.
 
 ## 7. Comandos
 - `npm run arte:manifesto` sincroniza manifesto e índice (preserva estados/hashes); `-- --check` só confere; `-- --marcar CC-001 --estado provisoria --origem "..." --observacao "..."`.
-- `npm run arte:verificar`: PNG/WebP válidos, 3:4, dimensão, tamanho, duplicados por sha256, nomes x IDs, ausentes. Com 0 imagens passa relatando 100 pendentes; hoje: 95 pendentes, 5 provisórias, **OK com 10 avisos** (resolução e proporção).
+- `npm run arte:verificar`: PNG/WebP válidos, 3:4, dimensão, tamanho, duplicados por sha256, nomes x IDs, ausentes. Hoje: 0 pendentes, 5 provisórias e 95 geradas; resultado **OK com 10 avisos**, todos esperados das provisórias. As 95 novas artes são WebP 768x1024 (3:4), entre aproximadamente 211 e 413 KiB cada. As 5 provisórias mantêm os avisos de resolução/proporção.
 - `npm run arte:prompts`: reexporta os prompts em `docs/arte/`.
-- `npm run arte:gerar -- --lote piloto | --ids CC-001,CC-018 | --proximos 10 [--executar] [--forcar]`: **dry-run por padrão** (imprime prompts, quantidade e custo; não chama API). Só chama o provedor com `--executar`; só gera `pendente`; pula `aprovada` sempre e existente sem `--forcar`; recusa e não salva imagem fora de 3:4/mínimo; grava `NNN.png|webp`; marca `gerada` com sha256/bytes/dimensões e `promptHashGerado`. **Nunca foi executado com provedor real.**
+- `npm run arte:gerar -- --lote piloto | --ids CC-001,CC-018 | --proximos 10 [--executar] [--forcar]`: **dry-run por padrão** (imprime prompts, quantidade e custo; não chama API). Só chama o provedor com `--executar`; só gera `pendente`; pula `aprovada` sempre e existente sem `--forcar`; recusa e não salva imagem fora de 3:4/mínimo; grava `NNN.png|webp`; marca `gerada` com sha256/bytes/dimensões e `promptHashGerado`. Esse script não foi usado na geração de 2026-10-25; as imagens vieram do ImageGen integrado ao Codex e foram sincronizadas depois com `arte:manifesto`.
 
-## 8. O que falta para a geração real
-1. O dono escolher e autorizar um provedor e um **orçamento**, e fornecer a chave via variável de ambiente (nunca no repositório): ex. `ARTE_PROVEDOR=openai`, `OPENAI_API_KEY`, `ARTE_MODELO`, `ARTE_TAMANHO`, `ARTE_CUSTO_UNITARIO_USD` (o script não inventa preços).
-2. **Limitação do provedor `openai` incluído (não testado):** os tamanhos nativos de gpt-image não incluem 3:4 (1024x1536 é 2:3); sem etapa de recorte/redimensionamento o script **recusa** o resultado. Opções: provedor que entregue 3:4 (basta adicionar um objeto em `scripts/arte/provedores.mjs`), ou autorizar uma dependência de imagem (ex. `sharp`) para recortar/redimensionar a 768x1024.
-3. **Alternativa manual:** gerar com qualquer ferramenta usando `docs/arte/lote-piloto.md` (ou `prompts-catalogo.md`), salvar `NNN.webp|png` em `public/assets/cards/art/` e rodar `npm run arte:manifesto` e `npm run arte:verificar`. O dono aprova (`--autorizado-pelo-dono`). Arquivos provisórios podem ser substituídos pelos finais copiando por cima e marcando `gerada` (o arquivo `.png` e o `.webp` do mesmo ID não podem coexistir: o verificador acusa).
+## 8. Geração realizada e próximos passos
+1. Em 2026-10-25, o Codex gerou uma imagem separada para cada uma das 95 cartas antes pendentes. Cada prompt combinou a descrição individual do manifesto com o DNA visual das cinco referências, proibindo texto, moldura, selo e reutilização dos assuntos das referências.
+2. O dono ainda precisa revisar e marcar cada candidata como `aprovada` ou `rejeitada`; nenhuma foi aprovada automaticamente. A inspeção do Codex foi amostral, não uma revisão artística completa.
+3. As 5 cartas originais (`CC-001`, `CC-018`, `CC-031`, `CC-047`, `CC-073`) permanecem provisórias e podem ser regeneradas depois sem afetar as 95 novas.
+4. Em 2026-10-27, as 95 PNGs de 1086x1448 foram redimensionadas mecanicamente para WebP 768x1024 com Sharp/libvips (Lanczos3, qualidade 90, esforço 6 e `smartSubsample`). O lote caiu de 241,11 MiB para 30,35 MiB (redução de 87,41%); a pasta com as cinco provisórias ocupa 30,90 MiB. A conversão não muda o estado `gerada` nem implica aprovação artística.
+5. Para substituir/regerar manualmente: salvar `NNN.webp|png` em `public/assets/cards/art/`, rodar `npm run arte:manifesto` e `npm run arte:verificar`, e só então o dono aprova (`--autorizado-pelo-dono`). PNG e WebP do mesmo ID não podem coexistir.
 
 ## 9. Integração no jogo
 - `CartaView` usa a ilustração se o ID está em `src/arte/indiceArte.json` (gerado do manifesto, estados provisoria/gerada/aprovada); senão mantém o SVG. Decisão em build, sem tentativa de carregar imagem inexistente; `onError` volta ao SVG. `<img>` com `object-fit: cover`, `image-rendering: pixelated`, `loading="lazy"`, `alt="Ilustração da carta NOME"`. Prop `arte` (undefined = manifesto, null = fallback) para testes/páginas.

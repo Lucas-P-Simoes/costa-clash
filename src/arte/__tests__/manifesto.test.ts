@@ -103,8 +103,8 @@ describe('manifesto real do repositório (public/assets/cards/art/manifest.json)
     }
   })
 
-  it('exatamente 5 provisórias (as piloto, com origem) e 95 pendentes; nada gerado, aprovado ou rejeitado', () => {
-    expect(contarPorEstado(m)).toEqual({ pendente: 95, provisoria: 5, gerada: 0, aprovada: 0, rejeitada: 0 })
+  it('exatamente 5 provisórias e 95 geradas; nada pendente, aprovado ou rejeitado', () => {
+    expect(contarPorEstado(m)).toEqual({ pendente: 0, provisoria: 5, gerada: 95, aprovada: 0, rejeitada: 0 })
     const prov = m.entradas.filter((e) => e.estado === 'provisoria')
     expect(prov.map((e) => e.id).sort()).toEqual(['CC-001', 'CC-018', 'CC-031', 'CC-047', 'CC-073'])
     for (const e of prov) {
@@ -113,11 +113,16 @@ describe('manifesto real do repositório (public/assets/cards/art/manifest.json)
       expect(e.promptHashGerado).toBeNull()
       expect(e.arquivo).toBe(`${e.id.slice(3)}.png`)
     }
-    for (const e of m.entradas.filter((x) => x.estado === 'pendente')) expect(e.verificacao.sha256).toBeNull()
+    for (const e of m.entradas.filter((x) => x.estado === 'gerada')) {
+      expect(e.arquivo).toBe(`${e.id.slice(3)}.webp`)
+      expect(e.verificacao.largura).toBe(768)
+      expect(e.verificacao.altura).toBe(1024)
+      expect(e.verificacao.sha256).toMatch(/^[0-9a-f]{64}$/)
+    }
   })
 
-  it('arquivos provisórios existem e batem com sha256/bytes/dimensões registrados', () => {
-    for (const e of m.entradas.filter((x) => x.estado === 'provisoria')) {
+  it('os 100 arquivos existem e batem com sha256/bytes/dimensões registrados', () => {
+    for (const e of m.entradas) {
       const dados = readFileSync(join(CAMINHOS.dirArte, e.arquivo))
       expect(createHash('sha256').update(dados).digest('hex')).toBe(e.verificacao.sha256)
       expect(dados.length).toBe(e.verificacao.bytes)
@@ -126,15 +131,14 @@ describe('manifesto real do repositório (public/assets/cards/art/manifest.json)
     }
   })
 
-  it('não há arquivo de imagem além dos 5 provisórios (nenhuma arte final)', () => {
-    const arquivos = ['001', '018', '031', '047', '073'].map((n) => `${n}.png`)
-    for (const e of m.entradas) if (!arquivos.includes(e.arquivo)) expect(existsSync(join(CAMINHOS.dirArte, e.arquivo)), e.arquivo).toBe(false)
+  it('não falta nenhuma das 100 imagens do catálogo', () => {
+    for (const e of m.entradas) expect(existsSync(join(CAMINHOS.dirArte, e.arquivo)), e.arquivo).toBe(true)
   })
 
   it('manifesto e índice do build estão em dia com o catálogo e a pasta (sem deriva)', () => {
     const r = sincronizarPasta({ escrever: false })
     expect(serializar(r.manifesto)).toBe(readFileSync(CAMINHOS.manifesto, 'utf8'))
     expect(r.indice).toEqual(indiceDoBuild)
-    expect(Object.keys(indiceDoBuild).sort()).toEqual(['CC-001', 'CC-018', 'CC-031', 'CC-047', 'CC-073'])
+    expect(Object.keys(indiceDoBuild).sort()).toEqual(CATALOGO.map((c) => c.id).sort())
   })
 })

@@ -3,20 +3,400 @@
     "arquivo": "001.png",
     "estado": "provisoria"
   },
+  "CC-002": {
+    "arquivo": "002.webp",
+    "estado": "gerada"
+  },
+  "CC-003": {
+    "arquivo": "003.webp",
+    "estado": "gerada"
+  },
+  "CC-004": {
+    "arquivo": "004.webp",
+    "estado": "gerada"
+  },
+  "CC-005": {
+    "arquivo": "005.webp",
+    "estado": "gerada"
+  },
+  "CC-006": {
+    "arquivo": "006.webp",
+    "estado": "gerada"
+  },
+  "CC-007": {
+    "arquivo": "007.webp",
+    "estado": "gerada"
+  },
+  "CC-008": {
+    "arquivo": "008.webp",
+    "estado": "gerada"
+  },
+  "CC-009": {
+    "arquivo": "009.webp",
+    "estado": "gerada"
+  },
+  "CC-010": {
+    "arquivo": "010.webp",
+    "estado": "gerada"
+  },
+  "CC-011": {
+    "arquivo": "011.webp",
+    "estado": "gerada"
+  },
+  "CC-012": {
+    "arquivo": "012.webp",
+    "estado": "gerada"
+  },
+  "CC-013": {
+    "arquivo": "013.webp",
+    "estado": "gerada"
+  },
+  "CC-014": {
+    "arquivo": "014.webp",
+    "estado": "gerada"
+  },
+  "CC-015": {
+    "arquivo": "015.webp",
+    "estado": "gerada"
+  },
+  "CC-016": {
+    "arquivo": "016.webp",
+    "estado": "gerada"
+  },
+  "CC-017": {
+    "arquivo": "017.webp",
+    "estado": "gerada"
+  },
   "CC-018": {
     "arquivo": "018.png",
     "estado": "provisoria"
+  },
+  "CC-019": {
+    "arquivo": "019.webp",
+    "estado": "gerada"
+  },
+  "CC-020": {
+    "arquivo": "020.webp",
+    "estado": "gerada"
+  },
+  "CC-021": {
+    "arquivo": "021.webp",
+    "estado": "gerada"
+  },
+  "CC-022": {
+    "arquivo": "022.webp",
+    "estado": "gerada"
+  },
+  "CC-023": {
+    "arquivo": "023.webp",
+    "estado": "gerada"
+  },
+  "CC-024": {
+    "arquivo": "024.webp",
+    "estado": "gerada"
+  },
+  "CC-025": {
+    "arquivo": "025.webp",
+    "estado": "gerada"
+  },
+  "CC-026": {
+    "arquivo": "026.webp",
+    "estado": "gerada"
+  },
+  "CC-027": {
+    "arquivo": "027.webp",
+    "estado": "gerada"
+  },
+  "CC-028": {
+    "arquivo": "028.webp",
+    "estado": "gerada"
+  },
+  "CC-029": {
+    "arquivo": "029.webp",
+    "estado": "gerada"
+  },
+  "CC-030": {
+    "arquivo": "030.webp",
+    "estado": "gerada"
   },
   "CC-031": {
     "arquivo": "031.png",
     "estado": "provisoria"
   },
+  "CC-032": {
+    "arquivo": "032.webp",
+    "estado": "gerada"
+  },
+  "CC-033": {
+    "arquivo": "033.webp",
+    "estado": "gerada"
+  },
+  "CC-034": {
+    "arquivo": "034.webp",
+    "estado": "gerada"
+  },
+  "CC-035": {
+    "arquivo": "035.webp",
+    "estado": "gerada"
+  },
+  "CC-036": {
+    "arquivo": "036.webp",
+    "estado": "gerada"
+  },
+  "CC-037": {
+    "arquivo": "037.webp",
+    "estado": "gerada"
+  },
+  "CC-038": {
+    "arquivo": "038.webp",
+    "estado": "gerada"
+  },
+  "CC-039": {
+    "arquivo": "039.webp",
+    "estado": "gerada"
+  },
+  "CC-040": {
+    "arquivo": "040.webp",
+    "estado": "gerada"
+  },
+  "CC-041": {
+    "arquivo": "041.webp",
+    "estado": "gerada"
+  },
+  "CC-042": {
+    "arquivo": "042.webp",
+    "estado": "gerada"
+  },
+  "CC-043": {
+    "arquivo": "043.webp",
+    "estado": "gerada"
+  },
+  "CC-044": {
+    "arquivo": "044.webp",
+    "estado": "gerada"
+  },
+  "CC-045": {
+    "arquivo": "045.webp",
+    "estado": "gerada"
+  },
+  "CC-046": {
+    "arquivo": "046.webp",
+    "estado": "gerada"
+  },
   "CC-047": {
     "arquivo": "047.png",
     "estado": "provisoria"
   },
+  "CC-048": {
+    "arquivo": "048.webp",
+    "estado": "gerada"
+  },
+  "CC-049": {
+    "arquivo": "049.webp",
+    "estado": "gerada"
+  },
+  "CC-050": {
+    "arquivo": "050.webp",
+    "estado": "gerada"
+  },
+  "CC-051": {
+    "arquivo": "051.webp",
+    "estado": "gerada"
+  },
+  "CC-052": {
+    "arquivo": "052.webp",
+    "estado": "gerada"
+  },
+  "CC-053": {
+    "arquivo": "053.webp",
+    "estado": "gerada"
+  },
+  "CC-054": {
+    "arquivo": "054.webp",
+    "estado": "gerada"
+  },
+  "CC-055": {
+    "arquivo": "055.webp",
+    "estado": "gerada"
+  },
+  "CC-056": {
+    "arquivo": "056.webp",
+    "estado": "gerada"
+  },
+  "CC-057": {
+    "arquivo": "057.webp",
+    "estado": "gerada"
+  },
+  "CC-058": {
+    "arquivo": "058.webp",
+    "estado": "gerada"
+  },
+  "CC-059": {
+    "arquivo": "059.webp",
+    "estado": "gerada"
+  },
+  "CC-060": {
+    "arquivo": "060.webp",
+    "estado": "gerada"
+  },
+  "CC-061": {
+    "arquivo": "061.webp",
+    "estado": "gerada"
+  },
+  "CC-062": {
+    "arquivo": "062.webp",
+    "estado": "gerada"
+  },
+  "CC-063": {
+    "arquivo": "063.webp",
+    "estado": "gerada"
+  },
+  "CC-064": {
+    "arquivo": "064.webp",
+    "estado": "gerada"
+  },
+  "CC-065": {
+    "arquivo": "065.webp",
+    "estado": "gerada"
+  },
+  "CC-066": {
+    "arquivo": "066.webp",
+    "estado": "gerada"
+  },
+  "CC-067": {
+    "arquivo": "067.webp",
+    "estado": "gerada"
+  },
+  "CC-068": {
+    "arquivo": "068.webp",
+    "estado": "gerada"
+  },
+  "CC-069": {
+    "arquivo": "069.webp",
+    "estado": "gerada"
+  },
+  "CC-070": {
+    "arquivo": "070.webp",
+    "estado": "gerada"
+  },
+  "CC-071": {
+    "arquivo": "071.webp",
+    "estado": "gerada"
+  },
+  "CC-072": {
+    "arquivo": "072.webp",
+    "estado": "gerada"
+  },
   "CC-073": {
     "arquivo": "073.png",
     "estado": "provisoria"
+  },
+  "CC-074": {
+    "arquivo": "074.webp",
+    "estado": "gerada"
+  },
+  "CC-075": {
+    "arquivo": "075.webp",
+    "estado": "gerada"
+  },
+  "CC-076": {
+    "arquivo": "076.webp",
+    "estado": "gerada"
+  },
+  "CC-077": {
+    "arquivo": "077.webp",
+    "estado": "gerada"
+  },
+  "CC-078": {
+    "arquivo": "078.webp",
+    "estado": "gerada"
+  },
+  "CC-079": {
+    "arquivo": "079.webp",
+    "estado": "gerada"
+  },
+  "CC-080": {
+    "arquivo": "080.webp",
+    "estado": "gerada"
+  },
+  "CC-081": {
+    "arquivo": "081.webp",
+    "estado": "gerada"
+  },
+  "CC-082": {
+    "arquivo": "082.webp",
+    "estado": "gerada"
+  },
+  "CC-083": {
+    "arquivo": "083.webp",
+    "estado": "gerada"
+  },
+  "CC-084": {
+    "arquivo": "084.webp",
+    "estado": "gerada"
+  },
+  "CC-085": {
+    "arquivo": "085.webp",
+    "estado": "gerada"
+  },
+  "CC-086": {
+    "arquivo": "086.webp",
+    "estado": "gerada"
+  },
+  "CC-087": {
+    "arquivo": "087.webp",
+    "estado": "gerada"
+  },
+  "CC-088": {
+    "arquivo": "088.webp",
+    "estado": "gerada"
+  },
+  "CC-089": {
+    "arquivo": "089.webp",
+    "estado": "gerada"
+  },
+  "CC-090": {
+    "arquivo": "090.webp",
+    "estado": "gerada"
+  },
+  "CC-091": {
+    "arquivo": "091.webp",
+    "estado": "gerada"
+  },
+  "CC-092": {
+    "arquivo": "092.webp",
+    "estado": "gerada"
+  },
+  "CC-093": {
+    "arquivo": "093.webp",
+    "estado": "gerada"
+  },
+  "CC-094": {
+    "arquivo": "094.webp",
+    "estado": "gerada"
+  },
+  "CC-095": {
+    "arquivo": "095.webp",
+    "estado": "gerada"
+  },
+  "CC-096": {
+    "arquivo": "096.webp",
+    "estado": "gerada"
+  },
+  "CC-097": {
+    "arquivo": "097.webp",
+    "estado": "gerada"
+  },
+  "CC-098": {
+    "arquivo": "098.webp",
+    "estado": "gerada"
+  },
+  "CC-099": {
+    "arquivo": "099.webp",
+    "estado": "gerada"
+  },
+  "CC-100": {
+    "arquivo": "100.webp",
+    "estado": "gerada"
   }
 }
