@@ -42,10 +42,9 @@ export async function abrirCena(page: Page, cena: Cena): Promise<void> {
     else if (cena === 'dueloCampo') await page.locator('.carta--campo').first().waitFor()
     else await page.getByRole('dialog').waitFor()
   } else if (cena === 'dueloLivre' || cena === 'duelo') {
-    // Jogar exige conta: entra pelo harness (serviço de auth FALSO, sem rede) e navega pela UI.
-    await page.goto(`${BASE}e2e/harness.html?cena=conta`)
-    await page.getByRole('heading', { name: 'Conta', exact: true }).waitFor()
-    await page.getByRole('button', { name: 'Duelo livre' }).click()
+    // Jogar exige conta: a sessão FALSA é restaurada e o App entra direto no Duelo Livre.
+    await page.goto(`${BASE}e2e/harness.html?cena=autenticado`)
+    await page.getByRole('heading', { name: 'Duelo Livre', exact: true }).waitFor()
     if (cena === 'duelo') {
       await page.getByRole('button', { name: 'Duelo', exact: true }).click()
       await page.locator('.tela-partida').waitFor()

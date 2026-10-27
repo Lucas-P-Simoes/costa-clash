@@ -13,7 +13,10 @@ import './dueloLivre.css'
 interface Props {
   /** Usuário logado (resumo do baralho vem do perfil já carregado); ausente: sem resumo de baralho. */
   usuario?: UsuarioAutenticado
-  onVoltar: () => void
+  /** Caminho de retorno em usos independentes/sem sessão. Ausente na tela inicial autenticada. */
+  onVoltar?: () => void
+  /** Encerra a sessão do usuário autenticado. Não é acionado por Esc. */
+  onSair?: () => Promise<void> | void
   /** Inicia o duelo contra o adversário selecionado. */
   onDuelo: (oponenteId: string) => void
   /** Adversário pré-selecionado (ao voltar do duelo). */
@@ -23,9 +26,10 @@ interface Props {
 type Aviso = { tipo: 'baralho'; n: number } | null
 
 /** Seleção de adversário do Duelo Livre; DUELO inicia a partida contra o adversário selecionado. */
-export function TelaDueloLivre({ usuario, onVoltar, onDuelo, oponenteInicialId }: Props) {
+export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteInicialId }: Props) {
   const [selecionadoId, setSelecionadoId] = useState(oponenteInicialId && buscarOponente(oponenteInicialId) ? oponenteInicialId : OPONENTE_PADRAO_ID)
   const [aviso, setAviso] = useState<Aviso>(null)
+  const [saindo, setSaindo] = useState(false)
   useAtalhoVoltar(onVoltar)
   const oponente = buscarOponente(selecionadoId) ?? OPONENTES[0]
 
@@ -33,6 +37,16 @@ export function TelaDueloLivre({ usuario, onVoltar, onDuelo, oponenteInicialId }
     if (id === selecionadoId) return
     setSelecionadoId(id)
     setAviso(null)
+  }
+
+  async function sair() {
+    if (!onSair || saindo) return
+    setSaindo(true)
+    try {
+      await onSair()
+    } finally {
+      setSaindo(false)
+    }
   }
 
   let mensagem: string | undefined
@@ -60,9 +74,15 @@ export function TelaDueloLivre({ usuario, onVoltar, onDuelo, oponenteInicialId }
           <BotaoRetro icone={<IconeCartas />} onClick={() => setAviso((a) => ({ tipo: 'baralho', n: (a?.n ?? 0) + 1 }))}>
             Baralho
           </BotaoRetro>
-          <BotaoRetro icone={<IconeVoltar />} onClick={onVoltar}>
-            Voltar
-          </BotaoRetro>
+          {onSair ? (
+            <BotaoRetro icone={<IconeVoltar />} ocupado={saindo} onClick={sair}>
+              {saindo ? 'Saindo…' : 'Sair'}
+            </BotaoRetro>
+          ) : onVoltar ? (
+            <BotaoRetro icone={<IconeVoltar />} onClick={onVoltar}>
+              Voltar
+            </BotaoRetro>
+          ) : null}
         </PainelOponente>
       </main>
       <RodapeControles />

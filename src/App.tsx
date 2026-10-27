@@ -3,7 +3,6 @@ import type { ResultadoAuth, ServicoAuth, UsuarioAutenticado } from './auth/serv
 import { MENSAGEM_RECONEXAO } from './auth/servicoAuth'
 import { servicoAuthPadrao } from './auth/servicoPadrao'
 import { CabecalhoTela } from './components/ui/CabecalhoTela'
-import { TelaConta } from './screens/conta/TelaConta'
 import { TelaDueloLivre } from './screens/dueloLivre/TelaDueloLivre'
 import { TelaDuelo } from './screens/duelo/TelaDuelo'
 import { TelaCriarConta } from './screens/criarConta/TelaCriarConta'
@@ -15,7 +14,6 @@ type Tela =
   | { nome: 'login' }
   | { nome: 'criarConta' }
   | { nome: 'recuperarSenha' }
-  | { nome: 'conta'; usuario: UsuarioAutenticado }
   | { nome: 'dueloLivre'; usuario?: UsuarioAutenticado; oponenteId?: string }
   | { nome: 'duelo'; oponenteId: string; usuario?: UsuarioAutenticado }
 
@@ -40,7 +38,7 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
     promessa
       .then((r) => {
         if (!ativo) return
-        if (r.ok) setTela({ nome: 'conta', usuario: r.usuario })
+        if (r.ok) setTela({ nome: 'dueloLivre', usuario: r.usuario })
         else {
           // Falha de rede (token mantido): avisa no login; sessão inválida volta sem aviso.
           if (r.codigo === 'indisponivel') setAviso(MENSAGEM_RECONEXAO)
@@ -78,21 +76,20 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
       return (
         <TelaCriarConta
           servicoAuth={servicoAuth}
-          onAutenticado={(usuario) => setTela({ nome: 'conta', usuario })}
+          onAutenticado={(usuario) => setTela({ nome: 'dueloLivre', usuario })}
           onVoltar={irParaLogin}
         />
       )
     case 'recuperarSenha':
       return <RecuperarSenhaPlaceholder onVoltar={irParaLogin} />
-    case 'conta':
-      return <TelaConta usuario={tela.usuario} onSair={sair} onDueloLivre={() => setTela({ nome: 'dueloLivre', usuario: tela.usuario })} />
     case 'dueloLivre': {
       const usuario = tela.usuario
       return (
         <TelaDueloLivre
           usuario={usuario}
           oponenteInicialId={tela.oponenteId}
-          onVoltar={() => setTela(usuario ? { nome: 'conta', usuario } : { nome: 'login' })}
+          onVoltar={usuario ? undefined : irParaLogin}
+          onSair={usuario ? sair : undefined}
           onDuelo={(oponenteId) => setTela({ nome: 'duelo', oponenteId, usuario })}
         />
       )
@@ -107,7 +104,7 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
           servicoAuth={servicoAuth}
           focarAoMontar={voltou}
           aviso={aviso}
-          onAutenticado={(usuario) => setTela({ nome: 'conta', usuario })}
+          onAutenticado={(usuario) => setTela({ nome: 'dueloLivre', usuario })}
           onCriarConta={() => setTela({ nome: 'criarConta' })}
           onRecuperarSenha={() => setTela({ nome: 'recuperarSenha' })}
         />

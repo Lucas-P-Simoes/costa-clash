@@ -103,8 +103,8 @@ describe('Tela de criar conta', () => {
     expect(cadastrar).toHaveBeenCalledWith({ email: 'ana@exemplo.com', senha: 'senha-longa-1' })
     expect(screen.getByRole('status').textContent).toBe('Criando conta...')
     await act(async () => resolver({ ok: true, usuario }))
-    expect(await screen.findByText('Conectado como ana@exemplo.com')).toBeTruthy()
-    expect(screen.getByRole('heading', { level: 1, name: 'Conta' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(screen.queryByRole('heading', { level: 1, name: 'Conta' })).toBeNull()
   })
 
   it('e-mail já usado aparece no campo; erro inesperado aparece em alerta', async () => {
@@ -131,20 +131,20 @@ describe('Tela de criar conta', () => {
   })
 })
 
-describe('Tela Conta, restauração de sessão e logout', () => {
-  it('mostra e-mail e contagens (coleção e baralho)', async () => {
+describe('Navegação autenticada, restauração de sessão e logout', () => {
+  it('login abre diretamente o Duelo Livre e mantém o baralho do perfil', async () => {
     const entrar = vi.fn().mockResolvedValue({ ok: true, usuario })
     render(<App servicoAuth={{ entrar }} />)
     fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'ana@exemplo.com' } })
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senha-longa-1' } })
     fireEvent.submit(document.querySelector('form')!)
-    expect(await screen.findByText('Conectado como ana@exemplo.com')).toBeTruthy()
-    expect(screen.getByText('Cartas na coleção').nextSibling?.textContent).toBe('40')
-    expect(screen.getByText('Cartas no baralho atual').nextSibling?.textContent).toBe('40')
-    expect(screen.getByText(/ainda não existem/)).toBeTruthy()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(screen.queryByRole('heading', { level: 1, name: 'Conta' })).toBeNull()
+    fireEvent.click(screen.getByRole('button', { name: 'Baralho' }))
+    expect(screen.getByRole('status').textContent).toContain('40 cartas')
   })
 
-  it('com sessão salva mostra carregamento (sem login) e restaura a conta', async () => {
+  it('com sessão salva mostra carregamento (sem login) e restaura direto no Duelo Livre', async () => {
     let resolver!: (r: ResultadoAuth) => void
     const servico = servicoCom({
       temSessaoSalva: () => true,
@@ -154,7 +154,8 @@ describe('Tela Conta, restauração de sessão e logout', () => {
     expect(screen.getByRole('status').textContent).toMatch(/Carregando sua sessão/)
     expect(screen.queryByLabelText('Senha')).toBeNull()
     await act(async () => resolver({ ok: true, usuario }))
-    expect(await screen.findByText('Conectado como ana@exemplo.com')).toBeTruthy()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(screen.queryByRole('heading', { level: 1, name: 'Conta' })).toBeNull()
   })
 
   it('se a restauração falhar, volta ao login', async () => {
@@ -198,7 +199,7 @@ describe('Tela Conta, restauração de sessão e logout', () => {
     fireEvent.click(await screen.findByRole('button', { name: 'Sair' }))
     expect(await screen.findByRole('heading', { level: 1, name: 'Login' })).toBeTruthy()
     expect(sair).toHaveBeenCalledTimes(1)
-    expect(screen.queryByText(/Conectado como/)).toBeNull()
+    expect(screen.queryByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeNull()
   })
 
   it('SAIR volta ao login mesmo se o logout falhar', async () => {
@@ -210,5 +211,15 @@ describe('Tela Conta, restauração de sessão e logout', () => {
     render(<App servicoAuth={servico} />)
     fireEvent.click(await screen.findByRole('button', { name: 'Sair' }))
     expect(await screen.findByRole('heading', { level: 1, name: 'Login' })).toBeTruthy()
+  })
+
+  it('Esc no Duelo Livre autenticado não encerra a sessão silenciosamente', async () => {
+    const sair = vi.fn().mockResolvedValue(undefined)
+    const servico = servicoCom({ temSessaoSalva: () => true, restaurarSessao: () => Promise.resolve({ ok: true, usuario }), sair })
+    render(<App servicoAuth={servico} />)
+    await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })
+    fireEvent.keyDown(window, { key: 'Escape' })
+    expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(sair).not.toHaveBeenCalled()
   })
 })

@@ -378,8 +378,7 @@ describe('Integração com o Duelo Livre', () => {
     fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'bia@exemplo.com' } })
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senha-valida-1' } })
     fireEvent.submit(document.querySelector('form')!)
-    await screen.findByText(/Conectado como bia@exemplo.com/)
-    fireEvent.click(botao('Duelo livre'))
+    await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })
     fireEvent.click(screen.getByRole('radio', { name: 'Porto' }))
     fireEvent.click(botao('Duelo'))
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Porto' })).toBeTruthy()
@@ -398,16 +397,16 @@ describe('Integração com o Duelo Livre', () => {
     fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'ana@exemplo.com' } })
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senha-valida-1' } })
     fireEvent.submit(document.querySelector('form')!)
-    await screen.findByText(/Conectado como ana@exemplo.com/)
-    fireEvent.click(botao('Duelo livre'))
+    await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })
     fireEvent.click(botao('Duelo'))
     expect(screen.getByRole('heading', { level: 1, name: /Duelo contra/ })).toBeTruthy()
     fireEvent.keyDown(window, { key: 'Escape' }) // abre confirmação
     fireEvent.click(botao('Desistir'.length ? 'Confirmar' : ''))
     fireEvent.keyDown(window, { key: 'Escape' }) // resultado: Esc volta
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
-    fireEvent.click(botao('Voltar'))
-    expect(screen.getByText(/Conectado como ana@exemplo.com/)).toBeTruthy()
+    expect(botao('Sair')).toBeTruthy()
+    fireEvent.click(botao('Baralho'))
+    expect(screen.getByRole('status').textContent).toContain('40 cartas')
   })
 
   it('baralho inválido do perfil mostra erro claro e permite voltar, sem quebrar', () => {

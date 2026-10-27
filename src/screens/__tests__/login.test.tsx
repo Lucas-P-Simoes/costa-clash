@@ -202,11 +202,12 @@ describe('Navegação por estado', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Login' })).toBeTruthy()
   })
 
-  it('login com serviço que autentica leva à tela inicial da conta (só em teste)', async () => {
+  it('login com serviço que autentica leva direto ao Duelo Livre', async () => {
     const entrar = vi.fn().mockResolvedValue({ ok: true, usuario: { id: '1', email: 'a@b.co' } })
     render(<App servicoAuth={{ entrar }} />)
     preencher('a@b.co', 'segredo')
     enviar()
-    expect(await screen.findByText('Conectado como a@b.co')).toBeTruthy()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(screen.queryByRole('heading', { level: 1, name: 'Conta' })).toBeNull()
   })
 })

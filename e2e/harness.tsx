@@ -1,6 +1,7 @@
 // Harness de testes e2e/viewport (SÓ servido pelo servidor de desenvolvimento; NÃO entra no build de produção).
 // Monta telas em estados difíceis de alcançar pela UI, sem rede nem serviço real:
 //   ?cena=conta                      TelaConta com serviço de auth FALSO injetado (nenhuma API é chamada)
+//   ?cena=autenticado                App com sessão FALSA restaurada direto no Duelo Livre
 //   ?cena=duelo-campo[&seed=N]       Partida com unidades em ataque e em defesa, um verso e suportes dos dois lados (estado gerado pelo motor)
 //   ?cena=resultado-vitoria|resultado-derrota|resultado-empate   Partida já encerrada (diálogo de resultado)
 import { StrictMode } from 'react'
@@ -16,6 +17,7 @@ import { BARALHOS_OPONENTES } from '../src/data/baralhosOponentes'
 import { OPONENTES } from '../src/data/oponentes'
 import { aplicarComando, criarDuelo, executarTurnoIA } from '../src/game'
 import type { EstadoDuelo } from '../src/game'
+import { TelaConta } from '../src/screens/conta/TelaConta'
 import { Partida } from '../src/screens/duelo/Partida'
 
 const busca = new URLSearchParams(window.location.search)
@@ -85,19 +87,27 @@ function estadoComCampo(seedPedida: number | null): EstadoDuelo {
   return novo(1)
 }
 
+const USUARIO_FALSO = {
+  id: 'u1',
+  email: 'teste@example.com',
+  baralho: [...BARALHO_INICIAL],
+  colecao: BARALHO_INICIAL.slice(0, 20).map((cartaId) => ({ cartaId, quantidade: 1 })),
+} satisfies UsuarioAutenticado
+
 const SERVICO_FALSO: ServicoAuth = {
   entrar: () => Promise.resolve({ ok: false, codigo: 'nao_configurado', mensagem: 'harness' }),
   temSessaoSalva: () => true,
   restaurarSessao: () =>
     Promise.resolve({
       ok: true,
-      usuario: { id: 'u1', email: 'teste@example.com', baralho: [...BARALHO_INICIAL], colecao: BARALHO_INICIAL.slice(0, 20).map((cartaId) => ({ cartaId, quantidade: 1 })) } satisfies UsuarioAutenticado,
+      usuario: USUARIO_FALSO,
     }),
   sair: () => Promise.resolve(),
 }
 
 function montarCena() {
-  if (cena === 'conta') return <App servicoAuth={SERVICO_FALSO} />
+  if (cena === 'conta') return <TelaConta usuario={USUARIO_FALSO} onSair={() => undefined} />
+  if (cena === 'autenticado') return <App servicoAuth={SERVICO_FALSO} />
   let estado: EstadoDuelo
   if (cena === 'duelo-campo') estado = estadoComCampo(Number(busca.get('seed')) || null)
   else {

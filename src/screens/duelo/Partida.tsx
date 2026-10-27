@@ -148,6 +148,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   // Estado verdadeiro do motor ao fim do turno da IA (o exibido pode estar num passo intermediário).
   const finalIA = useRef<EstadoDuelo | null>(null)
   const pedidoFoco = useRef<string | null>(null)
+  const focoSolicitadoInternamente = useRef<HTMLElement | null>(null)
 
   useEffect(() => {
     const t = timers.current
@@ -470,7 +471,13 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       onPointerDownCapture: (e: ReactPointerEvent<HTMLElement>) => {
         ultimaFonteToque.current = e.pointerType === 'touch' ? chave : null
       },
-      onFocus: () => abrirInspecao(chave, 'foco'),
+      onFocus: (e: ReactFocusEvent<HTMLElement>) => {
+        if (focoSolicitadoInternamente.current === e.target) {
+          focoSolicitadoInternamente.current = null
+          return
+        }
+        abrirInspecao(chave, 'foco')
+      },
       onBlur: (e: ReactFocusEvent<HTMLElement>) => {
         if (!e.currentTarget.contains(e.relatedTarget as Node | null)) fecharInspecao(chave, 'foco')
       },
@@ -918,7 +925,12 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const alvo = pedidoFoco.current
     if (!alvo) return
     pedidoFoco.current = null
-    document.querySelector<HTMLElement>(alvo)?.focus()
+    const elemento = document.querySelector<HTMLElement>(alvo)
+    if (!elemento) return
+    focoSolicitadoInternamente.current = elemento
+    elemento.focus()
+    // `focus()` não emite evento quando o elemento já estava ativo ou não pode receber foco.
+    if (focoSolicitadoInternamente.current === elemento) focoSolicitadoInternamente.current = null
   })
 
   const desistirVisivel = confirma && (!estado.resultado || reproduzindo)

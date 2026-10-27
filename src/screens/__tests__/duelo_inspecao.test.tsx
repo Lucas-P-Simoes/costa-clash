@@ -76,6 +76,23 @@ describe('mão em leque e inspeção ampliada', () => {
     expect(screen.queryByRole('alertdialog', { name: 'Desistir do duelo?' })).toBeNull()
   })
 
+  it('não amplia automaticamente a primeira carta ao devolver o foco depois do turno da IA', () => {
+    montar({
+      humano: { mao: ['CC-003'], baralho: 30 },
+      oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 },
+    })
+    fireEvent.click(cartaMao())
+    fireEvent.click(screen.getByRole('button', { name: /Usar carta/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
+    fireEvent.click(screen.getByRole('button', { name: /Encerrar turno/ }))
+
+    const primeira = cartaMao()
+    expect(document.activeElement).toBe(primeira)
+    expect(primeira.getAttribute('aria-pressed')).toBe('false')
+    expect(inspecao()).toBeNull()
+  })
+
   it('mantém a inspeção de foco quando o ponteiro entra e sai da mesma carta', () => {
     montar({ humano: { mao: ['CC-001'] } })
     const carta = cartaMao()

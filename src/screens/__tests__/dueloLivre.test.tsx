@@ -1,5 +1,5 @@
 // @vitest-environment jsdom
-import { cleanup, fireEvent, render, screen, waitFor, within } from '@testing-library/react'
+import { cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from '../../App'
 import type { ServicoAuth, UsuarioAutenticado } from '../../auth/servicoAuth'
@@ -153,38 +153,34 @@ describe('Tela Duelo Livre: ações', () => {
 })
 
 describe('Integração com o App', () => {
-  it('conta (serviço falso): abre o Duelo Livre e volta (botão e Esc) para a Conta, sem rodapé de controles', async () => {
-    const servico: ServicoAuth = { entrar: vi.fn().mockResolvedValue({ ok: true, usuario }) }
+  it('login abre diretamente o Duelo Livre; Esc não sai e o botão SAIR encerra a sessão', async () => {
+    const sair = vi.fn().mockResolvedValue(undefined)
+    const servico: ServicoAuth = { entrar: vi.fn().mockResolvedValue({ ok: true, usuario }), sair }
     render(<App servicoAuth={servico} />)
     fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'ana@exemplo.com' } })
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senha-valida-1' } })
     fireEvent.submit(document.querySelector('form')!)
-    await screen.findByText(/Conectado como ana@exemplo.com/)
-    fireEvent.click(botao('Duelo livre'))
-    expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(screen.queryByRole('heading', { level: 1, name: 'Conta' })).toBeNull()
     expect(document.querySelector('footer.rodape ul')).toBeNull()
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' }).parentElement!.querySelectorAll('svg').length).toBe(2)
-    fireEvent.click(botao('Voltar'))
-    expect(screen.getByText(/Conectado como ana@exemplo.com/)).toBeTruthy()
-    fireEvent.click(botao('Duelo livre'))
     fireEvent.keyDown(window, { key: 'Escape' })
-    expect(screen.getByText(/Conectado como ana@exemplo.com/)).toBeTruthy()
+    expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(sair).not.toHaveBeenCalled()
+    fireEvent.click(botao('Sair'))
+    expect(await screen.findByRole('heading', { level: 1, name: 'Login' })).toBeTruthy()
+    expect(sair).toHaveBeenCalledTimes(1)
   })
 
-  it('conta: abre o Duelo Livre, mostra o baralho do perfil e volta ainda logado', async () => {
+  it('Duelo Livre direto recebe o perfil e mostra a contagem do baralho', async () => {
     const servico: ServicoAuth = { entrar: vi.fn().mockResolvedValue({ ok: true, usuario }) }
     render(<App servicoAuth={servico} />)
     fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'ana@exemplo.com' } })
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senha-valida-1' } })
     fireEvent.submit(document.querySelector('form')!)
-    await waitFor(() => expect(screen.getByText(/Conectado como ana@exemplo.com/)).toBeTruthy())
-    fireEvent.click(botao('Duelo livre'))
-    expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
+    expect(await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
     fireEvent.click(botao('Baralho'))
     expect(screen.getByRole('status').textContent).toContain('40 cartas')
-    fireEvent.click(botao('Voltar'))
-    expect(screen.getByRole('heading', { level: 1, name: 'Conta' })).toBeTruthy()
-    expect(screen.getByText(/Conectado como ana@exemplo.com/)).toBeTruthy()
     expect(servico.entrar).toHaveBeenCalledTimes(1)
   })
 })
