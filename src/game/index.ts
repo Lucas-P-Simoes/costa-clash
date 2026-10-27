@@ -1,7 +1,15 @@
 // API pública do motor de duelo (consumida pela UI na fase B). Puro: sem React/DOM/localStorage/Math.random.
 export { criarDuelo, executarTurnoIA, executarTurnoIAComPassos } from './duelo'
 export type { OpcoesDuelo, ResultadoCriarDuelo, PassoIA, ResultadoTurnoIA } from './duelo'
-export { aplicarComando, jogadasLegais, ataquesLegais, validarJogarCarta } from './acoes'
+export {
+  aplicarComando,
+  jogadasLegais,
+  ataquesLegais,
+  alvosAtaqueLegais,
+  atacantesDisponiveis,
+  simularAtaque,
+  validarJogarCarta,
+} from './acoes'
 export type {
   Comando,
   ComandoJogarCarta,
@@ -20,7 +28,8 @@ export { criarRng, embaralhar } from './rng'
 export type { Rng } from './rng'
 export { visaoParaJogador, logPublico, eventosPublicos } from './visao'
 export type { VisaoDuelo, VisaoPropria, VisaoAdversario, SuporteVisivel, UnidadeVisivel } from './visao'
-export { decidirComando } from './ia'
+export { decidirComando, avaliarAtaque, escolherMelhorAtaque, PESOS_ATAQUE_IA } from './ia'
+export type { AvaliacaoAtaque, PesosAtaqueIA } from './ia'
 export { mapaCatalogo, invariantes, totalCartas, outro } from './estado'
 export type {
   EstadoDuelo,

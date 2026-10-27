@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { aplicarComando, ataquesLegais, jogadasLegais } from '../acoes'
+import { alvosAtaqueLegais, aplicarComando, atacantesDisponiveis, ataquesLegais, jogadasLegais, simularAtaque } from '../acoes'
 import type { Comando } from '../acoes'
 import { invariantes } from '../estado'
 import { atacar, cenario, cenarioCombate, irParaCombate, jogar, ok, uidDe } from './util'
@@ -250,6 +250,19 @@ describe('listagens de jogadas legais', () => {
     expect(ataquesLegais(d)).toEqual([{ tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 'direto' }])
     expect(ataquesLegais(cenarioCombate({ turno: 1, humano: { campo: ['CC-003'] } }))).toEqual([])
     expect(ataquesLegais(cenario({ humano: { campo: ['CC-003'] } }))).toEqual([])
+  })
+
+  it('alvos e atacantes usam a mesma legalidade; simulação é idêntica à execução e não muta a entrada', () => {
+    const e = cenarioCombate({ humano: { campo: ['CC-003', { id: 'CC-001', pos: 'DEFESA' }] }, oponente: { campo: ['CC-001', null, 'CC-004'] } })
+    expect(atacantesDisponiveis(e)).toEqual([0])
+    expect(alvosAtaqueLegais(e, 0).map((c) => c.alvo)).toEqual([0, 2])
+    expect(alvosAtaqueLegais(e, 1)).toEqual([])
+    const antes = JSON.stringify(e)
+    const cmd = alvosAtaqueLegais(e, 0)[0]!
+    const simulado = simularAtaque(e, cmd)
+    const executado = aplicarComando(e, cmd)
+    expect(simulado).toEqual(executado)
+    expect(JSON.stringify(e)).toBe(antes)
   })
 })
 

@@ -658,6 +658,62 @@ button.carta {
 .carta--valida {
   outline: 0.1875rem solid var(--cc-turquesa);
   outline-offset: 1px;
+  touch-action: none;
+  animation: duelo-brilho 1.4s ease-in-out infinite;
+}
+.tela-partida--mirando .carta {
+  touch-action: none;
+}
+.duelo-alvo-ataque--valido .carta,
+.duelo-alvo-ataque--ia .carta {
+  outline: 0.1875rem solid #ff5a3d;
+  outline-offset: 1px;
+  box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #07101a, 0 0 1rem 0.25rem rgba(255, 90, 61, 0.72);
+}
+.duelo-alvo-ataque--sobre .carta {
+  outline-color: #ffbf45;
+  animation: duelo-pulso 0.7s steps(2) infinite;
+}
+.duelo-alvo-ataque--invalido .carta {
+  filter: grayscale(0.65) brightness(0.55);
+}
+.duelo-atacante-ia .carta {
+  outline: 0.1875rem solid #ff8a2a;
+  outline-offset: 1px;
+  box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #07101a, 0 0 1.25rem 0.3rem rgba(255, 106, 30, 0.9);
+  animation: duelo-brilho-ia 0.7s ease-in-out infinite;
+}
+.duelo-vida--alvo-ataque {
+  border-color: #ff5a3d;
+  outline: 0.1875rem solid rgba(255, 90, 61, 0.9);
+  outline-offset: 2px;
+  box-shadow: 0 0 1rem 0.25rem rgba(255, 90, 61, 0.7);
+}
+
+/* A seta ocupa a viewport, mas é transparente a clique/toque e não altera o layout. */
+.duelo-seta-ataque {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  width: 100dvw;
+  height: 100dvh;
+  overflow: visible;
+  pointer-events: none;
+  color: #42dcff;
+}
+.duelo-seta-ataque--oponente {
+  color: #ff762f;
+}
+.duelo-seta-ataque__trilha {
+  fill: none;
+  stroke: currentColor;
+  stroke-width: clamp(4px, 0.4vw, 8px);
+  stroke-linecap: round;
+  stroke-dasharray: 12 8;
+  animation: duelo-seta-energia 0.45s linear infinite;
+}
+.duelo-seta-ataque marker path {
+  fill: currentColor;
 }
 .carta[aria-disabled='true'] {
   opacity: 0.85;
@@ -789,6 +845,17 @@ button.carta {
 @keyframes duelo-brilho {
   50% {
     box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #07101a, 0 0 1.625rem 0.4375rem rgba(90, 180, 255, 0.95);
+  }
+}
+@keyframes duelo-brilho-ia {
+  50% {
+    filter: brightness(1.3);
+    box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #07101a, 0 0 1.75rem 0.5rem rgba(255, 106, 30, 1);
+  }
+}
+@keyframes duelo-seta-energia {
+  to {
+    stroke-dashoffset: -20;
   }
 }
 @keyframes duelo-vida-dano {
@@ -1826,6 +1893,7 @@ button.carta {
 
 @media (prefers-reduced-motion: reduce) {
   .carta--alvo,
+  .carta--valida,
   .carta--selecionada,
   .carta--fx-entrando,
   .carta--fx-atacando,
@@ -1837,7 +1905,10 @@ button.carta {
   .duelo-vida__delta,
   .duelo-turno--mudou,
   .duelo-mao__item,
-  .duelo-inspecao {
+  .duelo-inspecao,
+  .duelo-seta-ataque__trilha,
+  .duelo-atacante-ia .carta,
+  .duelo-alvo-ataque--sobre .carta {
     animation: none;
   }
   .carta--selecionada {

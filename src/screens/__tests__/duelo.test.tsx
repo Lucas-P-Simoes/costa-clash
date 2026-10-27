@@ -15,6 +15,7 @@ import { cenario } from '../../game/__tests__/util'
 import type { ConfigCenario } from '../../game/__tests__/util'
 import { Partida } from '../duelo/Partida'
 import { TelaDuelo } from '../duelo/TelaDuelo'
+import { arrastarAtaque } from './ajudanteAtaque'
 
 afterEach(() => {
   cleanup()
@@ -174,31 +175,26 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
 
   it('ataque: escolhe atacante e alvo, aplica dano e mostra vida atualizada', () => {
     montarCenario({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'], mao: ['CC-001'] } })
-    fireEvent.click(botao(/^Atacar/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido.*/ })) // sem atacante ainda
-    expect(aviso()).toContain('atacante')
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido.*alvo válido/ }))
+    const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })
+    const alvo = screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ })
+    arrastarAtaque(atacante, alvo)
     expect(screen.getByLabelText('Vida do oponente: 7600')).toBeTruthy()
     expect(screen.queryByRole('button', { name: /Zona 1 do oponente/ })).toBeNull() // zona esvaziada
   })
 
   it('ataque direto só aparece quando o oponente não tem unidades', () => {
     montarCenario({ jogadaFeita: true, humano: { campo: ['CC-003'] } })
-    fireEvent.click(botao(/^Atacar/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }))
-    fireEvent.click(botao(/Ataque direto/))
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }), screen.getByLabelText('Vida do oponente: 8000'))
     expect(screen.getByLabelText('Vida do oponente: 6400')).toBeTruthy()
   })
 
-  it('ATACAR no primeiro turno e antes da jogada da mão mostra o motivo, sem alterar nada', () => {
+  it('sem botão ATACAR, unidades ilegais não iniciam a seta no primeiro turno nem antes da jogada', () => {
     montarCenario({ turno: 1, humano: { mao: ['CC-001'], campo: ['CC-003'] } })
-    fireEvent.click(botao(/^Atacar/))
-    expect(aviso()).toContain('primeiro turno')
+    expect(document.getElementById('b-atacar')).toBeNull()
+    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }).className).not.toContain('carta--arrastavel')
     cleanup()
     montarCenario({ humano: { mao: ['CC-001'], campo: ['CC-003'] } })
-    fireEvent.click(botao(/^Atacar/))
-    expect(aviso()).toContain('jogada da mão')
+    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }).className).not.toContain('carta--arrastavel')
     expect(screen.getByLabelText('Vida do oponente: 8000')).toBeTruthy()
   })
 
@@ -275,9 +271,7 @@ describe('Partida: informação oculta', () => {
     expect(container.innerHTML).not.toContain('Derramamento de Óleo')
     const oculta = screen.getByRole('button', { name: /Zona 1 do oponente: unidade virada para baixo, em ataque/ })
     expect(oculta.className).toContain('carta--verso')
-    fireEvent.click(botao(/^Atacar/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Manguezal Protegido.*pode atacar/ }))
-    fireEvent.click(screen.getByRole('button', { name: /unidade virada para baixo.*alvo válido/ }))
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Manguezal Protegido.*pode atacar/ }), oculta)
     expect(screen.getByRole('button', { name: /Zona 1 do oponente: Derramamento de Óleo, ATK 2200, DEF 700/ })).toBeTruthy()
     expect(screen.getByLabelText('Sua vida: 7000')).toBeTruthy()
   })
@@ -337,9 +331,7 @@ describe('Partida: desistência, resultado e jogar novamente', () => {
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia|Zona 2 sua: vazia/ }))
     confirmarFaceParaCima()
-    fireEvent.click(botao(/^Atacar/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Derramamento de Óleo.*pode atacar/ }))
-    fireEvent.click(botao(/Ataque direto/))
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Derramamento de Óleo.*pode atacar/ }), screen.getByLabelText('Vida do oponente: 1000'))
     const d = screen.getByRole('dialog')
     expect(within(d).getByRole('heading', { name: 'Vitória' })).toBeTruthy()
     expect(d.textContent).toContain('chegou a zero')

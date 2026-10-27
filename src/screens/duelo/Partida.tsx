@@ -10,12 +10,13 @@ import { IconeEscudo, IconeRelogioPixel } from '../../components/duelo/iconesDue
 import { InspecaoCarta } from '../../components/duelo/InspecaoCarta'
 import type { FonteInspecao } from '../../components/duelo/InspecaoCarta'
 import { PainelJogador } from '../../components/duelo/PainelJogador'
+import { SetaAtaque } from '../../components/duelo/SetaAtaque'
 import { chaveZona, useEfeitosVisuais } from '../../components/duelo/efeitosVisuais'
 import { calcularEstiloLeque } from '../../components/duelo/geometriaCartas'
 import { resolverConteudoInspecao } from '../../components/duelo/resolverInspecao'
 import { useFocoDialogo } from '../../components/duelo/useFocoDialogo'
 import { descricaoCarta } from '../../components/duelo/textoCarta'
-import { IconeCartas, IconeEspadas } from '../../components/ui/Icones'
+import { IconeCartas } from '../../components/ui/Icones'
 import { MolduraOrnamentada } from '../../components/ui/MolduraOrnamentada'
 import { CATALOGO } from '../../data/catalogo'
 import type { Oponente } from '../../data/oponentes'
@@ -32,14 +33,36 @@ import {
   validarJogarCarta,
   visaoParaJogador,
 } from '../../game'
-import type { Comando, ComandoJogarCarta, EstadoDuelo, IdJogador, PassoIA, Posicao, UnidadeEmCampo, VisaoDuelo } from '../../game'
+import type { Comando, ComandoAtacar, ComandoJogarCarta, EstadoDuelo, Evento, IdJogador, PassoIA, Posicao, UnidadeEmCampo, VisaoDuelo } from '../../game'
 import { estadoDeVisao } from '../../game/visao'
 import { ResultadoDuelo } from './ResultadoDuelo'
 import './duelo.css'
 
 const cat = mapaCatalogo(CATALOGO)
 
-type Modo = null | { tipo: 'zona' } | { tipo: 'alvo'; alvos: number[]; dono: IdJogador } | { tipo: 'atacar'; atacante?: number }
+type Modo = null | { tipo: 'zona' } | { tipo: 'alvo'; alvos: number[]; dono: IdJogador }
+interface Ponto {
+  x: number
+  y: number
+}
+interface SetaVisual {
+  origem: Ponto
+  destino: Ponto
+  lado: IdJogador
+  atacante: number
+  alvo: number | 'direto' | null
+}
+interface AtaquePointer {
+  id: number
+  atacante: number
+  origem: Ponto
+  base: EstadoDuelo
+  /** Revisão do estado real quando o gesto começou; impede aplicar fotografias antigas. */
+  revisao: number
+  opcoes: ComandoAtacar[]
+  moveu: boolean
+  alvo: number | 'direto' | null
+}
 interface Aviso {
   /** Turno em que o aviso foi dado: outro turno = aviso vencido (não é mostrado). */
   turno: number
@@ -142,6 +165,10 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const [colocacaoPendente, setColocacaoPendente] = useState<ComandoJogarCarta | null>(null)
   const [foco, setFoco] = useState<string | null>(null)
   const [gatilhosInspecao, setGatilhosInspecao] = useState<GatilhosInspecao>(SEM_GATILHOS_INSPECAO)
+  const [setaHumana, setSetaHumana] = useState<SetaVisual | null>(null)
+  const [setaIA, setSetaIA] = useState<SetaVisual | null>(null)
+  const ataquePointerRef = useRef<AtaquePointer | null>(null)
+  const revisaoEstadoRef = useRef(0)
   const inspecao = inspecaoPrioritaria(gatilhosInspecao)
   const temInspecao = inspecao !== null
   const timers = useRef<number[]>([])
@@ -155,6 +182,103 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     return () => t.forEach((x) => window.clearTimeout(x))
   }, [])
 
+  // ---------------------------------------------------------------- seta de ataque (Pointer Events)
+  const ouvintesAtaque = useRef({
+    mover: (e: PointerEvent) => apiAtaque.current.mover(e),
+    soltar: (e: PointerEvent) => apiAtaque.current.soltar(e),
+    cancelar: () => apiAtaque.current.cancelar(),
+  })
+  const apiAtaque = useRef<{ mover: (e: PointerEvent) => void; soltar: (e: PointerEvent) => void; cancelar: () => void }>({
+    mover: () => {},
+    soltar: () => {},
+    cancelar: () => {},
+  })
+  const enviarAtaqueRef = useRef<(base: EstadoDuelo, cmd: ComandoAtacar) => void>(() => {})
+
+  function pararOuvintesAtaque() {
+    window.removeEventListener('pointermove', ouvintesAtaque.current.mover)
+    window.removeEventListener('pointerup', ouvintesAtaque.current.soltar)
+    window.removeEventListener('pointercancel', ouvintesAtaque.current.cancelar)
+  }
+
+  function cancelarAtaquePointer() {
+    pararOuvintesAtaque()
+    ataquePointerRef.current = null
+    setSetaHumana(null)
+  }
+
+  /** Toda adoção de um novo estado invalida primeiro gestos iniciados na fotografia anterior. */
+  function adotarEstado(proximo: EstadoDuelo) {
+    cancelarAtaquePointer()
+    revisaoEstadoRef.current += 1
+    setEstado(proximo)
+  }
+
+  function alvoAtaqueSob(x: number, y: number, opcoes: readonly ComandoAtacar[]): number | 'direto' | null {
+    const el = typeof document.elementFromPoint === 'function' ? document.elementFromPoint(x, y) : null
+    const valor = el?.closest<HTMLElement>('[data-alvo-ataque]')?.dataset.alvoAtaque
+    const alvo: number | 'direto' | null = valor === 'direto' ? 'direto' : valor?.startsWith('unidade:') ? Number(valor.slice(8)) : null
+    return alvo !== null && opcoes.some((cmd) => cmd.alvo === alvo) ? alvo : null
+  }
+
+  function iniciarAtaquePointer(zona: number, e: ReactPointerEvent<HTMLButtonElement>) {
+    if ((e.pointerType === 'mouse' && e.button !== 0) || e.isPrimary === false) return
+    const opcoes = ataques.filter((cmd) => cmd.atacante === zona)
+    if (opcoes.length === 0) return
+    e.preventDefault()
+    cancelarAtaquePointer()
+    setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
+    const r = e.currentTarget.getBoundingClientRect()
+    const origem = { x: r.left + r.width / 2, y: r.top + r.height / 2 }
+    const a: AtaquePointer = {
+      id: e.pointerId,
+      atacante: zona,
+      origem,
+      base: estadoParaAtaque,
+      revisao: revisaoEstadoRef.current,
+      opcoes,
+      moveu: false,
+      alvo: null,
+    }
+    ataquePointerRef.current = a
+    setSel({ unidade: zona })
+    setModo(null)
+    setAviso(null)
+    setSetaHumana({ origem, destino: { x: e.clientX, y: e.clientY }, lado: 'humano', atacante: zona, alvo: null })
+    window.addEventListener('pointermove', ouvintesAtaque.current.mover)
+    window.addEventListener('pointerup', ouvintesAtaque.current.soltar)
+    window.addEventListener('pointercancel', ouvintesAtaque.current.cancelar)
+  }
+
+  function moverAtaquePointer(e: PointerEvent) {
+    const a = ataquePointerRef.current
+    if (!a || e.pointerId !== a.id) return
+    if (e.cancelable) e.preventDefault()
+    if (Math.hypot(e.clientX - a.origem.x, e.clientY - a.origem.y) > 5) a.moveu = true
+    a.alvo = alvoAtaqueSob(e.clientX, e.clientY, a.opcoes)
+    setSetaHumana({ origem: a.origem, destino: { x: e.clientX, y: e.clientY }, lado: 'humano', atacante: a.atacante, alvo: a.alvo })
+  }
+
+  function soltarAtaquePointer(e: PointerEvent) {
+    const a = ataquePointerRef.current
+    if (!a || e.pointerId !== a.id) return
+    pararOuvintesAtaque()
+    ataquePointerRef.current = null
+    setSetaHumana(null)
+    if (!a.moveu) return
+    if (a.revisao !== revisaoEstadoRef.current) return
+    const alvo = alvoAtaqueSob(e.clientX, e.clientY, a.opcoes)
+    if (alvo === null) {
+      setAviso({ texto: 'Ataque cancelado: solte a seta sobre um alvo válido.', erro: true, turno: a.base.turno })
+      return
+    }
+    enviarAtaqueRef.current(a.base, { tipo: 'atacar', jogador: 'humano', atacante: a.atacante, alvo })
+  }
+
+  useEffect(() => {
+    apiAtaque.current = { mover: moverAtaquePointer, soltar: soltarAtaquePointer, cancelar: cancelarAtaquePointer }
+  })
+
   // Fim de duelo encerra qualquer modo guiado (o botão não pode ficar em "cancelar ataque" atrás do diálogo).
   const modo = estado.resultado ? null : modoRaw
   const v: VisaoDuelo = useMemo(() => visaoParaJogador(estado, 'humano'), [estado])
@@ -163,12 +287,22 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   // Aviso/motivo antigo não atravessa a troca de turno (ex.: "Aguarde a sua vez." no início do turno seguinte).
   const aviso = avisoBruto && avisoBruto.turno === estado.turno ? avisoBruto : null
   const minhaVez = estado.ativo === 'humano' && !estado.resultado && !reproduzindo
-  const legais = useMemo(() => (minhaVez ? jogadasLegais(estado) : []), [estado, minhaVez])
-  const ataques = useMemo(() => (minhaVez && estado.fase === 'COMBATE' ? ataquesLegais(estado) : []), [estado, minhaVez])
   const mao = v.eu.mao
   const cartaSel = sel.mao ? cat.get(mao.find((c) => c.uid === sel.mao)?.cartaId ?? '') : undefined
   const podeSeguir = estado.jogadaFeita || mao.length === 0
+  const legais = useMemo(() => (minhaVez ? jogadasLegais(estado) : []), [estado, minhaVez])
   const soDescarte = legais.length > 0 && legais.every((c) => c.tipo === 'descartar')
+  // O gesto pode começar ainda na fase principal depois da jogada obrigatória. A
+  // transição para COMBATE é preparada pelo próprio motor e só é adotada quando
+  // o jogador inicia a seta.
+  const estadoParaAtaque = (() => {
+    if (!minhaVez || estado.turno === 1) return estado
+    if (estado.fase === 'COMBATE') return estado
+    if (estado.fase !== 'PRINCIPAL' || !podeSeguir) return estado
+    const r = aplicarComando(estado, { tipo: 'avancarFase', jogador: 'humano' })
+    return r.ok ? r.estado : estado
+  })()
+  const ataques = minhaVez ? ataquesLegais(estadoParaAtaque) : []
 
   function dizer(texto: string, erro = false) {
     setAviso({ texto, erro, turno: estado.turno })
@@ -179,6 +313,24 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     timers.current.forEach((x) => window.clearTimeout(x))
     timers.current = []
     setReproduzindo(false)
+    setSetaIA(null)
+  }
+
+  function centroDoElemento(seletor: string): Ponto | null {
+    const el = document.querySelector<HTMLElement>(seletor)
+    if (!el) return null
+    const r = el.getBoundingClientRect()
+    return { x: r.left + r.width / 2, y: r.top + r.height / 2 }
+  }
+
+  function setaDeEventoIA(ev: Extract<Evento, { tipo: 'ataque_declarado' }>): SetaVisual | null {
+    const defensor = ev.jogador === 'humano' ? 'oponente' : 'humano'
+    const origem = centroDoElemento(`[data-zona-unidade="${ev.jogador}:${ev.atacante}"] .carta`)
+    const destino =
+      ev.alvo === 'direto'
+        ? centroDoElemento(`[data-alvo-vida="${defensor}"]`)
+        : centroDoElemento(`[data-zona-unidade="${defensor}:${ev.alvo}"] .carta`)
+    return origem && destino ? { origem, destino, lado: ev.jogador, atacante: ev.atacante, alvo: ev.alvo } : null
   }
 
   function reproduzir(passos: PassoIA[]) {
@@ -187,14 +339,24 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     finalIA.current = ultimo.estado
     pedidoFoco.current = '.duelo-mao__cartas button'
     if (atrasoIA <= 0) {
-      setEstado(ultimo.estado)
+      adotarEstado(ultimo.estado)
       return
     }
     setReproduzindo(true)
     passos.forEach((p, i) => {
+      const ataque = p.eventos.find((ev): ev is Extract<Evento, { tipo: 'ataque_declarado' }> => ev.tipo === 'ataque_declarado')
+      if (ataque) {
+        timers.current.push(
+          window.setTimeout(() => {
+            const seta = setaDeEventoIA(ataque)
+            if (seta) setSetaIA(seta)
+          }, atrasoIA * (i + 0.25)),
+        )
+      }
       timers.current.push(
         window.setTimeout(() => {
-          setEstado(p.estado)
+          setSetaIA(null)
+          adotarEstado(p.estado)
           if (i === passos.length - 1) {
             setReproduzindo(false)
             pedidoFoco.current = '.duelo-mao__cartas button'
@@ -214,11 +376,11 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     setModo(null)
     setAviso(null)
     setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
-    setEstado(r.estado) // se a IA já tinha encerrado a partida, `base` (com resultado) é mantido
+    adotarEstado(r.estado) // se a IA já tinha encerrado a partida, `base` (com resultado) é mantido
   }
 
-  function enviar(cmd: Comando): boolean {
-    const r = aplicarComando(estado, cmd)
+  function enviarDoEstado(base: EstadoDuelo, cmd: Comando): boolean {
+    const r = aplicarComando(base, cmd)
     if (!r.ok) {
       dizer(r.erro, true)
       return false
@@ -228,7 +390,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     setModo(null)
     setFoco(null)
     setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
-    setEstado(r.estado)
+    adotarEstado(r.estado)
     pedidoFoco.current = cmd.tipo === 'atacar' || cmd.tipo === 'avancarFase' ? null : '#b-encerrar'
     if (!r.estado.resultado && r.estado.ativo === 'oponente') {
       pedidoFoco.current = null
@@ -238,6 +400,14 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     }
     return true
   }
+
+  function enviar(cmd: Comando): boolean {
+    return enviarDoEstado(estado, cmd)
+  }
+
+  useEffect(() => {
+    enviarAtaqueRef.current = enviarDoEstado
+  })
 
   /** Única entrada da UI para colocar unidade: clique/teclado e arrasto passam pela mesma escolha de face. */
   function enviarOuEscolherFace(cmd: Comando): boolean {
@@ -265,17 +435,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     return validarJogarCarta(estado, cat, { tipo: 'jogarCarta', jogador: 'humano', uid }) ?? 'Esta carta não pode ser jogada agora.'
   }
   const motivoUsar = () => motivoUsarDe(sel.mao)
-
-  function motivoAtacar(): string | null {
-    if (!minhaVez) return 'Aguarde a sua vez.'
-    if (estado.turno === 1) return 'No primeiro turno da partida ninguém pode atacar.'
-    if (estado.fase === 'PRINCIPAL' && !podeSeguir) return soDescarte ? 'Descarte uma carta antes de atacar.' : 'Faça a jogada da mão antes de atacar.'
-    const unidades = v.eu.campo.filter((u): u is UnidadeEmCampo => !!u)
-    if (unidades.length === 0) return 'Você não tem unidades em campo.'
-    if (!unidades.some((u) => u.posicao === 'ATAQUE')) return 'Nenhuma unidade está em posição de ataque.'
-    if (unidades.every((u) => u.atacou || u.posicao !== 'ATAQUE')) return 'Todas as unidades em ataque já atacaram neste turno.'
-    return null
-  }
 
   function motivoDefender(): string | null {
     if (!minhaVez) return 'Aguarde a sua vez.'
@@ -311,19 +470,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       pedidoFoco.current = '[data-foco="alvo"]'
       dizer('Escolha a unidade alvo (destacada).')
     } else enviar({ tipo: 'jogarCarta', jogador: 'humano', uid: sel.mao as string })
-  }
-
-  function atacar() {
-    const m = motivoAtacar()
-    if (m) return dizer(m, true)
-    if (modo?.tipo === 'atacar') {
-      setModo(null)
-      return dizer('Ataque cancelado.')
-    }
-    if (estado.fase === 'PRINCIPAL' && !enviar({ tipo: 'avancarFase', jogador: 'humano' })) return
-    setModo({ tipo: 'atacar' })
-    pedidoFoco.current = '[data-foco="alvo"]'
-    dizer('Escolha uma unidade sua em ataque e depois o alvo.')
   }
 
   function defender() {
@@ -368,23 +514,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       else dizer('Esta unidade não é um alvo válido para a carta.', true)
       return
     }
-    if (modo?.tipo === 'atacar') {
-      if (lado === 'humano') {
-        if (ataques.some((a) => a.atacante === z)) {
-          setModo({ tipo: 'atacar', atacante: z })
-          setSel({ unidade: z })
-          pedidoFoco.current = '[data-foco="alvo"]'
-          dizer('Escolha o alvo do ataque.')
-        } else dizer('Esta unidade não pode atacar agora (em defesa, já atacou ou vazia).', true)
-      } else if (modo.atacante !== undefined) {
-        const ok = enviar({ tipo: 'atacar', jogador: 'humano', atacante: modo.atacante, alvo: z })
-        if (ok) {
-          setModo({ tipo: 'atacar' })
-          pedidoFoco.current = '[data-foco="alvo"], #b-encerrar'
-        }
-      } else dizer('Escolha primeiro a unidade atacante.', true)
-      return
-    }
     if (u && !('oculta' in u && u.oculta)) {
       setFoco(u.cartaId)
       if (lado === 'humano') setSel({ unidade: z })
@@ -398,16 +527,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       return
     }
     if (s && !('oculta' in s && s.oculta)) setFoco((s as { cartaId: string }).cartaId)
-  }
-
-  function ataqueDireto() {
-    if (modo?.tipo === 'atacar' && modo.atacante !== undefined) {
-      const ok = enviar({ tipo: 'atacar', jogador: 'humano', atacante: modo.atacante, alvo: 'direto' })
-      if (ok) {
-        setModo({ tipo: 'atacar' })
-        pedidoFoco.current = '[data-foco="alvo"], #b-encerrar'
-      }
-    }
   }
 
   // ---------------------------------------------------------------- arrastar a carta da mão até o campo (Pointer Events)
@@ -706,6 +825,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     () => () => {
       limparTimerArrasto()
       pararOuvintes()
+      pararOuvintesAtaque()
       pararDeEngolirClique()
     },
     [], // eslint-disable-line react-hooks/exhaustive-deps
@@ -732,7 +852,10 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   useEffect(() => {
     const aoTeclar = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
-      if (temInspecao) setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
+      if (ataquePointerRef.current) {
+        cancelarAtaquePointer()
+        setAviso({ texto: 'Ataque cancelado.', erro: false, turno: estado.turno })
+      } else if (temInspecao) setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
       else if (arrRef.current) cancelarArrasto() // arrasto em curso: Esc só cancela o arrasto
       else if (estado.resultado && !reproduzindo) onVoltar()
       else if (colocacaoPendente) setColocacaoPendente(null)
@@ -744,15 +867,16 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     }
     window.addEventListener('keydown', aoTeclar)
     return () => window.removeEventListener('keydown', aoTeclar)
-  }, [estado.resultado, reproduzindo, colocacaoPendente, confirma, modo, onVoltar, temInspecao])
+  }, [estado.resultado, estado.turno, reproduzindo, colocacaoPendente, confirma, modo, onVoltar, temInspecao])
 
   // ---------------------------------------------------------------- derivados de apresentação
   const efet = (dono: IdJogador, u: UnidadeEmCampo) => ({ atk: atkEfetivo(plano, dono, u, cat), def: defEfetiva(plano, dono, u, cat) })
   const conteudoInspecaoAtual = inspecao ? resolverConteudoInspecao(inspecao.chave, v, plano) : null
   const fonteInspecaoAtual: FonteInspecao | null = inspecao ? { ...inspecao, conteudo: conteudoInspecaoAtual ?? { oculta: true } } : null
-  const atacanteAtual = modo?.tipo === 'atacar' ? modo.atacante : undefined
-  const alvosAtaque = ataques.filter((a) => a.atacante === atacanteAtual)
+  const atacanteAtual = setaHumana?.atacante
+  const alvosAtaque = atacanteAtual === undefined ? [] : ataques.filter((a) => a.atacante === atacanteAtual)
   const podeDireto = alvosAtaque.some((a) => a.alvo === 'direto')
+  const setaAtiva = setaHumana ?? setaIA
   const ultimaJogada = [...log].reverse().find((e) => e.tipo === 'carta_jogada' && e.carta.cartaId !== '?')
   const dicaCartaId = cartaSel?.id ?? foco ?? (ultimaJogada && ultimaJogada.tipo === 'carta_jogada' ? ultimaJogada.carta.cartaId : undefined)
   const dicaCarta = dicaCartaId ? cat.get(dicaCartaId) : undefined
@@ -786,11 +910,16 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const keyDestino = (u ? 'unidade:' : 'zona:') + lado + ':' + z
     const drop = classeDrop(keyDestino)
     const dropAttr = drop ? ({ 'aria-dropeffect': 'move' } as const) : {}
-    const alvoValido =
-      (modo?.tipo === 'alvo' && modo.dono === lado && modo.alvos.includes(z)) ||
-      (modo?.tipo === 'atacar' && lado === 'oponente' && alvosAtaque.some((a) => a.alvo === z))
+    const alvoAtaqueHumano = !!setaHumana && lado === 'oponente' && alvosAtaque.some((a) => a.alvo === z)
+    const alvoAtaqueIA = !!setaIA && lado === 'humano' && setaIA.alvo === z
+    const alvoValido = (modo?.tipo === 'alvo' && modo.dono === lado && modo.alvos.includes(z)) || alvoAtaqueHumano || alvoAtaqueIA
     const livreEscolha = modo?.tipo === 'zona' && lado === 'humano' && cartaSel?.tipo === 'unidade' && !u
-    const atacantePossivel = modo?.tipo === 'atacar' && lado === 'humano' && ataques.some((a) => a.atacante === z)
+    const atacantePossivel = lado === 'humano' && ataques.some((a) => a.atacante === z)
+    const atacanteIA = !!setaIA && lado === 'oponente' && setaIA.atacante === z
+    const sobreAtaque = !!setaHumana && lado === 'oponente' && setaHumana.alvo === z
+    const proibidoAtaque =
+      !!setaHumana && !!u && ((lado === 'oponente' && !alvoAtaqueHumano) || (lado === 'humano' && z !== setaHumana.atacante))
+    const classeAtaque = `${alvoAtaqueHumano ? ' duelo-alvo-ataque--valido' : ''}${sobreAtaque ? ' duelo-alvo-ataque--sobre' : ''}${alvoAtaqueIA ? ' duelo-alvo-ataque--ia' : ''}${proibidoAtaque ? ' duelo-alvo-ataque--invalido' : ''}${atacanteIA ? ' duelo-atacante-ia' : ''}`
     if (!u) {
       const rot = `Zona ${z + 1} ${quem}: vazia, escolher esta zona`
       if (livreEscolha) {
@@ -820,7 +949,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
         alvoValido ? ', alvo válido' : ''
       }`
       return (
-        <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
+        <div key={z} className={'zona' + drop + classeAtaque} data-destino={keyDestino} data-zona-unidade={`${lado}:${z}`} data-alvo-ataque={lado === 'oponente' ? `unidade:${z}` : undefined} {...dropAttr}>
           <span className="carta-inspecionavel" {...eventosInspecao(chaveInspecao)}>
             <CartaVerso
               tamanho="campo"
@@ -829,6 +958,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               focoAlvo={alvoValido}
               rotulo={rot}
               onClick={() => cliqueUnidade(lado, z)}
+              onPointerDown={lado === 'humano' && atacantePossivel ? (e) => iniciarAtaquePointer(z, e) : undefined}
             />
           </span>
         </div>
@@ -844,7 +974,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const chaveInspecao = `unidade:${lado}:${z}`
     if (unidade.viradaParaBaixo) {
       return (
-        <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
+        <div key={z} className={'zona' + drop + classeAtaque} data-destino={keyDestino} data-zona-unidade={`${lado}:${z}`} data-alvo-ataque={lado === 'oponente' ? `unidade:${z}` : undefined} {...dropAttr}>
           <span className="carta-inspecionavel" {...eventosInspecao(chaveInspecao)}>
             <CartaVerso
               tamanho="campo"
@@ -854,13 +984,14 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               focoAlvo={alvoValido || atacantePossivel}
               rotulo={`${rot}, virada para baixo`}
               onClick={() => cliqueUnidade(lado, z)}
+              onPointerDown={lado === 'humano' && atacantePossivel ? (e) => iniciarAtaquePointer(z, e) : undefined}
             />
           </span>
         </div>
       )
     }
     return (
-      <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
+      <div key={z} className={'zona' + drop + classeAtaque} data-destino={keyDestino} data-zona-unidade={`${lado}:${z}`} data-alvo-ataque={lado === 'oponente' ? `unidade:${z}` : undefined} {...dropAttr}>
         <span className="carta-inspecionavel" {...eventosInspecao(chaveInspecao)}>
           <CartaView
             carta={c}
@@ -875,6 +1006,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
             lado={lado}
             rotulo={rot}
             onClick={() => cliqueUnidade(lado, z)}
+            onPointerDown={lado === 'humano' && atacantePossivel ? (e) => iniciarAtaquePointer(z, e) : undefined}
           />
         </span>
       </div>
@@ -948,7 +1080,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   }
 
   return (
-    <div className={`tela tela-partida${aviso?.texto ? ' tela-partida--aviso' : ''}${arr ? ' tela-partida--arrastando' : ''}`}>
+    <div className={`tela tela-partida${aviso?.texto ? ' tela-partida--aviso' : ''}${arr ? ' tela-partida--arrastando' : ''}${setaAtiva ? ' tela-partida--mirando' : ''}`}>
       <div className="duelo-fundo" inert={dialogoAberto}>
         <CabecalhoDuelo />
         <h1 className="sr-only">Duelo contra {oponente.nome}</h1>
@@ -969,6 +1101,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               zonas={[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('oponente', z))}
               suportes={[0, 1, 2, 3, 4].map((z) => renderSuporte('oponente', z))}
               vidaFx={{ dano: fx.dano.oponente, cura: fx.cura.oponente }}
+              alvoVida={podeDireto ? 'direto' : undefined}
+              vidaDestacada={podeDireto || (!!setaHumana && setaHumana.alvo === 'direto')}
               maoOponente={
                 <div className="duelo-mao-oponente" role="group" aria-label={`Mão do oponente: ${v.oponente.maoTamanho} cartas`}>
                   {Array.from({ length: v.oponente.maoTamanho }, (_, i) => (
@@ -977,16 +1111,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
                     </span>
                   ))}
                 </div>
-              }
-              acao={
-                podeDireto ? (
-                  <button type="button" className="duelo-btn duelo-btn--atacar duelo-direto" data-foco="alvo" onClick={ataqueDireto}>
-                    <span className="duelo-btn__texto">
-                      <strong>Ataque direto</strong>
-                      <small>O oponente não tem unidades</small>
-                    </span>
-                  </button>
-                ) : null
               }
             />
 
@@ -1006,6 +1130,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               zonas={[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('humano', z))}
               suportes={[0, 1, 2, 3, 4].map((z) => renderSuporte('humano', z))}
               vidaFx={{ dano: fx.dano.humano, cura: fx.cura.humano }}
+              vidaDestacada={!!setaIA && setaIA.alvo === 'direto'}
               drop={validos.has('campo')}
               dataDestino="campo"
             />
@@ -1059,7 +1184,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               <BannerTurno rodada={Math.ceil(estado.turno / 2)} texto={bannerTexto} fase={faseTxt} meuTurno={bannerTexto === 'Seu turno'} mudou={fx.turnoMudou} />
 
               <div className="duelo-acoes">
-                <BotaoAcao id="b-atacar" variante="atacar" titulo={modo?.tipo === 'atacar' ? 'Cancelar ataque' : 'Atacar'} sub="Ataca uma carta do oponente" motivo={modo?.tipo === 'atacar' ? null : motivoAtacar()} onClick={atacar} icone={<IconeEspadas />} />
                 <BotaoAcao
                   id="b-defender"
                   variante="defender"
@@ -1119,7 +1243,9 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
         </main>
       </div>
 
-      {fonteInspecaoAtual && !dialogoAberto && !arr ? (
+      {setaAtiva ? <SetaAtaque origem={setaAtiva.origem} destino={setaAtiva.destino} lado={setaAtiva.lado} /> : null}
+
+      {fonteInspecaoAtual && !dialogoAberto && !arr && !setaAtiva ? (
         <InspecaoCarta
           fonte={fonteInspecaoAtual}
           toque={fonteInspecaoAtual.gatilho === 'toque'}

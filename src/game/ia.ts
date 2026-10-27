@@ -3,8 +3,8 @@
 import { CATALOGO } from '../data/catalogo'
 import { atkEfetivo, bonusTerreno, defEfetiva } from './combate'
 import { analisarAcao } from './efeitos'
-import { listarJogadas } from './acoes'
-import type { Comando, ComandoJogarCarta } from './acoes'
+import { ataquesLegais, listarJogadas, simularAtaque } from './acoes'
+import type { Comando, ComandoAtacar, ComandoJogarCarta } from './acoes'
 import { mapaCatalogo, outro } from './estado'
 import type { Catalogo, EstadoDuelo, IdJogador, Posicao } from './estado'
 import { estadoDeVisao } from './visao'
@@ -164,42 +164,166 @@ function ajustarPosicao(e: EstadoDuelo, cat: Catalogo, eu: IdJogador): Comando |
   return null
 }
 
-function escolherAtaque(e: EstadoDuelo, cat: Catalogo, eu: IdJogador): Comando | null {
-  if (e.turno === 1) return null
-  const inim = inimigos(e, eu, cat)
-  const campo = e.jogadores[eu].campo
-  let melhor: { cmd: Comando; score: number; cartaId: string; zona: number; alvo: number } | null = null
-  for (let zona = 0; zona < campo.length; zona++) {
-    const u = campo[zona]
-    if (!u || u.posicao !== 'ATAQUE' || u.atacou) continue
-    const atk = atkEfetivo(e, eu, u, cat)
-    const opcoes: { alvo: number | 'direto'; score: number }[] = []
-    if (inim.length === 0) opcoes.push({ alvo: 'direto', score: 100000 + atk })
-    for (const t of inim) {
-      // Política sem trapaça: alvos ocultos têm risco desconhecido. A IA prefere qualquer vitória conhecida;
-      // se não houver, ainda pode atacar um oculto com seu atacante mais forte (desempate pela menor zona).
-      if (t.oculta) {
-        opcoes.push({ alvo: t.zona, score: 1000 + atk })
-        continue
+export interface PesosAtaqueIA {
+  vitoriaImediata: number
+  danoCausado: number
+  danoSofrido: number
+  unidadeInimigaDestruida: number
+  ameacaRemovida: number
+  unidadePropriaPerdida: number
+  valorAtacantePerdido: number
+  riscoAlvoOculto: number
+  fatorFuturo: number
+  profundidadeMaxima: number
+}
+
+/** Pesos ficam concentrados e podem ser substituídos em testes/níveis futuros. */
+export const PESOS_ATAQUE_IA: Readonly<PesosAtaqueIA> = {
+  vitoriaImediata: 1_000_000,
+  danoCausado: 2,
+  danoSofrido: 3,
+  unidadeInimigaDestruida: 3_000,
+  ameacaRemovida: 10,
+  unidadePropriaPerdida: 8_000,
+  valorAtacantePerdido: 5,
+  riscoAlvoOculto: 250,
+  fatorFuturo: 0.9,
+  profundidadeMaxima: 3,
+}
+
+export interface AvaliacaoAtaque {
+  comando: ComandoAtacar
+  score: number
+  motivo: string
+  estadoSimulado: EstadoDuelo | null
+}
+
+function valorUnidade(e: EstadoDuelo, dono: IdJogador, zona: number, cat: Catalogo): number {
+  const u = e.jogadores[dono].campo[zona]
+  return u ? atkEfetivo(e, dono, u, cat) + defEfetiva(e, dono, u, cat) : 0
+}
+
+function avaliarAtaqueComCatalogo(
+  estado: EstadoDuelo,
+  comando: ComandoAtacar,
+  catalogo: readonly Carta[],
+  cat: Catalogo,
+  pesos: Readonly<PesosAtaqueIA>,
+  legalidadeConhecida: boolean,
+): AvaliacaoAtaque {
+  const eu = comando.jogador
+  const adv = outro(eu)
+  const atacante = estado.jogadores[eu].campo[comando.atacante]
+  if (!atacante || (!legalidadeConhecida && !ataquesLegais(estado).some((c) => c.atacante === comando.atacante && c.alvo === comando.alvo))) {
+    return { comando, score: Number.NEGATIVE_INFINITY, motivo: 'Ataque ilegal.', estadoSimulado: null }
+  }
+
+  if (comando.alvo !== 'direto') {
+    const alvo = estado.jogadores[adv].campo[comando.alvo]
+    // O marcador '?' vem de estadoDeVisao: jamais simular como se seus atributos fossem zero.
+    if (alvo?.cartaId === '?' || alvo?.viradaParaBaixo) {
+      const forcaPublica = atkEfetivo(estado, eu, atacante, cat)
+      return {
+        comando,
+        score: forcaPublica / 5 - pesos.riscoAlvoOculto,
+        motivo: 'Assume risco contra uma unidade de atributos ocultos.',
+        estadoSimulado: null,
       }
-      if (t.posicao === 'ATAQUE') {
-        if (atk > (t.atk as number)) opcoes.push({ alvo: t.zona, score: 10000 + 2 * (t.atk as number) + (atk - (t.atk as number)) })
-      } else if (atk > (t.def as number)) {
-        opcoes.push({ alvo: t.zona, score: 5000 + (t.atk as number) })
-      }
-      // nunca ataca quando o resultado é dano ao próprio LP, empate de destruição ou nada
-    }
-    for (const o of opcoes) {
-      const alvoN = o.alvo === 'direto' ? -1 : o.alvo
-      const m = melhor
-      const melhorQue =
-        !m ||
-        o.score > m.score ||
-        (o.score === m.score && (u.cartaId < m.cartaId || (u.cartaId === m.cartaId && (zona < m.zona || (zona === m.zona && alvoN < m.alvo)))))
-      if (melhorQue) melhor = { cmd: { tipo: 'atacar', jogador: eu, atacante: zona, alvo: o.alvo }, score: o.score, cartaId: u.cartaId, zona, alvo: alvoN }
     }
   }
-  return (melhor as { cmd: Comando } | null)?.cmd ?? null
+
+  const lpEu = estado.jogadores[eu].lp
+  const lpAdv = estado.jogadores[adv].lp
+  const alvoAntes =
+    comando.alvo === 'direto'
+      ? 0
+      : (() => {
+          const alvo = estado.jogadores[adv].campo[comando.alvo]
+          return alvo ? atkEfetivo(estado, adv, alvo, cat) : 0
+        })()
+  const atacanteAntes = valorUnidade(estado, eu, comando.atacante, cat)
+  const r = simularAtaque(estado, comando, catalogo)
+  if (!r.ok) return { comando, score: Number.NEGATIVE_INFINITY, motivo: r.erro, estadoSimulado: null }
+
+  const perdeuAtacante = !r.estado.jogadores[eu].campo[comando.atacante]
+  const removeuAlvo = comando.alvo !== 'direto' && !r.estado.jogadores[adv].campo[comando.alvo]
+  const danoCausado = lpAdv - r.estado.jogadores[adv].lp
+  const danoSofrido = lpEu - r.estado.jogadores[eu].lp
+  const venceu = r.estado.resultado?.vencedor === eu
+  const score =
+    (venceu ? pesos.vitoriaImediata : 0) +
+    danoCausado * pesos.danoCausado -
+    danoSofrido * pesos.danoSofrido +
+    (removeuAlvo ? pesos.unidadeInimigaDestruida + alvoAntes * pesos.ameacaRemovida : 0) -
+    (perdeuAtacante ? pesos.unidadePropriaPerdida + atacanteAntes * pesos.valorAtacantePerdido : 0)
+  const motivo = venceu
+    ? 'Conclui a vitória.'
+    : removeuAlvo && !perdeuAtacante
+      ? 'Elimina uma ameaça sem perder o atacante.'
+      : danoCausado > 0
+        ? `Causa ${danoCausado} de dano líquido.`
+        : danoSofrido > 0
+          ? `Causaria ${danoSofrido} de dano aos próprios pontos de vida.`
+          : 'Não gera vantagem imediata.'
+  return { comando, score, motivo, estadoSimulado: r.estado }
+}
+
+/** Avalia um ataque sem mutar o estado. O estado deve conter somente informação acessível à IA. */
+export function avaliarAtaque(
+  estado: EstadoDuelo,
+  comando: ComandoAtacar,
+  catalogo: readonly Carta[] = CATALOGO,
+  pesos: Readonly<PesosAtaqueIA> = PESOS_ATAQUE_IA,
+): AvaliacaoAtaque {
+  return avaliarAtaqueComCatalogo(estado, comando, catalogo, mapaCatalogo(catalogo), pesos, false)
+}
+
+function desempateAtaque(e: EstadoDuelo, a: ComandoAtacar, b: ComandoAtacar): number {
+  const ca = e.jogadores[a.jogador].campo[a.atacante]?.cartaId ?? ''
+  const cb = e.jogadores[b.jogador].campo[b.atacante]?.cartaId ?? ''
+  if (ca !== cb) return ca < cb ? -1 : 1
+  if (a.atacante !== b.atacante) return a.atacante - b.atacante
+  const aa = a.alvo === 'direto' ? -1 : a.alvo
+  const ab = b.alvo === 'direto' ? -1 : b.alvo
+  return aa - ab
+}
+
+interface PlanoAtaque {
+  primeiro: ComandoAtacar
+  score: number
+}
+
+function planejarAtaques(
+  estado: EstadoDuelo,
+  catalogo: readonly Carta[],
+  cat: Catalogo,
+  pesos: Readonly<PesosAtaqueIA>,
+  profundidade: number,
+): PlanoAtaque | null {
+  const opcoes = ataquesLegais(estado)
+  let melhor: PlanoAtaque | null = null
+  for (const comando of opcoes) {
+    const avaliacao = avaliarAtaqueComCatalogo(estado, comando, catalogo, cat, pesos, true)
+    let total = avaliacao.score
+    if (avaliacao.estadoSimulado && profundidade > 1 && !avaliacao.estadoSimulado.resultado) {
+      const futuro = planejarAtaques(avaliacao.estadoSimulado, catalogo, cat, pesos, profundidade - 1)
+      if (futuro && futuro.score > 0) total += futuro.score * pesos.fatorFuturo
+    }
+    if (!melhor || total > melhor.score || (total === melhor.score && desempateAtaque(estado, comando, melhor.primeiro) < 0)) {
+      melhor = { primeiro: comando, score: total }
+    }
+  }
+  return melhor
+}
+
+/** Escolhe a primeira ação da melhor sequência limitada; null significa preservar o campo. */
+export function escolherMelhorAtaque(
+  estado: EstadoDuelo,
+  catalogo: readonly Carta[] = CATALOGO,
+  pesos: Readonly<PesosAtaqueIA> = PESOS_ATAQUE_IA,
+): ComandoAtacar | null {
+  const plano = planejarAtaques(estado, catalogo, mapaCatalogo(catalogo), pesos, Math.max(1, Math.floor(pesos.profundidadeMaxima)))
+  return plano && plano.score > 0 ? plano.primeiro : null
 }
 
 /** Próximo comando da IA para a visão dada (a perspectiva deve ser o jogador ativo). */
@@ -213,7 +337,7 @@ export function decidirComando(visao: VisaoDuelo, catalogo: readonly Carta[] = C
     if (pos) return pos
     return e.turno === 1 ? { tipo: 'encerrarTurno', jogador: eu } : { tipo: 'avancarFase', jogador: eu }
   }
-  if (e.fase === 'COMBATE') return escolherAtaque(e, cat, eu) ?? { tipo: 'encerrarTurno', jogador: eu }
+  if (e.fase === 'COMBATE') return escolherMelhorAtaque(e, catalogo) ?? { tipo: 'encerrarTurno', jogador: eu }
   return { tipo: 'encerrarTurno', jogador: eu }
 }
 

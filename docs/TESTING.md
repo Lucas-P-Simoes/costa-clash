@@ -24,6 +24,12 @@ Vitest para lógica TypeScript. Testes de componentes com React Testing Library 
 6. Jogadas da IA oponente sem travamento.
 7. Regressões causadas por novos efeitos.
 
+## Ataque por seta e IA estratégica (2026-10-27)
+- Motor: `acoes.test.ts` cobre atacantes/alvos legais e equivalência da simulação com `aplicarComando`; `ia.test.ts` cobre vitória imediata, dano/destruição, decisão de não atacar, ordem de múltiplos ataques, determinismo e conteúdo oculto.
+- Interface: `duelo_ataque_seta.test.tsx` cobre Pointer Events com mouse e toque, ataque a unidade e direto, alvos inválidos, Escape, fora do turno, unidade já usada, seta/impacto da IA e gesto antigo depois de outro comando alterar o estado. `ajudanteAtaque.ts` concentra os gestos usados pelos testes de duelo já existentes.
+- Concorrência: qualquer atualização de estado deve cancelar o gesto ativo; manter a regressão `QA: não pode aplicar o gesto antigo depois que outro comando avançou o turno`.
+- E2E: a matriz Playwright verifica responsividade e toque emulado no Chrome; não substitui aparelho físico, caneta real, Safari, Firefox, leitor de tela nem revisão estética humana da curva/animação da seta.
+
 ## Casos de borda mínimos
 - Usar carta inexistente na mão.
 - Jogar carta sem espaço no tabuleiro.

@@ -8,7 +8,7 @@ export interface ResultadoClique {
   alcancavel: boolean
 }
 
-const BOTOES = ['b-atacar', 'b-defender', 'b-usar', 'b-encerrar', 'b-desistir']
+const BOTOES = ['b-defender', 'b-usar', 'b-encerrar', 'b-desistir']
 
 /** Em scroll 0, meio e máximo: document.elementFromPoint no centro de cada botão de ação deve devolver o botão (ou descendente). */
 export async function verificarCliquesAcoes(page: Page): Promise<ResultadoClique[]> {

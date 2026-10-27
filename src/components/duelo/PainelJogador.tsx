@@ -29,13 +29,16 @@ interface Props {
   /** Destino de arrasto "campo" (ações sem alvo): destaca o painel. */
   drop?: boolean
   dataDestino?: string
+  /** Torna a placa de vida um alvo do gesto de ataque direto. */
+  alvoVida?: string
+  vidaDestacada?: boolean
 }
 
 /**
  * Painel de um lado do tabuleiro: placa com avatar e identificação, VIDA com coração, contagens (baralho/descarte),
  * as 5 zonas de unidade e a faixa de 5 suportes. Só apresentação: zonas e suportes chegam prontos.
  */
-export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloContagens, baralho, descarte, rotuloZonas, rotuloSuportes, zonas, suportes, maoOponente, acao, vidaFx, drop, dataDestino }: Props) {
+export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloContagens, baralho, descarte, rotuloZonas, rotuloSuportes, zonas, suportes, maoOponente, acao, vidaFx, drop, dataDestino, alvoVida, vidaDestacada }: Props) {
   const oponente = lado === 'oponente'
   const efeitoVida = vidaFx?.dano ? ' duelo-vida--dano' : vidaFx?.cura ? ' duelo-vida--cura' : ''
   return (
@@ -50,7 +53,12 @@ export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloC
             <p>{subtitulo}</p>
           </div>
         </div>
-        <p className={`duelo-vida duelo-vida--${lado}${efeitoVida}`} aria-label={rotuloVida}>
+        <p
+          className={`duelo-vida duelo-vida--${lado}${efeitoVida}${vidaDestacada ? ' duelo-vida--alvo-ataque' : ''}`}
+          aria-label={rotuloVida}
+          data-alvo-ataque={alvoVida}
+          data-alvo-vida={lado === 'oponente' ? 'oponente' : 'humano'}
+        >
           <IconeCoracaoVida className="duelo-coracao" cor={oponente ? '#ff5a4a' : '#3fdcf0'} />
           <span>Vida:</span> <strong>{vida}</strong>
           {vidaFx?.dano ? (

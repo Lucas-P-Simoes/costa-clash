@@ -7,6 +7,7 @@ import { aplicarComando } from '../../game'
 import { cenario } from '../../game/__tests__/util'
 import type { ConfigCenario } from '../../game/__tests__/util'
 import { Partida } from '../duelo/Partida'
+import { arrastarAtaque } from './ajudanteAtaque'
 
 afterEach(() => {
   cleanup()
@@ -120,14 +121,13 @@ describe('D3: foco depois das ações', () => {
     expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 1 sua: Manguezal Protegido.*alvo válido/ }))
   })
 
-  it('modo de ataque: foco no primeiro atacante, depois no alvo; ao atacar, de volta ao próximo útil', () => {
+  it('gesto de ataque usa o atacante e alvo apontados sem depender de um modo por botão', () => {
     montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'], mao: ['CC-001'] } })
-    fireEvent.click(botao(/^Atacar/))
-    expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }))
-    fireEvent.click(document.activeElement as HTMLElement)
-    expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido.*alvo válido/ }))
-    fireEvent.click(document.activeElement as HTMLElement)
-    expect(document.activeElement).toBe(botao(/Encerrar turno/))
+    arrastarAtaque(
+      screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+    )
+    expect(screen.getByLabelText('Vida do oponente: 7600')).toBeTruthy()
   })
 })
 
@@ -141,14 +141,12 @@ describe('D6/D7: seleção mantida e modo zerado no fim', () => {
     expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*em ataque/ })).toBeTruthy()
   })
 
-  it('ao terminar o duelo o botão não fica em "Cancelar ataque"', () => {
+  it('o botão ATACAR não existe antes nem depois do resultado', () => {
     montar({ jogadaFeita: true, humano: { campo: ['CC-003'] } })
-    fireEvent.click(botao(/^Atacar/))
-    expect(botao(/Cancelar ataque/)).toBeTruthy()
+    expect(document.getElementById('b-atacar')).toBeNull()
     fireEvent.click(botao('Desistir'))
     fireEvent.click(botao('Confirmar'))
-    expect(document.getElementById('b-atacar')!.textContent).toContain('Atacar')
-    expect(document.getElementById('b-atacar')!.textContent).not.toContain('Cancelar')
+    expect(document.getElementById('b-atacar')).toBeNull()
   })
 })
 
@@ -160,9 +158,10 @@ describe('D8 a D11: textos', () => {
     expect(t).not.toContain('Terreno: Terreno')
   })
 
-  it('subtítulo de ATACAR em português e rodada compreensível', () => {
-    montar({})
-    expect(botao(/^Atacar/).textContent).toContain('Ataca uma carta do oponente')
+  it('o painel não tem ATACAR e a rodada continua compreensível', () => {
+    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] } })
+    expect(document.getElementById('b-atacar')).toBeNull()
+    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })).toBeTruthy()
     expect(document.querySelector('.duelo-turno__rotulo')!.textContent).toBe('Rodada 2') // turno absoluto 3
   })
 

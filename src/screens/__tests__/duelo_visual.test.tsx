@@ -11,6 +11,7 @@ import type { ConfigCenario } from '../../game/__tests__/util'
 import { readFileSync } from 'node:fs'
 import { resolve } from 'node:path'
 import { Partida } from '../duelo/Partida'
+import { arrastarAtaque } from './ajudanteAtaque'
 
 afterEach(() => {
   cleanup()
@@ -128,8 +129,8 @@ describe('Coluna lateral', () => {
     expect(banner.className).toContain('duelo-turno--meu')
     expect(within(banner).getByText('Seu turno')).toBeTruthy()
     expect(banner.querySelector('svg')).toBeTruthy() // setas douradas
+    expect(document.getElementById('b-atacar')).toBeNull()
     for (const [id, sub] of [
-      ['b-atacar', 'Ataca uma carta do oponente'],
       ['b-defender', 'Alterna a posição da unidade'],
       ['b-usar', 'Baixa uma carta da sua mão'],
       ['b-encerrar', 'Passa a vez ao oponente'],
@@ -240,9 +241,10 @@ describe('Faixa de terreno central', () => {
 
 describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
   const atacar = () => {
-    fireEvent.click(botao(/^Atacar/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido.*alvo válido/ }))
+    arrastarAtaque(
+      screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+    )
   }
   const fxAtivos = () => document.querySelectorAll('[class*="carta--fx-"]').length
 
@@ -288,9 +290,10 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
   it('impacto na unidade atacada que sobrevive (defesa repele o ataque)', () => {
     vi.useFakeTimers()
     montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA' }], mao: ['CC-001'] } })
-    fireEvent.click(botao(/^Atacar/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido.*alvo válido/ }))
+    arrastarAtaque(
+      screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+    )
     expect(q('.duelo-lado--oponente .zona .carta').className).toContain('carta--fx-impacto')
   })
 
@@ -323,13 +326,16 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
   it('a animação não bloqueia a entrada: dá para agir logo após o ataque, com a classe ainda ativa', () => {
     vi.useFakeTimers()
     montar({ jogadaFeita: true, humano: { campo: ['CC-003', 'CC-002'] }, oponente: { campo: ['CC-001', 'CC-004'], mao: ['CC-001'] } })
-    fireEvent.click(botao(/^Atacar/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido.*alvo válido/ }))
+    arrastarAtaque(
+      screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+    )
     expect(fxAtivos()).toBeGreaterThan(0)
     // segundo ataque imediatamente, sem esperar a animação
-    fireEvent.click(screen.getByRole('button', { name: /Zona 2 sua: Restinga Preservada.*pode atacar/ }))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 2 do oponente: Duna Costeira.*alvo válido/ }))
+    arrastarAtaque(
+      screen.getByRole('button', { name: /Zona 2 sua: Restinga Preservada.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 2 do oponente: Duna Costeira/ }),
+    )
     expect(screen.queryByRole('button', { name: /Zona 2 do oponente/ })).toBeNull()
   })
 })
@@ -369,9 +375,7 @@ describe('Tela de resultado (estilo Tela-derrota / Tela-recompensa)', () => {
     const onNovamente = vi.fn()
     const e = cenario({ jogadaFeita: true, humano: { campo: ['CC-056'], baralho: 20 }, oponente: { lp: 1000, mao: ['CC-001'], baralho: 20 } })
     render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={0} onVoltar={onVoltar} onNovamente={onNovamente} />)
-    fireEvent.click(botao(/^Atacar/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Derramamento de Óleo.*pode atacar/ }))
-    fireEvent.click(botao(/Ataque direto/))
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Derramamento de Óleo.*pode atacar/ }), screen.getByLabelText('Vida do oponente: 1000'))
     const d = screen.getByRole('dialog')
     expect(d.className).toContain('duelo-dialogo--vitoria')
     expect(within(d).getByRole('heading', { name: 'Vitória' })).toBeTruthy()
@@ -386,9 +390,10 @@ describe('Fantasma da carta destruída em defesa', () => {
   it('é desenhado deitado, como a unidade estava', () => {
     vi.useFakeTimers()
     montar({ jogadaFeita: true, humano: { campo: ['CC-071'] }, oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA' }], mao: ['CC-001'] } })
-    fireEvent.click(botao(/^Atacar/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Elevação.*pode atacar/ }))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido.*alvo válido/ }))
+    arrastarAtaque(
+      screen.getByRole('button', { name: /Zona 1 sua: Elevação.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+    )
     const f = q('.duelo-lado--oponente [data-fantasma="destruida"] .carta')
     expect(f.className).toContain('carta--defesa')
     expect(f.className).toContain('carta--fx-destruida')

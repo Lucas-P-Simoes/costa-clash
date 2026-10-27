@@ -163,6 +163,7 @@ export function CartaVerso({
   selecionada,
   focoAlvo,
   onClick,
+  onPointerDown,
 }: {
   rotulo: string
   tamanho?: 'mao' | 'campo' | 'mini'
@@ -171,6 +172,7 @@ export function CartaVerso({
   selecionada?: boolean
   focoAlvo?: boolean
   onClick?: () => void
+  onPointerDown?: (e: React.PointerEvent<HTMLButtonElement>) => void
 }) {
   const classe = [
     'carta',
@@ -197,6 +199,7 @@ export function CartaVerso({
         aria-pressed={selecionada === undefined ? undefined : selecionada}
         data-posicao={posicao}
         data-foco={focoAlvo ? 'alvo' : undefined}
+        onPointerDown={onPointerDown}
         onClick={onClick}
       >
         {conteudo}

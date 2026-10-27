@@ -232,6 +232,28 @@ export function ataquesLegais(estado: EstadoDuelo): ComandoAtacar[] {
   return r
 }
 
+/**
+ * Alvos legalmente atacáveis por uma unidade. É a mesma fonte usada por UI e IA;
+ * ataque direto só aparece quando o motor o permite.
+ */
+export function alvosAtaqueLegais(estado: EstadoDuelo, atacante: number): ComandoAtacar[] {
+  return ataquesLegais(estado).filter((cmd) => cmd.atacante === atacante)
+}
+
+/** Zonas das unidades que podem declarar ao menos um ataque no estado atual. */
+export function atacantesDisponiveis(estado: EstadoDuelo): number[] {
+  return [...new Set(ataquesLegais(estado).map((cmd) => cmd.atacante))]
+}
+
+/**
+ * Simula sem alterar o estado recebido e pelo mesmo caminho da execução real.
+ * Útil para planejamento: armadilhas, dano, destruição e vitória nunca são
+ * reimplementados pela IA.
+ */
+export function simularAtaque(estado: EstadoDuelo, comando: ComandoAtacar, catalogo: readonly Carta[] = CATALOGO): ResultadoComando {
+  return aplicarComando(estado, comando, catalogo)
+}
+
 function executarJogarCarta(ctx: Ctx, cmd: ComandoJogarCarta): void {
   const erro = validarJogarCarta(ctx.e, ctx.cat, cmd)
   if (erro) throw new ErroRegra(erro)

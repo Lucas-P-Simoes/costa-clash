@@ -6,7 +6,7 @@ import type { Comando } from '../acoes'
 import { criarDuelo, executarTurnoIA } from '../duelo'
 import { invariantes } from '../estado'
 import type { EstadoDuelo } from '../estado'
-import { decidirComando } from '../ia'
+import { avaliarAtaque, decidirComando, escolherMelhorAtaque } from '../ia'
 import { estadoDeVisao, visaoParaJogador } from '../visao'
 import { cenario, cenarioCombate, ok, uidDe } from './util'
 
@@ -208,6 +208,26 @@ describe('posições e ataques (§9)', () => {
     expect(decide(e)).toEqual({ tipo: 'atacar', jogador: 'oponente', atacante: 1, alvo: 'direto' }) // maior ATK primeiro
   })
 
+  it('prioriza sequência de vitória: usa a unidade menor para abrir o campo e preserva o atacante letal', () => {
+    const e = cenarioCombate({
+      ativo: 'oponente',
+      oponente: { campo: ['CC-043', 'CC-071'] },
+      humano: { lp: 2300, campo: [{ id: 'CC-013', pos: 'DEFESA' }] },
+    })
+    expect(decide(e)).toEqual({ tipo: 'atacar', jogador: 'oponente', atacante: 0, alvo: 0 })
+  })
+
+  it('avalia sem mutar e explica ataques vantajosos/prejudiciais', () => {
+    const bom = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-003'] }, humano: { campo: ['CC-001'] } })
+    const antes = JSON.stringify(bom)
+    const avaliacao = avaliarAtaque(bom, { tipo: 'atacar', jogador: 'oponente', atacante: 0, alvo: 0 })
+    expect(avaliacao.score).toBeGreaterThan(0)
+    expect(avaliacao.motivo).toContain('Elimina')
+    expect(JSON.stringify(bom)).toBe(antes)
+    const ruim = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-001'] }, humano: { campo: [{ id: 'CC-004', pos: 'DEFESA' }] } })
+    expect(escolherMelhorAtaque(ruim)).toBeNull()
+  })
+
   it('ataca a unidade que consegue vencer, preferindo remover a mais forte', () => {
     const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-071'] }, humano: { campo: ['CC-001', 'CC-056', 'CC-013'] } })
     // 2400 vence 2200 (zona 1), 1200 (0) e 700 (2): prefere a de maior ATK
@@ -240,6 +260,15 @@ describe('posições e ataques (§9)', () => {
     expect(JSON.stringify(visaoParaJogador(fraca, 'oponente'))).toBe(JSON.stringify(visaoParaJogador(forte, 'oponente')))
     expect(decide(fraca)).toEqual({ tipo: 'atacar', jogador: 'oponente', atacante: 1, alvo: 1 })
     expect(decide(forte)).toEqual(decide(fraca))
+  })
+
+  it('pode preservar uma unidade fraca quando o único alvo tem atributos ocultos', () => {
+    const e = cenarioCombate({
+      ativo: 'oponente',
+      oponente: { campo: ['CC-013'] },
+      humano: { campo: [{ id: 'CC-056', pos: 'ATAQUE', viradaParaBaixo: true }] },
+    })
+    expect(decide(e)).toEqual({ tipo: 'encerrarTurno', jogador: 'oponente' })
   })
 
   it('unidades em DEFESA ou que já atacaram não atacam', () => {
