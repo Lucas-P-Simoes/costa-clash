@@ -97,7 +97,7 @@ describe('Painéis OPONENTE e VOCÊ', () => {
   it('todo verso usa a arte costeira padrão sem o antigo losango decorativo', () => {
     montar({
       humano: { campo: [{ id: 'CC-001', viradaParaBaixo: true }] },
-      oponente: { campo: [{ id: 'CC-003', viradaParaBaixo: true }], suporte: ['CC-095'], mao: ['CC-001', 'CC-002'] },
+      oponente: { campo: [{ id: 'CC-003', pos: 'DEFESA', viradaParaBaixo: true }], suporte: ['CC-095'], mao: ['CC-001', 'CC-002'] },
     })
     const versos = Array.from(document.querySelectorAll('.carta--verso'))
     expect(versos.length).toBeGreaterThanOrEqual(5)
@@ -106,9 +106,17 @@ describe('Painéis OPONENTE e VOCÊ', () => {
       expect(arte?.getAttribute('src')).toContain('verso-carta.webp')
       expect(verso.querySelector('.carta__verso-marca')).toBeNull()
     }
+    const versosCampo = Array.from(document.querySelectorAll('.zona .carta--verso'))
+    expect(versosCampo).toHaveLength(2)
+    expect(versosCampo.every((verso) => verso.classList.contains('carta--campo'))).toBe(true)
+    expect(versosCampo.some((verso) => verso.classList.contains('carta--ataque'))).toBe(true)
+    expect(versosCampo.some((verso) => verso.classList.contains('carta--defesa'))).toBe(true)
     const css = readFileSync(resolve(__dirname, '../duelo/duelo.css'), 'utf8')
     expect(css).not.toContain('.carta__verso-marca')
     expect(css).toMatch(/\.carta__verso-imagem\s*\{[^}]*object-fit:\s*cover/s)
+    const blocoVerso = css.slice(css.indexOf('.carta--verso {'), css.indexOf('}', css.indexOf('.carta--verso {')))
+    expect(blocoVerso).not.toMatch(/\b(?:width|height|aspect-ratio):/)
+    expect(css).toMatch(/\.carta--verso:not\(\.carta--campo\)\s*\{[^}]*width:\s*2\.125rem;[^}]*height:\s*2\.875rem;[^}]*aspect-ratio:\s*auto;/s)
   })
 })
 

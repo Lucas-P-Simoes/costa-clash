@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from 'react'
+import type { CSSProperties, FocusEvent as ReactFocusEvent, PointerEvent as ReactPointerEvent } from 'react'
 import { BannerTurno } from '../../components/duelo/BannerTurno'
 import { BotaoAcao } from '../../components/duelo/BotaoAcao'
 import { CabecalhoDuelo } from '../../components/duelo/CabecalhoDuelo'
@@ -6,8 +7,12 @@ import { CartaVerso, CartaView } from '../../components/duelo/CartaView'
 import { DicaEducativa } from '../../components/duelo/DicaEducativa'
 import { FaixaTerreno } from '../../components/duelo/FaixaTerreno'
 import { IconeEscudo, IconeRelogioPixel } from '../../components/duelo/iconesDuelo'
+import { InspecaoCarta } from '../../components/duelo/InspecaoCarta'
+import type { FonteInspecao } from '../../components/duelo/InspecaoCarta'
 import { PainelJogador } from '../../components/duelo/PainelJogador'
 import { chaveZona, useEfeitosVisuais } from '../../components/duelo/efeitosVisuais'
+import { calcularEstiloLeque } from '../../components/duelo/geometriaCartas'
+import { resolverConteudoInspecao } from '../../components/duelo/resolverInspecao'
 import { useFocoDialogo } from '../../components/duelo/useFocoDialogo'
 import { descricaoCarta } from '../../components/duelo/textoCarta'
 import { IconeCartas, IconeEspadas } from '../../components/ui/Icones'
@@ -40,6 +45,21 @@ interface Aviso {
   turno: number
   texto: string
   erro: boolean
+}
+
+type InspecaoAtiva = Pick<FonteInspecao, 'chave' | 'gatilho'>
+type GatilhoInspecao = FonteInspecao['gatilho']
+type GatilhosInspecao = Record<GatilhoInspecao, string | null>
+
+const SEM_GATILHOS_INSPECAO: GatilhosInspecao = { foco: null, ponteiro: null, toque: null }
+const PRIORIDADE_INSPECAO: readonly GatilhoInspecao[] = ['toque', 'ponteiro', 'foco']
+
+function inspecaoPrioritaria(gatilhos: GatilhosInspecao): InspecaoAtiva | null {
+  for (const gatilho of PRIORIDADE_INSPECAO) {
+    const chave = gatilhos[gatilho]
+    if (chave) return { chave, gatilho }
+  }
+  return null
 }
 
 interface Props {
@@ -121,6 +141,9 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const [confirma, setConfirma] = useState(false)
   const [colocacaoPendente, setColocacaoPendente] = useState<ComandoJogarCarta | null>(null)
   const [foco, setFoco] = useState<string | null>(null)
+  const [gatilhosInspecao, setGatilhosInspecao] = useState<GatilhosInspecao>(SEM_GATILHOS_INSPECAO)
+  const inspecao = inspecaoPrioritaria(gatilhosInspecao)
+  const temInspecao = inspecao !== null
   const timers = useRef<number[]>([])
   // Estado verdadeiro do motor ao fim do turno da IA (o exibido pode estar num passo intermediário).
   const finalIA = useRef<EstadoDuelo | null>(null)
@@ -189,6 +212,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     setSel({})
     setModo(null)
     setAviso(null)
+    setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
     setEstado(r.estado) // se a IA já tinha encerrado a partida, `base` (com resultado) é mantido
   }
 
@@ -202,6 +226,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     setSel({})
     setModo(null)
     setFoco(null)
+    setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
     setEstado(r.estado)
     pedidoFoco.current = cmd.tipo === 'atacar' || cmd.tipo === 'avancarFase' ? null : '#b-encerrar'
     if (!r.estado.resultado && r.estado.ativo === 'oponente') {
@@ -216,6 +241,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   /** Única entrada da UI para colocar unidade: clique/teclado e arrasto passam pela mesma escolha de face. */
   function enviarOuEscolherFace(cmd: Comando): boolean {
     if (cmd.tipo === 'jogarCarta' && cartaDoUid(cmd.uid)?.tipo === 'unidade') {
+      setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
       setColocacaoPendente(cmd)
       return true
     }
@@ -409,6 +435,62 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const baixaPaisagem = () => typeof window.matchMedia === 'function' && window.matchMedia('(max-height: 520px) and (orientation: landscape) and (max-width: 1100px)').matches
   const [telaToque] = useState(() => typeof window.matchMedia === 'function' && window.matchMedia('(pointer: coarse)').matches)
   const [telaBaixa] = useState(() => baixaPaisagem())
+  const ultimaFonteToque = useRef<string | null>(null)
+
+  function abrirInspecao(chave: string, gatilho: GatilhoInspecao) {
+    setGatilhosInspecao((atuais) => (atuais[gatilho] === chave ? atuais : { ...atuais, [gatilho]: chave }))
+  }
+
+  function fecharInspecao(chave: string, gatilho: GatilhoInspecao) {
+    setGatilhosInspecao((atuais) => (atuais[gatilho] === chave ? { ...atuais, [gatilho]: null } : atuais))
+  }
+
+  function invalidarInspecao(chave: string) {
+    setGatilhosInspecao((atuais) => {
+      let mudou = false
+      const proximos = { ...atuais }
+      for (const gatilho of PRIORIDADE_INSPECAO) {
+        if (proximos[gatilho] === chave) {
+          proximos[gatilho] = null
+          mudou = true
+        }
+      }
+      return mudou ? proximos : atuais
+    })
+  }
+
+  /** Eventos ficam no contêiner: a carta continua sendo o único alvo interativo e de foco. */
+  function eventosInspecao(chave: string) {
+    return {
+      'data-inspecionavel': chave,
+      onPointerEnter: (e: ReactPointerEvent<HTMLElement>) => {
+        if (e.pointerType !== 'touch') abrirInspecao(chave, 'ponteiro')
+      },
+      onPointerLeave: () => fecharInspecao(chave, 'ponteiro'),
+      onPointerDownCapture: (e: ReactPointerEvent<HTMLElement>) => {
+        ultimaFonteToque.current = e.pointerType === 'touch' ? chave : null
+      },
+      onFocus: () => abrirInspecao(chave, 'foco'),
+      onBlur: (e: ReactFocusEvent<HTMLElement>) => {
+        if (!e.currentTarget.contains(e.relatedTarget as Node | null)) fecharInspecao(chave, 'foco')
+      },
+      onClickCapture: () => {
+        if (ultimaFonteToque.current === chave && !arrRef.current?.ativo) abrirInspecao(chave, 'toque')
+        ultimaFonteToque.current = null
+      },
+    }
+  }
+
+  useEffect(() => {
+    if (!gatilhosInspecao.toque) return
+    const fecharFora = (e: PointerEvent) => {
+      const alvo = e.target instanceof Element ? e.target : null
+      if (!alvo?.closest('[data-inspecionavel]')) setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
+    }
+    document.addEventListener('pointerdown', fecharFora, true)
+    return () => document.removeEventListener('pointerdown', fecharFora, true)
+  }, [gatilhosInspecao.toque])
+
   /** O clique sintetizado logo após soltar um arrasto não deve alternar a seleção: engole só o próximo clique (capture), removido no próximo ciclo. */
   const engolirRef = useRef<((ev: Event) => void) | null>(null)
   function pararDeEngolirClique() {
@@ -517,6 +599,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   function cancelarArrasto() {
     limparTimerArrasto()
     pararOuvintes()
+    ultimaFonteToque.current = null
     arrRef.current = null
     setArr(null)
   }
@@ -527,11 +610,14 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const bloqueio = bloqueioArrasto(a.uid)
     if (bloqueio) {
       pararOuvintes()
+      ultimaFonteToque.current = null
       arrRef.current = null
       dizer(bloqueio, true)
       return
     }
     a.ativo = true
+    ultimaFonteToque.current = null
+    setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
     a.ax = a.x
     a.ay = a.y
     setModo(null)
@@ -580,6 +666,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
         return
       }
       a.ativo = true
+      setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
       setModo(null)
       setAviso(null)
       setFoco(null)
@@ -638,7 +725,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   useEffect(() => {
     const aoTeclar = (e: KeyboardEvent) => {
       if (e.key !== 'Escape') return
-      if (arrRef.current) cancelarArrasto() // arrasto em curso: Esc só cancela o arrasto
+      if (temInspecao) setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
+      else if (arrRef.current) cancelarArrasto() // arrasto em curso: Esc só cancela o arrasto
       else if (estado.resultado && !reproduzindo) onVoltar()
       else if (colocacaoPendente) setColocacaoPendente(null)
       else if (confirma) setConfirma(false)
@@ -649,10 +737,12 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     }
     window.addEventListener('keydown', aoTeclar)
     return () => window.removeEventListener('keydown', aoTeclar)
-  }, [estado.resultado, reproduzindo, colocacaoPendente, confirma, modo, onVoltar])
+  }, [estado.resultado, reproduzindo, colocacaoPendente, confirma, modo, onVoltar, temInspecao])
 
   // ---------------------------------------------------------------- derivados de apresentação
   const efet = (dono: IdJogador, u: UnidadeEmCampo) => ({ atk: atkEfetivo(plano, dono, u, cat), def: defEfetiva(plano, dono, u, cat) })
+  const conteudoInspecaoAtual = inspecao ? resolverConteudoInspecao(inspecao.chave, v, plano) : null
+  const fonteInspecaoAtual: FonteInspecao | null = inspecao ? { ...inspecao, conteudo: conteudoInspecaoAtual ?? { oculta: true } } : null
   const atacanteAtual = modo?.tipo === 'atacar' ? modo.atacante : undefined
   const alvosAtaque = ataques.filter((a) => a.atacante === atacanteAtual)
   const podeDireto = alvosAtaque.some((a) => a.alvo === 'direto')
@@ -718,19 +808,22 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       )
     }
     if ('oculta' in u && u.oculta) {
+      const chaveInspecao = `unidade:${lado}:${z}`
       const rot = `Zona ${z + 1} ${quem}: unidade virada para baixo, em ${u.posicao === 'ATAQUE' ? 'ataque' : 'defesa'}${u.atacou ? ', já atacou' : ''}${
         alvoValido ? ', alvo válido' : ''
       }`
       return (
         <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
-          <CartaVerso
-            tamanho="campo"
-            posicao={u.posicao}
-            destaque={alvoValido ? 'alvo' : null}
-            focoAlvo={alvoValido}
-            rotulo={rot}
-            onClick={() => cliqueUnidade(lado, z)}
-          />
+          <span className="carta-inspecionavel" {...eventosInspecao(chaveInspecao)}>
+            <CartaVerso
+              tamanho="campo"
+              posicao={u.posicao}
+              destaque={alvoValido ? 'alvo' : null}
+              focoAlvo={alvoValido}
+              rotulo={rot}
+              onClick={() => cliqueUnidade(lado, z)}
+            />
+          </span>
         </div>
       )
     }
@@ -741,37 +834,42 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       unidade.equipamentoUid ? ', equipada' : ''
     }${alvoValido ? ', alvo válido' : ''}${atacantePossivel ? ', pode atacar' : ''}`
     const efeito = fx.atacando.includes(chave) ? 'atacando' : fx.impacto.includes(chave) ? 'impacto' : fx.entrando.includes(chave) ? 'entrando' : null
+    const chaveInspecao = `unidade:${lado}:${z}`
     if (unidade.viradaParaBaixo) {
       return (
         <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
-          <CartaVerso
-            tamanho="campo"
-            posicao={unidade.posicao}
-            selecionada={sel.unidade === z || atacanteAtual === z}
-            destaque={alvoValido ? 'alvo' : atacantePossivel ? 'valida' : null}
-            focoAlvo={alvoValido || atacantePossivel}
-            rotulo={`${rot}, virada para baixo`}
-            onClick={() => cliqueUnidade(lado, z)}
-          />
+          <span className="carta-inspecionavel" {...eventosInspecao(chaveInspecao)}>
+            <CartaVerso
+              tamanho="campo"
+              posicao={unidade.posicao}
+              selecionada={sel.unidade === z || atacanteAtual === z}
+              destaque={alvoValido ? 'alvo' : atacantePossivel ? 'valida' : null}
+              focoAlvo={alvoValido || atacantePossivel}
+              rotulo={`${rot}, virada para baixo`}
+              onClick={() => cliqueUnidade(lado, z)}
+            />
+          </span>
         </div>
       )
     }
     return (
       <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
-        <CartaView
-          carta={c}
-          atk={atk}
-          def={def}
-          posicao={unidade.posicao}
-          tamanho="campo"
-          selecionada={lado === 'humano' && (sel.unidade === z || atacanteAtual === z)}
-          destaque={alvoValido ? 'alvo' : atacantePossivel ? 'valida' : null}
-          focoAlvo={alvoValido || atacantePossivel}
-          efeito={efeito}
-          lado={lado}
-          rotulo={rot}
-          onClick={() => cliqueUnidade(lado, z)}
-        />
+        <span className="carta-inspecionavel" {...eventosInspecao(chaveInspecao)}>
+          <CartaView
+            carta={c}
+            atk={atk}
+            def={def}
+            posicao={unidade.posicao}
+            tamanho="campo"
+            selecionada={lado === 'humano' && (sel.unidade === z || atacanteAtual === z)}
+            destaque={alvoValido ? 'alvo' : atacantePossivel ? 'valida' : null}
+            focoAlvo={alvoValido || atacantePossivel}
+            efeito={efeito}
+            lado={lado}
+            rotulo={rot}
+            onClick={() => cliqueUnidade(lado, z)}
+          />
+        </span>
       </div>
     )
   }
@@ -797,8 +895,9 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       )
     }
     if ('oculta' in s && s.oculta) {
+      const chaveInspecao = `suporte:${lado}:${z}`
       return (
-        <div key={z} className="suporte" data-destino={dataS}>
+        <div key={z} className="suporte" data-destino={dataS} {...eventosInspecao(chaveInspecao)}>
           <CartaVerso rotulo={`Suporte ${z + 1} ${quem}: carta virada para baixo`} />
         </div>
       )
@@ -806,8 +905,9 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const full = s as { cartaId: string; tipo: string }
     const c = cat.get(full.cartaId)!
     const extra = full.tipo === 'armadilha' ? ', armadilha virada (visível só para você)' : ', equipamento'
+    const chaveInspecao = `suporte:${lado}:${z}`
     return (
-      <div key={z} className={'suporte' + dropS} data-destino={dataS} {...dropSAttr}>
+      <div key={z} className={'suporte' + dropS} data-destino={dataS} {...dropSAttr} {...eventosInspecao(chaveInspecao)}>
         <CartaView carta={c} tamanho="mini" rotulo={`Suporte ${z + 1} ${quem}: ${c.nome}${extra}`} onClick={() => cliqueSuporte(lado, z)} />
       </div>
     )
@@ -860,7 +960,9 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               maoOponente={
                 <div className="duelo-mao-oponente" role="group" aria-label={`Mão do oponente: ${v.oponente.maoTamanho} cartas`}>
                   {Array.from({ length: v.oponente.maoTamanho }, (_, i) => (
-                    <CartaVerso key={i} rotulo="Carta da mão do oponente" />
+                    <span key={i} className="duelo-mao-oponente__item" {...eventosInspecao(`mao-oponente:${i}`)}>
+                      <CartaVerso rotulo="Carta da mão do oponente" />
+                    </span>
                   ))}
                 </div>
               }
@@ -907,19 +1009,33 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               <div className="duelo-mao__cartas">
                 {mao.map((m, i) => {
                   const c = cat.get(m.cartaId)!
+                  const leque = calcularEstiloLeque(i, mao.length)
+                  const chaveInspecao = `mao:${m.uid}`
+                  const estilo = {
+                    '--mao-angulo': `${leque.angulo}deg`,
+                    '--mao-deslocamento': `${leque.deslocamentoY}rem`,
+                    '--mao-sobrepor': `${leque.sobreposicao}rem`,
+                    '--mao-z': leque.zIndex,
+                  } as CSSProperties
                   return (
-                    <CartaView
+                    <div
                       key={m.uid}
-                      carta={c}
-                      tamanho="mao"
-                      posicao={m.uid === sel.mao ? posAtual : undefined}
-                      selecionada={m.uid === sel.mao}
-                      rotulo={`Mão ${i + 1}: ${descricaoCarta(c)}${m.uid === sel.mao ? ', selecionada' : ''}`}
-                      onClick={() => escolherMao(m.uid)}
-                      onPointerDown={(e) => iniciarPointer(m.uid, e)}
-                      arrastando={arr?.uid === m.uid}
-                      inativa={!minhaVez}
-                    />
+                      className={`duelo-mao__item${inspecao?.chave === chaveInspecao ? ' duelo-mao__item--inspecionada' : ''}`}
+                      style={estilo}
+                      {...eventosInspecao(chaveInspecao)}
+                    >
+                      <CartaView
+                        carta={c}
+                        tamanho="mao"
+                        posicao={m.uid === sel.mao ? posAtual : undefined}
+                        selecionada={m.uid === sel.mao}
+                        rotulo={`Mão ${i + 1}: ${descricaoCarta(c)}${m.uid === sel.mao ? ', selecionada' : ''}`}
+                        onClick={() => escolherMao(m.uid)}
+                        onPointerDown={(e) => iniciarPointer(m.uid, e)}
+                        arrastando={arr?.uid === m.uid}
+                        inativa={!minhaVez}
+                      />
+                    </div>
                   )
                 })}
               </div>
@@ -990,6 +1106,15 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
           </aside>
         </main>
       </div>
+
+      {fonteInspecaoAtual && !dialogoAberto && !arr ? (
+        <InspecaoCarta
+          fonte={fonteInspecaoAtual}
+          toque={fonteInspecaoAtual.gatilho === 'toque'}
+          valida={conteudoInspecaoAtual !== null}
+          onInvalidar={() => invalidarInspecao(fonteInspecaoAtual.chave)}
+        />
+      ) : null}
 
       {arr && cartaDoUid(arr.uid) ? (
         <div className="duelo-arrasto-fantasma" aria-hidden="true" style={{ left: arr.x, top: arr.y }}>

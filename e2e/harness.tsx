@@ -1,7 +1,7 @@
 // Harness de testes e2e/viewport (SÓ servido pelo servidor de desenvolvimento; NÃO entra no build de produção).
 // Monta telas em estados difíceis de alcançar pela UI, sem rede nem serviço real:
 //   ?cena=conta                      TelaConta com serviço de auth FALSO injetado (nenhuma API é chamada)
-//   ?cena=duelo-campo[&seed=N]       Partida com unidades em ataque e em defesa e suportes dos dois lados (estado gerado pelo motor)
+//   ?cena=duelo-campo[&seed=N]       Partida com unidades em ataque e em defesa, um verso e suportes dos dois lados (estado gerado pelo motor)
 //   ?cena=resultado-vitoria|resultado-derrota|resultado-empate   Partida já encerrada (diálogo de resultado)
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -29,7 +29,23 @@ function novo(seed: number): EstadoDuelo {
   return r.estado
 }
 
-/** Procura (determinístico) um estado na vez do humano com unidade em ataque e em defesa e suportes. */
+function comVersoPublico(estado: EstadoDuelo): EstadoDuelo {
+  const oponente = estado.jogadores.oponente
+  const indice = oponente.campo.findIndex(Boolean)
+  if (indice < 0) return estado
+  return {
+    ...estado,
+    jogadores: {
+      ...estado.jogadores,
+      oponente: {
+        ...oponente,
+        campo: oponente.campo.map((unidade, zona) => (zona === indice && unidade ? { ...unidade, viradaParaBaixo: true } : unidade)),
+      },
+    },
+  }
+}
+
+/** Procura (determinístico) um estado na vez do humano com unidade em ataque e em defesa, um verso e suportes. */
 function estadoComCampo(seedPedida: number | null): EstadoDuelo {
   const ok = (e: EstadoDuelo) => {
     const eu = e.jogadores.humano
@@ -60,12 +76,12 @@ function estadoComCampo(seedPedida: number | null): EstadoDuelo {
           const t = aplicarComando(e, { tipo: 'mudarPosicao', jogador: 'humano', zona: un[0]!.z, posicao: 'DEFESA' })
           if (t.ok) e = t.estado
         }
-        if (ok(e)) return e
+        if (ok(e)) return comVersoPublico(e)
         melhor = melhor ?? e
       }
     }
   }
-  if (melhor) return melhor
+  if (melhor) return comVersoPublico(melhor)
   return novo(1)
 }
 
@@ -98,4 +114,3 @@ createRoot(document.getElementById('root')!).render(
     {montarCena()}
   </StrictMode>,
 )
-

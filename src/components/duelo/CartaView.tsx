@@ -10,6 +10,16 @@ import { IconeEscudo } from './iconesDuelo'
 import { SeloCarta } from './SeloCarta'
 import { efeitoCurto, nomeCurto, rotuloTipo, tipoArte } from './textoCarta'
 
+function ChipPosicao({ posicao }: { posicao?: 'ATAQUE' | 'DEFESA' }) {
+  if (!posicao) return null
+  return (
+    <span className="carta__posicao" aria-hidden="true">
+      {posicao === 'ATAQUE' ? <IconeEspadas className="carta__posicao-icone" /> : <IconeEscudo className="carta__posicao-icone" />}
+      {posicao === 'ATAQUE' ? 'ATQ' : 'DEF'}
+    </span>
+  )
+}
+
 export interface CartaViewProps {
   carta: Carta
   /** ATK/DEF a mostrar (efetivos em campo). Padrão: valores do catálogo. */
@@ -114,12 +124,7 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
           {tamanho === 'mao' ? <span>{efeitoCurto(carta)}</span> : null}
         </span>
       )}
-      {posicao ? (
-        <span className="carta__posicao" aria-hidden="true">
-          {posicao === 'ATAQUE' ? <IconeEspadas className="carta__posicao-icone" /> : <IconeEscudo className="carta__posicao-icone" />}
-          {posicao === 'ATAQUE' ? 'ATQ' : 'DEF'}
-        </span>
-      ) : null}
+      <ChipPosicao posicao={posicao} />
     </>
   )
   if (!onClick) {
@@ -177,7 +182,12 @@ export function CartaVerso({
   ]
     .filter(Boolean)
     .join(' ')
-  const arteVerso = <img className="carta__verso-imagem" src={versoCartaUrl} alt="" aria-hidden="true" draggable={false} />
+  const conteudo = (
+    <>
+      <img className="carta__verso-imagem" src={versoCartaUrl} alt="" aria-hidden="true" draggable={false} />
+      <ChipPosicao posicao={posicao} />
+    </>
+  )
   if (onClick) {
     return (
       <button
@@ -189,13 +199,13 @@ export function CartaVerso({
         data-foco={focoAlvo ? 'alvo' : undefined}
         onClick={onClick}
       >
-        {arteVerso}
+        {conteudo}
       </button>
     )
   }
   return (
     <div className={classe} role="img" aria-label={rotulo} data-posicao={posicao}>
-      {arteVerso}
+      {conteudo}
     </div>
   )
 }

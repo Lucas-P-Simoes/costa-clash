@@ -31,12 +31,14 @@ export interface Medicao {
   imagensDistorcidas: { src: string; razao: number; natural: number }[]
   /** Texto de carta/botão cortado (scroll > client). */
   textoCortado: string[]
-  /** Cartas da mão sobrepostas entre si, ao campo, fora do painel da mão ou com altura < 90% da natural (3:4). */
+  /** Cartas da mão inalcançáveis, sobre o campo, fora do painel ou com altura < 90% da natural (3:4). O leque pode sobrepor cartas deliberadamente. */
   problemasMao: string[]
   /** ATK/DEF (cartas da mão e do campo) cortados: número fora da carta ou scroll > client. */
   atributosCortados: string[]
   /** Rótulos ATK/DEF (aria-hidden, decorativos mas visíveis) com fonte efetiva abaixo do mínimo de 10px. */
   rotulosPequenos: { seletor: string; px: number }[]
+  /** Chip público de posição do campo invisível, cortado ou com fonte abaixo de 10px. */
+  posicoesIlegiveis: { seletor: string; texto: string; px: number; cortado: boolean }[]
   coarse: boolean
   dpr: number
 }
@@ -69,7 +71,7 @@ export function medirNaPagina(minFonte: number): Medicao {
   }
   const funcionais = Array.from(
     document.querySelectorAll<HTMLElement>('button, a[href], input, select, textarea, [role="button"], .carta--mao, .carta--campo, .duelo-vida, .duelo-turno__texto'),
-  ).filter((e) => visivel(e) && !e.closest('.sr-only, [inert], .duelo-arrasto-fantasma'))
+  ).filter((e) => visivel(e) && !e.closest('.sr-only, [inert], .duelo-arrasto-fantasma, .duelo-inspecao'))
 
   const foraDaViewport: Retangulo[] = []
   for (const e of funcionais) {
@@ -133,7 +135,7 @@ export function medirNaPagina(minFonte: number): Medicao {
 
   const cartasFora34: Medicao['cartasFora34'] = []
   document.querySelectorAll<HTMLElement>('.carta--campo, .carta--mao').forEach((e) => {
-    if (!visivel(e) || e.closest('[inert], .duelo-arrasto-fantasma')) return
+    if (!visivel(e) || e.closest('[inert], .duelo-arrasto-fantasma, .duelo-inspecao')) return
     const razao = e.offsetWidth / e.offsetHeight
     if (Math.abs(razao - 0.75) > 0.03) cartasFora34.push({ seletor: desc(e), razao: Math.round(razao * 1000) / 1000 })
   })
@@ -151,7 +153,7 @@ export function medirNaPagina(minFonte: number): Medicao {
 
   const textoCortado: string[] = []
   document.querySelectorAll<HTMLElement>('.carta__nome, .carta__atk, .carta__def, .carta__selo, .carta__efeito, .botao, .duelo-btn, .duelo-btn__texto, .duelo-vida, .duelo-turno__texto').forEach((e) => {
-    if (!visivel(e) || e.closest('[inert]')) return
+    if (!visivel(e) || e.closest('[inert], .duelo-inspecao')) return
     const cs = getComputedStyle(e)
     // só conta como cortado se algo recorta: overflow do próprio elemento ou o recorte da carta (.carta tem overflow: hidden)
     const recorta = cs.overflow !== 'visible' || !!e.closest('.carta')
@@ -159,17 +161,33 @@ export function medirNaPagina(minFonte: number): Medicao {
   })
 
   const problemasMao: string[] = []
-  const maos = Array.from(document.querySelectorAll<HTMLElement>(".carta--mao")).filter((e) => visivel(e) && !e.closest("[inert], .duelo-arrasto-fantasma, .avarte"))
+  const maos = Array.from(document.querySelectorAll<HTMLElement>(".duelo-mao__cartas .duelo-mao__item > .carta--mao")).filter((e) => visivel(e) && !e.closest("[inert], .duelo-arrasto-fantasma, .duelo-inspecao, .avarte"))
   const painelMao = document.querySelector<HTMLElement>(".duelo-mao")
   const inter = (a: DOMRect, b: DOMRect) => Math.min(a.right, b.right) - Math.max(a.left, b.left) > 2 && Math.min(a.bottom, b.bottom) - Math.max(a.top, b.top) > 2
-  maos.forEach((c, i) => {
+  maos.forEach((c) => {
     const r = c.getBoundingClientRect()
     if (c.offsetHeight < 0.9 * (c.offsetWidth / 0.75)) problemasMao.push("altura < 90% da natural: " + c.offsetWidth + "x" + c.offsetHeight)
     if (painelMao) {
       const p = painelMao.getBoundingClientRect()
       if (r.top < p.top - 1 || r.bottom > p.bottom + 1) problemasMao.push("carta fora do painel da mão (vertical)")
     }
-    for (let j = i + 1; j < maos.length; j++) if (inter(r, maos[j]!.getBoundingClientRect())) problemasMao.push("cartas da mão sobrepostas")
+    // A sobreposição é parte do leque. Ainda assim, cada carta precisa conservar
+    // ao menos uma faixa atingível por mouse/toque em algum ponto do retângulo.
+    const xs = [0.08, 0.27, 0.5, 0.73, 0.92]
+    const ys = [0.12, 0.5, 0.88]
+    const naViewport = r.right > 0 && r.left < vw && r.bottom > 0 && r.top < vh
+    const inteiraNaViewport = r.left >= 0 && r.right <= vw && r.top >= 0 && r.bottom <= vh
+    const acessivel = xs.some((xp) =>
+      ys.some((yp) => {
+        const alvo = document.elementFromPoint(r.left + r.width * xp, r.top + r.height * yp)
+        return alvo === c || alvo?.closest('.carta') === c
+      }),
+    )
+    // Em páginas com rolagem vertical natural a mão pode estar abaixo da dobra ou
+    // só aparecer atrás da barra fixa. O hit-test vale quando a carta está inteira
+    // na viewport atual; nos demais casos ela fica alcançável após a rolagem.
+    const paginaRolavel = raiz.scrollHeight > vh + 1
+    if (naViewport && (!paginaRolavel || inteiraNaViewport) && !acessivel) problemasMao.push("carta da mão sem faixa clicável")
     document.querySelectorAll<HTMLElement>(".duelo-lado, .zona, .suporte").forEach((z) => {
       if (visivel(z) && !z.closest("[inert]") && inter(r, z.getBoundingClientRect())) problemasMao.push("carta da mão sobre o campo (" + desc(z) + ")")
     })
@@ -178,7 +196,7 @@ export function medirNaPagina(minFonte: number): Medicao {
   const atributosCortados: string[] = []
   const rotulosPequenos: Medicao["rotulosPequenos"] = []
   document.querySelectorAll<HTMLElement>(".carta--mao .carta__atk, .carta--mao .carta__def, .carta--campo .carta__atk, .carta--campo .carta__def").forEach((e) => {
-    if (!visivel(e) || e.closest("[inert], .duelo-arrasto-fantasma, .avarte")) return
+    if (!visivel(e) || e.closest("[inert], .duelo-arrasto-fantasma, .duelo-inspecao, .avarte")) return
     const carta = e.closest<HTMLElement>(".carta")!
     const cr = carta.getBoundingClientRect()
     const rg = document.createRange()
@@ -191,6 +209,16 @@ export function medirNaPagina(minFonte: number): Medicao {
     if (small && visivel(small)) {
       const px = parseFloat(getComputedStyle(small).fontSize)
       if (px < 10) rotulosPequenos.push({ seletor: desc(small), px: Math.round(px * 10) / 10 })
+    }
+  })
+
+  const posicoesIlegiveis: Medicao['posicoesIlegiveis'] = []
+  document.querySelectorAll<HTMLElement>('.carta--campo .carta__posicao').forEach((e) => {
+    if (!visivel(e) || e.closest('[inert], .duelo-arrasto-fantasma, .duelo-inspecao, .avarte')) return
+    const px = parseFloat(getComputedStyle(e).fontSize)
+    const cortado = e.scrollWidth > e.clientWidth + 1 || e.scrollHeight > e.clientHeight + 1
+    if (px < 10 || cortado) {
+      posicoesIlegiveis.push({ seletor: desc(e), texto: (e.textContent ?? '').trim(), px: Math.round(px * 10) / 10, cortado })
     }
   })
 
@@ -212,6 +240,7 @@ export function medirNaPagina(minFonte: number): Medicao {
     problemasMao: [...new Set(problemasMao)],
     atributosCortados,
     rotulosPequenos,
+    posicoesIlegiveis,
     coarse,
     dpr: window.devicePixelRatio,
   }

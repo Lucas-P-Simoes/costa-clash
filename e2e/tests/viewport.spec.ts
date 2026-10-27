@@ -1,6 +1,7 @@
 // Testes de viewport: percorrem telas x viewports e conferem que a interface cabe, sem componentes fora da área visível.
 // Rodar: npm run test:e2e   (usa o Chrome instalado; ver docs/TESTING.md)
 import { expect, test } from '@playwright/test'
+import type { Locator } from '@playwright/test'
 import { abrirCena, CENAS } from '../lib/cenas.ts'
 import type { Cena } from '../lib/cenas.ts'
 import { verificarCliquesAcoes } from '../lib/cliques.ts'
@@ -44,10 +45,11 @@ for (const v of SUBCONJUNTO_E2E) {
         expect(m.cartasFora34, 'cartas fora de 3:4').toEqual([])
         if (m.coarse) expect(m.alvosPequenos, 'alvos de toque < 44px').toEqual([])
         if (!baixo && cena !== 'arte') expect(m.textoCortado, 'texto cortado').toEqual([])
-        // ATK/DEF nunca cortados (nome/efeito podem truncar em altura muito baixa); mão inteira e sem sobreposição; rótulos >= 10px
+        // ATK/DEF nunca cortados (nome/efeito podem truncar em altura muito baixa); leque inteiro e alcançável; rótulos >= 10px
         expect(m.atributosCortados, 'ATK/DEF cortados').toEqual([])
-        expect(m.problemasMao, 'mão colapsada/sobreposta').toEqual([])
+        expect(m.problemasMao, 'mão colapsada/inalcançável').toEqual([])
         expect(m.rotulosPequenos, 'rótulos ATK/DEF < 10px').toEqual([])
+        expect(m.posicoesIlegiveis, 'chips públicos ATQ/DEF ilegíveis').toEqual([])
         if (cena === 'duelo' || cena === 'dueloCampo') {
           for (const r of await verificarCliquesAcoes(page)) {
             expect(r.cobertoEm, 'botão ' + r.botao + ' coberto por outro elemento').toEqual([])
@@ -59,6 +61,128 @@ for (const v of SUBCONJUNTO_E2E) {
     }
   })
 }
+
+test('leque sobreposto mantém uma faixa clicável em cada carta, também após rolar no toque', async ({ browser }) => {
+  for (const [w, h, toque] of [
+    [1920, 1000, false],
+    [390, 844, true],
+    [812, 375, true],
+  ] as const) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: toque && w < 800, hasTouch: toque })
+    const page = await ctx.newPage()
+    await abrirCena(page, 'dueloCampo')
+    const cartas = page.locator('.duelo-mao__cartas .duelo-mao__item > .carta--mao')
+    if (!toque) {
+      const carta = cartas.nth(Math.floor((await cartas.count()) / 2))
+      const item = carta.locator('..')
+      const antes = await item.boundingBox()
+      await carta.hover()
+      await expect(page.locator('.duelo-inspecao')).toHaveCount(1)
+      await page.waitForTimeout(220)
+      const depois = await item.boundingBox()
+      if (!antes || !depois) throw new Error('wrapper do leque não mensurável')
+      for (const medida of ['x', 'y', 'width', 'height'] as const) {
+        expect(Math.abs(depois[medida] - antes[medida]), `hitbox ${medida} não pode mover no hover`).toBeLessThanOrEqual(0.25)
+      }
+      await page.mouse.move(1, 1)
+    }
+    for (let i = 0; i < (await cartas.count()); i++) {
+      const carta = cartas.nth(i)
+      await carta.evaluate((el) => el.scrollIntoView({ block: 'center', inline: 'center' }))
+      await page.waitForTimeout(30)
+      const alcançavel = await carta.evaluate((el) => {
+        const r = el.getBoundingClientRect()
+        return [0.08, 0.27, 0.5, 0.73, 0.92].some((xp) =>
+          [0.12, 0.5, 0.88].some((yp) => {
+            const alvo = document.elementFromPoint(r.left + r.width * xp, r.top + r.height * yp)
+            return alvo === el || alvo?.closest('.carta') === el
+          }),
+        )
+      })
+      expect(alcançavel, `${w}x${h}: carta ${i + 1} do leque`).toBe(true)
+    }
+    await ctx.close()
+  }
+})
+
+test('inspeção amplia a carta pela origem e o chip público permanece legível', async ({ browser }) => {
+  for (const [w, h, toque] of [
+    [3840, 2030, false],
+    [1920, 1000, false],
+    [1366, 650, false],
+    [1024, 600, false],
+    [390, 844, true],
+    [812, 375, true],
+  ] as const) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: toque && w < 800, hasTouch: toque })
+    const page = await ctx.newPage()
+    await abrirCena(page, 'dueloCampo')
+
+    const chipOculto = page.locator('.duelo-lado--oponente .carta--verso.carta--campo .carta__posicao').first()
+    await expect(chipOculto).toHaveText(/^(ATQ|DEF)$/)
+    const estiloChip = await chipOculto.evaluate((el) => ({
+      fonte: Number.parseFloat(getComputedStyle(el).fontSize),
+      cortado: el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1,
+    }))
+    expect(estiloChip.fonte, `${w}x${h}: fonte do chip oculto`).toBeGreaterThanOrEqual(10)
+    expect(estiloChip.cortado, `${w}x${h}: chip oculto cortado`).toBe(false)
+
+    const medir = async (origem: Locator, rotulo: string, detalhes: boolean, gatilho: 'foco' | 'toque') => {
+      await origem.scrollIntoViewIfNeeded()
+      if (gatilho === 'toque') await origem.tap()
+      else await origem.focus()
+      const painel = page.locator('.duelo-inspecao')
+      await expect(painel).toBeVisible()
+      await page.waitForTimeout(220)
+      const carta = painel.locator('.carta').first()
+      const [o, c, p, tabuleiro, barra, barraFixa] = await Promise.all([
+        origem.boundingBox(),
+        carta.boundingBox(),
+        painel.boundingBox(),
+        page.locator('.duelo-tabuleiro').boundingBox(),
+        page.locator('.duelo-acoes').boundingBox(),
+        page.locator('.duelo-acoes').evaluate((el) => getComputedStyle(el).position === 'fixed'),
+      ])
+      if (!o || !c || !p || !tabuleiro) throw new Error(`${w}x${h}: geometria ausente em ${rotulo}`)
+      const escala = c.width / o.width
+      expect(escala, `${w}x${h}: escala de ${rotulo} por ${gatilho}`).toBeGreaterThanOrEqual(1.55)
+      expect(escala, `${w}x${h}: escala de ${rotulo} por ${gatilho}`).toBeLessThanOrEqual(2.05)
+      expect(p.x, `${w}x${h}: painel à esquerda do tabuleiro`).toBeGreaterThanOrEqual(tabuleiro.x - 1)
+      expect(p.x + p.width, `${w}x${h}: painel sobre a lateral`).toBeLessThanOrEqual(tabuleiro.x + tabuleiro.width + 1)
+      expect(p.y, `${w}x${h}: painel acima da viewport`).toBeGreaterThanOrEqual(-1)
+      expect(p.y + p.height, `${w}x${h}: painel abaixo da viewport`).toBeLessThanOrEqual(h + 1)
+      if (barraFixa && barra) {
+        expect(p.y + p.height, `${w}x${h}: painel de ${rotulo} por ${gatilho} sobre a barra fixa`).toBeLessThanOrEqual(barra.y + 0.5)
+      }
+      expect(c.y + c.height, `${w}x${h}: carta recortada no painel`).toBeLessThanOrEqual(p.y + p.height + 1)
+      if (detalhes) {
+        const d = await painel.locator('.duelo-inspecao__detalhes').boundingBox()
+        if (!d) throw new Error(`${w}x${h}: detalhes ausentes em ${rotulo}`)
+        expect(d.x + d.width, `${w}x${h}: detalhes cortados na horizontal`).toBeLessThanOrEqual(p.x + p.width + 1)
+        expect(d.y + d.height, `${w}x${h}: detalhes cortados na vertical`).toBeLessThanOrEqual(p.y + p.height + 1)
+      }
+    }
+
+    const mao = page.locator('.duelo-mao__cartas .carta--mao').first()
+    const verso = page.locator('.duelo-lado--oponente .carta--verso.carta--campo').first()
+    const gatilho = toque ? 'toque' : 'foco'
+    await medir(mao, 'carta da mão', true, gatilho)
+    await page.keyboard.press('Escape')
+    await medir(verso, 'verso do campo', false, gatilho)
+
+    // Regressão específica da paisagem baixa: o teste anterior só focava e não
+    // exercitava o gesto real que recebe a geometria de toque.
+    if (w === 812 && h === 375) {
+      await page.keyboard.press('Escape')
+      await mao.evaluate((el) => (el as HTMLElement).blur())
+      await medir(mao, 'carta da mão', true, 'foco')
+      await page.keyboard.press('Escape')
+      await verso.evaluate((el) => (el as HTMLElement).blur())
+      await medir(verso, 'verso do campo', false, 'foco')
+    }
+    await ctx.close()
+  }
+})
 
 test.describe('zoom do navegador e redimensionamento dinâmico', () => {
   test('zoom 125% e 150% (viewport CSS menor + dpr) mantém o duelo e o login sem rolagem', async ({ browser }) => {
