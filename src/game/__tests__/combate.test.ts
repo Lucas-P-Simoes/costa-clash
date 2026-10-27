@@ -31,6 +31,80 @@ describe('ATK x ATK', () => {
     expect(e.jogadores.oponente.campo[0]?.cartaId).toBe('CC-003')
   })
 
+  it('revela alvo oculto antes do cálculo; atacante mais fraco é destruído e perde a diferença', () => {
+    const r = atacar(
+      cenarioCombate({ humano: { campo: ['CC-001'] }, oponente: { campo: [{ id: 'CC-056', viradaParaBaixo: true }] } }),
+      0,
+      0,
+    )
+    if (!r.ok) throw new Error(r.erro)
+    expect(r.estado.jogadores.humano.lp).toBe(7000) // 2200 - 1200
+    expect(r.estado.jogadores.humano.campo[0]).toBeNull()
+    expect(r.estado.jogadores.oponente.campo[0]).toMatchObject({ cartaId: 'CC-056', viradaParaBaixo: false })
+    expect(r.eventos.map((e) => e.tipo)).toEqual([
+      'ataque_declarado',
+      'unidade_revelada',
+      'dano',
+      'unidade_destruida',
+      'combate_resolvido',
+    ])
+    expect(r.eventos[0]?.texto).not.toContain('Derramamento de Óleo')
+    expect(r.eventos[1]?.texto).toContain('Derramamento de Óleo')
+  })
+
+  it('não revela alvo oculto quando armadilha anula antes do cálculo', () => {
+    const r = atacar(
+      cenarioCombate({ humano: { campo: ['CC-001'] }, oponente: { campo: [{ id: 'CC-056', viradaParaBaixo: true }], suporte: [{ id: 'CC-099', turno: 1 }] } }),
+      0,
+      0,
+    )
+    if (!r.ok) throw new Error(r.erro)
+    expect(r.estado.jogadores.oponente.campo[0]?.viradaParaBaixo).toBe(true)
+    expect(r.eventos.some((e) => e.tipo === 'unidade_revelada')).toBe(false)
+    expect(r.eventos.some((e) => e.tipo === 'ataque_anulado')).toBe(true)
+  })
+
+  it('revela também um atacante oculto antes do cálculo e o mantém revelado', () => {
+    const r = atacar(cenarioCombate({ humano: { campo: [{ id: 'CC-003', viradaParaBaixo: true }] }, oponente: { campo: ['CC-001'] } }), 0, 0)
+    if (!r.ok) throw new Error(r.erro)
+    expect(r.estado.jogadores.humano.campo[0]?.viradaParaBaixo).toBe(false)
+    expect(r.eventos[0]?.texto).not.toContain('Recife de Coral')
+    expect(r.eventos.find((e) => e.tipo === 'unidade_revelada')).toMatchObject({ jogador: 'humano', zona: 0, carta: { cartaId: 'CC-003' } })
+  })
+
+  it('quando atacante e alvo estão ocultos, revela ambos antes de resolver o combate', () => {
+    const r = atacar(
+      cenarioCombate({
+        humano: { campo: [{ id: 'CC-001', viradaParaBaixo: true }] },
+        oponente: { campo: [{ id: 'CC-056', viradaParaBaixo: true }] },
+      }),
+      0,
+      0,
+    )
+    if (!r.ok) throw new Error(r.erro)
+    expect(r.estado.jogadores.humano.campo[0]).toBeNull()
+    expect(r.estado.jogadores.oponente.campo[0]).toMatchObject({ viradaParaBaixo: false })
+    expect(r.eventos.filter((e) => e.tipo === 'unidade_revelada')).toMatchObject([
+      { jogador: 'humano', zona: 0, carta: { cartaId: 'CC-001' } },
+      { jogador: 'oponente', zona: 0, carta: { cartaId: 'CC-056' } },
+    ])
+  })
+
+  it('ataque anulado mantém atacante e alvo ocultos', () => {
+    const r = atacar(
+      cenarioCombate({
+        humano: { campo: [{ id: 'CC-001', viradaParaBaixo: true }] },
+        oponente: { campo: [{ id: 'CC-056', viradaParaBaixo: true }], suporte: [{ id: 'CC-099', turno: 1 }] },
+      }),
+      0,
+      0,
+    )
+    if (!r.ok) throw new Error(r.erro)
+    expect(r.estado.jogadores.humano.campo[0]?.viradaParaBaixo).toBe(true)
+    expect(r.estado.jogadores.oponente.campo[0]?.viradaParaBaixo).toBe(true)
+    expect(r.eventos.some((e) => e.tipo === 'unidade_revelada')).toBe(false)
+  })
+
   it('empate destrói as duas unidades sem dano', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-003'] } }), 0, 0))
     expect(e.jogadores.humano.lp).toBe(8000)
@@ -68,6 +142,18 @@ describe('ATK x DEF', () => {
     expect(e.jogadores.oponente.lp).toBe(8000)
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
+  })
+
+  it('revela alvo oculto em DEFESA e usa a DEF no cálculo, mantendo-o revelado', () => {
+    const e = ok(
+      atacar(
+        cenarioCombate({ humano: { campo: ['CC-001'] }, oponente: { campo: [{ id: 'CC-004', pos: 'DEFESA', viradaParaBaixo: true }] } }),
+        0,
+        0,
+      ),
+    )
+    expect(e.jogadores.humano.lp).toBe(7200)
+    expect(e.jogadores.oponente.campo[0]).toMatchObject({ cartaId: 'CC-004', posicao: 'DEFESA', viradaParaBaixo: false })
   })
 
   it('empate de ATK e DEF: nada acontece (mas a unidade conta como tendo atacado)', () => {

@@ -61,12 +61,21 @@ export function resolverAtaque(ctx: Ctx, jogador: IdJogador, zonaAtk: number, al
   const atacante = e.jogadores[jogador].campo[zonaAtk] as UnidadeEmCampo
   atacante.atacou = true
   const nomeAtk = nomeCarta(ctx.cat, atacante.cartaId)
+  const alvoInicial = alvo === 'direto' ? null : (e.jogadores[def].campo[alvo] as UnidadeEmCampo)
+  const atacanteOculto = atacante.viradaParaBaixo
+  const alvoOculto = !!alvoInicial?.viradaParaBaixo
   emitir(
     ctx,
     { tipo: 'ataque_declarado', jogador, atacante: zonaAtk, alvo },
     alvo === 'direto'
-      ? `${nomeAtk} ataca diretamente.`
-      : `${nomeAtk} ataca ${nomeCarta(ctx.cat, (e.jogadores[def].campo[alvo] as UnidadeEmCampo).cartaId)}.`,
+      ? atacanteOculto
+        ? 'Uma unidade virada para baixo ataca diretamente.'
+        : `${nomeAtk} ataca diretamente.`
+      : atacanteOculto
+        ? `Uma unidade virada para baixo ataca ${alvoOculto ? 'outra unidade virada para baixo' : nomeCarta(ctx.cat, alvoInicial!.cartaId)}.`
+        : alvoOculto
+          ? `${nomeAtk} ataca uma unidade virada para baixo.`
+          : `${nomeAtk} ataca ${nomeCarta(ctx.cat, alvoInicial!.cartaId)}.`,
   )
 
   // armadilha do atacado: ataque_direto se direto; senão ataque_recebido
@@ -81,12 +90,28 @@ export function resolverAtaque(ctx: Ctx, jogador: IdJogador, zonaAtk: number, al
     else if (trap.operacao === 'cura') curar(ctx, def, Math.abs(trap.valor))
   }
 
+  if (atacante.viradaParaBaixo) {
+    atacante.viradaParaBaixo = false
+    emitir(
+      ctx,
+      { tipo: 'unidade_revelada', jogador, zona: zonaAtk, carta: { uid: atacante.uid, cartaId: atacante.cartaId } },
+      `${nomeCarta(ctx.cat, atacante.cartaId)} é revelada antes do cálculo de combate.`,
+    )
+  }
   const atk = atkEfetivo(e, jogador, atacante, ctx.cat)
   if (alvo === 'direto') {
     causarDano(ctx, def, Math.max(0, atk - reducao))
     emitir(ctx, { tipo: 'combate_resolvido', jogador, atacante: zonaAtk, alvo, resultado: 'direto' }, 'Ataque direto resolvido.')
   } else {
     const alvoU = e.jogadores[def].campo[alvo] as UnidadeEmCampo
+    if (alvoU.viradaParaBaixo) {
+      alvoU.viradaParaBaixo = false
+      emitir(
+        ctx,
+        { tipo: 'unidade_revelada', jogador: def, zona: alvo, carta: { uid: alvoU.uid, cartaId: alvoU.cartaId } },
+        `${nomeCarta(ctx.cat, alvoU.cartaId)} é revelada antes do cálculo de combate.`,
+      )
+    }
     if (alvoU.posicao === 'ATAQUE') {
       const atkAlvo = atkEfetivo(e, def, alvoU, ctx.cat)
       if (atk > atkAlvo) {

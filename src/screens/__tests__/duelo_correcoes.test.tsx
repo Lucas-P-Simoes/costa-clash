@@ -15,6 +15,7 @@ afterEach(() => {
 
 const botao = (n: string | RegExp) => screen.getByRole('button', { name: n })
 const aviso = () => document.querySelector('.duelo-aviso')!.textContent
+const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
 
 function montar(cfg: ConfigCenario = {}, atrasoIA = 0) {
   const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
@@ -27,6 +28,7 @@ function iaEmAndamento() {
   fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
   fireEvent.click(botao(/Usar carta/))
   fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+  confirmarFaceParaCima()
   fireEvent.click(botao(/Encerrar turno/))
   act(() => {
     vi.advanceTimersByTime(150)
@@ -106,6 +108,8 @@ describe('D3: foco depois das ações', () => {
     fireEvent.click(botao(/Usar carta/))
     expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     fireEvent.click(document.activeElement as HTMLElement)
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Virada para cima' }))
+    confirmarFaceParaCima()
     expect(document.activeElement).toBe(botao(/Encerrar turno/))
   })
 

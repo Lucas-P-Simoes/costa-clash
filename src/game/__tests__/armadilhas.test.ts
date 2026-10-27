@@ -149,6 +149,26 @@ describe('invocacao_impacto: debuff_invocada (CC-097 500, CC-098 400)', () => {
     const e = ok(jogar(cenario({ ativo: 'oponente', oponente: { mao: ['CC-047'] }, humano: { suporte: ['CC-098'] } }), 'oponente', 'CC-047'))
     expect(e.jogadores.oponente.campo[0]!.buffAtk).toBe(-400)
   })
+
+  it('unidade impacto virada para baixo não abre o gatilho, nem quando é revelada depois', () => {
+    let e = ok(
+      jogar(
+        cenario({ ativo: 'oponente', humano: { campo: ['CC-013'], suporte: ['CC-097'] }, oponente: { mao: ['CC-056'] } }),
+        'oponente',
+        'CC-056',
+        { viradaParaBaixo: true },
+      ),
+    )
+    expect(e.jogadores.oponente.campo[0]).toMatchObject({ cartaId: 'CC-056', viradaParaBaixo: true, buffAtk: 0, buffDef: 0 })
+    expect(restantes(e, 'humano')).toEqual(['CC-097'])
+    expect(ativadas(e)).toHaveLength(0)
+
+    e = ok(aplicarComando(e, { tipo: 'avancarFase', jogador: 'oponente' }))
+    e = ok(atacar(e, 0, 0))
+    expect(e.jogadores.oponente.campo[0]).toMatchObject({ cartaId: 'CC-056', viradaParaBaixo: false, buffAtk: 0, buffDef: 0 })
+    expect(restantes(e, 'humano')).toEqual(['CC-097'])
+    expect(ativadas(e)).toHaveLength(0)
+  })
 })
 
 describe('prioridade e ordem de ativação', () => {

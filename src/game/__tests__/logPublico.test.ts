@@ -36,6 +36,52 @@ describe('logPublico / eventosPublicos', () => {
     expect(JSON.stringify(logPublico(e2, 'humano'))).toContain('CC-077')
   })
 
+  it('unidade adversária baixada e movida virada para baixo não vaza identidade no evento ou texto', () => {
+    let e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-056'] } })
+    e = ok(jogar(e, 'oponente', 'CC-056', { posicao: 'ATAQUE', viradaParaBaixo: true }))
+    e = ok(aplicarComando(e, { tipo: 'mudarPosicao', jogador: 'oponente', zona: 0, posicao: 'DEFESA' }))
+    const publico = logPublico(e, 'humano')
+    expect(JSON.stringify(publico)).not.toContain('CC-056')
+    expect(publico.map((x) => x.texto).join(' ')).not.toContain('Derramamento de Óleo')
+    expect(publico.find((x) => x.tipo === 'carta_jogada')).toMatchObject({ carta: { uid: '?', cartaId: '?' }, viradaParaBaixo: true })
+    expect(publico.find((x) => x.tipo === 'posicao_alterada')?.texto).toContain('unidade virada para baixo')
+    expect(JSON.stringify(logPublico(e, 'oponente'))).toContain('CC-056')
+  })
+
+  it('buff em unidade própria virada para baixo não publica o nome da unidade alvo', () => {
+    let e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-077'], campo: [{ id: 'CC-056', viradaParaBaixo: true }] } })
+    e = ok(jogar(e, 'oponente', 'CC-077', { alvo: 0 }))
+    const publico = logPublico(e, 'humano')
+    const texto = publico.map((x) => x.texto).join(' ')
+    expect(texto).not.toContain('Derramamento de Óleo')
+    expect(texto).toContain('uma unidade virada para baixo')
+    expect(publico.find((x) => x.tipo === 'efeito_aplicado')).toMatchObject({ cartaId: '?', operacao: 'efeito_oculto', valor: 0 })
+    expect(JSON.stringify(logPublico(e, 'oponente'))).toContain('buff_unidade')
+  })
+
+  it('efeito de equipamento em unidade oculta não publica operação, valor nem texto derivado do alvo', () => {
+    let e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-088'], campo: [{ id: 'CC-056', viradaParaBaixo: true }] } })
+    e = ok(jogar(e, 'oponente', 'CC-088', { alvo: 0 }))
+    const efeitoPublico = logPublico(e, 'humano').find((x) => x.tipo === 'efeito_aplicado')
+    expect(efeitoPublico).toMatchObject({ cartaId: '?', operacao: 'efeito_oculto', valor: 0, texto: 'Um efeito é aplicado a uma unidade virada para baixo.' })
+    expect(JSON.stringify(efeitoPublico)).not.toMatch(/equip_buff|Derramamento de Óleo|300/)
+    expect(JSON.stringify(logPublico(e, 'oponente'))).toContain('equip_buff_def')
+  })
+
+  it('não revela a identidade de unidade oculta quando armadilha reage à invocação', () => {
+    let e = cenario({
+      ativo: 'oponente',
+      humano: { suporte: [{ id: 'CC-097', turno: 1 }] },
+      oponente: { mao: ['CC-056'] },
+    })
+    e = ok(jogar(e, 'oponente', 'CC-056', { viradaParaBaixo: true }))
+    const publico = JSON.stringify(logPublico(e, 'humano'))
+    expect(publico).not.toContain('CC-056')
+    expect(publico).not.toContain('Derramamento de Óleo')
+    expect(e.log.some((x) => x.tipo === 'armadilha_ativada' || x.tipo === 'efeito_aplicado')).toBe(false)
+    expect(e.jogadores.humano.suporte[0]?.cartaId).toBe('CC-097')
+  })
+
   it('turno completo da IA: nenhum cartaId de carta oculta (mão/armadilha) vaza para o humano', () => {
     const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-093', 'CC-094', 'CC-095', 'CC-096', 'CC-100'], baralho: 20 }, humano: { baralho: 20 } })
     const r = executarTurnoIA(e)

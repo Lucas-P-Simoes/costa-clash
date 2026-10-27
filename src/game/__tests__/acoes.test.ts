@@ -23,6 +23,13 @@ describe('jogar carta: regras de fase, turno e uma jogada por turno', () => {
     expect(e.jogadores.humano.campo[0]).toBeNull()
   })
 
+  it('permite unidade virada para baixo tanto em ATAQUE quanto em DEFESA', () => {
+    const atk = ok(jogar(cenario({ humano: { mao: ['CC-001'] } }), 'humano', 'CC-001', { posicao: 'ATAQUE', viradaParaBaixo: true }))
+    expect(atk.jogadores.humano.campo[0]).toMatchObject({ posicao: 'ATAQUE', viradaParaBaixo: true })
+    const def = ok(jogar(cenario({ humano: { mao: ['CC-001'] } }), 'humano', 'CC-001', { posicao: 'DEFESA', viradaParaBaixo: true }))
+    expect(def.jogadores.humano.campo[0]).toMatchObject({ posicao: 'DEFESA', viradaParaBaixo: true })
+  })
+
   it('rejeita zona ocupada, zona inválida e posição inválida', () => {
     const base = cenario({ humano: { mao: ['CC-001'], campo: ['CC-002'] } })
     expect(jogar(base, 'humano', 'CC-001', { zona: 0 }).ok).toBe(false)
@@ -104,6 +111,12 @@ describe('descarte forçado', () => {
     expect(jogadasLegais(e).every((c) => c.tipo === 'descartar')).toBe(true)
     const e2 = ok(aplicarComando(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-075') }))
     expect(e2.jogadores.humano.descarte[0]?.cartaId).toBe('CC-075')
+  })
+
+  it('ação direcionada inimiga não usa grupo/identidade de unidade virada para baixo para validar alvo', () => {
+    const e = cenario({ humano: { mao: ['CC-075'] }, oponente: { campo: [{ id: 'CC-056', viradaParaBaixo: true }] } })
+    expect(jogar(e, 'humano', 'CC-075', { alvo: 0 }).ok).toBe(false)
+    expect(jogadasLegais(e)).toEqual([{ tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-075') }])
   })
 
   it('mão vazia (estado atípico) não trava: pode avançar e encerrar sem jogada', () => {
@@ -219,10 +232,10 @@ describe('validação no motor (não só na interface)', () => {
 })
 
 describe('listagens de jogadas legais', () => {
-  it('jogadasLegais lista unidades em duas posições, ações com cada alvo e armadilhas', () => {
+  it('jogadasLegais lista unidades nas duas posições e duas faces, ações com cada alvo e armadilhas', () => {
     const e = cenario({ humano: { mao: ['CC-001', 'CC-077', 'CC-093'], campo: ['CC-002', 'CC-004'] } })
     const legais = jogadasLegais(e)
-    expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-001'))).toHaveLength(2)
+    expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-001'))).toHaveLength(4)
     expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-077'))).toHaveLength(2) // 2 alvos
     expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-093'))).toHaveLength(1)
     for (const c of legais) expect(aplicarComando(e, c).ok).toBe(true)

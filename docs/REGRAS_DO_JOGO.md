@@ -27,6 +27,8 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 4. `FIM`: processar fim de turno e passar ao adversário.
 - **No primeiro turno absoluto, o humano não pode atacar**. O oponente pode atacar no segundo turno absoluto. A ordem do combate não depende da ordem de invocação.
 - Cada unidade ocupa posição `ATAQUE` ou `DEFESA`; só ataca em ATAQUE. Posição pode mudar livremente antes do ataque; uma unidade que atacou não pode mudar posição até o próximo turno de seu controlador.
+- Ao colocar uma unidade no campo, seu controlador escolhe a posição (`ATAQUE` ou `DEFESA`) e se ela fica **virada para cima ou para baixo**. Unidade virada para baixo pode existir também em ATAQUE e pode mudar de posição sem ser revelada.
+- Para o adversário, uma unidade virada para baixo oculta identidade, ilustração, ATK e DEF, mas sua zona ocupada e sua posição continuam públicas. O controlador continua conhecendo sua própria carta.
 - Sem efeitos de reação em cadeia: armadilhas disparam automaticamente por prioridade descrita no item 7.
 - Jogadas ilegais não modificam estado. Todas as transições são validadas no motor, não só pela interface.
 
@@ -34,6 +36,8 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 - `ATK_EFETIVO = max(0, ATK_BASE + buffs_ATK + bonus_terreno)`; `DEF_EFETIVA = max(0, DEF_BASE + buffs_DEF + bonus_terreno)`.
 - Contra unidade em ATAQUE: maior ATK destrói a menor; perdedor recebe diferença em LP. Empate destrói ambas, sem dano.
 - Contra unidade em DEFESA: ATK maior que DEF destrói defensora sem dano de LP; ATK menor que DEF causa ao atacante dano de LP igual à diferença, **sem destruir unidades**; empate não destrói e não causa dano.
+- Unidade virada para baixo pode atacar e ser escolhida como alvo de ataque. Depois das armadilhas aplicáveis e imediatamente antes do cálculo, toda unidade virada para baixo envolvida naquele combate é revelada permanentemente; em ATAQUE usa seu ATK e em DEFESA usa sua DEF pelas regras acima. Se uma armadilha anular o ataque antes do cálculo, as unidades permanecem viradas para baixo.
+- A colocação virada para baixo não dispara armadilhas de `invocacao_impacto`, pois consultar o grupo para decidir o gatilho revelaria informação oculta. A revelação posterior não reabre esse timing de invocação.
 - Sem unidade adversária em campo, permite ataque direto: subtrai ATK_EFETIVO dos LP adversários.
 - Destruídas vão para descarte; equipamentos anexados saem junto. Sem dano por transbordamento contra DEFESA.
 - LP ≤ 0 determina derrota imediata. Se um efeito simultâneo levar ambos a ≤ 0, declarar empate (regra adaptada para casos não presentes no catálogo).
@@ -47,6 +51,8 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 - `buff_grupo` e `debuff_grupo`: exigem escolher **uma única unidade** válida (aliada para buff, inimiga para debuff). Modificam **ATK e DEF** pela quantidade indicada e duram enquanto a unidade estiver no campo. Não atingem todas as unidades do grupo.
 - `buff_unidade`: selecionar qualquer unidade **aliada**, soma o valor ao **ATK e DEF** até sair do campo.
 - `destruir_grupo`: destruir **uma unidade inimiga** do grupo especificado; não afeta LP.
+- Uma unidade inimiga virada para baixo não pode ser oferecida como alvo de ação direcionada cuja elegibilidade dependa de grupo/identidade ocultos. Isso evita usar a validação da interface ou da IA para descobrir a carta; ataques continuam podendo escolhê-la normalmente.
+- Buffs e equipamentos que o controlador aplicar à própria unidade oculta são mantidos no estado real. A carta de ação/equipamento jogada continua pública, mas a visão da unidade e o evento público do efeito não expõem identidade, atributos acumulados, vínculo interno de equipamento, operação, valor nem texto derivado do alvo antes da revelação.
 - `cura`: acrescentar LP ao próprio controlador até o máximo de 8.000.
 - `revelar`: revela ao jogador todas as armadilhas viradas para baixo do oponente **até o fim do turno atual**; não as desarma.
 - `equip_buff_atk` / `equip_buff_def`: bônus somente ao atributo indicado, enquanto equipamento permanecer anexado.
@@ -76,6 +82,7 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 - Selecionar jogada legal determinística: priorizar unidade capaz de vencer combate, depois ação eficaz, depois unidade de maior defesa, depois armadilha; desempate por ID crescente.
 - Posicionar em ATQ se houver vantagem atual; senão DEFESA. Atacar quando gera dano favorável ou vence unidade; nunca atacar unidade em defesa mais alta quando gera dano ao próprio LP, a menos que não haja outras opções e se queira evitar empate por estagnação.
 - Oponentes avançados diferem pelos baralhos, não por vantagem ilegal de regras. Não acessar mão ou ordem futura do deck humano na estratégia.
+- A IA recebe unidades adversárias viradas para baixo apenas como marcadores de zona/posição, sem identidade nem atributos. Política determinística mínima: prefere primeiro qualquer combate favorável conhecido; se não existir, pode atacar um alvo oculto com seu atacante disponível de maior ATK, usando a menor zona como desempate. Essa escolha assume risco e nunca consulta o conteúdo oculto.
 
 ## 10. Catálogo, progressão e baralhos
 - Os **100 modelos de cartas** estão listados no item 11 e no arquivo `cartas.json`, que é a **fonte de dados estruturada**. Todos são originais.

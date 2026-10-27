@@ -21,6 +21,7 @@ afterEach(() => {
 
 const botao = (n: string | RegExp) => screen.getByRole('button', { name: n })
 const q = <T extends Element = HTMLElement>(s: string) => document.querySelector<T>(s)!
+const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
 
 function montar(cfg: ConfigCenario = {}, atrasoIA = 0) {
   const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
@@ -92,6 +93,23 @@ describe('Painéis OPONENTE e VOCÊ', () => {
     expect(screen.getByRole('heading', { level: 2, name: /Sua mão/ }).textContent).toContain('(2 cartas)')
     expect(q('.duelo-mao').className).toContain('moldura-orn')
   })
+
+  it('todo verso usa a arte costeira padrão sem o antigo losango decorativo', () => {
+    montar({
+      humano: { campo: [{ id: 'CC-001', viradaParaBaixo: true }] },
+      oponente: { campo: [{ id: 'CC-003', viradaParaBaixo: true }], suporte: ['CC-095'], mao: ['CC-001', 'CC-002'] },
+    })
+    const versos = Array.from(document.querySelectorAll('.carta--verso'))
+    expect(versos.length).toBeGreaterThanOrEqual(5)
+    for (const verso of versos) {
+      const arte = verso.querySelector<HTMLImageElement>('.carta__verso-imagem')
+      expect(arte?.getAttribute('src')).toContain('verso-carta.webp')
+      expect(verso.querySelector('.carta__verso-marca')).toBeNull()
+    }
+    const css = readFileSync(resolve(__dirname, '../duelo/duelo.css'), 'utf8')
+    expect(css).not.toContain('.carta__verso-marca')
+    expect(css).toMatch(/\.carta__verso-imagem\s*\{[^}]*object-fit:\s*cover/s)
+  })
 })
 
 describe('Coluna lateral', () => {
@@ -136,6 +154,7 @@ describe('Coluna lateral', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
     expect(q('.duelo-turno').className).toContain('duelo-turno--outro')
     expect(screen.getByText('Turno do oponente')).toBeTruthy()
@@ -224,6 +243,7 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 2 sua: vazia/ }))
+    confirmarFaceParaCima()
     const carta = q('.duelo-lado--voce .zona:nth-child(2) .carta')
     expect(carta.className).toContain('carta--fx-entrando')
     act(() => {
@@ -271,6 +291,7 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/)) // IA sem atraso: volta direto ao jogador
     expect(q('.duelo-turno').className).toContain('duelo-turno--mudou')
     act(() => {
@@ -406,6 +427,7 @@ describe('Correções pós-QA (D1, D2, D5)', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
     fireEvent.click(botao(/Encerrar turno/)) // durante a IA
     expect(q('.duelo-aviso').textContent).toContain('Aguarde a sua vez')

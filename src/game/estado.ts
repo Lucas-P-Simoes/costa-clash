@@ -17,6 +17,8 @@ export interface CartaInstancia {
 
 export interface UnidadeEmCampo extends CartaInstancia {
   posicao: Posicao
+  /** Enquanto true, só o controlador conhece identidade e atributos; o combate a revela permanentemente. */
+  viradaParaBaixo: boolean
   atacou: boolean
   /** Soma dos buffs/debuffs de ATK (pode ser negativa; o ATK efetivo é limitado a >= 0 só no cálculo). */
   buffAtk: number
@@ -86,10 +88,12 @@ export type DadosEvento =
       destino: 'campo' | 'suporte' | 'descarte' | 'terreno'
       zona?: number
       posicao?: Posicao
+      viradaParaBaixo?: boolean
       alvo?: { jogador: IdJogador; zona: number }
     }
   | { tipo: 'descarte_forcado'; jogador: IdJogador; carta: CartaInstancia }
-  | { tipo: 'posicao_alterada'; jogador: IdJogador; zona: number; posicao: Posicao }
+  | { tipo: 'posicao_alterada'; jogador: IdJogador; zona: number; posicao: Posicao; viradaParaBaixo?: boolean }
+  | { tipo: 'unidade_revelada'; jogador: IdJogador; zona: number; carta: CartaInstancia }
   | {
       tipo: 'efeito_aplicado'
       jogador: IdJogador
@@ -97,6 +101,8 @@ export type DadosEvento =
       operacao: string
       valor: number
       alvo?: { jogador: IdJogador; zona: number }
+      /** Metadado interno para a projeção pública não publicar detalhes do alvo oculto. */
+      alvoViradoParaBaixo?: boolean
     }
   | { tipo: 'cura'; jogador: IdJogador; valor: number; lp: number }
   | { tipo: 'dano'; jogador: IdJogador; valor: number; lp: number }
@@ -289,7 +295,7 @@ export function assinatura(e: EstadoDuelo): string {
       j.lp,
       j.baralho.length,
       j.mao.map((c) => c.cartaId).sort().join(','),
-      j.campo.map((u) => (u ? `${u.cartaId}/${u.posicao}/${u.buffAtk}/${u.buffDef}/${u.equipamentoUid ? 'E' : '-'}` : '_')).join(','),
+      j.campo.map((u) => (u ? `${u.cartaId}/${u.posicao}/${u.viradaParaBaixo ? 'B' : 'C'}/${u.buffAtk}/${u.buffDef}/${u.equipamentoUid ? 'E' : '-'}` : '_')).join(','),
       j.suporte.map((s) => (s ? `${s.cartaId}` : '_')).join(','),
       j.descarte.length,
     ].join('|')

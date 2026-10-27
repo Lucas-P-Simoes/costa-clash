@@ -44,11 +44,14 @@ const suporteDoJogador = (i: number) => qa('.duelo-lado--voce .duelo-suportes > 
 const zonaDoOponente = (i: number) => qa('.duelo-lado--oponente .duelo-zonas > .zona')[i]
 const aviso = () => q('.duelo-aviso').textContent
 const tabuleiro = () => qa('.duelo-zonas .carta, .duelo-suportes .carta').map((c) => c.getAttribute('aria-label')).join('|') + '#' + q('.duelo-terreno').textContent + '#' + qa('.duelo-log li').map((l) => l.textContent).join('|')
+const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
 
 describe('Arrastar: unidade para zona livre', () => {
   it('entra na zona solta, com a animação de entrada, e o resultado é igual ao do fluxo por botão', async () => {
     montar({ humano: { mao: ['CC-003', 'CC-077'] } })
     arrastar(mao(1), zonaDoJogador(2))
+    await tick()
+    confirmarFaceParaCima()
     const carta = q('.duelo-lado--voce .duelo-zonas > .zona:nth-child(3) .carta')
     expect(carta.getAttribute('aria-label')).toMatch(/^Zona 3 sua: Recife de Coral, ATK 1600, DEF 1500, em ataque/)
     expect(carta.className).toContain('carta--fx-entrando')
@@ -60,17 +63,32 @@ describe('Arrastar: unidade para zona livre', () => {
     fireEvent.click(mao(1))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 3 sua: vazia/ }))
+    confirmarFaceParaCima()
     expect(tabuleiro()).toBe(viaArrasto)
   })
 
-  it('respeita a posição pendente (DEFENDER antes de arrastar): entra deitada', () => {
+  it('respeita a posição pendente (DEFENDER antes de arrastar): entra deitada', async () => {
     montar({ humano: { mao: ['CC-003'] } })
     fireEvent.click(mao(1))
     fireEvent.click(botao(/Defender/)) // entrará em defesa
     arrastar(mao(1), zonaDoJogador(0))
+    await tick()
+    confirmarFaceParaCima()
     const c = q('.duelo-lado--voce .zona .carta')
     expect(c.getAttribute('aria-label')).toContain('em defesa')
     expect(c.className).toContain('carta--defesa')
+  })
+
+  it('ao soltar, não baixa ainda: abre a mesma escolha e aceita virada para baixo', async () => {
+    montar({ humano: { mao: ['CC-003'] } })
+    arrastar(mao(1), zonaDoJogador(0))
+    const dialogo = screen.getByRole('dialog', { name: 'Como colocar a unidade?' })
+    expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
+    await tick()
+    fireEvent.click(screen.getByRole('button', { name: 'Virada para baixo' }))
+    expect(dialogo.isConnected).toBe(false)
+    expect(screen.queryAllByRole('button', { name: /^Mão \d/ })).toHaveLength(0)
+    expect(document.querySelector('[role="log"]')?.textContent).toContain('virada para baixo em ataque')
   })
 
   it('durante o arrasto: carta fantasma aria-hidden, original esmaecida e zonas livres destacadas', () => {
@@ -198,6 +216,7 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
     fireEvent.click(mao(1))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
     arrastar(mao(1), zonaDoJogador(1), false)
     expect(document.querySelector('.duelo-arrasto-fantasma')).toBeNull()
@@ -230,6 +249,7 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
     fireEvent.click(mao(1))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
     expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ })).toBeTruthy()
   })
 

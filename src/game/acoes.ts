@@ -33,6 +33,8 @@ export interface ComandoJogarCarta {
   zona?: number
   /** Só para unidades (padrão: ATAQUE). */
   posicao?: Posicao
+  /** Só para unidades (padrão: false/virada para cima). */
+  viradaParaBaixo?: boolean
   /** Zona da unidade-alvo (lado definido pela carta: aliada para buff/equipamento, inimiga para debuff/destruir). */
   alvo?: number
 }
@@ -154,6 +156,7 @@ export function validarJogarCarta(e: EstadoDuelo, cat: Catalogo, cmd: ComandoJog
   if (!carta) return 'Carta desconhecida.'
   if (carta.tipo === 'unidade') {
     if (cmd.posicao !== undefined && cmd.posicao !== 'ATAQUE' && cmd.posicao !== 'DEFESA') return 'Posição inválida.'
+    if (cmd.viradaParaBaixo !== undefined && typeof cmd.viradaParaBaixo !== 'boolean') return 'Face da unidade inválida.'
     if (cmd.zona !== undefined) {
       if (!zonaValida(cmd.zona, ZONAS_UNIDADE)) return 'Zona de unidade inválida.'
       if (j.campo[cmd.zona]) return 'A zona de unidade escolhida está ocupada.'
@@ -177,8 +180,10 @@ function opcoesDeCarta(e: EstadoDuelo, cat: Catalogo, jogador: IdJogador, inst: 
   let base: ComandoJogarCarta[]
   if (carta.tipo === 'unidade') {
     base = [
-      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'ATAQUE' },
-      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'DEFESA' },
+      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'ATAQUE', viradaParaBaixo: false },
+      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'ATAQUE', viradaParaBaixo: true },
+      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'DEFESA', viradaParaBaixo: false },
+      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'DEFESA', viradaParaBaixo: true },
     ]
   } else if (carta.tipo === 'armadilha') {
     base = [{ tipo: 'jogarCarta', jogador, uid: inst.uid }]
@@ -241,10 +246,12 @@ function executarJogarCarta(ctx: Ctx, cmd: ComandoJogarCarta): void {
   if (carta.tipo === 'unidade') {
     const zona = cmd.zona ?? primeiraZonaLivre(j.campo)
     const posicao: Posicao = cmd.posicao ?? 'ATAQUE'
+    const viradaParaBaixo = cmd.viradaParaBaixo ?? false
     const u: UnidadeEmCampo = {
       uid: inst.uid,
       cartaId: inst.cartaId,
       posicao,
+      viradaParaBaixo,
       atacou: false,
       buffAtk: 0,
       buffDef: 0,
@@ -254,10 +261,14 @@ function executarJogarCarta(ctx: Ctx, cmd: ComandoJogarCarta): void {
     j.campo[zona] = u
     emitir(
       ctx,
-      { tipo: 'carta_jogada', jogador: cmd.jogador, carta: inst, destino: 'campo', zona, posicao },
-      `${nomeJogador(cmd.jogador)} invoca ${nome} em ${posicao === 'ATAQUE' ? 'ataque' : 'defesa'}.`,
+      { tipo: 'carta_jogada', jogador: cmd.jogador, carta: inst, destino: 'campo', zona, posicao, viradaParaBaixo },
+      viradaParaBaixo
+        ? `${nomeJogador(cmd.jogador)} coloca ${nome} virada para baixo em ${posicao === 'ATAQUE' ? 'ataque' : 'defesa'}.`
+        : `${nomeJogador(cmd.jogador)} invoca ${nome} em ${posicao === 'ATAQUE' ? 'ataque' : 'defesa'}.`,
     )
-    reagirInvocacao(ctx, cmd.jogador, zona)
+    // A face oculta também oculta o grupo: não consulte `impacto` nem dispare seu gatilho.
+    // Revelar a unidade mais tarde não reabre o timing de invocação.
+    if (!viradaParaBaixo) reagirInvocacao(ctx, cmd.jogador, zona)
   } else if (carta.tipo === 'armadilha') {
     const zona = cmd.zona ?? primeiraZonaLivre(j.suporte)
     const s: SuporteEmZona = {
@@ -321,7 +332,7 @@ function executarMudarPosicao(ctx: Ctx, cmd: ComandoMudarPosicao): void {
   u.posicao = cmd.posicao
   emitir(
     ctx,
-    { tipo: 'posicao_alterada', jogador: cmd.jogador, zona: cmd.zona, posicao: cmd.posicao },
+    { tipo: 'posicao_alterada', jogador: cmd.jogador, zona: cmd.zona, posicao: cmd.posicao, viradaParaBaixo: u.viradaParaBaixo },
     `${nomeCarta(ctx.cat, u.cartaId)} muda para ${cmd.posicao === 'ATAQUE' ? 'ataque' : 'defesa'}.`,
   )
 }

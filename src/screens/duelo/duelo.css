@@ -656,18 +656,22 @@ button.carta {
   align-items: center;
   justify-content: center;
   aspect-ratio: auto;
-  background: repeating-linear-gradient(45deg, #15395a 0 0.25rem, #0e2640 0.25rem 0.5rem);
+  background: #081a28;
+  border-color: #2f91aa;
   box-shadow: inset 0 0 0 0.125rem var(--cc-turquesa-esc);
 }
 .suporte .carta--verso {
   width: 100%;
   height: 100%;
 }
-.carta__verso-marca {
-  width: 0.625rem;
-  height: 0.625rem;
-  transform: rotate(45deg);
-  border: 0.125rem solid var(--cc-turquesa-med);
+.carta__verso-imagem {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  pointer-events: none;
+  user-select: none;
 }
 
 /* ---- efeitos temporários (classes aplicadas por useEfeitosVisuais; removidas por timer) ---- */

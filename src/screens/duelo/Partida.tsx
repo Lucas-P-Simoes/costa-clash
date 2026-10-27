@@ -27,7 +27,7 @@ import {
   validarJogarCarta,
   visaoParaJogador,
 } from '../../game'
-import type { Comando, EstadoDuelo, IdJogador, PassoIA, Posicao, UnidadeEmCampo, VisaoDuelo } from '../../game'
+import type { Comando, ComandoJogarCarta, EstadoDuelo, IdJogador, PassoIA, Posicao, UnidadeEmCampo, VisaoDuelo } from '../../game'
 import { estadoDeVisao } from '../../game/visao'
 import { ResultadoDuelo } from './ResultadoDuelo'
 import './duelo.css'
@@ -74,6 +74,42 @@ function DialogoDesistir({ onConfirmar, onCancelar }: { onConfirmar: () => void;
   )
 }
 
+function DialogoFaceUnidade({
+  posicao,
+  onEscolher,
+  onCancelar,
+}: {
+  posicao: Posicao
+  onEscolher: (viradaParaBaixo: boolean) => void
+  onCancelar: () => void
+}) {
+  const ref = useRef<HTMLDivElement>(null)
+  useFocoDialogo(ref, 'b-usar')
+  return (
+    <div className="duelo-overlay">
+      <div ref={ref} className="duelo-dialogo moldura textura-pedra" role="dialog" aria-modal="true" aria-labelledby="duelo-face-titulo" aria-describedby="duelo-face-descricao">
+        <h2 id="duelo-face-titulo" className="duelo-dialogo__titulo duelo-dialogo__titulo--pequeno">
+          Como colocar a unidade?
+        </h2>
+        <p id="duelo-face-descricao" className="duelo-dialogo__motivo">
+          Posição {posicao === 'ATAQUE' ? 'de ataque' : 'de defesa'}. Escolha a face da carta.
+        </p>
+        <div className="duelo-dialogo__botoes">
+          <button type="button" className="botao botao--primario" data-foco-inicial onClick={() => onEscolher(false)}>
+            <span>Virada para cima</span>
+          </button>
+          <button type="button" className="botao botao--primario" onClick={() => onEscolher(true)}>
+            <span>Virada para baixo</span>
+          </button>
+          <button type="button" className="botao botao--secundario" onClick={onCancelar}>
+            <span>Cancelar</span>
+          </button>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 /** Tela do duelo. Toda regra vem do motor (`src/game`); aqui só há seleção, modos guiados e apresentação. */
 export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atrasoIA }: Props) {
   const [estado, setEstado] = useState(estadoInicial)
@@ -83,6 +119,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const [posPend, setPosPend] = useState<Posicao>('ATAQUE')
   const [avisoBruto, setAviso] = useState<Aviso | null>(null)
   const [confirma, setConfirma] = useState(false)
+  const [colocacaoPendente, setColocacaoPendente] = useState<ComandoJogarCarta | null>(null)
   const [foco, setFoco] = useState<string | null>(null)
   const timers = useRef<number[]>([])
   // Estado verdadeiro do motor ao fim do turno da IA (o exibido pode estar num passo intermediário).
@@ -174,6 +211,15 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       else dizer(ia.erro, true)
     }
     return true
+  }
+
+  /** Única entrada da UI para colocar unidade: clique/teclado e arrasto passam pela mesma escolha de face. */
+  function enviarOuEscolherFace(cmd: Comando): boolean {
+    if (cmd.tipo === 'jogarCarta' && cartaDoUid(cmd.uid)?.tipo === 'unidade') {
+      setColocacaoPendente(cmd)
+      return true
+    }
+    return enviar(cmd)
   }
 
   // ---------------------------------------------------------------- motivos (botões desabilitados)
@@ -287,7 +333,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   function cliqueUnidade(lado: IdJogador, z: number) {
     const u = (lado === 'humano' ? v.eu.campo : v.oponente.campo)[z]
     if (modo?.tipo === 'zona' && lado === 'humano' && cartaSel?.tipo === 'unidade' && !u) {
-      enviar({ tipo: 'jogarCarta', jogador: 'humano', uid: sel.mao as string, zona: z, posicao: posPend })
+      enviarOuEscolherFace({ tipo: 'jogarCarta', jogador: 'humano', uid: sel.mao as string, zona: z, posicao: posPend })
       return
     }
     if (modo?.tipo === 'alvo') {
@@ -312,7 +358,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       } else dizer('Escolha primeiro a unidade atacante.', true)
       return
     }
-    if (u) {
+    if (u && !('oculta' in u && u.oculta)) {
       setFoco(u.cartaId)
       if (lado === 'humano') setSel({ unidade: z })
     }
@@ -555,7 +601,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     setArr(null)
     if (a.toque && !a.moveu) return // pressão longa solta sem mover: não joga (a carta fica selecionada)
     const r = avaliarDestino(a.uid, destinoSob(e.clientX, e.clientY))
-    if (r.cmd) enviar(r.cmd)
+    if (r.cmd) enviarOuEscolherFace(r.cmd)
     else dizer(r.motivo, true)
   }
 
@@ -594,6 +640,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       if (e.key !== 'Escape') return
       if (arrRef.current) cancelarArrasto() // arrasto em curso: Esc só cancela o arrasto
       else if (estado.resultado && !reproduzindo) onVoltar()
+      else if (colocacaoPendente) setColocacaoPendente(null)
       else if (confirma) setConfirma(false)
       else if (modo) {
         setModo(null)
@@ -602,7 +649,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     }
     window.addEventListener('keydown', aoTeclar)
     return () => window.removeEventListener('keydown', aoTeclar)
-  }, [estado.resultado, reproduzindo, confirma, modo, onVoltar])
+  }, [estado.resultado, reproduzindo, colocacaoPendente, confirma, modo, onVoltar])
 
   // ---------------------------------------------------------------- derivados de apresentação
   const efet = (dono: IdJogador, u: UnidadeEmCampo) => ({ atk: atkEfetivo(plano, dono, u, cat), def: defEfetiva(plano, dono, u, cat) })
@@ -670,19 +717,52 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
         </div>
       )
     }
-    const c = cat.get(u.cartaId)!
-    const { atk, def } = efet(lado, u)
+    if ('oculta' in u && u.oculta) {
+      const rot = `Zona ${z + 1} ${quem}: unidade virada para baixo, em ${u.posicao === 'ATAQUE' ? 'ataque' : 'defesa'}${u.atacou ? ', já atacou' : ''}${
+        alvoValido ? ', alvo válido' : ''
+      }`
+      return (
+        <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
+          <CartaVerso
+            tamanho="campo"
+            posicao={u.posicao}
+            destaque={alvoValido ? 'alvo' : null}
+            focoAlvo={alvoValido}
+            rotulo={rot}
+            onClick={() => cliqueUnidade(lado, z)}
+          />
+        </div>
+      )
+    }
+    const unidade = u as UnidadeEmCampo
+    const c = cat.get(unidade.cartaId)!
+    const { atk, def } = efet(lado, unidade)
     const rot = `Zona ${z + 1} ${quem}: ${c.nome}, ATK ${atk}, DEF ${def}, em ${u.posicao === 'ATAQUE' ? 'ataque' : 'defesa'}${u.atacou ? ', já atacou' : ''}${
-      u.equipamentoUid ? ', equipada' : ''
+      unidade.equipamentoUid ? ', equipada' : ''
     }${alvoValido ? ', alvo válido' : ''}${atacantePossivel ? ', pode atacar' : ''}`
     const efeito = fx.atacando.includes(chave) ? 'atacando' : fx.impacto.includes(chave) ? 'impacto' : fx.entrando.includes(chave) ? 'entrando' : null
+    if (unidade.viradaParaBaixo) {
+      return (
+        <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
+          <CartaVerso
+            tamanho="campo"
+            posicao={unidade.posicao}
+            selecionada={sel.unidade === z || atacanteAtual === z}
+            destaque={alvoValido ? 'alvo' : atacantePossivel ? 'valida' : null}
+            focoAlvo={alvoValido || atacantePossivel}
+            rotulo={`${rot}, virada para baixo`}
+            onClick={() => cliqueUnidade(lado, z)}
+          />
+        </div>
+      )
+    }
     return (
       <div key={z} className={'zona' + drop} data-destino={keyDestino} {...dropAttr}>
         <CartaView
           carta={c}
           atk={atk}
           def={def}
-          posicao={u.posicao}
+          posicao={unidade.posicao}
           tamanho="campo"
           selecionada={lado === 'humano' && (sel.unidade === z || atacanteAtual === z)}
           destaque={alvoValido ? 'alvo' : atacantePossivel ? 'valida' : null}
@@ -742,7 +822,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   })
 
   const desistirVisivel = confirma && (!estado.resultado || reproduzindo)
-  const dialogoAberto = desistirVisivel || (!!estado.resultado && !reproduzindo)
+  const dialogoAberto = !!colocacaoPendente || desistirVisivel || (!!estado.resultado && !reproduzindo)
 
   const posAtual = cartaSel?.tipo === 'unidade' ? posPend : undefined
 
@@ -924,6 +1004,18 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
             desistirAgora()
           }}
           onCancelar={() => setConfirma(false)}
+        />
+      ) : null}
+
+      {colocacaoPendente ? (
+        <DialogoFaceUnidade
+          posicao={colocacaoPendente.posicao ?? 'ATAQUE'}
+          onEscolher={(viradaParaBaixo) => {
+            const cmd = colocacaoPendente
+            setColocacaoPendente(null)
+            enviar({ ...cmd, viradaParaBaixo })
+          }}
+          onCancelar={() => setColocacaoPendente(null)}
         />
       ) : null}
 

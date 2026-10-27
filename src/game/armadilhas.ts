@@ -5,6 +5,7 @@ import type { Catalogo, Ctx, EstadoDuelo, IdJogador } from './estado'
 export type Gatilho = 'ataque_recebido' | 'ataque_direto' | 'invocacao_impacto'
 
 export interface EfeitoArmadilha {
+  cartaId: string
   operacao: string
   valor: number
 }
@@ -40,7 +41,7 @@ export function ativarArmadilha(ctx: Ctx, dono: IdJogador, zona: number, gatilho
     { tipo: 'armadilha_ativada', dono, zona, carta: { uid: s.uid, cartaId: s.cartaId }, gatilho, operacao: ef.operacao, valor: ef.valor },
     `${dono === 'humano' ? 'Sua armadilha foi ativada' : 'Armadilha do oponente ativada'}: ${nomeCarta(ctx.cat, s.cartaId)}.`,
   )
-  return { operacao: ef.operacao, valor: ef.valor }
+  return { cartaId: s.cartaId, operacao: ef.operacao, valor: ef.valor }
 }
 
 /** Procura e dispara (no máximo uma) armadilha do `dono` para o gatilho; null se nenhuma elegível. */
@@ -64,7 +65,15 @@ export function reagirInvocacao(ctx: Ctx, invocador: IdJogador, zonaUnidade: num
   u.buffDef -= m
   emitir(
     ctx,
-    { tipo: 'efeito_aplicado', jogador: dono, cartaId: u.cartaId, operacao: 'debuff_invocada', valor: -m, alvo: { jogador: invocador, zona: zonaUnidade } },
+    {
+      tipo: 'efeito_aplicado',
+      jogador: dono,
+      cartaId: ef.cartaId,
+      operacao: 'debuff_invocada',
+      valor: -m,
+      alvo: { jogador: invocador, zona: zonaUnidade },
+      ...(u.viradaParaBaixo ? { alvoViradoParaBaixo: true } : {}),
+    },
     `${nomeCarta(ctx.cat, u.cartaId)} perde ${m} de ATK e DEF.`,
   )
 }

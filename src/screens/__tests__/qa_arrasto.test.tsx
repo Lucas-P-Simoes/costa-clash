@@ -38,7 +38,7 @@ describe('QA arrasto: bordas', () => {
     expect(campoV()).toBe('')
   })
 
-  it('movimento de outro ponteiro durante o arrasto é ignorado e não solta a carta', () => {
+  it('movimento de outro ponteiro durante o arrasto é ignorado e não solta a carta', async () => {
     montar()
     document.elementFromPoint = () => zona(2)
     fireEvent.pointerDown(mao(1), { ...P, clientX: 100, clientY: 500 })
@@ -48,6 +48,9 @@ describe('QA arrasto: bordas', () => {
     expect(campoV()).toBe('')
     expect(document.querySelector('.duelo-arrasto-fantasma')).not.toBeNull()
     fireEvent.pointerUp(window, { ...P, clientX: 200, clientY: 300 })
+    expect(screen.getByRole('dialog', { name: 'Como colocar a unidade?' })).toBeTruthy()
+    await tick()
+    fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
     expect(campoV()).toMatch(/Zona 3 sua: Recife de Coral/)
   })
 

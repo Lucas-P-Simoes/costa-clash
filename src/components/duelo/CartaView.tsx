@@ -1,5 +1,6 @@
 import { useState } from 'react'
 import type { Carta } from '../../game/tipos'
+import versoCartaUrl from '../../assets/duelo/verso-carta.webp'
 import { arteDaCarta } from '../../arte/arteDisponivel'
 import type { ArteDaCarta } from '../../arte/arteDisponivel'
 import { classificarCarta } from '../../arte/categorias'
@@ -148,11 +149,53 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
   )
 }
 
-/** Verso de carta (mão ou armadilha virada do adversário): não revela nada. */
-export function CartaVerso({ rotulo, tamanho = 'mini' }: { rotulo: string; tamanho?: 'mao' | 'campo' | 'mini' }) {
+/** Verso de carta: não revela identidade, arte nem atributos; em campo pode continuar interativo/alvo. */
+export function CartaVerso({
+  rotulo,
+  tamanho = 'mini',
+  posicao,
+  destaque,
+  selecionada,
+  focoAlvo,
+  onClick,
+}: {
+  rotulo: string
+  tamanho?: 'mao' | 'campo' | 'mini'
+  posicao?: 'ATAQUE' | 'DEFESA'
+  destaque?: 'alvo' | 'valida' | null
+  selecionada?: boolean
+  focoAlvo?: boolean
+  onClick?: () => void
+}) {
+  const classe = [
+    'carta',
+    'carta--verso',
+    `carta--${tamanho}`,
+    posicao === 'DEFESA' ? 'carta--defesa' : posicao === 'ATAQUE' ? 'carta--ataque' : '',
+    selecionada ? 'carta--selecionada' : '',
+    destaque ? `carta--${destaque}` : '',
+  ]
+    .filter(Boolean)
+    .join(' ')
+  const arteVerso = <img className="carta__verso-imagem" src={versoCartaUrl} alt="" aria-hidden="true" draggable={false} />
+  if (onClick) {
+    return (
+      <button
+        type="button"
+        className={classe}
+        aria-label={rotulo}
+        aria-pressed={selecionada === undefined ? undefined : selecionada}
+        data-posicao={posicao}
+        data-foco={focoAlvo ? 'alvo' : undefined}
+        onClick={onClick}
+      >
+        {arteVerso}
+      </button>
+    )
+  }
   return (
-    <div className={`carta carta--verso carta--${tamanho}`} role="img" aria-label={rotulo}>
-      <span className="carta__verso-marca" aria-hidden="true" />
+    <div className={classe} role="img" aria-label={rotulo} data-posicao={posicao}>
+      {arteVerso}
     </div>
   )
 }

@@ -7,7 +7,7 @@ import type { CartaInstancia, EstadoDuelo, Fase, IdJogador, Posicao, SuporteEmZo
 
 const cat = mapaCatalogo(CATALOGO)
 
-export type CampoCfg = string | { id: string; pos?: Posicao; atacou?: boolean; buffAtk?: number; buffDef?: number; equip?: string }
+export type CampoCfg = string | { id: string; pos?: Posicao; viradaParaBaixo?: boolean; atacou?: boolean; buffAtk?: number; buffDef?: number; equip?: string }
 export type SuporteCfg = string | { id: string; turno?: number; ordem?: number }
 
 export interface ConfigJogador {
@@ -53,6 +53,7 @@ export function cenario(cfg: ConfigCenario = {}): EstadoDuelo {
       const u: UnidadeEmCampo = {
         ...inst,
         posicao: o.pos ?? 'ATAQUE',
+        viradaParaBaixo: o.viradaParaBaixo ?? false,
         atacou: o.atacou ?? false,
         buffAtk: o.buffAtk ?? 0,
         buffDef: o.buffDef ?? 0,
@@ -113,7 +114,7 @@ export function uidDe(e: EstadoDuelo, j: IdJogador, cartaId: string): string {
   return c.uid
 }
 
-export function jogar(e: EstadoDuelo, j: IdJogador, cartaId: string, extra: { zona?: number; posicao?: Posicao; alvo?: number } = {}): ResultadoComando {
+export function jogar(e: EstadoDuelo, j: IdJogador, cartaId: string, extra: { zona?: number; posicao?: Posicao; viradaParaBaixo?: boolean; alvo?: number } = {}): ResultadoComando {
   return aplicarComando(e, { tipo: 'jogarCarta', jogador: j, uid: uidDe(e, j, cartaId), ...extra })
 }
 

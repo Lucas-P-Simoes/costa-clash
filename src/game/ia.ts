@@ -15,28 +15,34 @@ import type { Carta } from './tipos'
 interface Inimigo {
   zona: number
   posicao: Posicao
-  atk: number
-  def: number
-  cartaId: string
+  atk: number | null
+  def: number | null
+  cartaId: string | null
+  oculta: boolean
 }
 
 function inimigos(e: EstadoDuelo, eu: IdJogador, cat: Catalogo): Inimigo[] {
   const adv = outro(eu)
   const r: Inimigo[] = []
   e.jogadores[adv].campo.forEach((u, zona) => {
-    if (u) r.push({ zona, posicao: u.posicao, atk: atkEfetivo(e, adv, u, cat), def: defEfetiva(e, adv, u, cat), cartaId: u.cartaId })
+    if (!u) return
+    if (u.viradaParaBaixo || u.cartaId === '?') r.push({ zona, posicao: u.posicao, atk: null, def: null, cartaId: null, oculta: true })
+    else r.push({ zona, posicao: u.posicao, atk: atkEfetivo(e, adv, u, cat), def: defEfetiva(e, adv, u, cat), cartaId: u.cartaId, oculta: false })
   })
   return r
 }
 
 /** O atacante projetado vence ao menos um combate (ou o adversário está sem unidades: ataque direto). */
 function vence(atk: number, inim: Inimigo[]): boolean {
-  return inim.length === 0 || inim.some((t) => atk > (t.posicao === 'ATAQUE' ? t.atk : t.def))
+  return inim.length === 0 || inim.some((t) => !t.oculta && atk > (t.posicao === 'ATAQUE' ? (t.atk as number) : (t.def as number)))
 }
 
 /** "Vantagem atual": vence algum combate e não é mais fraca que nenhum atacante inimigo. */
 function temVantagem(atk: number, inim: Inimigo[]): boolean {
-  return inim.length === 0 || (vence(atk, inim) && inim.filter((t) => t.posicao === 'ATAQUE').every((t) => atk >= t.atk))
+  return (
+    inim.length === 0 ||
+    (vence(atk, inim) && inim.filter((t) => t.posicao === 'ATAQUE').every((t) => !t.oculta && atk >= (t.atk as number)))
+  )
 }
 
 function contarGrupo(e: EstadoDuelo, dono: IdJogador, grupo: string, cat: Catalogo): number {
@@ -168,10 +174,16 @@ function escolherAtaque(e: EstadoDuelo, cat: Catalogo, eu: IdJogador): Comando |
     const opcoes: { alvo: number | 'direto'; score: number }[] = []
     if (inim.length === 0) opcoes.push({ alvo: 'direto', score: 100000 + atk })
     for (const t of inim) {
+      // Política sem trapaça: alvos ocultos têm risco desconhecido. A IA prefere qualquer vitória conhecida;
+      // se não houver, ainda pode atacar um oculto com seu atacante mais forte (desempate pela menor zona).
+      if (t.oculta) {
+        opcoes.push({ alvo: t.zona, score: 1000 + atk })
+        continue
+      }
       if (t.posicao === 'ATAQUE') {
-        if (atk > t.atk) opcoes.push({ alvo: t.zona, score: 10000 + 2 * t.atk + (atk - t.atk) })
-      } else if (atk > t.def) {
-        opcoes.push({ alvo: t.zona, score: 5000 + t.atk })
+        if (atk > (t.atk as number)) opcoes.push({ alvo: t.zona, score: 10000 + 2 * (t.atk as number) + (atk - (t.atk as number)) })
+      } else if (atk > (t.def as number)) {
+        opcoes.push({ alvo: t.zona, score: 5000 + (t.atk as number) })
       }
       // nunca ataca quando o resultado é dano ao próprio LP, empate de destruição ou nada
     }

@@ -20,6 +20,7 @@ function iniciarTurnoDaIA() {
   fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
   fireEvent.click(botao(/Usar carta/))
   fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+  fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
   fireEvent.click(botao(/Encerrar turno/))
   act(() => {
     vi.advanceTimersByTime(150) // IA no meio da reprodução

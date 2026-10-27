@@ -19,7 +19,7 @@ export type { ResultadoValidacaoBaralho } from './baralho'
 export { criarRng, embaralhar } from './rng'
 export type { Rng } from './rng'
 export { visaoParaJogador, logPublico, eventosPublicos } from './visao'
-export type { VisaoDuelo, VisaoPropria, VisaoAdversario, SuporteVisivel } from './visao'
+export type { VisaoDuelo, VisaoPropria, VisaoAdversario, SuporteVisivel, UnidadeVisivel } from './visao'
 export { decidirComando } from './ia'
 export { mapaCatalogo, invariantes, totalCartas, outro } from './estado'
 export type {

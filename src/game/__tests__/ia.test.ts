@@ -4,6 +4,7 @@ import { BARALHOS_OPONENTES } from '../../data/baralhosOponentes'
 import { aplicarComando } from '../acoes'
 import type { Comando } from '../acoes'
 import { criarDuelo, executarTurnoIA } from '../duelo'
+import { invariantes } from '../estado'
 import type { EstadoDuelo } from '../estado'
 import { decidirComando } from '../ia'
 import { estadoDeVisao, visaoParaJogador } from '../visao'
@@ -42,10 +43,32 @@ describe('visão parcial: não vaza informação oculta', () => {
     expect(visaoParaJogador(e, 'humano').eu.suporte[0]?.cartaId).toBe('CC-093')
   })
 
+  it('unidade virada para baixo aparece sem identidade, uid, arte lógica, ATK, DEF ou buffs', () => {
+    const e = cenario({ humano: { campo: [{ id: 'CC-056', pos: 'ATAQUE', viradaParaBaixo: true, buffAtk: 900, buffDef: 700 }] }, ativo: 'oponente' })
+    const v = visaoParaJogador(e, 'oponente')
+    expect(v.oponente.campo[0]).toEqual({ oculta: true, posicao: 'ATAQUE', atacou: false })
+    const json = JSON.stringify(v.oponente.campo[0])
+    expect(json).not.toMatch(/CC-056|cartaId|uid|buff|atk|def/i)
+    expect(visaoParaJogador(e, 'humano').eu.campo[0]).toMatchObject({ cartaId: 'CC-056', viradaParaBaixo: true })
+  })
+
   it('equipamentos do adversário são públicos (estão vinculados a unidades visíveis)', () => {
     const e = cenario({ humano: { campo: [{ id: 'CC-001', equip: 'CC-085' }] }, ativo: 'oponente' })
     const v = visaoParaJogador(e, 'oponente')
-    expect(v.oponente.suporte[0]).toMatchObject({ oculta: false, cartaId: 'CC-085' })
+    const unidade = v.oponente.campo[0]
+    expect(unidade?.oculta).toBe(false)
+    if (!unidade || unidade.oculta) throw new Error('A unidade deveria estar visível.')
+    expect(v.oponente.suporte[0]).toMatchObject({ oculta: false, cartaId: 'CC-085', vinculadaA: unidade.uid })
+  })
+
+  it('equipamento público não expõe o uid interno da unidade oculta vinculada', () => {
+    const e = cenario({ humano: { campo: [{ id: 'CC-056', viradaParaBaixo: true, equip: 'CC-085' }] }, ativo: 'oponente' })
+    const uidOculto = e.jogadores.humano.campo[0]!.uid
+    const v = visaoParaJogador(e, 'oponente')
+    expect(v.oponente.campo[0]).toEqual({ oculta: true, posicao: 'ATAQUE', atacou: false })
+    expect(v.oponente.suporte[0]).toMatchObject({ oculta: false, cartaId: 'CC-085', vinculadaA: '?u0' })
+    expect.soft(JSON.stringify(v.oponente)).not.toContain(uidOculto)
+    expect.soft(invariantes(estadoDeVisao(v)).filter((erro) => !erro.includes('total de cartas'))).toEqual([])
   })
 
   it('o estado reconstruído para planejamento só tem marcadores no lugar do oculto', () => {
@@ -203,6 +226,20 @@ describe('posições e ataques (§9)', () => {
   it('destrói unidade em defesa quando o ATK é maior', () => {
     const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-003'] }, humano: { campo: [{ id: 'CC-047', pos: 'DEFESA' }] } })
     expect(decide(e)).toMatchObject({ tipo: 'atacar', alvo: 0 })
+  })
+
+  it('ataca alvo oculto sem consultar identidade/atributos: usa o atacante mais forte e menor zona no desempate', () => {
+    const montarOculta = (id: string) =>
+      cenarioCombate({
+        ativo: 'oponente',
+        oponente: { campo: ['CC-003', 'CC-007'] },
+        humano: { campo: [null, { id, pos: 'ATAQUE', viradaParaBaixo: true }] },
+      })
+    const fraca = montarOculta('CC-013')
+    const forte = montarOculta('CC-056')
+    expect(JSON.stringify(visaoParaJogador(fraca, 'oponente'))).toBe(JSON.stringify(visaoParaJogador(forte, 'oponente')))
+    expect(decide(fraca)).toEqual({ tipo: 'atacar', jogador: 'oponente', atacante: 1, alvo: 1 })
+    expect(decide(forte)).toEqual(decide(fraca))
   })
 
   it('unidades em DEFESA ou que já atacaram não atacam', () => {

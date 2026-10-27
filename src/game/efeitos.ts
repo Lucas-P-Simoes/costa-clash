@@ -34,8 +34,16 @@ function alterarAtributos(ctx: Ctx, jogador: IdJogador, carta: Carta, lado: IdJo
   const sinal = delta >= 0 ? '+' : ''
   emitir(
     ctx,
-    { tipo: 'efeito_aplicado', jogador, cartaId: carta.id, operacao: carta.efeito?.operacao ?? '', valor: delta, alvo: { jogador: lado, zona } },
-    `${nomeCarta(ctx.cat, u.cartaId)}: ${sinal}${delta} de ATK e DEF.`,
+    {
+      tipo: 'efeito_aplicado',
+      jogador,
+      cartaId: carta.id,
+      operacao: carta.efeito?.operacao ?? '',
+      valor: delta,
+      alvo: { jogador: lado, zona },
+      ...(u.viradaParaBaixo ? { alvoViradoParaBaixo: true } : {}),
+    },
+    `${u.viradaParaBaixo ? 'Uma unidade virada para baixo' : nomeCarta(ctx.cat, u.cartaId)}: ${sinal}${delta} de ATK e DEF.`,
   )
 }
 
@@ -56,8 +64,16 @@ function equipar(ctx: Ctx, jogador: IdJogador, carta: Carta, inst: CartaInstanci
   u.equipamentoUid = inst.uid
   emitir(
     ctx,
-    { tipo: 'efeito_aplicado', jogador, cartaId: carta.id, operacao: carta.efeito?.operacao ?? '', valor: carta.efeito?.valor ?? 0, alvo: { jogador, zona: alvo as number } },
-    `${carta.nome} equipada em ${nomeCarta(ctx.cat, u.cartaId)}.`,
+    {
+      tipo: 'efeito_aplicado',
+      jogador,
+      cartaId: carta.id,
+      operacao: carta.efeito?.operacao ?? '',
+      valor: carta.efeito?.valor ?? 0,
+      alvo: { jogador, zona: alvo as number },
+      ...(u.viradaParaBaixo ? { alvoViradoParaBaixo: true } : {}),
+    },
+    `${carta.nome} equipada em ${u.viradaParaBaixo ? 'uma unidade virada para baixo' : nomeCarta(ctx.cat, u.cartaId)}.`,
   )
 }
 
@@ -160,6 +176,8 @@ export function analisarAcao(e: EstadoDuelo, jogador: IdJogador, carta: Carta, c
   const alvos: number[] = []
   e.jogadores[dono].campo.forEach((u, z) => {
     if (!u) return
+    // Não use grupo/identidade ocultos para oferecer ao adversário um alvo que ele não poderia conhecer.
+    if (dono !== jogador && u.viradaParaBaixo) return
     if (grupo && cat.get(u.cartaId)?.grupo !== grupo) return
     if (op.semEquipamento && u.equipamentoUid) return
     alvos.push(z)

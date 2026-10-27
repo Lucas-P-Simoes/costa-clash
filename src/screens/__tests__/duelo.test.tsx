@@ -25,6 +25,7 @@ const ressaca = buscarOponente('ressaca')!
 const botao = (nome: string | RegExp) => screen.getByRole('button', { name: nome })
 const aviso = () => document.querySelector('.duelo-aviso')!.textContent
 const carta = (id: string) => CATALOGO.find((c) => c.id === id)!
+const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
 
 function montarCenario(cfg: ConfigCenario, atrasoIA = 0, extra: { onVoltar?: () => void; onNovamente?: () => void } = {}) {
   const e: EstadoDuelo = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
@@ -57,7 +58,14 @@ describe('CartaView', () => {
 
   it('verso não revela nada; todo efeito do catálogo tem texto curto', () => {
     render(<CartaVerso rotulo="Carta virada" />)
-    expect(screen.getByRole('img', { name: 'Carta virada' }).textContent).toBe('')
+    const verso = screen.getByRole('img', { name: 'Carta virada' })
+    expect(verso.textContent).toBe('')
+    const arte = verso.querySelector<HTMLImageElement>('.carta__verso-imagem')!
+    expect(arte).toBeTruthy()
+    expect(arte.getAttribute('src')).toContain('verso-carta.webp')
+    expect(arte.getAttribute('alt')).toBe('')
+    expect(arte.getAttribute('aria-hidden')).toBe('true')
+    expect(arte.draggable).toBe(false)
     for (const c of CATALOGO.filter((x) => x.tipo !== 'unidade')) expect(efeitoCurto(c).length).toBeGreaterThan(10)
   })
 })
@@ -83,6 +91,7 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     fireEvent.click(botao(/Usar carta/))
     expect(aviso()).toContain('zona livre')
     fireEvent.click(screen.getByRole('button', { name: /Zona 2 sua: vazia/ }))
+    confirmarFaceParaCima()
     const z = screen.getByRole('button', { name: /^Zona 2 sua: Recife de Coral, ATK 1600, DEF 1500, em ataque/ })
     expect(z).toBeTruthy()
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
@@ -102,7 +111,43 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     fireEvent.click(botao(/Defender/))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
     expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*em defesa/ })).toBeTruthy()
+  })
+
+  it('após escolher a zona, oferece por teclado as duas faces e permite baixar virada para baixo', () => {
+    montarCenario({ humano: { mao: ['CC-003'] } })
+    fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
+    fireEvent.click(botao(/Usar carta/))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    const dialogo = screen.getByRole('dialog', { name: 'Como colocar a unidade?' })
+    expect(dialogo.textContent).toContain('Posição de ataque')
+    expect(document.activeElement).toBe(within(dialogo).getByRole('button', { name: 'Virada para cima' }))
+    fireEvent.click(within(dialogo).getByRole('button', { name: 'Virada para baixo' }))
+    expect(screen.queryByRole('dialog', { name: 'Como colocar a unidade?' })).toBeNull()
+    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*virada para baixo/ }).className).toContain('carta--verso')
+    expect(document.querySelector('[role="log"]')?.textContent).toContain('virada para baixo em ataque')
+  })
+
+  it('prende o foco no diálogo de face e Esc cancela sem jogar a carta', () => {
+    montarCenario({ humano: { mao: ['CC-003'] } })
+    fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
+    fireEvent.click(botao(/Usar carta/))
+    const zona = screen.getByRole('button', { name: /Zona 1 sua: vazia/ })
+    fireEvent.click(zona)
+    const dialogo = screen.getByRole('dialog', { name: 'Como colocar a unidade?' })
+    const cima = within(dialogo).getByRole('button', { name: 'Virada para cima' })
+    const cancelar = within(dialogo).getByRole('button', { name: 'Cancelar' })
+    cancelar.focus()
+    fireEvent.keyDown(document, { key: 'Tab' })
+    expect(document.activeElement).toBe(cima)
+    fireEvent.keyDown(document, { key: 'Tab', shiftKey: true })
+    expect(document.activeElement).toBe(cancelar)
+    fireEvent.keyDown(window, { key: 'Escape' })
+    expect(screen.queryByRole('dialog', { name: 'Como colocar a unidade?' })).toBeNull()
+    expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
+    expect(screen.getByRole('button', { name: /Zona 1 sua: vazia/ })).toBeTruthy()
+    expect(document.activeElement).toBe(zona)
   })
 
   it('ação com alvo: destaca alvos válidos, rejeita inválidos e aplica o efeito pelo motor', () => {
@@ -164,6 +209,7 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
     expect(screen.getByText('Seu turno')).toBeTruthy()
     expect(document.querySelector('.duelo-turno__rotulo')!.textContent).toBe('Rodada 3')
@@ -177,6 +223,7 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
     expect(screen.getByText('Turno do oponente')).toBeTruthy()
     fireEvent.click(botao(/Encerrar turno/))
@@ -217,6 +264,23 @@ describe('Partida: informação oculta', () => {
     expect(c2.container.innerHTML).toContain('Plano de Contingência')
   })
 
+  it('unidade adversária oculta mostra só o verso, continua atacável e revela antes do combate', () => {
+    const { container } = montarCenario({
+      fase: 'COMBATE',
+      jogadaFeita: true,
+      humano: { campo: ['CC-001'] },
+      oponente: { campo: [{ id: 'CC-056', viradaParaBaixo: true }], mao: ['CC-002'] },
+    })
+    expect(container.innerHTML).not.toContain('Derramamento de Óleo')
+    const oculta = screen.getByRole('button', { name: /Zona 1 do oponente: unidade virada para baixo, em ataque/ })
+    expect(oculta.className).toContain('carta--verso')
+    fireEvent.click(botao(/^Atacar/))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Manguezal Protegido.*pode atacar/ }))
+    fireEvent.click(screen.getByRole('button', { name: /unidade virada para baixo.*alvo válido/ }))
+    expect(screen.getByRole('button', { name: /Zona 1 do oponente: Derramamento de Óleo, ATK 2200, DEF 700/ })).toBeTruthy()
+    expect(screen.getByLabelText('Sua vida: 7000')).toBeTruthy()
+  })
+
   it('o log só traz eventos públicos: compras e armadilhas colocadas pelo oponente não vazam', () => {
     const { container } = montarCenario(
       { humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-099', 'CC-099', 'CC-099', 'CC-099', 'CC-099'], baralho: 30 } },
@@ -224,6 +288,7 @@ describe('Partida: informação oculta', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
     expect(container.innerHTML).not.toContain('Proteção Emergencial')
     expect(container.innerHTML).not.toContain('CC-099')
@@ -270,6 +335,7 @@ describe('Partida: desistência, resultado e jogar novamente', () => {
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia|Zona 2 sua: vazia/ }))
+    confirmarFaceParaCima()
     fireEvent.click(botao(/^Atacar/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Derramamento de Óleo.*pode atacar/ }))
     fireEvent.click(botao(/Ataque direto/))
