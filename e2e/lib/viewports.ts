@@ -68,6 +68,9 @@ export const SUBCONJUNTO_E2E: Viewport[] = [
   vp(1100, 640),
   vp(1024, 600),
   vp(1280, 610, { dpr: 1.5 }),
+  vp(709, 506),
+  vp(800, 500),
+  vp(700, 450),
 ]
 
 export const MATRIZ_COMPLETA: Viewport[] = [...NOMINAIS, ...EFETIVAS, ...ZOOM, ...EXTRAS_QA]

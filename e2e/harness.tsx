@@ -2,7 +2,8 @@
 // Monta telas em estados difíceis de alcançar pela UI, sem rede nem serviço real:
 //   ?cena=conta                      TelaConta com serviço de auth FALSO injetado (nenhuma API é chamada)
 //   ?cena=autenticado                App com sessão FALSA restaurada direto no Duelo Livre
-//   ?cena=duelo-campo[&seed=N]       Partida com unidades em ataque e em defesa, um verso e suportes dos dois lados (estado gerado pelo motor)
+//   ?cena=codigo                     TelaCodigoRecuperacao com um código FICTÍCIO (nenhuma API é chamada)
+//   ?cena=duelo-campo[&seed=N]       Partida com unidades em ataque e em defesa e suportes dos dois lados (estado gerado pelo motor)
 //   ?cena=resultado-vitoria|resultado-derrota|resultado-empate   Partida já encerrada (diálogo de resultado)
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -19,6 +20,7 @@ import { aplicarComando, criarDuelo, executarTurnoIA } from '../src/game'
 import type { EstadoDuelo } from '../src/game'
 import { TelaConta } from '../src/screens/conta/TelaConta'
 import { Partida } from '../src/screens/duelo/Partida'
+import { TelaCodigoRecuperacao } from '../src/screens/recuperacao/TelaCodigoRecuperacao'
 
 const busca = new URLSearchParams(window.location.search)
 const cena = busca.get('cena') ?? 'conta'
@@ -92,6 +94,7 @@ const USUARIO_FALSO = {
   email: 'teste@example.com',
   baralho: [...BARALHO_INICIAL],
   colecao: BARALHO_INICIAL.slice(0, 20).map((cartaId) => ({ cartaId, quantidade: 1 })),
+  temCodigoRecuperacao: true,
 } satisfies UsuarioAutenticado
 
 const SERVICO_FALSO: ServicoAuth = {
@@ -103,11 +106,26 @@ const SERVICO_FALSO: ServicoAuth = {
       usuario: USUARIO_FALSO,
     }),
   sair: () => Promise.resolve(),
+  // Código FICTÍCIO (não é de nenhuma conta).
+  gerarNovoCodigo: ({ senhaAtual }) =>
+    Promise.resolve(senhaAtual === 'senha-correta-1' ? { ok: true, codigoRecuperacao: 'K7M2Q-9XWPD-4NHTR-VBS38' } : { ok: false, codigo: 'senha_incorreta', mensagem: 'Senha atual incorreta.' }),
 }
 
 function montarCena() {
-  if (cena === 'conta') return <TelaConta usuario={USUARIO_FALSO} onSair={() => undefined} />
+  if (cena === 'conta') return <TelaConta usuario={USUARIO_FALSO} servicoAuth={SERVICO_FALSO} onSair={() => undefined} />
   if (cena === 'autenticado') return <App servicoAuth={SERVICO_FALSO} />
+  if (cena === 'codigo') {
+    return (
+      <TelaCodigoRecuperacao
+        titulo="Conta criada"
+        introducao="Sua conta foi criada. Este é o código que recupera sua senha se você esquecê-la."
+        email="teste@example.com"
+        codigo="K7M2Q-9XWPD-4NHTR-VBS38"
+        rotuloContinuar="Continuar"
+        onContinuar={() => undefined}
+      />
+    )
+  }
   let estado: EstadoDuelo
   if (cena === 'duelo-campo') estado = estadoComCampo(Number(busca.get('seed')) || null)
   else {
@@ -124,3 +142,4 @@ createRoot(document.getElementById('root')!).render(
     {montarCena()}
   </StrictMode>,
 )
+

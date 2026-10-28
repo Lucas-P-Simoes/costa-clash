@@ -1,13 +1,15 @@
 // D1 falso para testes: SQLite em memória (node:sqlite) com a migração REAL aplicada.
-import { readFileSync } from 'node:fs'
+import { readdirSync, readFileSync } from 'node:fs'
 import { join } from 'node:path'
 import { DatabaseSync } from 'node:sqlite'
 import type { SQLInputValue } from 'node:sqlite'
 
+const MIGRACOES = readdirSync(join(import.meta.dirname, '../../migrations')).filter((f) => f.endsWith('.sql')).sort()
+
 export function criarD1() {
   const sqlite = new DatabaseSync(':memory:')
   sqlite.exec('PRAGMA foreign_keys = ON')
-  sqlite.exec(readFileSync(join(import.meta.dirname, '../../migrations/0001_init.sql'), 'utf8'))
+  for (const f of MIGRACOES) sqlite.exec(readFileSync(join(import.meta.dirname, '../../migrations', f), 'utf8'))
 
   function preparar(sql: string, valores: SQLInputValue[] = []) {
     const stmt = {

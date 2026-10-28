@@ -313,7 +313,7 @@ describe('Partida: desistência, resultado e jogar novamente', () => {
     const d = screen.getByRole('dialog')
     expect(within(d).getByRole('heading', { name: 'Derrota' })).toBeTruthy()
     expect(d.textContent).toContain('Você desistiu do duelo.')
-    expect(d.textContent).toContain('em breve')
+    expect(d.textContent).toContain('para ganhar uma carta para a sua coleção.')
   })
 
   it('Esc abre a confirmação e Esc de novo a fecha', () => {

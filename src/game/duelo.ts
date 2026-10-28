@@ -12,7 +12,7 @@ import type { Carta } from './tipos'
 import { visaoParaJogador } from './visao'
 
 export interface OpcoesDuelo {
-  /** 40 IDs de carta do jogador humano (perfil do usuário ou baralho inicial do convidado). */
+  /** 40 IDs de carta do jogador humano (perfil do usuário ou baralho inicial padrão). */
   baralhoJogador: readonly string[]
   /** 40 IDs de carta do oponente (ver `baralhosOponentes.ts`). */
   baralhoOponente: readonly string[]

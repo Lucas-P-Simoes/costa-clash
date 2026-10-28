@@ -10,7 +10,23 @@
 
 Separar conteúdo educativo, motor de jogo e UI. Qualquer arquivo/stack aqui é proposta até a inicialização real do projeto.
 
-- Duelo Livre: dados em `src/data/oponentes.ts` (16 adversários; só apresentação, sem baralhos); retratos em `src/assets/oponentes/` (resolvidos por `import.meta.glob`); UI reutilizável em `src/components/ui/{GradeOponentes,navegacaoGrade,PainelOponente,MedidorDificuldade}` e tela em `src/screens/dueloLivre/`. `App.tsx` abre `dueloLivre` diretamente após login, restauração de sessão ou cadastro; `usuario` transporta perfil/baralho. Sem usuário, essa tela só é usada em teste de componente. A antiga `TelaConta` permanece no código, mas saiu da navegação.
+- Duelo Livre: dados em `src/data/oponentes.ts` (17 adversários) e baralhos provisórios de 40 cartas em `src/data/baralhosOponentes.ts`; retratos e panoramas em `src/assets/oponentes/` (resolvidos por `import.meta.glob`). A grade inclui ainda `CartaoBaralho`, atalho visual separado e inerte que não faz parte de `OPONENTES` nem do `radiogroup`. UI reutilizável em `src/components/ui/{GradeOponentes,navegacaoGrade,PainelOponente,MedidorDificuldade}` e tela em `src/screens/dueloLivre/`. `CabecalhoTela` mantém a variante padrão global e oferece a variante opt-in `duelo-livre`, com `OrnamentoOndaGrande` SVG decorativo, usada somente nesta tela. `App.tsx` abre o estado `dueloLivre` diretamente após login, restauração de sessão ou conclusão do cadastro; `usuario` transporta perfil/baralho. Sem usuário, essa tela só é usada em teste de componente (o modo convidado foi removido). A antiga `TelaConta` permanece implementada para preservação do trabalho de conta/recuperação, mas não integra a navegação atual.
+
+## Coordenação entre Codex e Claude Code
+
+A coordenação é parte do processo do repositório, não da aplicação em runtime:
+
+```text
+AGENTS.md                 regras operacionais compartilhadas; reconhecidas pelo Codex
+.agents/dev.md            papel canônico DEV, independente de provedor
+.agents/qa.md             papel canônico QA, independente de provedor
+.claude/agents/*.md       adaptadores de descoberta do Claude Code
+.codex/agents/*.md        templates usados pelo coordenador ao criar subagentes no Codex
+docs/ESTADO_DO_PROJETO.md fotografia factual do projeto
+docs/HANDOFF.md           continuidade entre sessões e ferramentas
+```
+
+Os adaptadores não duplicam responsabilidades: apontam para `.agents/`. No Codex, `.codex/agents/` não implica auto-descoberta; a sessão coordenadora lê o template e despacha o subagente dinamicamente. O ciclo de mutação é serial: DEV termina e entrega evidências, QA revisa a árvore estável, defeitos retornam a uma nova rodada DEV e exigem novo QA. Somente o coordenador consolida o estado e o handoff ao final, salvo delegação explícita.
 
 ## Motor de duelo (implementado, 2026-10-22; fase A, sem UI)
 Módulos em `src/game/` (todos puros; sem React/DOM/localStorage/`Math.random`; estado imutável e serializável em JSON):
@@ -69,6 +85,7 @@ Eventos (`Evento` = dados + `turno` + `texto` em português): `turno_iniciado`, 
 
 ## Sistema de responsividade (2026-10-25)
 - **Escala**: `src/styles/responsivo.css` define `html { font-size: var(--cc-base) }` com `--cc-base = clamp(14px, min(100dvw / 90, 100dvh / 56.25), 26px)` (90 x 56,25 rem = 1440x900 de referência, 1rem = 16px). A escala é limitada pela MENOR dimensão relativa; piso 14px (legibilidade), teto 26px = 1,625x (4K não fica gigante; conteúdo centralizado em `--cc-largura-max`/`--cc-largura-duelo`, fundo preenche as laterais). Celular (largura <= 700px) usa 16px fixos (15px abaixo de 360px). Sem `zoom` nem `transform: scale()` globais. `src/ui/escala.ts` replica a fórmula (testada contra o CSS).
+- **Recuperação de senha** (`src/screens/recuperacao/`: `TelaRecuperarSenha`, `TelaCodigoRecuperacao`, `PainelCodigo` reutilizado no diálogo `src/screens/conta/DialogoNovoCodigo.tsx`; formato/validação puros em `src/auth/codigoRecuperacao.ts`, compartilhados com o worker; `ServicoAuth.recuperarSenha/gerarNovoCodigo`). O código vive só em estado de tela e é descartado ao sair. Worker: `codigo.ts` (geração/hash) e `recuperacao.ts` (rotas).
 - **Regra de ouro**: tamanhos em `rem` ou variáveis (`--sp-1..6`, `--h-*`, `--fs-*`, `--cc-alvo-toque`); `px` só para filetes de 1px e alvo de toque mínimo (`max(44px, 2.75rem)`). Quando a escala não está no piso a altura em rem é sempre >= 56,25 (a tela é desenhada para caber nisso); abaixo de ~790px de altura a escala fica no piso e a altura em rem encolhe: aí agem as **faixas de compactação por altura** (media `max-height` 900/820/720/680/620 em px reais; combinadas com largura), que redefinem variáveis (`--topo-h`, `--btn-h`, `--login-*`, ...) e escondem primeiro o decorativo (cena do cabeçalho, imagem da dica, textos de apoio) e só depois o funcional. Utilitários `.oculta-h820/.oculta-h720/.oculta-h620`.
 - **Layout de tela**: `.tela` (min-height 100dvh, safe-area) e `.tela-jogo` (a partir de 701x480: `height: 100dvh`, grid `auto minmax(0,1fr) auto`, `min-height: 0` nos filhos). Rolagem interna só onde inevitável (corpo das telas simples, painel do adversário). Celular/tablet: a tela volta a crescer (rolagem natural da página); breakpoints próprios: login 900px, duelo 900x560 (abaixo: coluna única com mão de altura natural e barra de ações fixa fora do contexto de empilhamento do miolo), Duelo Livre 1000px.
 - **Duelo**: tabuleiro em grid/flex (oponente, terreno, você, mão) + coluna lateral; cartas 3:4 dimensionadas por container query (`.zona` e `.duelo-mao__cartas` são contêineres de tamanho; `cqh/cqw`); nomes abreviados por container query em rem.

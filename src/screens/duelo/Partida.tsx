@@ -36,6 +36,7 @@ import {
 import type { Comando, ComandoAtacar, ComandoJogarCarta, EstadoDuelo, Evento, IdJogador, PassoIA, Posicao, UnidadeEmCampo, VisaoDuelo } from '../../game'
 import { estadoDeVisao } from '../../game/visao'
 import { ResultadoDuelo } from './ResultadoDuelo'
+import type { EstadoRecompensa } from './recompensa'
 import './duelo.css'
 
 const cat = mapaCatalogo(CATALOGO)
@@ -92,6 +93,10 @@ interface Props {
   onNovamente: () => void
   /** Atraso (ms) entre os passos do turno da IA; 0 = sem animação. */
   atrasoIA: number
+  /** Drop de carta da vitória (mostrado no resultado). */
+  recompensa?: EstadoRecompensa
+  /** Chamado uma única vez quando o humano vence. */
+  onVitoria?: () => void
 }
 
 function DialogoDesistir({ onConfirmar, onCancelar }: { onConfirmar: () => void; onCancelar: () => void }) {
@@ -154,7 +159,7 @@ function DialogoFaceUnidade({
 }
 
 /** Tela do duelo. Toda regra vem do motor (`src/game`); aqui só há seleção, modos guiados e apresentação. */
-export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atrasoIA }: Props) {
+export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atrasoIA, recompensa, onVitoria }: Props) {
   const [estado, setEstado] = useState(estadoInicial)
   const [reproduzindo, setReproduzindo] = useState(false)
   const [sel, setSel] = useState<{ mao?: string; unidade?: number }>({})
@@ -181,6 +186,15 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const t = timers.current
     return () => t.forEach((x) => window.clearTimeout(x))
   }, [])
+
+  // Vitória do humano: avisa uma única vez (o drop de carta é resgatado no servidor).
+  const vitoriaAvisada = useRef(false)
+  const venceu = estado.resultado?.vencedor === 'humano'
+  useEffect(() => {
+    if (!venceu || vitoriaAvisada.current) return
+    vitoriaAvisada.current = true
+    onVitoria?.()
+  }, [venceu, onVitoria])
 
   // ---------------------------------------------------------------- seta de ataque (Pointer Events)
   const ouvintesAtaque = useRef({
@@ -1283,7 +1297,15 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       ) : null}
 
       {estado.resultado && !reproduzindo ? (
-        <ResultadoDuelo resultado={estado.resultado} nomeOponente={oponente.nome} dados={dadosResultado} conceitos={conceitos} onNovamente={onNovamente} onVoltar={onVoltar} />
+        <ResultadoDuelo
+          resultado={estado.resultado}
+          nomeOponente={oponente.nome}
+          dados={dadosResultado}
+          conceitos={conceitos}
+          recompensa={recompensa}
+          onNovamente={onNovamente}
+          onVoltar={onVoltar}
+        />
       ) : null}
     </div>
   )

@@ -18,7 +18,8 @@ const MENSAGEM_FALHA_INESPERADA = 'Não foi possível criar a conta agora. Tente
 
 interface Props {
   servicoAuth: ServicoAuth
-  onAutenticado: (usuario: UsuarioAutenticado) => void
+  /** `codigoRecuperacao` vem só no cadastro: a tela seguinte o mostra uma única vez. */
+  onAutenticado: (usuario: UsuarioAutenticado, codigoRecuperacao?: string) => void
   onVoltar: () => void
 }
 
@@ -105,7 +106,7 @@ export function TelaCriarConta({ servicoAuth, onAutenticado, onVoltar }: Props) 
         : { ok: false, codigo: 'nao_configurado', mensagem: MENSAGEM_CADASTRO_NAO_CONFIGURADO }
       if (!montado.current) return
       if (resultado.ok) {
-        onAutenticado(resultado.usuario)
+        onAutenticado(resultado.usuario, resultado.codigoRecuperacao)
         return
       }
       if (resultado.campos?.email || resultado.campos?.senha) {
@@ -206,7 +207,7 @@ export function TelaCriarConta({ servicoAuth, onAutenticado, onVoltar }: Props) 
               </p>
 
               <p className="criar-conta__nota">
-                Você começa com um baralho inicial de 40 cartas. Ainda não há verificação de e-mail nem recuperação de senha.
+                Você começa com um baralho inicial de 40 cartas e recebe um código de recuperação de senha para guardar. Ainda não há verificação de e-mail.
               </p>
 
               <div className="criar-conta__botoes">

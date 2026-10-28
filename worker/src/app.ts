@@ -1,4 +1,6 @@
+import { iniciarDuelo, resgatarVitoria } from './drop'
 import { cabecalhosCors, erro, origensPermitidas, resposta } from './http'
+import { novoCodigoRecuperacao, recuperarSenha } from './recuperacao'
 import { cadastro, login, logout, me, putBaralho, saude } from './rotas'
 import type { Contexto } from './rotas'
 import type { Env } from './tipos'
@@ -16,6 +18,10 @@ const ROTAS: Record<string, Record<string, Acao>> = {
   '/api/logout': { POST: logout },
   '/api/me': { GET: me },
   '/api/baralho': { PUT: putBaralho },
+  '/api/senha/recuperar': { POST: recuperarSenha },
+  '/api/conta/codigo-recuperacao': { POST: novoCodigoRecuperacao },
+  '/api/duelo/iniciar': { POST: iniciarDuelo },
+  '/api/duelo/vitoria': { POST: resgatarVitoria },
 }
 
 export async function tratar(request: Request, env: Env, opcoes: Opcoes = {}): Promise<Response> {

@@ -42,3 +42,25 @@ export async function verificarCliquesAcoes(page: Page): Promise<ResultadoClique
     return out
   }, BOTOES)
 }
+
+/** Telas de formulário/código: cada controle visível e não inerte, centralizado na viewport, deve receber o clique (elementFromPoint). */
+export async function verificarCliquesControles(page: Page): Promise<string[]> {
+  return page.evaluate(async () => {
+    const problemas: string[] = []
+    const els = Array.from(document.querySelectorAll<HTMLElement>('button, input, a[href]')).filter((e) => {
+      const r = e.getBoundingClientRect()
+      const cs = getComputedStyle(e)
+      return r.width > 2 && r.height > 2 && cs.visibility !== 'hidden' && cs.display !== 'none' && !e.closest('[inert], .sr-only')
+    })
+    for (const e of els) {
+      e.scrollIntoView({ block: 'center' })
+      await new Promise((r) => requestAnimationFrame(() => r(null)))
+      const r = e.getBoundingClientRect()
+      const topo = document.elementFromPoint(r.left + r.width / 2, r.top + r.height / 2)
+      const ok = !!topo && (e.contains(topo) || (topo instanceof HTMLLabelElement && topo.control === e))
+      if (!ok) problemas.push((e.textContent ?? e.id).trim().slice(0, 30) + ' coberto por ' + (topo?.tagName ?? 'nada'))
+    }
+    window.scrollTo(0, 0)
+    return problemas
+  })
+}

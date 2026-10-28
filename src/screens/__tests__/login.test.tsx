@@ -145,8 +145,8 @@ describe('Regressões de QA', () => {
 
 describe('Navegação por estado', () => {
   it.each([
-    ['Esqueci a senha', 'Recuperar senha', /não está disponível/],
-  ])('%s abre a tela provisória e volta ao login', (rotulo, titulo, texto) => {
+    ['Esqueci a senha', 'Recuperar senha', /código de recuperação/],
+  ])('%s abre a tela de recuperação e volta ao login', (rotulo, titulo, texto) => {
     render(<App />)
     fireEvent.click(botao(rotulo))
     expect(screen.getByRole('heading', { level: 1, name: titulo })).toBeTruthy()

@@ -6,7 +6,10 @@ import { useFocoDialogo } from '../../components/duelo/useFocoDialogo'
 import { BotaoRetro } from '../../components/ui/BotaoRetro'
 import { IconeCartas, IconeEspadas, IconeLivro, IconeVoltar } from '../../components/ui/Icones'
 import { MolduraOrnamentada } from '../../components/ui/MolduraOrnamentada'
+import { CATALOGO } from '../../data/catalogo'
+import { MAX_COPIAS_COLECAO } from '../../data/dropsOponentes'
 import type { Resultado } from '../../game'
+import type { EstadoRecompensa } from './recompensa'
 
 /** Números públicos do duelo para o resumo (vida final, unidades em campo, rodadas). Nada oculto. */
 export interface DadosResultado {
@@ -22,6 +25,8 @@ interface Props {
   nomeOponente: string
   dados: DadosResultado
   conceitos: { nome: string; texto: string }[]
+  /** Drop de carta (só na vitória). Ausente = nada a mostrar ainda. */
+  recompensa?: EstadoRecompensa
   onNovamente: () => void
   onVoltar: () => void
 }
@@ -55,11 +60,35 @@ function motivoResultado(r: Resultado, nomeOponente: string): string {
   }
 }
 
+const TOTAL_CARTAS = CATALOGO.length
+
+function TextoRecompensa({ tipo, recompensa, nomeOponente }: { tipo: Tipo; recompensa?: EstadoRecompensa; nomeOponente: string }) {
+  if (tipo !== 'vitoria') return <>Vença {nomeOponente} para ganhar uma carta para a sua coleção.</>
+  switch (recompensa?.tipo) {
+    case 'carta': {
+      const nome = CATALOGO.find((c) => c.id === recompensa.cartaId)?.nome ?? recompensa.cartaId
+      return (
+        <>
+          Nova carta: <strong className="duelo-resultado__drop-carta">{nome}</strong> ({recompensa.quantidade}/{MAX_COPIAS_COLECAO} cópias). Coleção: {recompensa.cartasDistintas}/{TOTAL_CARTAS} cartas.
+        </>
+      )
+    }
+    case 'sem_carta':
+      return <>Você já tem todas as cartas de {nomeOponente} no máximo de cópias. Enfrente outros adversários!</>
+    case 'sem_conta':
+      return <>Entre com uma conta para ganhar cartas e montar sua coleção.</>
+    case 'erro':
+      return <>{recompensa.mensagem}</>
+    default:
+      return <>Sorteando sua carta…</>
+  }
+}
+
 /**
  * Tela de resultado (diálogo modal) no estilo de Tela-derrota/Tela-recompensa: título em placa de pedra, motivo,
- * conceitos aprendidos, resumo do duelo e as ações JOGAR NOVAMENTE / VOLTAR. Recompensas continuam "em breve".
+ * conceitos aprendidos, resumo do duelo, a carta ganha (drop) e as ações JOGAR NOVAMENTE / VOLTAR.
  */
-export function ResultadoDuelo({ resultado, nomeOponente, dados, conceitos, onNovamente, onVoltar }: Props) {
+export function ResultadoDuelo({ resultado, nomeOponente, dados, conceitos, recompensa, onNovamente, onVoltar }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   useFocoDialogo(ref)
   const tipo = tipoResultado(resultado)
@@ -133,7 +162,9 @@ export function ResultadoDuelo({ resultado, nomeOponente, dados, conceitos, onNo
                 </dd>
               </div>
             </dl>
-            <p className="duelo-dialogo__breve">Recompensas de cartas: em breve.</p>
+            <p className="duelo-dialogo__breve duelo-resultado__drop" role="status" aria-live="polite">
+              <TextoRecompensa tipo={tipo} recompensa={recompensa} nomeOponente={nomeOponente} />
+            </p>
           </MolduraOrnamentada>
         </div>
 

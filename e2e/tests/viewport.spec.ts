@@ -4,7 +4,7 @@ import { expect, test } from '@playwright/test'
 import type { Locator } from '@playwright/test'
 import { abrirCena, CENAS } from '../lib/cenas.ts'
 import type { Cena } from '../lib/cenas.ts'
-import { verificarCliquesAcoes } from '../lib/cliques.ts'
+import { verificarCliquesAcoes, verificarCliquesControles } from '../lib/cliques.ts'
 import { medirNaPagina } from '../lib/medir.ts'
 import { exigeSemRolagem, SUBCONJUNTO_E2E } from '../lib/viewports.ts'
 
@@ -55,6 +55,9 @@ for (const v of SUBCONJUNTO_E2E) {
             expect(r.cobertoEm, 'botão ' + r.botao + ' coberto por outro elemento').toEqual([])
             expect(r.alcancavel, 'botão ' + r.botao + ' inalcançável').toBe(true)
           }
+        }
+        if (['login', 'criarConta', 'recuperar', 'recuperarErros', 'codigo', 'conta', 'contaDialogo', 'contaNovoCodigo'].includes(cena)) {
+          expect(await verificarCliquesControles(page), 'controles cobertos (elementFromPoint)').toEqual([])
         }
         await ctx.close()
       })
@@ -181,6 +184,82 @@ test('inspeção amplia a carta pela origem e o chip público permanece legível
       await medir(verso, 'verso do campo', false, 'foco')
     }
     await ctx.close()
+  }
+})
+
+test('código de recuperação: aparece inteiro (sem corte) em celulares estreitos e com texto a 200%', async ({ browser }) => {
+  for (const [w, h, zoomTexto] of [[320, 568, false], [360, 640, false], [375, 667, false], [320, 568, true], [375, 667, true]] as const) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h }, isMobile: true, hasTouch: true })
+    const page = await ctx.newPage()
+    await abrirCena(page, 'codigo')
+    if (zoomTexto) await page.addStyleTag({ content: 'html { font-size: 32px !important }' })
+    const r = await page.evaluate(() => {
+      const el = document.querySelector<HTMLTextAreaElement>('.codigo__valor')!
+      const caixa = el.getBoundingClientRect()
+      const pai = el.parentElement!.getBoundingClientRect()
+      return { cortado: el.scrollWidth > el.clientWidth + 1 || el.scrollHeight > el.clientHeight + 1, dentro: caixa.left >= pai.left - 1 && caixa.right <= pai.right + 1, valor: el.value, excessoH: document.documentElement.scrollWidth - innerWidth }
+    })
+    expect(r.cortado, `${w}x${h} zoom=${zoomTexto}`).toBe(false)
+    expect(r.dentro, `${w}x${h} zoom=${zoomTexto}`).toBe(true)
+    expect(r.excessoH, `${w}x${h} zoom=${zoomTexto}`).toBeLessThanOrEqual(0)
+    expect(r.valor).toBe('K7M2Q-9XWPD-4NHTR-VBS38')
+    await ctx.close()
+  }
+})
+
+test('botões das telas novas têm pelo menos 44px de altura em desktop de altura baixa', async ({ browser }) => {
+  for (const [w, h] of [[1280, 600], [1366, 650], [1024, 600], [1100, 640]] as const) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h } })
+    const page = await ctx.newPage()
+    for (const cena of ['codigo', 'recuperar', 'contaNovoCodigo', 'contaDialogo', 'conta'] as Cena[]) {
+      await abrirCena(page, cena)
+      const pequenos = await page.evaluate(() =>
+        Array.from(document.querySelectorAll<HTMLElement>('button, input[type=checkbox]'))
+          .filter((e) => !e.closest('[inert], .sr-only') && e.getBoundingClientRect().height > 2 && !e.classList.contains('botao--link'))
+          .map((e) => ({ t: (e.textContent ?? '').trim().slice(0, 20), h: Math.round(e.getBoundingClientRect().height) }))
+          .filter((x) => x.h < 43.5),
+      )
+      expect(pequenos, `${cena} ${w}x${h}`).toEqual([])
+      const m = await page.evaluate(medirNaPagina, MIN_FONTE)
+      expect(m.excessoV, `${cena} ${w}x${h} rolagem`).toBeLessThanOrEqual(0)
+    }
+    await ctx.close()
+  }
+})
+
+test('login: ENTRAR, CRIAR CONTA e ESQUECI A SENHA recebem o clique em janelas médias/baixas', async ({ browser }) => {
+  for (const [w, h] of [[709, 506], [800, 500], [900, 600], [1024, 600], [1100, 640], [700, 450]] as const) {
+    const ctx = await browser.newContext({ viewport: { width: w, height: h } })
+    const page = await ctx.newPage()
+    await abrirCena(page, 'login')
+    expect(await verificarCliquesControles(page), `${w}x${h}`).toEqual([])
+    await ctx.close()
+  }
+})
+
+test.describe('varredura de grade (login e telas novas): nenhum controle coberto', () => {
+  const LARGURAS = [600, 700, 800, 900, 1000, 1100, 1200, 1300, 1400]
+  const ALTURAS = [450, 500, 550, 600, 650, 700, 750, 800]
+  for (const cena of ['login', 'criarConta', 'recuperar', 'recuperarErros', 'codigo', 'conta'] as Cena[]) {
+    test(`${cena}`, async ({ browser }) => {
+      const ctx = await browser.newContext({ viewport: { width: 1400, height: 800 } })
+      const page = await ctx.newPage()
+      await abrirCena(page, cena)
+      const falhas: string[] = []
+      for (const w of LARGURAS) {
+        for (const h of ALTURAS) {
+          await page.setViewportSize({ width: w, height: h })
+          await page.waitForTimeout(60)
+          const m = await page.evaluate(medirNaPagina, MIN_FONTE)
+          const cob = await verificarCliquesControles(page)
+          if (m.excessoH > 0) falhas.push(`${w}x${h} rolagem horizontal`)
+          if (m.sobreposicoes.length) falhas.push(`${w}x${h} sobreposição ${m.sobreposicoes.join(';')}`)
+          if (cob.length) falhas.push(`${w}x${h} coberto ${cob.join(';')}`)
+        }
+      }
+      expect(falhas).toEqual([])
+      await ctx.close()
+    })
   }
 })
 

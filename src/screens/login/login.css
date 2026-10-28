@@ -382,3 +382,21 @@
     margin-top: 0.875rem;
   }
 }
+
+/* Uma coluna (largura < 900): o painel informativo é irmão do formulário no fluxo e a PÁGINA rola naturalmente.
+   Sem isto, em 701-899 de largura com altura 480-700 a linha única da grade (altura fixa) estourava e o painel
+   informativo cobria CRIAR CONTA e ESQUECI A SENHA. */
+@media (max-width: 899px) {
+  .tela-jogo.tela-login {
+    display: flex;
+    flex-direction: column;
+    height: auto;
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+  .tela-login > .tela-login__corpo {
+    flex: 1 0 auto;
+    min-height: auto;
+    align-content: start;
+  }
+}

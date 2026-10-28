@@ -7,13 +7,16 @@ import { TelaDueloLivre } from './screens/dueloLivre/TelaDueloLivre'
 import { TelaDuelo } from './screens/duelo/TelaDuelo'
 import { TelaCriarConta } from './screens/criarConta/TelaCriarConta'
 import { TelaLogin } from './screens/login/TelaLogin'
-import { RecuperarSenhaPlaceholder } from './screens/Placeholders'
+import { TelaCodigoRecuperacao } from './screens/recuperacao/TelaCodigoRecuperacao'
+import { TelaRecuperarSenha } from './screens/recuperacao/TelaRecuperarSenha'
 
 type Tela =
   | { nome: 'restaurando' }
   | { nome: 'login' }
   | { nome: 'criarConta' }
   | { nome: 'recuperarSenha' }
+  | { nome: 'codigoCadastro'; usuario: UsuarioAutenticado; codigo: string }
+  | { nome: 'senhaAlterada'; email: string; codigo: string }
   | { nome: 'dueloLivre'; usuario?: UsuarioAutenticado; oponenteId?: string }
   | { nome: 'duelo'; oponenteId: string; usuario?: UsuarioAutenticado }
 
@@ -76,12 +79,37 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
       return (
         <TelaCriarConta
           servicoAuth={servicoAuth}
-          onAutenticado={(usuario) => setTela({ nome: 'dueloLivre', usuario })}
+          // Conta nova: o código de recuperação aparece uma única vez antes do Duelo Livre.
+          onAutenticado={(usuario, codigo) => setTela(codigo ? { nome: 'codigoCadastro', usuario, codigo } : { nome: 'dueloLivre', usuario })}
           onVoltar={irParaLogin}
         />
       )
+    case 'codigoCadastro': {
+      const usuario = tela.usuario
+      return (
+        <TelaCodigoRecuperacao
+          titulo="Conta criada"
+          introducao="Sua conta foi criada. Este é o código que recupera sua senha se você esquecê-la."
+          email={usuario.email}
+          codigo={tela.codigo}
+          rotuloContinuar="Continuar"
+          onContinuar={() => setTela({ nome: 'dueloLivre', usuario })}
+        />
+      )
+    }
     case 'recuperarSenha':
-      return <RecuperarSenhaPlaceholder onVoltar={irParaLogin} />
+      return <TelaRecuperarSenha servicoAuth={servicoAuth} onVoltar={irParaLogin} onConcluido={(email, codigo) => setTela({ nome: 'senhaAlterada', email, codigo })} />
+    case 'senhaAlterada':
+      return (
+        <TelaCodigoRecuperacao
+          titulo="Senha alterada"
+          introducao="Sua senha foi alterada e as sessões antigas foram encerradas. O código usado não vale mais: este é o seu NOVO código. Depois, entre com a nova senha."
+          email={tela.email}
+          codigo={tela.codigo}
+          rotuloContinuar="Ir para o login"
+          onContinuar={irParaLogin}
+        />
+      )
     case 'dueloLivre': {
       const usuario = tela.usuario
       return (
@@ -96,7 +124,16 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
     }
     case 'duelo': {
       const usuario = tela.usuario
-      return <TelaDuelo oponenteId={tela.oponenteId} usuario={usuario} onVoltar={() => setTela({ nome: 'dueloLivre', usuario, oponenteId: tela.oponenteId })} />
+      return (
+        <TelaDuelo
+          oponenteId={tela.oponenteId}
+          usuario={usuario}
+          servicoAuth={servicoAuth}
+          // Drop de carta: a coleção nova do servidor passa a valer no restante da sessão.
+          onColecaoAtualizada={(colecao) => setTela((t) => (t.nome === 'duelo' && t.usuario ? { ...t, usuario: { ...t.usuario, colecao } } : t))}
+          onVoltar={() => setTela({ nome: 'dueloLivre', usuario, oponenteId: tela.oponenteId })}
+        />
+      )
     }
     default:
       return (

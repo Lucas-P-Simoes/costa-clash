@@ -3,7 +3,7 @@
 > Criado em 2026-10-22. Complementa `ARQUITETURA.md` (estrutura) e `REGRAS_DO_JOGO.md` (regras). Em conflito, vale `REGRAS_DO_JOGO.md`. Marcar etapas como concluídas em `ESTADO_DO_PROJETO.md`, não aqui.
 
 ## 1. Diagnóstico (estado em 2026-10-22)
-- Pasta única (sem subpastas além de `.claude/agents` e `docs`). Arquivos de regras, testes, agentes e prompts presentes; nada ausente além de `README.md` (opcional).
+- Na fotografia original havia somente `.claude/agents` e `docs` para coordenação. Em 2026-10-25 os papéis foram neutralizados em `.agents/`, com adaptadores para Claude Code e templates de despacho para Codex; ver `AGENTS.md` e `docs/ARQUITETURA.md`.
 - `cartas.json` (raiz), `src/data/cartas.json` e `cartas.csv` estão consistentes entre si (verificado por script: 100 cartas, mesmos IDs/nomes/tipos/atributos). A cópia em `src/data` é a usada pelo código.
 - Projeto Vite + React 19 + TS + Vitest + oxlint inicializado; 4 testes de catálogo passam; typecheck, lint e build passam. Sem commits.
 
@@ -21,7 +21,7 @@ Em aberto (decisão do responsável ou do DEV com registro):
 8. **Recompensas/progressão** (§10, e item 6 do plano): regras só dizem "desbloqueio por vitória pode ser implementado depois". Falta definir o que é recompensa. Proposta: desbloquear cartas por vitória, salvo em `localStorage`.
 9. **Baralhos iniciais** prontos (§10): não existem; o DEV precisa montar baralhos válidos de 40 (máx. 3 por ID) e a QA testá-los. Há só 20 ações+8 armadilhas, então baralhos precisam de composição deliberada.
 10. **Aleatoriedade**: RNG deve ser injetável (seed) em baralhos e IA — exigido pelas regras e pelos testes.
-11. **Agentes** (`.claude/agents/dev.md`, `qa.md`): sem `tools`/`model` no frontmatter (herdam tudo). A QA *poderia* editar código de produção; a restrição é só textual. Aceitável, mas a regra "QA reporta, não corrige produção" depende de disciplina.
+11. **Agentes** (resolvido em 2026-10-25): papéis canônicos em `.agents/{dev,qa}.md`, adaptadores em `.claude/agents/` e templates manuais em `.codex/agents/`. A restrição "QA reporta, não corrige produção" continua processual e é reforçada no papel canônico; o coordenador deve serializar DEV → QA.
 12. **Exposição de dados**: `src/data/cartas.json` contém a mão/efeitos de todas as cartas; a IA não deve ler mão/baralho humano (§9) — a função da IA deve receber uma *visão* do estado, não o estado completo.
 
 ## 3. Arquitetura proposta
@@ -68,12 +68,12 @@ Cada etapa termina com: testes passando, `typecheck`/`lint`/`build` ok, revisão
 Etapas 2–5 não dependem da UI; a etapa 1 pode andar em paralelo apenas se não tocar `src/game/`.
 
 ## 5. Responsabilidades DEV × QA
-**DEV** (`.claude/agents/dev.md`): implementa a etapa pedida com a menor mudança; mantém motor puro e separado da UI; escreve testes dos próprios comportamentos; registra decisões de regra ambíguas e pergunta em vez de assumir; devolve lista de arquivos, decisões, comandos executados e riscos.
+**DEV** (`.agents/dev.md`): implementa a etapa pedida com a menor mudança; mantém motor puro e separado da UI; escreve testes dos próprios comportamentos; registra decisões de regra ambíguas e pergunta em vez de assumir; devolve lista de arquivos, decisões, comandos executados e riscos.
 
-**QA** (`.claude/agents/qa.md`): revisa o diff e os scripts reais; roda `npm test`, `npm run typecheck`, `npm run lint`, `npm run build`; escreve testes de borda e regressão (lista em `TESTING.md` e §12 das regras); **reporta** defeitos de produção com passos de reprodução e não os corrige — volta ao DEV e depois novo QA; não afirma revisão visual.
+**QA** (`.agents/qa.md`): revisa o diff e os scripts reais; roda `npm test`, `npm run typecheck`, `npm run lint`, `npm run build` conforme o risco; escreve testes de borda e regressão (lista em `TESTING.md` e §12 das regras); **reporta** defeitos de produção com passos de reprodução e não os corrige — volta ao DEV e depois novo QA; não afirma revisão visual.
 
-**Coordenador** (sessão principal, Claude Code ou Codex): DEV → QA → atualiza `ESTADO_DO_PROJETO.md` e `HANDOFF.md`. Nunca duas edições simultâneas nos mesmos arquivos. Sem subagentes, executa os dois papéis em sequência e declara isso.
+**Coordenador** (sessão principal, Claude Code ou Codex): DEV → aguarda término → QA → atualiza `ESTADO_DO_PROJETO.md` e `HANDOFF.md`. Nunca há edição DEV/QA concorrente na mesma árvore. Claude Code usa `.claude/agents/`; no Codex, o coordenador cria subagentes dinamicamente com `.codex/agents/`, pois esses arquivos são templates e não auto-descoberta. Sem subagentes, executa os dois papéis em sequência e declara isso.
 
 **Responsável pelo projeto**: aprova regras ambíguas, balanceamento, cores/layout/textos e a revisão visual; autoriza commits.
 
-**Regras iguais em qualquer ferramenta**: `AGENTS.md` é a fonte; `CLAUDE.md` apenas aponta para ele; Codex lê `AGENTS.md` direto. Antes de agir, confirmar Git e testes reais, não confiar só no handoff.
+**Regras iguais em qualquer ferramenta**: `AGENTS.md` é a fonte operacional; `.agents/` define os papéis; `CLAUDE.md`, `.claude/agents/` e `.codex/agents/` apenas adaptam a entrada. Antes de agir, confirmar Git e testes reais, não confiar só no handoff.

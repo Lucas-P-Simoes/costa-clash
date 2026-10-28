@@ -1,6 +1,6 @@
 // Serviço de conta real: fala com a API (Cloudflare Worker) em `baseUrl`.
 // O token fica em localStorage (try/catch: pode falhar em modo privado); a senha nunca é guardada.
-import type { CodigoErroAuth, Credenciais, ResultadoAuth, ResultadoBaralho, ServicoAuth, UsuarioAutenticado } from './servicoAuth'
+import type { CodigoErroAuth, Credenciais, ItemColecao, ResultadoAuth, ResultadoBaralho, ResultadoCodigo, ResultadoDrop, ResultadoInicioDuelo, ServicoAuth, UsuarioAutenticado } from './servicoAuth'
 
 export const CHAVE_TOKEN = 'costa-clash:sessao'
 const MENSAGEM_REDE = 'Não foi possível falar com o servidor. Verifique sua conexão e tente novamente.'
@@ -35,16 +35,20 @@ function texto(v: unknown): v is string {
   return typeof v === 'string' && v !== ''
 }
 
+function lerColecao(v: unknown[]): ItemColecao[] {
+  return v.filter((i): i is ItemColecao => {
+    const o = (i ?? {}) as Record<string, unknown>
+    return typeof o.cartaId === 'string' && Number.isInteger(o.quantidade)
+  })
+}
+
 function lerUsuario(v: unknown): UsuarioAutenticado | null {
   const o = (v ?? {}) as Record<string, unknown>
   if (!texto(o.id) || !texto(o.email)) return null
   const u: UsuarioAutenticado = { id: o.id, email: o.email }
+  if (typeof o.temCodigoRecuperacao === 'boolean') u.temCodigoRecuperacao = o.temCodigoRecuperacao
   if (Array.isArray(o.baralho)) u.baralho = o.baralho.filter((x): x is string => typeof x === 'string')
-  if (Array.isArray(o.colecao)) {
-    u.colecao = o.colecao.filter(
-      (i): i is { cartaId: string; quantidade: number } => typeof i?.cartaId === 'string' && Number.isInteger(i?.quantidade),
-    )
-  }
+  if (Array.isArray(o.colecao)) u.colecao = lerColecao(o.colecao)
   return u
 }
 
@@ -114,13 +118,18 @@ export function criarServicoAuthHttp(baseUrl: string, opcoes: Opcoes = {}): Serv
     }
   }
 
+  function falhaCodigo(status: number, json: Record<string, unknown> | null, padrao: string): Extract<ResultadoCodigo, { ok: false }> {
+    const f = falha(status, json, padrao)
+    return { ok: false, codigo: status === 403 ? 'senha_incorreta' : f.codigo, mensagem: f.mensagem, ...(f.campos?.senha ? { campos: { senha: f.campos.senha } } : {}) }
+  }
+
   async function autenticar(caminho: string, c: Credenciais, padrao: string): Promise<ResultadoAuth> {
     try {
       const { status, ok, json } = await chamar(caminho, { metodo: 'POST', corpo: { email: c.email, senha: c.senha } })
       const usuario = ok ? lerUsuario(json?.usuario) : null
       if (!ok || !usuario || !texto(json?.token)) return falha(ok ? 500 : status, json, padrao)
       guardarToken(json.token as string)
-      return { ok: true, usuario }
+      return texto(json.codigoRecuperacao) ? { ok: true, usuario, codigoRecuperacao: json.codigoRecuperacao } : { ok: true, usuario }
     } catch {
       return { ok: false, codigo: 'indisponivel', mensagem: MENSAGEM_REDE }
     }
@@ -158,6 +167,74 @@ export function criarServicoAuthHttp(baseUrl: string, opcoes: Opcoes = {}): Serv
         await chamar('/api/logout', { metodo: 'POST', token })
       } catch {
         /* o token local já foi removido; a sessão expira no servidor */
+      }
+    },
+
+    async recuperarSenha(dados): Promise<ResultadoCodigo> {
+      try {
+        const { status, ok, json } = await chamar('/api/senha/recuperar', {
+          metodo: 'POST',
+          corpo: { email: dados.email, codigo: dados.codigo, novaSenha: dados.novaSenha },
+        })
+        if (!ok || !texto(json?.codigoRecuperacao)) return falhaCodigo(ok ? 500 : status, json, 'Não foi possível trocar a senha agora. Tente novamente em instantes.')
+        return { ok: true, codigoRecuperacao: json.codigoRecuperacao as string }
+      } catch {
+        return { ok: false, codigo: 'indisponivel', mensagem: MENSAGEM_REDE }
+      }
+    },
+
+    async gerarNovoCodigo({ senhaAtual }): Promise<ResultadoCodigo> {
+      const token = lerToken()
+      if (!token) return { ok: false, codigo: 'sessao_invalida', mensagem: MENSAGEM_SESSAO }
+      try {
+        const { status, ok, json } = await chamar('/api/conta/codigo-recuperacao', { metodo: 'POST', corpo: { senhaAtual }, token })
+        if (status === 401) {
+          apagarToken()
+          return { ok: false, codigo: 'sessao_invalida', mensagem: MENSAGEM_SESSAO }
+        }
+        if (!ok || !texto(json?.codigoRecuperacao)) return falhaCodigo(ok ? 500 : status, json, 'Não foi possível gerar o código agora. Tente novamente em instantes.')
+        return { ok: true, codigoRecuperacao: json.codigoRecuperacao as string }
+      } catch {
+        return { ok: false, codigo: 'indisponivel', mensagem: MENSAGEM_REDE }
+      }
+    },
+
+    async iniciarDuelo(oponenteId): Promise<ResultadoInicioDuelo> {
+      const token = lerToken()
+      if (!token) return { ok: false, codigo: 'sessao_invalida', mensagem: MENSAGEM_SESSAO }
+      try {
+        const { status, ok, json } = await chamar('/api/duelo/iniciar', { metodo: 'POST', corpo: { oponenteId }, token })
+        if (status === 401) {
+          apagarToken()
+          return { ok: false, codigo: 'sessao_invalida', mensagem: MENSAGEM_SESSAO }
+        }
+        if (!ok || !texto(json?.dueloId)) {
+          const f = falha(ok ? 500 : status, json, 'Não foi possível registrar o duelo.')
+          return { ok: false, codigo: f.codigo, mensagem: f.mensagem }
+        }
+        return { ok: true, dueloId: json.dueloId as string }
+      } catch {
+        return { ok: false, codigo: 'indisponivel', mensagem: MENSAGEM_REDE }
+      }
+    },
+
+    async resgatarVitoria(dueloId): Promise<ResultadoDrop> {
+      const token = lerToken()
+      if (!token) return { ok: false, codigo: 'sessao_invalida', mensagem: MENSAGEM_SESSAO }
+      try {
+        const { status, ok, json } = await chamar('/api/duelo/vitoria', { metodo: 'POST', corpo: { dueloId }, token })
+        if (status === 401) {
+          apagarToken()
+          return { ok: false, codigo: 'sessao_invalida', mensagem: MENSAGEM_SESSAO }
+        }
+        const carta = json?.carta
+        if (!ok || !(carta === null || texto(carta)) || !Number.isInteger(json?.quantidade) || !Array.isArray(json?.colecao)) {
+          const f = falha(ok ? 500 : status, json, 'Não foi possível entregar a recompensa.')
+          return { ok: false, codigo: f.codigo, mensagem: f.mensagem }
+        }
+        return { ok: true, carta, quantidade: json.quantidade as number, colecao: lerColecao(json.colecao as unknown[]) }
+      } catch {
+        return { ok: false, codigo: 'indisponivel', mensagem: MENSAGEM_REDE }
       }
     },
 

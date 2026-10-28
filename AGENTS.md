@@ -14,6 +14,21 @@ O mesmo repositório é usado alternadamente por OpenAI Codex e Claude Code. Nen
 - **QA:** analisar alterações e casos extremos, executar testes e build existentes, adicionar testes úteis sem alterar comportamento esperado. Se encontrar bug, reportar; correções de produção retornam ao DEV, depois novo QA.
 - **Coordenador:** organizar DEV -> QA -> registro de continuidade; se a plataforma não disponibilizar subagentes, executar os papéis sequencialmente na sessão atual.
 
+### Fontes dos papéis e adaptadores
+- As definições canônicas, independentes de ferramenta, são `.agents/dev.md` e `.agents/qa.md`. Mudanças de responsabilidade devem ser feitas primeiro nesses arquivos.
+- `.claude/agents/` contém adaptadores de descoberta do Claude Code; eles apontam para os papéis canônicos e não devem manter uma segunda cópia das regras.
+- O Codex reconhece este `AGENTS.md` como instrução do repositório. Os arquivos em `.codex/agents/` são **templates de despacho para o coordenador**, não agentes auto-descobertos nem processos permanentes.
+- No Codex, quando houver suporte a subagentes, o coordenador deve criar dinamicamente um DEV com o template `.codex/agents/dev.md`, aguardar seu término e somente então criar um QA com `.codex/agents/qa.md`.
+
+### Fluxo obrigatório de coordenação
+1. O coordenador registra o escopo da tarefa e o estado inicial do Git antes de delegar.
+2. O DEV trabalha sozinho, seguindo `.agents/dev.md`, e devolve mudanças, testes executados, decisões e riscos. O DEV deve estar encerrado antes do QA começar.
+3. O QA revisa a árvore resultante, seguindo `.agents/qa.md`. Pode adicionar testes úteis, mas não corrige código de produção silenciosamente.
+4. Se o QA encontrar defeito de produção, encerra sua rodada com evidências; o coordenador devolve a correção ao DEV e inicia uma nova rodada de QA somente depois.
+5. Após aprovação ou registro claro das pendências, o coordenador atualiza `docs/ESTADO_DO_PROJETO.md` e `docs/HANDOFF.md`.
+
+Nunca manter DEV e QA editando simultaneamente a mesma árvore de trabalho. Leituras paralelas só são aceitáveis quando o coordenador garantir que nenhum dos papéis esteja escrevendo arquivos que o outro analisa.
+
 ## Requisitos do jogo
 - MVP para navegador: React + TypeScript + Vite, 1 jogador vs computador, **8.000 pontos de vida** por lado, **5 zonas de unidade + 5 zonas de suporte** por jogador e terreno global único, baralhos de **40 cartas** montados a partir do **catálogo de 100 cartas** (`cartas.json`, até 3 cópias por ID). Sem multiplayer ou fusões; backend apenas de contas, baralho e coleção (Cloudflare Worker + D1).
 - Em caso de divergência entre este arquivo, o mockup (`Interface de Batalha Costa Clash.png`) e `docs/REGRAS_DO_JOGO.md`, vale `docs/REGRAS_DO_JOGO.md`. O mockup é referência visual, não de regras (ex.: ele mostra 4.000 de vida e 4 cartas na mão, valores superados).
@@ -31,6 +46,7 @@ O mesmo repositório é usado alternadamente por OpenAI Codex e Claude Code. Nen
 - Atualizar `docs/REGRAS_DO_JOGO.md` e `docs/TESTING.md` quando houver mudanças relevantes.
 - Usar Git em todos os marcos; commits apenas se autorizados. Não apagar arquivos, resetar ou descartar mudanças sem permissão.
 - A ferramenta que retomar deve ler o handoff, confirmar o estado real por Git e testes, e só então continuar. O handoff não substitui conferência do código.
+- Registrar no handoff qual ferramenta coordenou a tarefa e quais rodadas DEV/QA realmente ocorreram; não atribuir revisão a um agente que não foi executado.
 
 ## Formato da resposta final
 Resumo das mudanças; testes executados e resultados; problemas/pendências; arquivos relevantes; próximos passos. Indicar mudanças ainda não validadas visualmente.

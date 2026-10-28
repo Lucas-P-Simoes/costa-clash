@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react'
-import type { UsuarioAutenticado } from '../../auth/servicoAuth'
+import type { ItemColecao, ServicoAuth, UsuarioAutenticado } from '../../auth/servicoAuth'
 import { BotaoRetro } from '../../components/ui/BotaoRetro'
 import { CabecalhoTela } from '../../components/ui/CabecalhoTela'
 import { IconeVoltar } from '../../components/ui/Icones'
@@ -8,11 +8,16 @@ import { BARALHOS_OPONENTES } from '../../data/baralhosOponentes'
 import { buscarOponente } from '../../data/oponentes'
 import { criarDuelo } from '../../game'
 import { Partida } from './Partida'
+import { useRecompensaDuelo } from './recompensa'
 
 interface Props {
   oponenteId: string
   /** Usuário logado: usa o baralho do perfil; ausente (ou perfil sem baralho) usa o baralho inicial. */
   usuario?: UsuarioAutenticado
+  /** Serviço da conta: registra o duelo e resgata o drop de carta da vitória (só com usuário logado). */
+  servicoAuth?: ServicoAuth
+  /** Coleção nova devolvida pelo servidor após um drop. */
+  onColecaoAtualizada?: (colecao: ItemColecao[]) => void
   onVoltar: () => void
   /** Seed da primeira partida (testes/depuração); padrão: relógio. */
   seedInicial?: number
@@ -30,13 +35,14 @@ function atrasoPadrao(): number {
 }
 
 /** Inicia o duelo contra o adversário escolhido; erros de baralho ou de adversário aparecem sem quebrar a navegação. */
-export function TelaDuelo({ oponenteId, usuario, onVoltar, seedInicial, atrasoIA }: Props) {
+export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizada, onVoltar, seedInicial, atrasoIA }: Props) {
   // A seed fica no estado da tela (depuração); JOGAR NOVAMENTE gera outra e remonta a partida (key).
   const [seed, setSeed] = useState<number>(() => seedInicial ?? novaSeed())
   const oponente = buscarOponente(oponenteId)
   const baralhoOponente = BARALHOS_OPONENTES[oponenteId]
   const baralhoJogador = usuario?.baralho ?? BARALHO_INICIAL
   const atraso = useMemo(() => atrasoIA ?? atrasoPadrao(), [atrasoIA])
+  const { recompensa, aoVencer } = useRecompensaDuelo(oponenteId, seed, usuario, servicoAuth, onColecaoAtualizada)
 
   const criado = useMemo(() => {
     if (!oponente || !baralhoOponente) return { ok: false as const, erros: ['Adversário não encontrado.'] }
@@ -57,5 +63,16 @@ export function TelaDuelo({ oponenteId, usuario, onVoltar, seedInicial, atrasoIA
       </div>
     )
   }
-  return <Partida key={seed} estadoInicial={criado.estado} oponente={oponente} atrasoIA={atraso} onVoltar={onVoltar} onNovamente={() => setSeed((s) => { const n = novaSeed(); return n === s ? s + 1 : n })} />
+  return (
+    <Partida
+      key={seed}
+      estadoInicial={criado.estado}
+      oponente={oponente}
+      atrasoIA={atraso}
+      recompensa={recompensa}
+      onVitoria={aoVencer}
+      onVoltar={onVoltar}
+      onNovamente={() => setSeed((s) => { const n = novaSeed(); return n === s ? s + 1 : n })}
+    />
+  )
 }

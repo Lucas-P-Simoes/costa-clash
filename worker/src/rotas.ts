@@ -12,6 +12,7 @@ import {
   removerSessao,
   salvarBaralho,
 } from './dados'
+import { gerarCodigoRecuperacao, protegerCodigo } from './codigo'
 import { erro, lerJson, resposta } from './http'
 import { CADASTRO_JANELA_MS, CADASTRO_MAX, consumir, criarLimite, devolver, limpar, LOGIN_IP_MAX_TENTATIVAS, LOGIN_JANELA_MS, LOGIN_MAX_TENTATIVAS } from './limite'
 import type { Env } from './tipos'
@@ -26,11 +27,11 @@ export interface Contexto {
 }
 
 export const MSG_LOGIN_INVALIDO = 'E-mail ou senha incorretos.'
-const MSG_MUITAS = 'Muitas tentativas. Aguarde alguns minutos e tente novamente.'
-const MSG_NAO_AUTENTICADO = 'Sessão inválida ou expirada. Entre novamente.'
+export const MSG_MUITAS = 'Muitas tentativas. Aguarde alguns minutos e tente novamente.'
+export const MSG_NAO_AUTENTICADO = 'Sessão inválida ou expirada. Entre novamente.'
 const MSG_EMAIL_EM_USO = 'Este e-mail já está cadastrado.'
 
-function objeto(v: unknown): Record<string, unknown> | null {
+export function objeto(v: unknown): Record<string, unknown> | null {
   return typeof v === 'object' && v !== null && !Array.isArray(v) ? (v as Record<string, unknown>) : null
 }
 
@@ -43,7 +44,7 @@ function tokenDoHeader(request: Request): string | null {
   return m ? m[1]! : null
 }
 
-async function autenticar(c: Contexto): Promise<{ id: string; email: string; tokenHash: string } | null> {
+export async function autenticar(c: Contexto): Promise<{ id: string; email: string; tokenHash: string } | null> {
   const token = tokenDoHeader(c.request)
   if (!token) return null
   const tokenHash = await sha256Hex(token)
@@ -81,14 +82,16 @@ export async function cadastro(c: Contexto): Promise<Response> {
   if (await buscarUsuarioPorEmail(db, email)) return erro(409, 'email_em_uso', MSG_EMAIL_EM_USO, c.extra)
   const id = crypto.randomUUID()
   const token = novoToken()
+  // Código de recuperação: gerado aqui, devolvido SÓ nesta resposta; no banco fica apenas o hash.
+  const codigoRecuperacao = gerarCodigoRecuperacao()
   try {
-    await criarUsuarioCompleto(db, { id, email, hash, salt, iteracoes }, await sha256Hex(token), c.agora)
+    await criarUsuarioCompleto(db, { id, email, hash, salt, iteracoes }, await protegerCodigo(codigoRecuperacao), await sha256Hex(token), c.agora)
   } catch {
     // Corrida na restrição UNIQUE do e-mail.
     if (await buscarUsuarioPorEmail(db, email)) return erro(409, 'email_em_uso', MSG_EMAIL_EM_USO, c.extra)
     throw new Error('falha ao criar usuário')
   }
-  return resposta(201, { token, usuario: await carregarPerfil(db, { id, email }) }, c.extra)
+  return resposta(201, { token, usuario: await carregarPerfil(db, { id, email }), codigoRecuperacao }, c.extra)
 }
 
 export async function login(c: Contexto): Promise<Response> {

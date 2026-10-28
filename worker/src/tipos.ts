@@ -14,4 +14,6 @@ export interface Perfil {
   email: string
   baralho: string[]
   colecao: ItemColecao[]
+  /** A conta tem código de recuperação ativo? (nunca o código nem o hash) */
+  temCodigoRecuperacao: boolean
 }

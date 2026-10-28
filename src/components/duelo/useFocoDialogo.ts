@@ -15,7 +15,7 @@ export function useFocoDialogo(ref: RefObject<HTMLElement | null>, idAlternativo
     const dialogo = ref.current
     if (!dialogo) return
     const aberto = abertoRef.current
-    const lista = () => [...dialogo.querySelectorAll<HTMLElement>(FOCAVEIS)]
+    const lista = () => [...dialogo.querySelectorAll<HTMLElement>(FOCAVEIS)].filter((e) => e.getAttribute('tabindex') !== '-1')
     const inicial = dialogo.querySelector<HTMLElement>('[data-foco-inicial]') ?? lista()[0]
     inicial?.focus({ preventScroll: true })
     const aoTeclar = (e: KeyboardEvent) => {

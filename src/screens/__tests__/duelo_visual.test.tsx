@@ -348,7 +348,7 @@ describe('Tela de resultado (estilo Tela-derrota / Tela-recompensa)', () => {
     return screen.getByRole('dialog')
   }
 
-  it('derrota por desistência: título, frase, motivo, resumo com números públicos e recompensas em breve', () => {
+  it('derrota por desistência: título, frase, motivo, resumo com números públicos e convite ao drop', () => {
     const d = desistir()
     expect(d.className).toContain('duelo-dialogo--derrota')
     expect(within(d).getByRole('heading', { name: 'Derrota' })).toBeTruthy()
@@ -359,8 +359,8 @@ describe('Tela de resultado (estilo Tela-derrota / Tela-recompensa)', () => {
     expect(within(resumo).getByLabelText('Sua vida final: 8000')).toBeTruthy()
     expect(within(resumo).getByLabelText('Unidades do oponente em campo: 2')).toBeTruthy()
     expect(within(resumo).getByLabelText('Suas unidades em campo: 1')).toBeTruthy()
-    expect(d.textContent).toContain('Recompensas de cartas: em breve.')
-    expect(d.textContent).not.toMatch(/nova carta obtida/i) // nenhuma recompensa inventada
+    expect(d.textContent).toMatch(/Vença .+ para ganhar uma carta para a sua coleção\./)
+    expect(d.textContent).not.toMatch(/nova carta/i) // derrota não rende drop
     expect(within(d).getAllByRole('button').map((b) => b.textContent)).toEqual(['Jogar novamente', 'Voltar'])
     expect(document.activeElement!.textContent).toBe('Jogar novamente')
   })

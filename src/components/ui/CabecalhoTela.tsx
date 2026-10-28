@@ -6,10 +6,10 @@ type VarianteCabecalho = 'padrao' | 'duelo-livre'
 
 /** Logo Costa Clash + faixa de título da tela (h1). Reutilizável nas próximas telas. */
 /** Sem `titulo`, só o logo é exibido (login: o h1 fica dentro do painel do formulário). */
-export function CabecalhoTela({ titulo, variante = 'padrao' }: { titulo?: string; variante?: VarianteCabecalho }) {
+export function CabecalhoTela({ titulo, inert, variante = 'padrao' }: { titulo?: string; inert?: boolean; variante?: VarianteCabecalho }) {
   const dueloLivre = variante === 'duelo-livre'
   return (
-    <header className={`cabecalho${dueloLivre ? ' cabecalho--duelo-livre' : ''}`}>
+    <header className={`cabecalho${dueloLivre ? ' cabecalho--duelo-livre' : ''}`} inert={inert || undefined}>
       <div className="cabecalho__cena">
         <img className="cabecalho__imagem cabecalho__imagem--esq" src={topoEsquerda} alt="" aria-hidden="true" />
         <img className="cabecalho__imagem cabecalho__imagem--dir" src={topoDireita} alt="" aria-hidden="true" />
