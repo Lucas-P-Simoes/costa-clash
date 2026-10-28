@@ -270,9 +270,9 @@ describe('QA 8 - IA', () => {
 })
 
 describe('QA 9 - baralhos', () => {
-  it('17 baralhos válidos (40 cartas, <=3 por ID, IDs existentes) e um por oponente', () => {
+  it('18 baralhos válidos (40 cartas, <=3 por ID, IDs existentes) e um por oponente', () => {
     const todos: [string, readonly string[]][] = [['inicial', BARALHO_INICIAL], ...Object.entries(BARALHOS_OPONENTES)]
-    expect(todos).toHaveLength(17)
+    expect(todos).toHaveLength(18)
     for (const [nome, ids] of todos) {
       expect(validarBaralhoDuelo(ids), nome).toEqual({ ok: true })
       expect(ids).toHaveLength(40)

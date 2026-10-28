@@ -10,7 +10,7 @@ interface Props {
   oponente: Oponente
   /** Mensagem de estado (ex.: "em breve"); aparece em região role="status". */
   aviso?: ReactNode
-  /** Botões de ação (DUELO, BARALHO, VOLTAR). */
+  /** Botões de ação (INICIAR DUELO, BARALHO, VOLTAR/SAIR). */
   children?: ReactNode
 }
 
@@ -22,12 +22,12 @@ export function PainelOponente({ oponente, aviso, children }: Props) {
   const arte = urlArquivoOponente(oponente.retratoGrande ?? oponente.retrato)
   return (
     <MolduraPedra as="section" variante="interna" className="painel-oponente" data-aviso={aviso ? '' : undefined} data-expandido={expandido ? '' : undefined} aria-label="Detalhes do adversário">
+      <div className="painel-oponente__arte">
+        <img key={oponente.id} className="painel-oponente__imagem" src={arte} alt={`Arte do adversário ${oponente.nome}`} />
+      </div>
       <div className="painel-oponente__nome">
         <IconeAlvo className="painel-oponente__icone" />
         <h2 className="painel-oponente__titulo">{oponente.nome}</h2>
-      </div>
-      <div className="painel-oponente__arte">
-        <img className="painel-oponente__imagem" src={arte} alt={`Arte do adversário ${oponente.nome}`} />
       </div>
       <div className="painel-oponente__info">
         <h3 className="painel-oponente__rotulo">Dificuldade</h3>
@@ -46,6 +46,10 @@ export function PainelOponente({ oponente, aviso, children }: Props) {
           {expandido ? 'Ler menos' : 'Ler mais'}
         </button>
       </div>
+      <section className="painel-oponente__recompensas" aria-labelledby="titulo-recompensas-oponente">
+        <h3 id="titulo-recompensas-oponente" className="painel-oponente__recompensas-titulo">Cartas que podem ser obtidas</h3>
+        <p className="painel-oponente__recompensas-vazio">Recompensas ainda não disponíveis.</p>
+      </section>
       <div className="painel-oponente__aviso" role="status">
         {aviso}
       </div>

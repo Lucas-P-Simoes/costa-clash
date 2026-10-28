@@ -1,483 +1,505 @@
-/* ===== Tela Duelo Livre ===== */
+/* ===== Duelo Livre: seleção de chefes em pixel art oceânica ===== */
+.tela-duelo {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: linear-gradient(180deg, rgba(2, 10, 18, 0.08), rgba(2, 8, 15, 0.88)), #04101d;
+}
+
+.tela-duelo::before {
+  content: '';
+  position: absolute;
+  z-index: 0;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(3, 12, 22, 0.05), rgba(3, 12, 22, 0.72) 44%, rgba(3, 12, 22, 0.5)),
+    url('../../assets/login/cena-mangue.png') left 42% / min(53rem, 54vw) auto no-repeat,
+    radial-gradient(circle at 74% 24%, rgba(23, 217, 244, 0.16), transparent 25%),
+    linear-gradient(180deg, #061827 0%, #061521 55%, #020a12 100%);
+  opacity: 0.72;
+}
+
+.tela-duelo > * { position: relative; z-index: 1; }
+
+/* O título fica sobre uma placa central, como na referência, sem aumentar o cabeçalho. */
+.tela-duelo > .cabecalho { z-index: 3; height: 7.45rem; min-height: 7.45rem; }
+.tela-duelo .cabecalho__cena {
+  height: 100%;
+  border-bottom: 0.2rem solid #14bddb;
+  background: linear-gradient(180deg, #06111e, #07263a 76%, #04101d);
+  box-shadow: inset 0 -0.11rem 0 #05465f, 0 0.16rem 0 #02111d;
+}
+.tela-duelo .cabecalho__imagem { width: 46%; max-width: 43rem; }
+.tela-duelo .cabecalho__logo { padding-top: 0; }
+.tela-duelo .cabecalho__marca {
+  width: min(72rem, 94vw);
+  min-height: 5.35rem;
+  gap: clamp(0.35rem, 1.2vw, 1.25rem);
+}
+.tela-duelo .cabecalho__nome {
+  flex: none;
+  font-size: clamp(3rem, 4.9vw, 4.55rem);
+  color: #f6c84e;
+  letter-spacing: 0.035em;
+  text-shadow: -0.16rem -0.16rem 0 #281803, 0.16rem -0.16rem 0 #281803, -0.16rem 0.16rem 0 #281803, 0.16rem 0.16rem 0 #281803, 0 0.26rem 0 #9a6511, 0 0.42rem 0 rgba(0, 0, 0, 0.78), 0 -0.08rem 0 #fff1a9;
+}
+.tela-duelo .cabecalho__onda-grande {
+  flex: 0 1 13.5rem;
+  width: clamp(7.5rem, 14vw, 13.5rem);
+  height: auto;
+  max-height: 5.25rem;
+  filter: drop-shadow(0 0.16rem 0 #031d2d) drop-shadow(0 0 0.28rem rgba(23, 217, 244, 0.28));
+}
+.tela-duelo .cabecalho__onda-grande.espelhado {
+  transform: scaleX(-1);
+}
+.tela-duelo .cabecalho__subtitulo { display: none; }
+.tela-duelo .cabecalho__faixa {
+  position: absolute;
+  left: 50%;
+  bottom: -0.82rem;
+  width: min(31rem, 53vw);
+  min-height: 3.25rem;
+  transform: translateX(-50%);
+  gap: 0.65rem;
+  padding: 0.35rem 1rem;
+  border: 0.2rem solid #03111d;
+  background: radial-gradient(ellipse at 50% 20%, rgba(19, 106, 129, 0.72), transparent 62%), linear-gradient(180deg, #092d43, #061622);
+  box-shadow: inset 0 0 0 0.1rem #063b54, inset 0 0 0 0.22rem #139bbb, 0 0 0 0.1rem #041a29, 0 0.22rem 0 #020810, 0 0 0.5rem rgba(23, 217, 244, 0.18);
+  clip-path: polygon(5% 0, 95% 0, 100% 50%, 95% 100%, 5% 100%, 0 50%);
+}
+.tela-duelo .cabecalho__faixa .cabecalho__ornamento { width: 4.6rem; color: #1ac6e2; }
+.tela-duelo .cabecalho__titulo {
+  color: #f4d56e;
+  font-family: var(--cc-fonte-pixel);
+  font-size: clamp(1.35rem, 2.1vw, 1.85rem);
+  font-weight: 700;
+  letter-spacing: 0.13em;
+  text-shadow: 0.12rem 0.12rem 0 #6a4714, 0 0 0.45rem rgba(231, 185, 77, 0.45);
+}
+
+/* ===== Estrutura principal: aproximadamente 65% / 35% ===== */
 .tela-duelo__corpo {
-  flex: 1;
   display: grid;
-  grid-template-columns: minmax(0, 2.05fr) minmax(18.75rem, 1fr);
-  align-items: start;
-  gap: 1.75rem;
+  grid-template-columns: minmax(0, 1.92fr) minmax(22rem, 1fr);
+  align-items: stretch;
+  gap: 0.75rem;
   width: 100%;
-  max-width: 106.25rem;
+  max-width: var(--cc-largura-duelo);
+  min-height: 0;
   margin: 0 auto;
-  padding: 1.625rem 1.75rem;
+  padding: 1.15rem 0.75rem 0.6rem;
 }
-
 .tela-duelo__grade {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
   min-width: 0;
+  min-height: 0;
+  padding: 0.6rem 0.75rem 0.7rem;
+  border-color: #03101a;
+  background: linear-gradient(rgba(5, 20, 32, 0.9), rgba(3, 14, 24, 0.96)), radial-gradient(circle at 50% 100%, rgba(23, 217, 244, 0.14), transparent 45%);
+  box-shadow: inset 0 0 0 0.12rem #17394b, inset 0 0 0 0.25rem #087c9f, inset 0 0 2.2rem rgba(0, 0, 0, 0.72), 0 0 0 0.1rem #17a9cc;
 }
+.tela-duelo__chamada {
+  position: relative;
+  display: flex;
+  align-items: center;
+  width: min(26rem, 58%);
+  min-height: 2.25rem;
+  margin: -0.1rem 0 0.55rem;
+  padding: 0.2rem 1.35rem;
+  border-block: 0.1rem solid #146982;
+  background: linear-gradient(90deg, #09283b 0%, rgba(7, 28, 43, 0.84) 75%, transparent);
+  color: #bdeef8;
+  font-size: clamp(var(--fs-min), 1.25vw, 1.25rem);
+  line-height: 1.05;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  text-shadow: 0.1rem 0.1rem 0 #062237;
+}
+.tela-duelo__chamada::before, .tela-duelo__chamada::after {
+  content: '';
+  position: absolute;
+  width: 0.48rem;
+  height: 0.48rem;
+  border: 0.12rem solid #20c8e6;
+  transform: rotate(45deg);
+}
+.tela-duelo__chamada::before { left: 0.3rem; }
+.tela-duelo__chamada::after { right: 0.35rem; border-color: #e7b94d; box-shadow: 0 0 0.35rem rgba(231, 185, 77, 0.65); }
 
-/* ===== Grade e cartões ===== */
+/* ===== Grade 6 / 6 / 6 (17 adversários + atalho Baralho) ===== */
 .grade-oponentes {
   display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 1.25rem;
+  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-rows: repeat(3, minmax(0, 1fr));
+  gap: 0.58rem 0.65rem;
+  min-width: 0;
+  min-height: 0;
 }
-
+.grade-oponentes__radios { display: contents; }
 .cartao-oponente {
   position: relative;
   display: flex;
   flex-direction: column;
   min-width: 0;
-  padding: 0.3125rem;
-  border: 0.1875rem solid var(--cc-contorno);
-  background: #0b1520;
+  min-height: 0;
+  padding: 0.18rem;
+  border: 0.14rem solid #020b12;
+  background: #071722;
+  color: inherit;
   cursor: pointer;
   text-align: center;
-  box-shadow:
-    inset 0 0 0 0.125rem #53675f,
-    inset 0 0 0 0.1875rem var(--cc-contorno),
-    0 0 0 0.125rem #3a4c48,
-    0 0.25rem 0 rgba(0, 0, 0, 0.55);
-  transition: box-shadow 0.12s, transform 0.12s;
+  box-shadow: inset 0 0 0 0.09rem #2f7389, inset 0 0 0 0.18rem #06111a, 0 0 0 0.08rem #1592b2, 0 0.2rem 0 rgba(0, 0, 0, 0.72);
+  transition: filter 120ms linear, box-shadow 120ms linear;
 }
-
+.cartao-oponente::before {
+  content: '';
+  position: absolute;
+  z-index: 2;
+  inset: 0.35rem;
+  pointer-events: none;
+  border-top: 0.08rem solid rgba(93, 203, 232, 0.55);
+  border-bottom: 0.08rem solid rgba(93, 203, 232, 0.28);
+}
 .cartao-oponente__arte {
   display: block;
+  flex: 1 1 0;
+  min-height: 0;
   overflow: hidden;
-  aspect-ratio: 212 / 150;
-  border: 0.125rem solid var(--cc-contorno);
+  border: 0.08rem solid #0c344a;
+  background: #04101d;
 }
-
 .cartao-oponente__imagem {
   width: 100%;
   height: 100%;
   object-fit: cover;
   image-rendering: pixelated;
+  transition: filter 120ms linear;
 }
-
 .cartao-oponente__nome {
   display: flex;
+  flex: none;
   align-items: center;
   justify-content: center;
-  min-height: 2.9em;
-  padding: 0.1875rem 0.25rem;
-  background: #060e17;
-  color: var(--cc-pedra-texto);
-  font-size: 0.9rem;
+  min-height: 2.65em;
+  padding: 0.18rem 0.2rem;
+  border-top: 0.1rem solid #23738d;
+  background: linear-gradient(180deg, #092033, #04101d);
+  color: #d9f1f8;
+  font-size: clamp(var(--fs-min), 0.79vw, 0.83rem);
   font-weight: 700;
-  letter-spacing: 0.1em;
-  line-height: 1.15;
+  letter-spacing: 0.035em;
+  line-height: 1.08;
   text-transform: uppercase;
   overflow-wrap: anywhere;
+  text-shadow: 0.08rem 0.08rem 0 #02070c;
 }
-
 .cartao-oponente:hover {
-  transform: translateY(-0.125rem);
-  box-shadow:
-    inset 0 0 0 0.125rem var(--cc-turquesa-med),
-    inset 0 0 0 0.1875rem var(--cc-contorno),
-    0 0 0 0.125rem var(--cc-turquesa-esc),
-    0 0 0.875rem var(--cc-brilho),
-    0 0.25rem 0 rgba(0, 0, 0, 0.55);
-}
-
-/* selecionado: moldura turquesa luminosa com cantos */
-.cartao-oponente[data-selecionado] {
   z-index: 1;
-  background: #06202c;
-  box-shadow:
-    inset 0 0 0 0.125rem var(--cc-turquesa),
-    inset 0 0 0 0.1875rem var(--cc-contorno),
-    0 0 0 0.1875rem var(--cc-turquesa),
-    0 0 1.375rem 0.25rem var(--cc-brilho),
-    0 0.25rem 0 rgba(0, 0, 0, 0.55);
+  filter: brightness(1.12);
+  box-shadow: inset 0 0 0 0.1rem #32cce5, inset 0 0 0 0.18rem #06111a, 0 0 0 0.1rem #35b6d2, 0 0 0.75rem rgba(23, 217, 244, 0.45);
 }
-
+.cartao-oponente[data-selecionado] {
+  z-index: 2;
+  background: #082739;
+  box-shadow: inset 0 0 0 0.12rem #d4f9ff, inset 0 0 0 0.24rem #17d9f4, 0 0 0 0.16rem #7deaff, 0 0 0.85rem 0.18rem rgba(23, 217, 244, 0.68), 0 0.22rem 0 rgba(0, 0, 0, 0.75);
+  animation: duelo-selecao-pulso 2.2s steps(4, jump-none) infinite;
+}
 .cartao-oponente[data-selecionado]::after {
-  --c: #b8f6ff;
+  --c: #d5fbff;
   content: '';
   position: absolute;
-  inset: -0.5625rem;
+  z-index: 3;
+  inset: -0.3rem;
   pointer-events: none;
-  background:
-    linear-gradient(var(--c), var(--c)) 0 0 / 1.375rem 0.25rem no-repeat,
-    linear-gradient(var(--c), var(--c)) 0 0 / 0.25rem 1.375rem no-repeat,
-    linear-gradient(var(--c), var(--c)) 100% 0 / 1.375rem 0.25rem no-repeat,
-    linear-gradient(var(--c), var(--c)) 100% 0 / 0.25rem 1.375rem no-repeat,
-    linear-gradient(var(--c), var(--c)) 0 100% / 1.375rem 0.25rem no-repeat,
-    linear-gradient(var(--c), var(--c)) 0 100% / 0.25rem 1.375rem no-repeat,
-    linear-gradient(var(--c), var(--c)) 100% 100% / 1.375rem 0.25rem no-repeat,
-    linear-gradient(var(--c), var(--c)) 100% 100% / 0.25rem 1.375rem no-repeat;
+  background: linear-gradient(var(--c), var(--c)) 0 0 / 0.9rem 0.18rem no-repeat, linear-gradient(var(--c), var(--c)) 0 0 / 0.18rem 0.9rem no-repeat, linear-gradient(var(--c), var(--c)) 100% 0 / 0.9rem 0.18rem no-repeat, linear-gradient(var(--c), var(--c)) 100% 0 / 0.18rem 0.9rem no-repeat, linear-gradient(var(--c), var(--c)) 0 100% / 0.9rem 0.18rem no-repeat, linear-gradient(var(--c), var(--c)) 0 100% / 0.18rem 0.9rem no-repeat, linear-gradient(var(--c), var(--c)) 100% 100% / 0.9rem 0.18rem no-repeat, linear-gradient(var(--c), var(--c)) 100% 100% / 0.18rem 0.9rem no-repeat;
 }
-
-.cartao-oponente[data-selecionado] .cartao-oponente__nome {
-  color: #d8fbff;
+.cartao-oponente:focus-visible { z-index: 4; outline: 0.18rem solid #fff; outline-offset: 0.28rem; }
+.cartao-oponente--baralho {
+  cursor: default;
+  box-shadow: inset 0 0 0 0.12rem #bff8ff, inset 0 0 0 0.24rem #17d9f4, 0 0 0 0.14rem #52eaff, 0 0 0.75rem 0.12rem rgba(23, 217, 244, 0.58), 0 0.22rem 0 rgba(0, 0, 0, 0.75);
 }
+.cartao-oponente--baralho:hover { filter: none; }
+@keyframes duelo-selecao-pulso { 50% { filter: brightness(1.13); } }
 
-.cartao-oponente:focus-visible {
-  outline: 0.1875rem solid #fff;
-  outline-offset: 0.375rem;
-}
-
-/* ===== Painel de detalhe ===== */
+/* ===== Painel direito ===== */
 .painel-oponente {
-  position: sticky;
-  top: 0.5rem;
-  display: flex;
-  flex-direction: column;
-  gap: 0.5rem;
+  display: grid;
+  grid-template-rows: minmax(9rem, 1fr) auto auto auto auto auto;
+  gap: 0.4rem;
   min-width: 0;
-  max-height: calc(100dvh - 1rem);
-  overflow-y: auto;
-  padding: 1.08rem;
-}
-
-.painel-oponente__mais {
-  display: none;
-}
-
-/* desktop: cabeçalho mais baixo nesta tela para o painel (e o botão DUELO) caber na primeira tela */
-.tela-duelo .cabecalho__faixa { padding-block: 0.25rem; }
-
-.painel-oponente__nome {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.875rem;
-  padding: 0.5rem 0.75rem;
-  background: var(--cc-campo);
-  border: 0.1875rem solid #1a3a50;
-  box-shadow: inset 0 0 0 1px #000;
-}
-
-.painel-oponente__icone {
-  flex: none;
-  width: 2rem;
-  height: auto;
-}
-
-.painel-oponente__titulo {
-  margin: 0;
-  color: #aef2fc;
-  font-size: 1.89rem;
-  letter-spacing: 0.12em;
-  line-height: 1.1;
-  text-transform: uppercase;
-  text-shadow: 0.125rem 0.125rem 0 #0a3a4c;
-  overflow-wrap: anywhere;
-}
-
-.painel-oponente__arte {
-  height: 11.25rem;
+  min-height: 0;
   overflow: hidden;
-  border: 0.1875rem solid #1a3a50;
-  box-shadow: inset 0 0 0 1px #000;
+  padding: 0.65rem;
+  border-color: #020b12;
+  background: linear-gradient(180deg, rgba(7, 25, 38, 0.92), rgba(3, 13, 22, 0.98)), radial-gradient(circle at 50% 10%, rgba(23, 217, 244, 0.15), transparent 38%);
+  box-shadow: inset 0 0 0 0.12rem #17394b, inset 0 0 0 0.25rem #0785a8, inset 0 0 2.2rem rgba(0, 0, 0, 0.72), 0 0 0 0.1rem #17a9cc;
 }
-
+.painel-oponente__arte {
+  position: relative;
+  min-height: 0;
+  overflow: hidden;
+  border: 0.18rem solid #03101a;
+  background: #061521;
+  box-shadow: inset 0 0 0 0.1rem #23a6c4, 0 0 0 0.08rem #95661b;
+}
+.painel-oponente__arte::after {
+  content: '';
+  position: absolute;
+  inset: 0.35rem;
+  pointer-events: none;
+  border: 0.08rem solid rgba(23, 217, 244, 0.38);
+  box-shadow: inset 0 0 1.4rem rgba(3, 15, 25, 0.62);
+}
 .painel-oponente__imagem {
   width: 100%;
   height: 100%;
   object-fit: cover;
   image-rendering: pixelated;
+  animation: duelo-retrato-entrada 180ms steps(3, jump-none);
 }
-
-.painel-oponente__info {
-  padding: 0.625rem 0.875rem;
-  background: var(--cc-campo);
-  border: 0.1875rem solid #1a3a50;
-  box-shadow: inset 0 0 0 1px #000;
-}
-
-.painel-oponente__rotulo {
-  margin: 0 0 0.375rem;
-  color: var(--cc-texto-suave);
-  font-size: 0.85rem;
-  font-weight: 400;
-  letter-spacing: 0.22em;
-  text-transform: uppercase;
-}
-
-.painel-oponente__rotulo--desc {
-  margin-top: 0.75rem;
-  padding-top: 0.75rem;
-  border-top: 0.125rem solid #20384a;
-}
-
-.painel-oponente__descricao {
-  margin: 0;
-  color: var(--cc-texto);
-  font-size: 1.035rem;
-  line-height: 1.45;
-}
-
-.painel-oponente__aviso:empty {
-  display: none;
-}
-
-.painel-oponente__aviso {
-  padding: 0.5rem 0.75rem;
-  border-left: 0.25rem solid var(--cc-ouro);
-  background: rgba(230, 182, 72, 0.12);
-  color: #ffe7a6;
-  font-size: 0.9rem;
-  line-height: 1.35;
-}
-
-.painel-oponente__acoes {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 0.5rem;
-}
-
-.painel-oponente__acoes > :first-child {
-  grid-column: 1 / -1;
-}
-
-/* ===== Medidor de dificuldade ===== */
-.medidor {
+@keyframes duelo-retrato-entrada { from { opacity: 0.45; filter: brightness(0.65) saturate(0.8); } }
+.painel-oponente__nome {
+  position: relative;
   display: flex;
   align-items: center;
-  gap: 1.125rem;
+  justify-content: center;
+  gap: 0.45rem;
+  min-height: 2.7rem;
+  padding: 0.3rem 0.6rem;
+  border: 0.12rem solid #092f43;
+  background: linear-gradient(90deg, transparent, #08273a 12%, #061827 88%, transparent);
+  box-shadow: inset 0 0.12rem 0 #17a4c4, inset 0 -0.12rem 0 #0c536b;
 }
-
-.medidor__conchas {
-  display: flex;
-  gap: 0.625rem;
+.painel-oponente__nome::before, .painel-oponente__nome::after {
+  content: '';
+  width: 0.5rem;
+  height: 0.5rem;
+  flex: none;
+  border: 0.12rem solid #e7b94d;
+  transform: rotate(45deg);
 }
-
-.medidor__concha {
-  width: 2.25rem;
-  height: auto;
+.painel-oponente__icone { display: none; }
+.painel-oponente__titulo {
+  margin: 0;
+  color: #d9f1f8;
+  font-family: var(--cc-fonte-pixel);
+  font-size: clamp(1.15rem, 1.7vw, 1.72rem);
+  line-height: 1.05;
+  letter-spacing: 0.055em;
+  text-align: center;
+  text-transform: uppercase;
+  text-shadow: 0.12rem 0.12rem 0 #0a3a4c;
+  overflow-wrap: anywhere;
 }
-
-.medidor__rotulo {
-  color: var(--cc-ouro);
-  font-size: 1.05rem;
+.painel-oponente__info {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: center;
+  gap: 0.22rem 0.75rem;
+  min-width: 0;
+  padding: 0.35rem 0.65rem 0.45rem;
+  border-bottom: 0.1rem solid #19536a;
+  background: rgba(3, 15, 25, 0.72);
+}
+.painel-oponente__rotulo {
+  grid-column: 1 / -1;
+  margin: 0;
+  color: #43cce8;
+  font-size: clamp(var(--fs-min), 0.82vw, 0.82rem);
   font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+.painel-oponente__rotulo--desc {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+.painel-oponente__descricao {
+  grid-column: 1 / -1;
+  margin: 0.35rem 0 0;
+  color: #d9f1f8;
+  font-size: clamp(var(--fs-min), 0.88vw, 0.9rem);
+  line-height: 1.32;
+}
+.painel-oponente__mais { display: none; }
+
+/* ===== Medidor ===== */
+.medidor { grid-column: 1 / -1; display: flex; align-items: center; gap: 0.85rem; }
+.medidor__conchas { display: flex; gap: 0.35rem; }
+.medidor__concha { width: clamp(1.35rem, 1.8vw, 1.8rem); height: auto; filter: drop-shadow(0.08rem 0.08rem 0 #03101a); }
+.medidor__rotulo { font-size: clamp(var(--fs-min), 0.95vw, 0.95rem); font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; }
+.medidor[data-nivel='1'] .medidor__rotulo { color: #6fe48b; }
+.medidor[data-nivel='2'] .medidor__rotulo { color: #f0c857; }
+.medidor[data-nivel='3'] .medidor__rotulo { color: #ff8172; }
+
+/* ===== Recompensas preparadas, sem inventar dados ===== */
+.painel-oponente__recompensas {
+  min-width: 0;
+  padding: 0.28rem 0.6rem 0.4rem;
+  border: 0.1rem solid #15536b;
+  background: rgba(4, 18, 30, 0.88);
+  box-shadow: inset 0 0 0 0.07rem #03101a;
+}
+.painel-oponente__recompensas-titulo {
+  margin: 0 0 0.25rem;
+  color: #41d4ed;
+  font-size: var(--fs-min);
+  line-height: 1.15;
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
+.painel-oponente__recompensas-titulo::before {
+  content: '';
+  display: inline-block;
+  width: 0.42rem;
+  height: 0.42rem;
+  margin: 0 0.45rem 0.08rem 0.08rem;
+  border: 0.08rem solid #e7b94d;
+  transform: rotate(45deg);
+}
+.painel-oponente__recompensas-vazio {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 2.3rem;
+  margin: 0;
+  border: 0.08rem dashed #18536b;
+  color: #8eb4c2;
+  font-size: var(--fs-min);
+  text-align: center;
+}
+.painel-oponente__aviso:empty { display: none; }
+.painel-oponente__aviso {
+  padding: 0.38rem 0.65rem;
+  border-left: 0.22rem solid #e7b94d;
+  background: rgba(231, 185, 77, 0.12);
+  color: #ffe7a6;
+  font-size: var(--fs-min);
+  line-height: 1.25;
+}
+.painel-oponente__acoes { display: grid; grid-template-columns: 1fr 1fr; gap: 0.42rem; }
+.painel-oponente__acoes > :first-child { grid-column: 1 / -1; }
+.painel-oponente__acoes .botao {
+  min-height: 2.8rem;
+  padding: 0.35rem 0.55rem;
+  border-width: 0.13rem;
+  font-size: clamp(var(--fs-min), 0.88vw, 0.9rem);
+}
+.painel-oponente__acoes .botao--primario {
+  min-height: 4rem;
+  font-size: clamp(1.05rem, 1.45vw, 1.45rem);
+  letter-spacing: 0.09em;
+  background: linear-gradient(135deg, transparent 0.55rem, rgba(23, 217, 244, 0.82) 0 0.7rem, transparent 0) left bottom / 2.4rem 1.25rem no-repeat, linear-gradient(225deg, transparent 0.55rem, rgba(23, 217, 244, 0.82) 0 0.7rem, transparent 0) right bottom / 2.4rem 1.25rem no-repeat, linear-gradient(180deg, #efc75b 0%, #c48a18 48%, #8c5a0d 100%);
+  box-shadow: inset 0 0 0 0.12rem #fff0a5, inset 0 -0.3rem 0 rgba(74, 37, 0, 0.42), 0 0 0 0.12rem #e7b94d, 0 0 0.65rem rgba(231, 185, 77, 0.45), 0 0.22rem 0 rgba(0, 0, 0, 0.7);
+}
+.painel-oponente__acoes .botao__icone { width: 2.15rem; }
 
-/* ===== Tablet e celular (<=62.5rem): grade abaixo do cabeçalho e painel compacto fixo na base ===== */
+/* ===== Rodapé ===== */
+.tela-duelo > .rodape {
+  border-color: #03101a;
+  background: rgba(5, 19, 30, 0.94);
+  box-shadow: inset 0 0.12rem 0 #17677f, inset 0 0.25rem 0 #0a2f43;
+}
+.tela-duelo .rodape__frase { letter-spacing: 0.16em; }
+
+/* ===== Desktop baixo: mantém tudo visível sem rolagem ===== */
+@media (min-width: 1001px) and (max-height: 820px) {
+  .tela-duelo > .cabecalho { height: 5.85rem; min-height: 5.85rem; }
+  .tela-duelo .cabecalho__nome { font-size: 2.85rem; }
+  .tela-duelo .cabecalho__marca { min-height: 3.85rem; }
+  .tela-duelo .cabecalho__onda-grande { max-height: 3.75rem; }
+  .tela-duelo .cabecalho__faixa { min-height: 2.65rem; }
+  .tela-duelo .cabecalho__titulo { font-size: 1.25rem; }
+  .tela-duelo__corpo { padding-top: 0.9rem; }
+  .tela-duelo__chamada { min-height: 1.85rem; margin-bottom: 0.4rem; }
+  .grade-oponentes { gap: 0.42rem 0.5rem; }
+  .cartao-oponente__nome { min-height: 2.85em; font-size: var(--fs-min); line-height: 0.95; }
+  .painel-oponente { gap: 0.28rem; padding: 0.48rem; grid-template-rows: minmax(7rem, 1fr) auto auto auto auto auto; }
+  .painel-oponente__nome { min-height: 2.15rem; padding-block: 0.18rem; }
+  .painel-oponente__titulo { font-size: 1.1rem; }
+  .painel-oponente__info { padding: 0.2rem 0.5rem 0.28rem; }
+  .painel-oponente__descricao { display: -webkit-box; overflow: hidden; margin-top: 0.2rem; font-size: var(--fs-min); line-height: 1.12; -webkit-box-orient: vertical; -webkit-line-clamp: 2; line-clamp: 2; }
+  .painel-oponente__recompensas { padding-block: 0.2rem 0.28rem; }
+  .painel-oponente__recompensas-vazio { min-height: 1.55rem; }
+  .painel-oponente__acoes .botao { min-height: 2.45rem; }
+  .painel-oponente__acoes .botao--primario { min-height: 3.15rem; }
+}
+@media (min-width: 1001px) and (max-height: 660px) {
+  .tela-duelo > .cabecalho { height: 3.4rem; min-height: 3.4rem; }
+  .tela-duelo .cabecalho__nome { font-size: 1.8rem; }
+  .tela-duelo .cabecalho__marca { min-height: 2.35rem; }
+  .tela-duelo .cabecalho__onda-grande { max-height: 2.25rem; }
+  .tela-duelo .cabecalho__faixa { min-height: 2.15rem; bottom: -0.65rem; }
+  .tela-duelo .cabecalho__titulo { font-size: 1rem; }
+  .tela-duelo__corpo { padding-top: 0.7rem; padding-bottom: 0.3rem; }
+  .tela-duelo__chamada { min-height: 1.55rem; font-size: var(--fs-min); }
+  .painel-oponente { grid-template-rows: minmax(4.5rem, 1fr) auto auto auto auto auto; }
+  .painel-oponente__recompensas { display: none; }
+  .painel-oponente__acoes .botao--primario { min-height: 2.7rem; }
+}
+
+/* ===== Tablet: painéis empilhados, 4 colunas e rolagem vertical natural ===== */
 @media (max-width: 1000px) {
-  .tela-duelo__corpo {
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    padding-bottom: 0;
-  }
-  .painel-oponente {
-    position: sticky;
-    bottom: 0;
-    z-index: 5;
-    top: auto;
-    max-height: 44dvh;
-    overflow: hidden;
-    gap: 0.375rem;
-    margin: 0 -0.25rem;
-    padding: 0.5rem 0.625rem;
-  }
-  .painel-oponente__arte { display: none; }
-  .painel-oponente__nome { padding: 0.125rem 0.5rem; gap: 0.625rem; }
-  .painel-oponente__icone { width: 1.5rem; }
-  .painel-oponente__titulo { font-size: 1.15rem; }
-  .painel-oponente > * { flex: none; }
-  /* só a área de informações rola (descrição expandida); DUELO/BARALHO/VOLTAR ficam sempre visíveis */
-  .painel-oponente > .painel-oponente__info {
-    flex: 0 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-  }
-  .painel-oponente__info {
-    display: grid;
-    grid-template-columns: auto minmax(0, 1fr) auto;
-    align-items: center;
-    column-gap: 0.625rem;
-    padding: 0.25rem 0.625rem;
-  }
-  /* rótulos visuais ocultos no compacto (continuam para leitores de tela): o medidor já diz o nível */
-  .painel-oponente__rotulo {
-    position: absolute;
-    width: 1px;
-    height: 1px;
-    margin: -1px;
-    overflow: hidden;
-    clip-path: inset(50%);
-    white-space: nowrap;
-  }
-  .painel-oponente__rotulo--desc { display: none; }
-  .painel-oponente__descricao {
-    grid-column: 1 / -1;
-    grid-row: 2;
-    margin-top: 0.25rem;
-    font-size: 0.82rem;
-    line-height: 1.3;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-  .painel-oponente[data-expandido] .painel-oponente__descricao {
-    display: block;
-    overflow: visible;
-  }
-  .painel-oponente__mais {
-    display: inline-block;
-    grid-column: 3;
-    grid-row: 1;
-    justify-self: end;
-    white-space: nowrap;
-    min-height: 2rem;
-    padding: 0.125rem 0.25rem;
-    border: 0;
-    background: none;
-    color: var(--cc-turquesa);
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-decoration: underline;
-    text-underline-offset: 0.25rem;
-    cursor: pointer;
-  }
-  /* com aviso visível o painel economiza altura: descrição só via "Ler mais" */
-  .painel-oponente[data-aviso]:not([data-expandido]) .painel-oponente__descricao { display: none; }
-  .medidor { gap: 0.625rem; }
-  .medidor__conchas { gap: 0.25rem; }
-  .medidor__concha { width: 1.5rem; }
-  .medidor__rotulo { font-size: 0.85rem; }
-  .painel-oponente__aviso { padding: 0.375rem 0.625rem; font-size: 0.8rem; }
-  .painel-oponente__acoes { grid-template-columns: 1.3fr 1fr 1fr; gap: 0.375rem; }
-  .painel-oponente__acoes > :first-child { grid-column: auto; }
-  .painel-oponente__acoes .botao { gap: 0.375rem; padding: 0.375rem 0.25rem; font-size: 0.85rem; letter-spacing: 0.04em; min-height: max(44px, 2.75rem); }
-  .painel-oponente__acoes .botao--primario { font-size: 1rem; min-height: max(44px, 2.75rem); }
+  .tela-duelo { overflow-x: clip; overflow-y: auto; }
+  .tela-duelo.tela-jogo { display: flex; height: auto; min-height: 100vh; min-height: 100dvh; }
+  .tela-duelo > .cabecalho { height: clamp(5.5rem, 13vw, 7rem); min-height: clamp(5.5rem, 13vw, 7rem); }
+  .tela-duelo .cabecalho__nome { font-size: clamp(2.25rem, 6vw, 3.5rem); }
+  .tela-duelo .cabecalho__marca { width: min(56rem, 96vw); min-height: 4.35rem; }
+  .tela-duelo .cabecalho__onda-grande { width: clamp(5.5rem, 15vw, 9rem); max-height: 4.2rem; }
+  .tela-duelo .cabecalho__faixa { width: min(26rem, 68vw); }
+  .tela-duelo__corpo { display: flex; flex-direction: column; gap: 0.8rem; padding: 1.3rem 0.75rem 0.75rem; }
+  .tela-duelo__grade { padding: 0.7rem; }
+  .tela-duelo__chamada { width: min(26rem, 78%); }
+  .grade-oponentes { grid-template-columns: repeat(4, minmax(0, 1fr)); grid-template-rows: none; grid-auto-rows: auto; gap: 0.75rem; }
+  .cartao-oponente__arte { flex: none; aspect-ratio: 212 / 150; }
+  .cartao-oponente__nome { font-size: clamp(0.72rem, 1.45vw, 0.88rem); }
+  .painel-oponente { grid-template-rows: none; overflow: visible; padding: 0.75rem; }
+  .painel-oponente__arte { min-height: 0; aspect-ratio: 16 / 7; }
+  .painel-oponente__titulo { font-size: clamp(1.15rem, 3vw, 1.7rem); }
+  .painel-oponente__descricao { font-size: 0.9rem; }
+  .painel-oponente__acoes .botao { min-height: max(44px, 3rem); }
+  .painel-oponente__acoes .botao--primario { min-height: max(50px, 3.75rem); }
 }
 
+/* ===== Celular ===== */
 @media (max-width: 600px) {
-  .tela-duelo__corpo {
-    padding: 0.75rem 0.625rem 0;
-    gap: 0.75rem;
+  .tela-duelo::before {
+    background: linear-gradient(180deg, rgba(3, 12, 22, 0.28), rgba(2, 8, 15, 0.92)), url('../../assets/login/cena-mangue.png') 28% top / auto 58rem no-repeat, #04101d;
+    opacity: 0.56;
   }
-  .grade-oponentes {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0.75rem;
-  }
-  .cartao-oponente__nome {
-    min-height: 3em;
-    font-size: 0.78rem;
-  }
-  .painel-oponente__titulo { font-size: 1.05rem; }
-  .painel-oponente__acoes .botao__icone { display: none; }
-  .painel-oponente__acoes .botao { font-size: 0.8rem; }
-  .painel-oponente__acoes .botao--primario { font-size: 0.95rem; }
-}
-
-/* altura baixa (celular deitado etc.): painel deixa de ser fixo para não cobrir a grade */
-@media (max-height: 520px) and (orientation: landscape) {
-  .painel-oponente { position: static; max-height: none; }
+  .tela-duelo > .cabecalho { height: 5.5rem; min-height: 5.5rem; }
+  .tela-duelo .cabecalho__nome { font-size: clamp(1.85rem, 9vw, 2.65rem); }
+  .tela-duelo .cabecalho__marca { width: 98vw; min-height: 3.45rem; gap: 0.2rem; }
+  .tela-duelo .cabecalho__onda-grande { flex-basis: 5.1rem; width: clamp(3.9rem, 18vw, 5.1rem); max-height: 3.15rem; }
+  .tela-duelo .cabecalho__faixa { width: min(22rem, 84vw); min-height: 2.65rem; padding-inline: 0.55rem; }
+  .tela-duelo .cabecalho__faixa .cabecalho__ornamento { width: 2.5rem; }
+  .tela-duelo .cabecalho__titulo { font-size: clamp(1rem, 5vw, 1.25rem); }
+  .tela-duelo__corpo { padding: 1.2rem 0.5rem 0.6rem; }
+  .tela-duelo__grade { padding: 0.55rem; }
+  .tela-duelo__chamada { width: 100%; min-height: 2.25rem; padding-inline: 1.25rem; font-size: 0.82rem; }
+  .grade-oponentes { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.68rem; }
+  .cartao-oponente__nome { min-height: 3em; font-size: 0.74rem; }
+  .painel-oponente { padding: 0.55rem; }
+  .painel-oponente__arte { aspect-ratio: 4 / 3; }
+  .painel-oponente__info { padding: 0.45rem 0.55rem; }
+  .painel-oponente__descricao { font-size: 0.82rem; }
+  .painel-oponente__recompensas-vazio { min-height: 2.75rem; }
+  .painel-oponente__acoes { grid-template-columns: 1fr; }
+  .painel-oponente__acoes > :first-child { grid-column: auto; }
+  .painel-oponente__acoes .botao, .painel-oponente__acoes .botao--primario { min-height: 48px; }
+  .painel-oponente__acoes .botao__icone { width: 1.75rem; }
+  .tela-duelo > .rodape { padding-inline: 0.5rem; }
+  .tela-duelo .rodape__frase { font-size: 0.68rem; letter-spacing: 0.07em; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .cartao-oponente:hover { transform: none; }
-}
-
-/* ===== Desktop (> 1000px): grade e painel repartem a altura da viewport (sem rolagem da página) =====
-   16 adversários em 6 colunas x 3 linhas; o retrato ocupa a altura que sobra (object-fit: cover, sem distorção). */
-@media (min-width: 1001px) {
-  .tela-duelo__corpo {
-    align-items: stretch;
-    min-height: 0;
-    padding-block: 0.875rem;
-  }
-  .tela-duelo__grade {
-    display: flex;
-    min-height: 0;
-  }
-  .grade-oponentes {
-    flex: 1;
-    grid-template-columns: repeat(6, minmax(0, 1fr));
-    grid-template-rows: repeat(3, minmax(0, 1fr));
-    gap: 0.875rem;
-    min-height: 0;
-  }
-  .cartao-oponente {
-    min-height: 0;
-  }
-  .cartao-oponente__arte {
-    flex: 1 1 0;
-    min-height: 0;
-    aspect-ratio: auto;
-  }
-  .cartao-oponente__nome {
-    flex: none;
-    min-height: 2.6em;
-    font-size: max(var(--fs-min), 0.8rem);
-  }
-  .painel-oponente {
-    position: static;
-    max-height: none;
-    min-height: 0;
-    overflow-y: auto;
-  }
-  .painel-oponente__arte {
-    flex: 1 1 4rem;
-    height: auto;
-    min-height: 0;
-  }
-}
-@media (min-width: 1001px) and (max-height: 820px) {
-  .tela-duelo__corpo {
-    gap: 1rem;
-    padding-block: 0.5rem;
-  }
-  .grade-oponentes {
-    gap: 0.625rem;
-  }
-  .painel-oponente {
-    gap: 0.375rem;
-    padding: 0.625rem;
-  }
-  .painel-oponente__rotulo--desc {
-    margin-top: 0.5rem;
-    padding-top: 0.5rem;
-  }
-  .painel-oponente__info {
-    padding: 0.5rem 0.75rem;
-  }
-  .painel-oponente__descricao {
-    font-size: 0.875rem;
-    line-height: 1.35;
-  }
-}
-@media (min-width: 1001px) and (max-height: 720px) {
-  .painel-oponente__arte {
-    display: none;
-  }
-  .painel-oponente__aviso {
-    padding: 0.25rem 0.5rem;
-  }
-  .painel-oponente__acoes .botao {
-    min-height: 2.5rem;
-  }
-}
-@media (min-width: 1001px) and (max-height: 620px) {
-  .painel-oponente__rotulo,
-  .painel-oponente__rotulo--desc {
-    display: none;
-  }
-  .tela-duelo__corpo {
-    padding-block: 0.25rem;
-  }
-}
-
-/* tablet/celular: a tela cresce com o conteúdo (rolagem natural da página); o painel fica colado na base */
-@media (max-width: 1000px) {
-  .tela-duelo.tela-jogo {
-    display: flex;
-    height: auto;
-    min-height: 100vh;
-    min-height: 100dvh;
-  }
-  .painel-oponente__mais {
-    min-height: 44px;
-    margin-block: -0.5rem;
-  }
+  .cartao-oponente[data-selecionado], .painel-oponente__imagem { animation: none; }
 }

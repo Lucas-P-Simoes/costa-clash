@@ -1,20 +1,23 @@
 import topoEsquerda from '../../assets/login/topo-esquerda.png'
 import topoDireita from '../../assets/login/topo-direita.png'
-import { OrnamentoOnda } from './Icones'
+import { OrnamentoOnda, OrnamentoOndaGrande } from './Icones'
+
+type VarianteCabecalho = 'padrao' | 'duelo-livre'
 
 /** Logo Costa Clash + faixa de título da tela (h1). Reutilizável nas próximas telas. */
 /** Sem `titulo`, só o logo é exibido (login: o h1 fica dentro do painel do formulário). */
-export function CabecalhoTela({ titulo }: { titulo?: string }) {
+export function CabecalhoTela({ titulo, variante = 'padrao' }: { titulo?: string; variante?: VarianteCabecalho }) {
+  const dueloLivre = variante === 'duelo-livre'
   return (
-    <header className="cabecalho">
+    <header className={`cabecalho${dueloLivre ? ' cabecalho--duelo-livre' : ''}`}>
       <div className="cabecalho__cena">
         <img className="cabecalho__imagem cabecalho__imagem--esq" src={topoEsquerda} alt="" aria-hidden="true" />
         <img className="cabecalho__imagem cabecalho__imagem--dir" src={topoDireita} alt="" aria-hidden="true" />
         <div className="cabecalho__logo">
           <div className="cabecalho__marca">
-            <OrnamentoOnda className="cabecalho__ornamento" />
+            {dueloLivre ? <OrnamentoOndaGrande className="cabecalho__onda-grande" /> : <OrnamentoOnda className="cabecalho__ornamento" />}
             <p className="cabecalho__nome">Costa Clash</p>
-            <OrnamentoOnda className="cabecalho__ornamento" espelhado />
+            {dueloLivre ? <OrnamentoOndaGrande className="cabecalho__onda-grande" espelhado /> : <OrnamentoOnda className="cabecalho__ornamento" espelhado />}
           </div>
           <p className="cabecalho__subtitulo">Batalha pelo Litoral</p>
         </div>

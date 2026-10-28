@@ -25,7 +25,7 @@ interface Props {
 
 type Aviso = { tipo: 'baralho'; n: number } | null
 
-/** Seleção de adversário do Duelo Livre; DUELO inicia a partida contra o adversário selecionado. */
+/** Seleção de adversário do Duelo Livre; INICIAR DUELO abre a partida contra o adversário selecionado. */
 export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteInicialId }: Props) {
   const [selecionadoId, setSelecionadoId] = useState(oponenteInicialId && buscarOponente(oponenteInicialId) ? oponenteInicialId : OPONENTE_PADRAO_ID)
   const [aviso, setAviso] = useState<Aviso>(null)
@@ -61,15 +61,18 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
 
   return (
     <div className="tela tela-jogo tela-duelo">
-      <CabecalhoTela titulo="Duelo Livre" />
+      <CabecalhoTela titulo="Duelo Livre" variante="duelo-livre" />
       <main className="tela-duelo__corpo">
-        <div className="tela-duelo__grade">
+        <section className="tela-duelo__grade moldura moldura--interna" aria-labelledby="titulo-escolha-oponente">
+          <h2 id="titulo-escolha-oponente" className="tela-duelo__chamada">
+            Escolha seu adversário
+          </h2>
           <GradeOponentes oponentes={OPONENTES} selecionadoId={selecionadoId} onSelecionar={selecionar} />
-        </div>
+        </section>
         {/* A chave força nova leitura quando o mesmo aviso é pedido de novo. */}
         <PainelOponente oponente={oponente} aviso={mensagem ? <span key={aviso?.n}>{mensagem}</span> : undefined}>
           <BotaoRetro variante="primario" icone={<IconeEspadas />} onClick={() => onDuelo(oponente.id)}>
-            Duelo
+            Iniciar duelo
           </BotaoRetro>
           <BotaoRetro icone={<IconeCartas />} onClick={() => setAviso((a) => ({ tipo: 'baralho', n: (a?.n ?? 0) + 1 }))}>
             Baralho

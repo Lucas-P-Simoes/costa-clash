@@ -136,6 +136,29 @@ export function OrnamentoOnda({ className, espelhado = false }: Props & { espelh
   )
 }
 
+/** Onda larga decorativa do cabeçalho do Duelo Livre. SVG próprio para escalar sem raster borrado. */
+export function OrnamentoOndaGrande({ className, espelhado = false }: Props & { espelhado?: boolean }) {
+  return (
+    <svg
+      className={`pixel-art ${className ?? ''} ${espelhado ? 'espelhado' : ''}`}
+      viewBox="0 0 160 76"
+      shapeRendering="geometricPrecision"
+      aria-hidden="true"
+      focusable="false"
+    >
+      <path d="M1 69h28c18 0 27-8 34-21 6-11 7-25 18-35C91 4 108 1 123 7c15 6 24 19 21 33-2 11-10 19-21 23 6-12 1-23-9-27-9-4-19 0-23 8-5 10 0 20 12 25h56v7H1z" fill="#05283e" />
+      <path d="M10 65h19c14 0 21-7 28-19 7-13 9-29 23-39 12-8 31-9 45-1 10 5 17 14 18 24-6-8-14-13-24-14-14-2-27 6-31 18-5 15 5 29 21 31h50v6H10z" fill="#08799f" />
+      <path d="M28 62c12-2 17-10 22-21 5-13 9-27 21-35 10-7 25-8 37-4-19 4-31 15-34 31-4 17 7 31 25 35H28z" fill="#1ab9dc" />
+      <path d="M70 11c10-8 28-11 42-5 8 3 16 9 20 16-11-7-24-9-35-4-10 4-17 13-19 24-3-11-7-20-18-24 2-3 5-5 10-7z" fill="#69e3f3" />
+      <path d="M95 28c8-8 21-9 31-3 9 5 13 16 9 26-2 6-7 10-13 13 3-8 1-16-5-20-7-5-17-3-22 4-5-6-5-14 0-20z" fill="#0b6089" />
+      <path d="M8 67h45l-7 5H8zm102 0h49v5h-56z" fill="#58d9ee" />
+      <rect x="18" y="59" width="8" height="4" fill="#82eff8" />
+      <rect x="34" y="52" width="6" height="5" fill="#48d4ea" />
+      <rect x="52" y="34" width="5" height="8" fill="#82eff8" />
+    </svg>
+  )
+}
+
 /** Concha pixelada para o medidor de dificuldade. */
 export function IconeConcha({ className, cheia = true }: Props & { cheia?: boolean }) {
   return (

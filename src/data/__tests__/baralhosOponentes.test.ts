@@ -9,9 +9,14 @@ import * as inicialDoWorker from '../../../worker/src/inicial'
 const porId = new Map(CATALOGO.map((c) => [c.id, c]))
 
 describe('baralhos dos oponentes (provisórios)', () => {
-  it('há um baralho para cada um dos 16 oponentes e nenhum extra', () => {
-    expect(OPONENTES).toHaveLength(16)
+  it('há um baralho para cada um dos 17 oponentes e nenhum extra', () => {
+    expect(OPONENTES).toHaveLength(17)
     expect(Object.keys(BARALHOS_OPONENTES).sort()).toEqual(OPONENTES.map((o) => o.id).sort())
+  })
+
+  it('Oceano Limpo reutiliza a composição de Biodiversidade sem introduzir balanceamento novo', () => {
+    expect(baralhoDoOponente('oceano-limpo')).toEqual(baralhoDoOponente('biodiversidade-costeira'))
+    expect(baralhoDoOponente('oceano-limpo')).not.toBe(baralhoDoOponente('biodiversidade-costeira'))
   })
 
   it.each(OPONENTES.map((o) => [o.id] as const))('%s: baralho válido (40 cartas, <=3 por ID, IDs existentes)', (id) => {

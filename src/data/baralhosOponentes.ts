@@ -1,4 +1,4 @@
-// Baralhos dos 16 adversários do Duelo Livre. PROVISÓRIOS (aguardam revisão/balanceamento do responsável).
+// Baralhos dos 17 adversários do Duelo Livre. PROVISÓRIOS (aguardam revisão/balanceamento do responsável).
 // Cada baralho tem exatamente 40 cartas, no máximo 3 por ID, e é válido pelo validador do motor.
 // Temática: segue o `grupo` do oponente (src/data/oponentes.ts). Dificuldade: SÓ pela composição
 // (fácil = unidades mais fracas e poucas ações/armadilhas; difícil = unidades mais fortes, mais ações e armadilhas).
@@ -109,6 +109,14 @@ const BARALHOS: Readonly<Record<string, Pares>> = {
     ['CC-093', 1], ['CC-094', 1], ['CC-095', 1], ['CC-096', 1], ['CC-098', 1],
   ],
   'biodiversidade-costeira': [
+    ['CC-027', 3], ['CC-019', 3], ['CC-024', 2], ['CC-018', 2], ['CC-023', 2], ['CC-026', 2], ['CC-017', 2], ['CC-020', 2],
+    ['CC-028', 2], ['CC-005', 2], ['CC-010', 2],
+    ['CC-091', 1], ['CC-085', 2], ['CC-088', 2], ['CC-074', 2], ['CC-084', 1], ['CC-077', 1], ['CC-083', 1], ['CC-079', 1],
+    ['CC-094', 1], ['CC-095', 1], ['CC-096', 1], ['CC-099', 1], ['CC-100', 1],
+  ],
+  // Oceano Limpo reutiliza explicitamente a composição difícil de Biodiversidade Costeira.
+  // A nova identidade visual não introduz balanceamento nem cartas novas nesta etapa.
+  'oceano-limpo': [
     ['CC-027', 3], ['CC-019', 3], ['CC-024', 2], ['CC-018', 2], ['CC-023', 2], ['CC-026', 2], ['CC-017', 2], ['CC-020', 2],
     ['CC-028', 2], ['CC-005', 2], ['CC-010', 2],
     ['CC-091', 1], ['CC-085', 2], ['CC-088', 2], ['CC-074', 2], ['CC-084', 1], ['CC-077', 1], ['CC-083', 1], ['CC-079', 1],

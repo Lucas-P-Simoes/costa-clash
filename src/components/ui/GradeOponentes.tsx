@@ -32,6 +32,24 @@ export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao }
   )
 }
 
+/** Atalho visual reservado para a futura montagem de baralho. Intencionalmente inerte nesta etapa. */
+export function CartaoBaralho() {
+  return (
+    <button
+      type="button"
+      className="cartao-oponente cartao-oponente--baralho"
+      aria-label="Baralho (em breve)"
+      aria-disabled="true"
+      title="Em breve"
+    >
+      <span className="cartao-oponente__arte">
+        <img className="cartao-oponente__imagem" src={urlArquivoOponente('baralho.png')} alt="" draggable={false} />
+      </span>
+      <span className="cartao-oponente__nome">Baralho</span>
+    </button>
+  )
+}
+
 interface GradeProps {
   oponentes: readonly Oponente[]
   selecionadoId: string
@@ -61,18 +79,21 @@ export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo 
   }
 
   return (
-    <div ref={grade} className="grade-oponentes" role="radiogroup" aria-label={rotulo} onKeyDown={aoTeclar}>
-      {oponentes.map((o, i) => (
-        <CartaoOponente
-          key={o.id}
-          oponente={o}
-          selecionado={o.id === selecionadoId}
-          onSelecionar={() => onSelecionar(o.id)}
-          refBotao={(el) => {
-            botoes.current[i] = el
-          }}
-        />
-      ))}
+    <div ref={grade} className="grade-oponentes">
+      <div className="grade-oponentes__radios" role="radiogroup" aria-label={rotulo} onKeyDown={aoTeclar}>
+        {oponentes.map((o, i) => (
+          <CartaoOponente
+            key={o.id}
+            oponente={o}
+            selecionado={o.id === selecionadoId}
+            onSelecionar={() => onSelecionar(o.id)}
+            refBotao={(el) => {
+              botoes.current[i] = el
+            }}
+          />
+        ))}
+      </div>
+      <CartaoBaralho />
     </div>
   )
 }

@@ -4,7 +4,7 @@ import { describe, it } from 'vitest'
 import { BARALHOS_SIMULACAO, simularIAxIA } from './simular'
 
 describe('estatísticas IA x IA (manual)', () => {
-  it.runIf(import.meta.env['STATS'])('todas as combinações ordenadas de 17 baralhos, 2 seeds cada', () => {
+  it.runIf(import.meta.env['STATS'])('todas as combinações ordenadas de 18 baralhos, 2 seeds cada', () => {
     const t0 = Date.now()
     const res = { primeiro: 0, segundo: 0, empate: 0 }
     const motivos: Record<string, number> = {}

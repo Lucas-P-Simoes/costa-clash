@@ -364,7 +364,7 @@ describe('Integração com o Duelo Livre', () => {
     colecao: [],
   }
 
-  it('logado sem baralho no perfil: DUELO usa o baralho inicial e VOLTAR retorna ao Duelo Livre mantendo o adversário', async () => {
+  it('logado sem baralho no perfil: INICIAR DUELO usa o baralho inicial e VOLTAR retorna ao Duelo Livre mantendo o adversário', async () => {
     const servico: ServicoAuth = { entrar: vi.fn().mockResolvedValue({ ok: true, usuario: { id: 'u2', email: 'bia@exemplo.com' } }) }
     render(<App servicoAuth={servico} />)
     fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'bia@exemplo.com' } })
@@ -372,7 +372,7 @@ describe('Integração com o Duelo Livre', () => {
     fireEvent.submit(document.querySelector('form')!)
     await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })
     fireEvent.click(screen.getByRole('radio', { name: 'Porto' }))
-    fireEvent.click(botao('Duelo'))
+    fireEvent.click(botao('Iniciar duelo'))
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Porto' })).toBeTruthy()
     expect(screen.queryByText(/Em breve — o duelo/)).toBeNull()
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(5)
@@ -390,7 +390,7 @@ describe('Integração com o Duelo Livre', () => {
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senha-valida-1' } })
     fireEvent.submit(document.querySelector('form')!)
     await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })
-    fireEvent.click(botao('Duelo'))
+    fireEvent.click(botao('Iniciar duelo'))
     expect(screen.getByRole('heading', { level: 1, name: /Duelo contra/ })).toBeTruthy()
     fireEvent.keyDown(window, { key: 'Escape' }) // abre confirmação
     fireEvent.click(botao('Desistir'.length ? 'Confirmar' : ''))
@@ -410,6 +410,14 @@ describe('Integração com o Duelo Livre', () => {
     expect(alerta.textContent).toContain('CC-001')
     fireEvent.click(botao('Voltar'))
     expect(onVoltar).toHaveBeenCalled()
+  })
+
+  it('Oceano Limpo possui baralho válido e inicia uma partida real', () => {
+    render(<TelaDuelo oponenteId="oceano-limpo" seedInicial={27} atrasoIA={0} onVoltar={() => {}} />)
+    expect(screen.queryByRole('alert')).toBeNull()
+    expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Oceano Limpo' })).toBeTruthy()
+    expect(screen.getByLabelText('Sua vida: 8000')).toBeTruthy()
+    expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(5)
   })
 
   it('adversário inexistente também não quebra a tela', () => {

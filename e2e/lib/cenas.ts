@@ -46,7 +46,7 @@ export async function abrirCena(page: Page, cena: Cena): Promise<void> {
     await page.goto(`${BASE}e2e/harness.html?cena=autenticado`)
     await page.getByRole('heading', { name: 'Duelo Livre', exact: true }).waitFor()
     if (cena === 'duelo') {
-      await page.getByRole('button', { name: 'Duelo', exact: true }).click()
+      await page.getByRole('button', { name: 'Iniciar duelo', exact: true }).click()
       await page.locator('.tela-partida').waitFor()
     }
   } else {

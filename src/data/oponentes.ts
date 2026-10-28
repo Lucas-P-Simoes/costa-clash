@@ -1,5 +1,5 @@
-// Adversários do modo "Duelo Livre". Apenas apresentação (seleção de adversário): NÃO há baralho
-// nem balanceamento por adversário nesta etapa, o duelo ainda não existe.
+// Adversários do modo "Duelo Livre". Cada id também aponta para um baralho provisório em
+// `baralhosOponentes.ts`.
 // ATENÇÃO: descrições (exceto a de Ressaca, que vem da referência visual) e dificuldades são PROVISÓRIAS
 // e aguardam revisão do responsável pelo projeto (ver docs/ESTADO_DO_PROJETO.md).
 
@@ -25,7 +25,7 @@ export const ROTULO_DIFICULDADE: Readonly<Record<NivelDificuldade, string>> = { 
 // Porto ~ CC-058 Expansão Portuária (impacto). Grupo é só rótulo temático, não define baralho.
 export const OPONENTE_PADRAO_ID = 'ressaca'
 
-// Ordem = ordem da grade 4x4 da referência (linha a linha).
+// Ordem = ordem visual da grade (linha a linha). O atalho inativo BARALHO não faz parte destes dados.
 export const OPONENTES: readonly Oponente[] = [
   {
     id: 'guardiao-manguezal',
@@ -34,6 +34,7 @@ export const OPONENTES: readonly Oponente[] = [
     grupo: 'ecossistema',
     descricao: 'Protege áreas de manguezal, ecossistema que abriga diversas espécies e ajuda a reter sedimentos.',
     retrato: 'guardiao-manguezal.png',
+    retratoGrande: 'guardiao-manguezal-grande.png',
   },
   {
     id: 'fiscal-ambiental',
@@ -155,6 +156,14 @@ export const OPONENTES: readonly Oponente[] = [
     grupo: 'fauna',
     descricao: 'A variedade de aves, peixes e plantas do litoral contribui para o funcionamento dos ambientes costeiros.',
     retrato: 'biodiversidade-costeira.png',
+  },
+  {
+    id: 'oceano-limpo',
+    nome: 'Oceano Limpo',
+    dificuldade: 3,
+    grupo: 'fauna',
+    descricao: 'Reúne espécies e ações ligadas à conservação da qualidade da água e à redução de impactos sobre a vida marinha.',
+    retrato: 'oceano-limpo.png',
   },
 ]
 
