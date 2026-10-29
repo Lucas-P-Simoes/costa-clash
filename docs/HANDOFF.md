@@ -1,5 +1,12 @@
 # Handoff — continuidade entre Codex e Claude Code
 
+## Pop-up de drops no Duelo Livre (coordenador Claude Code; DEV sessão principal → QA reprovada (D1–D3) → DEV correção → QA rodada 2 APROVADA, 2026-10-28; sem commit/publicação)
+- **Pedido:** botão no painel do adversário que abre pop-up com as cartas que ele pode dropar e a chance de cada uma.
+- **Implementação:** `src/components/ui/DialogoDropsOponente.tsx` (lista ordenada por chance, miniatura da arte, tipo, "você tem x/3" quando logado, "Completa" e chances renormalizadas via `chancesDrop`); `PainelOponente` troca "Recompensas ainda não disponíveis." pelo botão "Ver N cartas e chances"; `TelaDueloLivre` controla o pop-up e deixa cabeçalho/main/rodapé `inert`; estilos em `dueloLivre.css` (no desktop baixo ≤660px de altura a seção de recompensas deixou de sumir: só o título some).
+- **Correções pós-QA:** D1 botão ≥44px em toque (≤1000px); D2 Esc tratado por listener de captura no document (fecha mesmo com foco no body, sem acionar o voltar da tela); D3 lista focável (`tabIndex=0`) e rolável por teclado.
+- **Testes:** `src/screens/__tests__/dropsOponente.test.tsx`, ajuste em `dueloLivre.test.tsx`; QA: `src/screens/__tests__/qa_dropsOponente.test.tsx`, `e2e/tests/qa_dropsOponente.spec.ts`. Resultados: vitest 851 + 1 ignorado; tsc, worker:typecheck, oxlint, build ok; Playwright 295/295.
+- **Ressalvas:** `src/game/__tests__/qa_fuzz.test.ts:102` deu timeout de 5 s intermitente sob carga (fora do escopo; aumentar timeout depois). Segurar Esc com repetição pode, sem login, fechar o pop-up e depois acionar o voltar (baixa; ignorar `e.repeat` em `useAtalhoVoltar`). Sem revisão em dispositivo real.
+
 ## Drop de cartas por vitória (coordenador Claude Code; DEV na sessão principal → QA subagente `qa`, 2026-10-27; APROVADA com ressalvas e PUBLICADA)
 - **Publicação (2026-10-27, autorizada pelo dono):** commit `8de51d7` em `main` (inclui também as mudanças locais anteriores: recuperação de senha por código, cabeçalho do Duelo Livre, Oceano Limpo, coordenação). Migrações `0002` e `0003` aplicadas no D1 remoto; Worker `costa-clash-api` publicado (versão `8b3a8332-e5be-4f16-8468-41f5667bfe66`); workflow Pages `40619201365` com sucesso; site HTTP 200; `/api/saude` ok e `/api/duelo/iniciar` sem token responde 401. Não houve smoke test com conta real (cadastro/vitória/recuperação).
 - **Pedido:** cada vitória contra um adversário pode dropar uma carta dele, com percentual específico por carta, para o jogador montar a coleção das 100 cartas.

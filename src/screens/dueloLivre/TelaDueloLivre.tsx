@@ -4,6 +4,7 @@ import { BotaoRetro } from '../../components/ui/BotaoRetro'
 import { CabecalhoTela } from '../../components/ui/CabecalhoTela'
 import { GradeOponentes } from '../../components/ui/GradeOponentes'
 import { IconeCartas, IconeEspadas, IconeVoltar } from '../../components/ui/Icones'
+import { DialogoDropsOponente } from '../../components/ui/DialogoDropsOponente'
 import { PainelOponente } from '../../components/ui/PainelOponente'
 import { RodapeControles } from '../../components/ui/RodapeControles'
 import { useAtalhoVoltar } from '../../components/ui/useAtalhoVoltar'
@@ -30,6 +31,7 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
   const [selecionadoId, setSelecionadoId] = useState(oponenteInicialId && buscarOponente(oponenteInicialId) ? oponenteInicialId : OPONENTE_PADRAO_ID)
   const [aviso, setAviso] = useState<Aviso>(null)
   const [saindo, setSaindo] = useState(false)
+  const [dropsAbertos, setDropsAbertos] = useState(false)
   useAtalhoVoltar(onVoltar)
   const oponente = buscarOponente(selecionadoId) ?? OPONENTES[0]
 
@@ -61,8 +63,8 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
 
   return (
     <div className="tela tela-jogo tela-duelo">
-      <CabecalhoTela titulo="Duelo Livre" variante="duelo-livre" />
-      <main className="tela-duelo__corpo">
+      <CabecalhoTela titulo="Duelo Livre" variante="duelo-livre" inert={dropsAbertos} />
+      <main className="tela-duelo__corpo" inert={dropsAbertos}>
         <section className="tela-duelo__grade moldura moldura--interna" aria-labelledby="titulo-escolha-oponente">
           <h2 id="titulo-escolha-oponente" className="tela-duelo__chamada">
             Escolha seu adversário
@@ -70,7 +72,7 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
           <GradeOponentes oponentes={OPONENTES} selecionadoId={selecionadoId} onSelecionar={selecionar} />
         </section>
         {/* A chave força nova leitura quando o mesmo aviso é pedido de novo. */}
-        <PainelOponente oponente={oponente} aviso={mensagem ? <span key={aviso?.n}>{mensagem}</span> : undefined}>
+        <PainelOponente oponente={oponente} aviso={mensagem ? <span key={aviso?.n}>{mensagem}</span> : undefined} onVerDrops={() => setDropsAbertos(true)}>
           <BotaoRetro variante="primario" icone={<IconeEspadas />} onClick={() => onDuelo(oponente.id)}>
             Iniciar duelo
           </BotaoRetro>
@@ -88,7 +90,8 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
           ) : null}
         </PainelOponente>
       </main>
-      <RodapeControles />
+      <RodapeControles inert={dropsAbertos} />
+      {dropsAbertos ? <DialogoDropsOponente oponente={oponente} colecao={usuario?.colecao} onFechar={() => setDropsAbertos(false)} /> : null}
     </div>
   )
 }

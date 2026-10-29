@@ -41,7 +41,7 @@ describe('Tela Duelo Livre: seleção', () => {
     expect(within(painel()).getByText('Médio')).toBeTruthy()
     expect(within(painel()).getByText(/Domina cartas de impacto costeiro/)).toBeTruthy()
     expect(within(painel()).getByRole('heading', { level: 3, name: 'Cartas que podem ser obtidas' })).toBeTruthy()
-    expect(within(painel()).getByText('Recompensas ainda não disponíveis.')).toBeTruthy()
+    expect(within(painel()).getByRole('button', { name: 'Ver 25 cartas e chances' }).getAttribute('aria-haspopup')).toBe('dialog')
   })
 
   it('clique seleciona e atualiza o painel (anúncio fica só no aviso role=status)', () => {

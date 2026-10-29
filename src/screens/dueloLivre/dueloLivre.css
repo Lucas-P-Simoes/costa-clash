@@ -376,6 +376,111 @@
   font-size: var(--fs-min);
   text-align: center;
 }
+.painel-oponente__ver-drops {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  width: 100%;
+  min-height: 2.3rem;
+  padding: 0.3rem 0.6rem;
+  border: 0.1rem solid #2aa9c4;
+  background: linear-gradient(180deg, rgba(23, 101, 128, 0.55), rgba(6, 34, 50, 0.9));
+  box-shadow: inset 0 0 0 0.07rem #03101a;
+  color: #bff4ff;
+  font: inherit;
+  font-size: var(--fs-min);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.painel-oponente__ver-drops::after {
+  content: '';
+  width: 0.42rem;
+  height: 0.42rem;
+  border-top: 0.12rem solid currentColor;
+  border-right: 0.12rem solid currentColor;
+  transform: rotate(45deg);
+}
+.painel-oponente__ver-drops:hover { border-color: #e7b94d; color: #ffe7a6; }
+.painel-oponente__ver-drops:focus-visible { outline: 0.18rem solid #e7b94d; outline-offset: 0.12rem; }
+
+/* ===== Pop-up: cartas que o adversário pode dropar ===== */
+.drops-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  background: rgba(2, 6, 12, 0.84);
+}
+.drops-dialogo {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  width: min(36rem, 100%);
+  max-height: min(44rem, calc(100dvh - 2rem));
+  padding: 0.9rem;
+  border: 0.15rem solid #2aa9c4;
+  background: linear-gradient(180deg, #082234, #04131f);
+  box-shadow: 0 0 0 0.15rem #03101a, 0 0 0 0.3rem #15536b, 0 0.6rem 2rem rgba(0, 0, 0, 0.7);
+  color: #d9f3fb;
+}
+.drops-dialogo__titulo {
+  margin: 0;
+  color: #f0c857;
+  font-size: clamp(1.05rem, 2.2vw, 1.35rem);
+  letter-spacing: 0.08em;
+  text-align: center;
+  text-transform: uppercase;
+}
+.drops-dialogo__regra { margin: 0; color: #8eb4c2; font-size: var(--fs-min); line-height: 1.3; text-align: center; }
+.drops-dialogo__lista {
+  display: grid;
+  gap: 0.3rem;
+  min-height: 0;
+  margin: 0;
+  padding: 0 0.2rem 0 0;
+  overflow-y: auto;
+  list-style: none;
+  overscroll-behavior: contain;
+}
+.drops-item {
+  display: grid;
+  grid-template-columns: 2.6rem minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.3rem 0.5rem 0.3rem 0.3rem;
+  border: 0.08rem solid #15536b;
+  background: rgba(4, 18, 30, 0.88);
+}
+.drops-item[data-completa] { opacity: 0.55; }
+.drops-dialogo__lista:focus-visible { outline: 0.18rem solid #e7b94d; outline-offset: 0.12rem; }
+.drops-item__arte {
+  width: 2.6rem;
+  aspect-ratio: 4 / 3;
+  overflow: hidden;
+  border: 0.08rem solid #0b3446;
+  background: #0e2a3d;
+}
+.drops-item__arte img, .drops-item__arte svg { display: block; width: 100%; height: 100%; object-fit: cover; }
+.drops-item__texto { display: flex; flex-direction: column; min-width: 0; }
+.drops-item__nome { font-size: 0.9rem; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
+.drops-item__tipo { color: #8eb4c2; font-size: var(--fs-min); }
+.drops-item__chance {
+  min-width: 4.2rem;
+  color: #41d4ed;
+  font-size: 1rem;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  text-align: right;
+}
+.drops-item[data-completa] .drops-item__chance { color: #6fe48b; font-size: var(--fs-min); text-transform: uppercase; }
+.drops-dialogo__fechar { align-self: center; min-width: 10rem; min-height: 44px; }
+
 .painel-oponente__aviso:empty { display: none; }
 .painel-oponente__aviso {
   padding: 0.38rem 0.65rem;
@@ -442,7 +547,9 @@
   .tela-duelo__corpo { padding-top: 0.7rem; padding-bottom: 0.3rem; }
   .tela-duelo__chamada { min-height: 1.55rem; font-size: var(--fs-min); }
   .painel-oponente { grid-template-rows: minmax(4.5rem, 1fr) auto auto auto auto auto; }
-  .painel-oponente__recompensas { display: none; }
+  .painel-oponente__recompensas { padding-block: 0.18rem; }
+  .painel-oponente__recompensas-titulo { display: none; }
+  .painel-oponente__ver-drops { min-height: 1.9rem; }
   .painel-oponente__acoes .botao--primario { min-height: 2.7rem; }
 }
 
@@ -466,6 +573,7 @@
   .painel-oponente__titulo { font-size: clamp(1.15rem, 3vw, 1.7rem); }
   .painel-oponente__descricao { font-size: 0.9rem; }
   .painel-oponente__acoes .botao { min-height: max(44px, 3rem); }
+  .painel-oponente__ver-drops { min-height: max(44px, 2.75rem); }
   .painel-oponente__acoes .botao--primario { min-height: max(50px, 3.75rem); }
 }
 
