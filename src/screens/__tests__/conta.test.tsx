@@ -141,7 +141,7 @@ describe('Navegação autenticada, restauração de sessão e logout', () => {
     expect(await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
     expect(screen.queryByRole('heading', { level: 1, name: 'Conta' })).toBeNull()
     fireEvent.click(screen.getByRole('button', { name: 'Baralho' }))
-    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toContain('40 cartas')
+    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toContain('cartas diferentes')
   })
 
   it('com sessão salva mostra carregamento (sem login) e restaura direto no Duelo Livre', async () => {

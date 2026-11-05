@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react'
-import type { UsuarioAutenticado } from '../../auth/servicoAuth'
+import type { ResultadoBaralho, UsuarioAutenticado } from '../../auth/servicoAuth'
 import { BotaoRetro } from '../../components/ui/BotaoRetro'
 import { CabecalhoTela } from '../../components/ui/CabecalhoTela'
 import { GradeOponentes } from '../../components/ui/GradeOponentes'
@@ -11,6 +11,7 @@ import { DialogoDropsOponente } from '../../components/ui/DialogoDropsOponente'
 import { PainelOponente } from '../../components/ui/PainelOponente'
 import { RodapeControles } from '../../components/ui/RodapeControles'
 import { useAtalhoVoltar } from '../../components/ui/useAtalhoVoltar'
+import { BARALHO_INICIAL } from '../../data/baralhoInicial'
 import { OPONENTES, OPONENTE_PADRAO_ID, buscarOponente } from '../../data/oponentes'
 import { idsBloqueados, proximoAdversarioId } from '../../data/progressoOponentes'
 import './dueloLivre.css'
@@ -22,6 +23,8 @@ interface Props {
   onVoltar?: () => void
   /** Encerra a sessão do usuário autenticado. Não é acionado por Esc. */
   onSair?: () => Promise<void> | void
+  /** Salva o baralho montado no modal Baralho (servidor). Ausente: o modal só mostra a coleção. */
+  onSalvarBaralho?: (cartas: string[]) => Promise<ResultadoBaralho>
   /** Inicia o duelo contra o adversário selecionado. */
   onDuelo: (oponenteId: string) => void
   /** Adversário pré-selecionado (ao voltar do duelo). */
@@ -37,7 +40,7 @@ interface Props {
 type Aviso = { tipo: 'bloqueado'; n: number; alvo: string; bloqueado: string } | null
 
 /** Seleção de adversário do Duelo Livre; INICIAR DUELO abre a partida contra o adversário selecionado. */
-export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteInicialId, derrotados, liberados, onSalvarLiberados }: Props) {
+export function TelaDueloLivre({ usuario, onVoltar, onSair, onSalvarBaralho, onDuelo, oponenteInicialId, derrotados, liberados, onSalvarLiberados }: Props) {
   const bloqueados = useMemo(() => (derrotados ? idsBloqueados(derrotados, liberados) : undefined), [derrotados, liberados])
   const [selecionadoId, setSelecionadoId] = useState(() => {
     if (oponenteInicialId && buscarOponente(oponenteInicialId) && !bloqueados?.has(oponenteInicialId)) return oponenteInicialId
@@ -134,7 +137,7 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
       </main>
       <RodapeControles inert={fundoInerte} />
       {historiaAberta ? <DialogoHistoriaOponente oponente={oponente} onDuelar={() => onDuelo(oponente.id)} onFechar={() => setHistoriaAberta(false)} /> : null}
-      {colecaoAberta ? <DialogoColecao logado={!!usuario} colecao={usuario?.colecao} tamanhoBaralho={usuario?.baralho?.length} onFechar={() => setColecaoAberta(false)} /> : null}
+      {colecaoAberta ? <DialogoColecao logado={!!usuario} colecao={usuario?.colecao} baralho={usuario ? (usuario.baralho ?? BARALHO_INICIAL) : undefined} onSalvarBaralho={usuario ? onSalvarBaralho : undefined} onFechar={() => setColecaoAberta(false)} /> : null}
       {dropsAbertos ? <DialogoDropsOponente oponente={oponente} colecao={usuario?.colecao} onFechar={() => setDropsAbertos(false)} /> : null}
     </div>
   )

@@ -11,9 +11,6 @@ interface Props {
   vida: number
   /** Texto acessível da vida (ex.: "Sua vida: 8000"). */
   rotuloVida: string
-  rotuloContagens: string
-  baralho: number
-  descarte: number
   rotuloZonas: string
   rotuloSuportes: string
   /** As 5 zonas de unidade (já renderizadas). */
@@ -35,10 +32,10 @@ interface Props {
 }
 
 /**
- * Painel de um lado do tabuleiro: placa com avatar e identificação, VIDA com coração, contagens (baralho/descarte),
+ * Painel de um lado do tabuleiro: placa com avatar e identificação, VIDA com coração,
  * as 5 zonas de unidade e a faixa de 5 suportes. Só apresentação: zonas e suportes chegam prontos.
  */
-export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloContagens, baralho, descarte, rotuloZonas, rotuloSuportes, zonas, suportes, maoOponente, acao, vidaFx, drop, dataDestino, alvoVida, vidaDestacada }: Props) {
+export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloZonas, rotuloSuportes, zonas, suportes, maoOponente, acao, vidaFx, drop, dataDestino, alvoVida, vidaDestacada }: Props) {
   const oponente = lado === 'oponente'
   const efeitoVida = vidaFx?.dano ? ' duelo-vida--dano' : vidaFx?.cura ? ' duelo-vida--cura' : ''
   return (
@@ -71,10 +68,6 @@ export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloC
             </span>
           ) : null}
         </p>
-        <ul className="duelo-contagens" aria-label={rotuloContagens}>
-          <li>Baralho: {baralho}</li>
-          <li>Descarte: {descarte}</li>
-        </ul>
         {maoOponente}
         {acao}
       </div>

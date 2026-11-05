@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import type { ResultadoAuth, ServicoAuth, UsuarioAutenticado } from './auth/servicoAuth'
+import type { ResultadoAuth, ResultadoBaralho, ServicoAuth, UsuarioAutenticado } from './auth/servicoAuth'
 import { MENSAGEM_RECONEXAO } from './auth/servicoAuth'
 import { lerDerrotados, lerLiberados, registrarVitoria, salvarLiberados } from './data/progressoOponentes'
 import { servicoAuthPadrao } from './auth/servicoPadrao'
@@ -58,6 +58,13 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
       ativo = false
     }
   }, [tela.nome, servicoAuth])
+
+  /** Salva o baralho no servidor e, se der certo, passa a valer na sessão (próximos duelos). */
+  async function salvarBaralho(cartas: string[]): Promise<ResultadoBaralho> {
+    const r = await servicoAuth.salvarBaralho!(cartas)
+    if (r.ok) setTela((t) => (t.nome === 'dueloLivre' && t.usuario ? { ...t, usuario: { ...t.usuario, baralho: r.baralho } } : t))
+    return r
+  }
 
   async function sair() {
     try {
@@ -133,6 +140,7 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
           onSalvarLiberados={(ids) => setProgresso({ dono: usuario?.id, ids: derrotados, liberados: salvarLiberados(usuario?.id, ids) })}
           onVoltar={usuario ? undefined : irParaLogin}
           onSair={usuario ? sair : undefined}
+          onSalvarBaralho={usuario && servicoAuth.salvarBaralho ? salvarBaralho : undefined}
           onDuelo={(oponenteId) => setTela({ nome: 'duelo', oponenteId, usuario })}
         />
       )

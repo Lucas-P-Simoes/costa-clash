@@ -4,6 +4,8 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from '../../App'
 import type { ServicoAuth, UsuarioAutenticado } from '../../auth/servicoAuth'
 import { proximoIndice } from '../../components/ui/navegacaoGrade'
+import { BARALHO_INICIAL, colecaoInicial } from '../../data/baralhoInicial'
+import { CATALOGO } from '../../data/catalogo'
 import { OPONENTES } from '../../data/oponentes'
 import { TelaDueloLivre } from '../dueloLivre/TelaDueloLivre'
 
@@ -173,7 +175,7 @@ describe('Integração com o App', () => {
     fireEvent.submit(document.querySelector('form')!)
     expect(await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
     fireEvent.click(botao('Baralho'))
-    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toContain('40 cartas')
+    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toContain('cartas diferentes')
     expect(servico.entrar).toHaveBeenCalledTimes(1)
   })
 })
@@ -271,5 +273,61 @@ describe('Modal Baralho (coleção)', () => {
     render(<TelaDueloLivre onDuelo={() => {}} usuario={{ id: 'u', email: 'a@b.co', colecao: [] }} />)
     fireEvent.click(botao('Baralho'))
     expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toMatch(/Vença duelos/)
+  })
+})
+
+describe('Modal Baralho: montar o baralho', () => {
+  const extra = CATALOGO.find((c) => !BARALHO_INICIAL.includes(c.id))!
+  const u: UsuarioAutenticado = { id: 'u7', email: 'm@x.co', baralho: [...BARALHO_INICIAL], colecao: [...colecaoInicial(), { cartaId: extra.id, quantidade: 1 }] }
+  const abrir = (onSalvar = vi.fn().mockResolvedValue({ ok: true, baralho: [] })) => {
+    render(<TelaDueloLivre onDuelo={() => {}} usuario={u} onSalvarBaralho={onSalvar} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Coleção de cartas' }))
+    return { onSalvar, d: screen.getByRole('dialog', { name: 'Baralho' }) }
+  }
+
+  it('mostra duas seções: Minhas cartas e Meu baralho com 40/40', () => {
+    const { d } = abrir()
+    expect(within(d).getByRole('heading', { level: 3, name: /Minhas cartas/ })).toBeTruthy()
+    expect(within(d).getByRole('heading', { level: 3, name: /Meu baralho/ })).toBeTruthy()
+    expect(within(d).getByLabelText('40 de 40 cartas no baralho')).toBeTruthy()
+  })
+
+  it('trocar uma carta: salvar só habilita com 40; envia as 40 cartas novas', async () => {
+    const { d, onSalvar } = abrir()
+    const salvar = within(d).getByRole('button', { name: 'Salvar baralho' })
+    expect(salvar.getAttribute('aria-disabled')).toBe('true') // sem alterações
+    fireEvent.click(within(d).getAllByRole('button', { name: /^Remover .* do baralho$/ })[0])
+    expect(within(d).getByLabelText('39 de 40 cartas no baralho')).toBeTruthy()
+    expect(salvar.getAttribute('aria-disabled')).toBe('true') // 39
+    fireEvent.click(within(d).getByRole('button', { name: `Adicionar ${extra.nome} ao baralho` }))
+    expect(within(d).getByLabelText('40 de 40 cartas no baralho')).toBeTruthy()
+    expect(salvar.getAttribute('aria-disabled')).toBeNull()
+    fireEvent.click(salvar)
+    expect(onSalvar).toHaveBeenCalledTimes(1)
+    const enviado = onSalvar.mock.calls[0][0] as string[]
+    expect(enviado).toHaveLength(40)
+    expect(enviado).toContain(extra.id)
+    expect(await within(d).findByText(/Baralho salvo/)).toBeTruthy()
+  })
+
+  it('não deixa passar de 40 nem usar mais cópias do que possui; Desfazer restaura', () => {
+    const { d } = abrir()
+    const add = within(d).getByRole('button', { name: `Adicionar ${extra.nome} ao baralho` })
+    expect(add.getAttribute('aria-disabled')).toBe('true') // baralho cheio
+    fireEvent.click(within(d).getAllByRole('button', { name: /^Remover .* do baralho$/ })[0])
+    fireEvent.click(add)
+    fireEvent.click(add) // só possui 1 cópia
+    expect(within(d).getByLabelText('40 de 40 cartas no baralho')).toBeTruthy()
+    fireEvent.click(within(d).getByRole('button', { name: 'Desfazer' }))
+    expect(within(d).queryByRole('button', { name: `Remover ${extra.nome} do baralho` })).toBeNull()
+  })
+
+  it('erro do servidor aparece sem fechar o modal', async () => {
+    const { d } = abrir(vi.fn().mockResolvedValue({ ok: false, codigo: 'dados_invalidos', mensagem: 'Baralho inválido.' }))
+    fireEvent.click(within(d).getAllByRole('button', { name: /^Remover .* do baralho$/ })[0])
+    fireEvent.click(within(d).getByRole('button', { name: `Adicionar ${extra.nome} ao baralho` }))
+    fireEvent.click(within(d).getByRole('button', { name: 'Salvar baralho' }))
+    expect(await within(d).findByText('Baralho inválido.')).toBeTruthy()
+    expect(screen.getByRole('dialog', { name: 'Baralho' })).toBeTruthy()
   })
 })

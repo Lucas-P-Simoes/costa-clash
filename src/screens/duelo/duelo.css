@@ -246,17 +246,6 @@
 .duelo-vida--cura {
   animation: duelo-vida-cura 0.6s ease-out;
 }
-.duelo-contagens {
-  display: flex;
-  flex-direction: column;
-  gap: 0.125rem;
-  margin: 0;
-  padding: 0;
-  list-style: none;
-  font-size: var(--fs-min);
-  color: #8ab4c4;
-  text-transform: uppercase;
-}
 .duelo-mao-oponente {
   display: flex;
   padding-left: 0.5rem;
@@ -2275,11 +2264,7 @@ button.carta {
   .duelo-nome p {
     display: none;
   }
-  .duelo-contagens {
-    flex-direction: row;
-    gap: 0.5rem;
-  }
-  .duelo-turno__fase {
+    .duelo-turno__fase {
     display: none;
   }
   .duelo-restantes {

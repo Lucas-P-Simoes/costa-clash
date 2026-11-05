@@ -400,7 +400,7 @@ describe('Integração com o Duelo Livre', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
     expect(botao('Sair')).toBeTruthy()
     fireEvent.click(botao('Baralho'))
-    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toContain('40 cartas')
+    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toContain('ainda não tem cartas')
   })
 
   it('baralho inválido do perfil mostra erro claro e permite voltar, sem quebrar', () => {

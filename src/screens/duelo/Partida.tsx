@@ -1119,9 +1119,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               subtitulo="IA do Litoral"
               vida={v.oponente.lp}
               rotuloVida={`Vida do oponente: ${v.oponente.lp}`}
-              rotuloContagens="Cartas do oponente"
-              baralho={v.oponente.baralhoTamanho}
-              descarte={v.oponente.descarte.length}
               rotuloZonas="Zonas de unidade do oponente"
               rotuloSuportes="Zonas de suporte do oponente"
               zonas={[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('oponente', z))}
@@ -1148,9 +1145,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               subtitulo="Protetor do Litoral"
               vida={v.eu.lp}
               rotuloVida={`Sua vida: ${v.eu.lp}`}
-              rotuloContagens="Suas cartas"
-              baralho={v.eu.baralhoTamanho}
-              descarte={v.eu.descarte.length}
               rotuloZonas="Suas zonas de unidade"
               rotuloSuportes="Suas zonas de suporte"
               zonas={[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('humano', z))}

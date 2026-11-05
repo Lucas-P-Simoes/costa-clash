@@ -66,11 +66,11 @@ describe('MolduraOrnamentada (componente reutilizável)', () => {
 })
 
 describe('Painéis OPONENTE e VOCÊ', () => {
-  it('identificação, avatar, vida, contagens, 5 zonas de unidade e faixa de 5 suportes em cada lado', () => {
+  it('identificação, avatar, vida, 5 zonas de unidade e faixa de 5 suportes em cada lado', () => {
     montar()
-    for (const [lado, nome, sub, vida, baralho] of [
-      ['oponente', 'Oponente', 'IA do Litoral', 'Vida do oponente: 5000', 'Baralho: 20'],
-      ['voce', 'Você', 'Protetor do Litoral', 'Sua vida: 5000', 'Baralho: 20'],
+    for (const [lado, nome, sub, vida] of [
+      ['oponente', 'Oponente', 'IA do Litoral', 'Vida do oponente: 5000'],
+      ['voce', 'Você', 'Protetor do Litoral', 'Sua vida: 5000'],
     ] as const) {
       const painel = q(`.duelo-lado--${lado}`)
       expect(painel.className).toContain('moldura-orn')
@@ -79,8 +79,7 @@ describe('Painéis OPONENTE e VOCÊ', () => {
       expect(painel.querySelector(`.duelo-avatar--${lado} svg`)).toBeTruthy()
       expect(within(painel).getByLabelText(vida)).toBeTruthy()
       expect(painel.querySelector('.duelo-vida svg')).toBeTruthy() // coração
-      expect(painel.querySelector('.duelo-contagens')!.textContent).toContain(baralho)
-      expect(painel.querySelector('.duelo-contagens')!.textContent).toContain('Descarte: 0')
+      expect(painel.querySelector('.duelo-contagens')).toBeNull() // contagens de baralho/descarte removidas do painel
       expect(painel.querySelectorAll('.zona')).toHaveLength(5)
       expect(painel.querySelectorAll('.suporte')).toHaveLength(5)
     }

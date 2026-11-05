@@ -427,3 +427,6 @@ Antes (baseline): 163 falhas em 288 medições; depois: 0 falhas (8 casos AD).
 - Descarte livre (lixeira): `validarDescartar` + evento `descarte_livre`; descarte forçado inalterado. UI: componente `Lixeira` no lugar de `DicaEducativa` (removida); arrastar carta da mão até a lixeira (`data-destino="lixeira"`) ou botão. A mão enche até 5 no início do próximo turno do jogador (comportamento já existente de `iniciarTurno`).
 - IA: `temVantagem` = vence ao menos um combate; `PESOS_ATAQUE_IA` com `limiarAtaque` -1000 e pesos de perda reduzidos. Testes de IA atualizados para a nova postura.
 - Testes: LP 8000→5000 e totais 40→30 ajustados; `tsc -b`, `oxlint` e `vitest run` passam (864). O Worker não foi alterado (DURACAO_MINIMA_DUELO_MS = 30 s permanece). Visual não verificado no navegador.
+
+## Modal Baralho com edição (Claude Code, sessão única)
+- `DialogoColecao` ampliado: seção "Minhas cartas" (coleção, botão + Adicionar) e "Meu baralho" (X/40, − Remover), com Salvar/Desfazer. Usa o `PUT /api/baralho` e `salvarBaralho` já existentes (Worker inalterado: 40 cartas exatas, até 3 cópias, só o que possui). Após salvar, `App` atualiza `usuario.baralho` e os próximos duelos usam o novo baralho. Cada duelo sorteia 30 das 40 cartas. Visual não verificado no navegador.
