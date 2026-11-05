@@ -252,7 +252,8 @@ describe('Clique em bloqueado e engrenagem', () => {
   it('bloqueado avisa qual adversário enfrentar e o faz pulsar', () => {
     render(<TelaDueloLivre onDuelo={() => {}} derrotados={[]} />)
     fireEvent.click(radios()[3])
-    expect(screen.getByText(new RegExp(`Enfrente ${OPONENTES[0].nome} primeiro`))).toBeTruthy()
+    const balao = within(radios()[0]).getByRole('status')
+    expect(balao.textContent).toContain(`liberar ${OPONENTES[3].nome}`)
     expect(radios()[0].getAttribute('data-alerta')).toBe('true')
     expect(screen.queryByRole('dialog')).toBeNull()
   })

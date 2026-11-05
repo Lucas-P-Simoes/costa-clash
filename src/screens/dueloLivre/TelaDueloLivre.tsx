@@ -65,6 +65,8 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
     return () => clearTimeout(t)
   }, [alertaAtivo])
 
+  const balaoAtivo = aviso?.tipo === 'bloqueado' && alertaAtivo === aviso.n
+
   function aoClicarBloqueado(id: string) {
     const alvo = proximoAdversarioId(derrotados ?? [])
     const n = (aviso?.n ?? 0) + 1
@@ -83,9 +85,6 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
   }
 
   let mensagem: string | undefined
-  if (aviso?.tipo === 'bloqueado') {
-    mensagem = `${buscarOponente(aviso.bloqueado)?.nome ?? 'Este adversário'} está bloqueado. Enfrente ${buscarOponente(aviso.alvo)?.nome ?? 'o adversário anterior'} primeiro.`
-  }
   if (aviso?.tipo === 'baralho') {
     const qtd = usuario?.baralho?.length
     mensagem = !usuario
@@ -118,7 +117,7 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
           <h2 id="titulo-escolha-oponente" className="tela-duelo__chamada">
             Escolha seu adversário
           </h2>
-          <GradeOponentes oponentes={OPONENTES} selecionadoId={selecionadoId} onSelecionar={selecionar} bloqueados={bloqueados} onAbrir={(id) => !bloqueados?.has(id) && setHistoriaAberta(true)} onBloqueadoClick={aoClicarBloqueado} alertaId={aviso?.tipo === 'bloqueado' && alertaAtivo === aviso.n ? aviso.alvo : undefined} />
+          <GradeOponentes oponentes={OPONENTES} selecionadoId={selecionadoId} onSelecionar={selecionar} bloqueados={bloqueados} onAbrir={(id) => !bloqueados?.has(id) && setHistoriaAberta(true)} onBloqueadoClick={aoClicarBloqueado} alertaId={balaoAtivo ? aviso.alvo : undefined} balao={balaoAtivo ? `Vença-me primeiro para liberar ${buscarOponente(aviso.bloqueado)?.nome ?? 'o próximo'}!` : undefined} />
         </section>
         {/* A chave força nova leitura quando o mesmo aviso é pedido de novo. */}
         <PainelOponente oponente={oponente} aviso={mensagem ? <span key={aviso?.n}>{mensagem}</span> : undefined} onVerDrops={() => setDropsAbertos(true)}>
