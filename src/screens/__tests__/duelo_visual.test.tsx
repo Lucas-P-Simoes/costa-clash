@@ -278,12 +278,21 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
     const vida = q('.duelo-vida--oponente')
     expect(vida.className).toContain('duelo-vida--dano')
     expect(vida.querySelector('.duelo-vida__delta')!.textContent).toBe('-400')
+    // cena de confronto: as duas cartas grandes lado a lado, fora da árvore de acessibilidade; a derrotada queima
+    const cena = q('.confronto')
+    expect(cena.getAttribute('aria-hidden')).toBe('true')
+    expect(cena.querySelector('[data-confronto="atacante"]')!.hasAttribute('data-queima')).toBe(false)
+    expect(cena.querySelector('[data-confronto="alvo"]')!.getAttribute('data-queima')).toBe('true')
     act(() => {
       vi.advanceTimersByTime(700)
     })
     expect(fxAtivos()).toBe(0)
     expect(document.querySelector('[data-fantasma]')).toBeNull()
     expect(q('.duelo-vida--oponente').className).not.toContain('duelo-vida--dano')
+    act(() => {
+      vi.advanceTimersByTime(1000)
+    })
+    expect(document.querySelector('.confronto')).toBeNull()
     expect(vi.getTimerCount()).toBe(0)
   })
 

@@ -11,7 +11,8 @@ import type { FonteInspecao } from '../../components/duelo/InspecaoCarta'
 import { Lixeira } from '../../components/duelo/Lixeira'
 import { PainelJogador } from '../../components/duelo/PainelJogador'
 import { SetaAtaque } from '../../components/duelo/SetaAtaque'
-import { chaveZona, useEfeitosVisuais } from '../../components/duelo/efeitosVisuais'
+import { chaveZona, DURACAO_CONFRONTO_MS, movimentoReduzido, useConfronto, useEfeitosVisuais } from '../../components/duelo/efeitosVisuais'
+import { ConfrontoAtaque } from '../../components/duelo/ConfrontoAtaque'
 import { calcularEstiloLeque } from '../../components/duelo/geometriaCartas'
 import { resolverConteudoInspecao } from '../../components/duelo/resolverInspecao'
 import { useFocoDialogo } from '../../components/duelo/useFocoDialogo'
@@ -358,6 +359,9 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       return
     }
     setReproduzindo(true)
+    // Depois de um ataque entre unidades, o próximo passo espera a cena de confronto terminar.
+    const pausaConfronto = movimentoReduzido() ? 0 : Math.round((DURACAO_CONFRONTO_MS * atrasoIA) / 700)
+    let inicio = 0
     passos.forEach((p, i) => {
       const ataque = p.eventos.find((ev): ev is Extract<Evento, { tipo: 'ataque_declarado' }> => ev.tipo === 'ataque_declarado')
       if (ataque) {
@@ -365,7 +369,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
           window.setTimeout(() => {
             const seta = setaDeEventoIA(ataque)
             if (seta) setSetaIA(seta)
-          }, atrasoIA * (i + 0.25)),
+          }, inicio + atrasoIA * 0.25),
         )
       }
       timers.current.push(
@@ -376,8 +380,10 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
             setReproduzindo(false)
             pedidoFoco.current = '.duelo-mao__cartas button'
           }
-        }, atrasoIA * (i + 1)),
+        }, inicio + atrasoIA),
       )
+      const combateUnidades = ataque && ataque.alvo !== 'direto' && !p.eventos.some((ev) => ev.tipo === 'ataque_anulado')
+      inicio += atrasoIA + (combateUnidades ? pausaConfronto : 0)
     })
   }
 
@@ -928,6 +934,14 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     return m
   }, [v])
   const fx = useEfeitosVisuais(log, posicoes)
+  // Cena de confronto (cartas grandes lado a lado) nos ataques entre unidades; só apresentação.
+  const cartasVisiveis = useMemo(() => {
+    const m: Record<string, string> = {}
+    v.eu.campo.forEach((u, z) => u && !('oculta' in u && u.oculta) && (m[chaveZona('humano', z)] = (u as UnidadeEmCampo).cartaId))
+    v.oponente.campo.forEach((u, z) => u && !('oculta' in u && u.oculta) && (m[chaveZona('oponente', z)] = (u as UnidadeEmCampo).cartaId))
+    return m
+  }, [v])
+  const confronto = useConfronto(log, cartasVisiveis)
 
   function renderZonaUnidade(lado: IdJogador, z: number) {
     const u = (lado === 'humano' ? v.eu.campo : v.oponente.campo)[z]
@@ -1092,7 +1106,9 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   })
 
   const desistirVisivel = confirma && (!estado.resultado || reproduzindo)
-  const dialogoAberto = !!colocacaoPendente || desistirVisivel || (!!estado.resultado && !reproduzindo)
+  // O resultado espera a cena de confronto do golpe final terminar (para a queima ficar visível).
+  const resultadoVisivel = !!estado.resultado && !reproduzindo && (!confronto || estado.resultado.motivo === 'desistencia')
+  const dialogoAberto = !!colocacaoPendente || desistirVisivel || resultadoVisivel
 
   const posAtual = cartaSel?.tipo === 'unidade' ? posPend : undefined
 
@@ -1271,6 +1287,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
 
       {setaAtiva ? <SetaAtaque origem={setaAtiva.origem} destino={setaAtiva.destino} lado={setaAtiva.lado} /> : null}
 
+      {confronto ? <ConfrontoAtaque confronto={confronto} carta={(id) => cat.get(id)} /> : null}
+
       {fonteInspecaoAtual && !dialogoAberto && !arr && !setaAtiva ? (
         <InspecaoCarta
           fonte={fonteInspecaoAtual}
@@ -1308,7 +1326,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
         />
       ) : null}
 
-      {estado.resultado && !reproduzindo ? (
+      {estado.resultado && resultadoVisivel ? (
         <ResultadoDuelo
           resultado={estado.resultado}
           nomeOponente={oponente.nome}

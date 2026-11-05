@@ -2424,3 +2424,242 @@ button.carta {
 .duelo-lixeira__botao[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
 .duelo-lixeira__botao:not([aria-disabled="true"]):hover { border-color: #f2c24a; }
 .duelo-lixeira__botao:focus-visible { outline: 0.18rem solid #fff; outline-offset: 0.15rem; }
+
+/* ---- cena de confronto (ataque entre unidades): cartas grandes lado a lado, vibração e queima ---- */
+@property --queima {
+  syntax: '<percentage>';
+  inherits: true;
+  initial-value: 0%;
+}
+.confronto {
+  position: fixed;
+  inset: 0;
+  z-index: 45;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+  background: radial-gradient(ellipse at center, rgba(4, 10, 20, 0.72) 0, rgba(4, 10, 20, 0.45) 55%, transparent 85%);
+  animation: confronto-cena 1.7s ease both;
+}
+.confronto__palco {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: min(6vw, 4rem);
+}
+.confronto__carta {
+  --largura: min(30vw, 42vh, 17rem);
+  position: relative;
+  width: var(--largura);
+  aspect-ratio: 3 / 4;
+  container-type: size;
+  animation: confronto-entra 0.3s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+}
+.confronto__corpo {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+.confronto .carta--mao,
+.confronto .carta--verso {
+  width: 100%;
+  height: 100%;
+  transform: none;
+}
+/* atacante avança contra o alvo */
+.confronto--atq-esquerda .confronto__carta--atacante {
+  --avanco: min(5vw, 3rem);
+}
+.confronto--atq-direita .confronto__carta--atacante {
+  --avanco: max(-5vw, -3rem);
+}
+.confronto__carta--atacante .confronto__corpo {
+  animation: confronto-avanca 0.42s 0.22s cubic-bezier(0.5, 0, 0.3, 1) both;
+}
+.confronto__carta--atacante .carta {
+  box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #ff4a3a, 0 0 1.5rem 0.4rem rgba(255, 74, 58, 0.85);
+}
+/* a carta atacada vibra */
+.confronto__carta--alvo .confronto__corpo {
+  animation: confronto-vibra 0.5s 0.42s linear both;
+}
+.confronto__impacto {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 9rem;
+  height: 9rem;
+  margin: -4.5rem 0 0 -4.5rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(255, 245, 190, 0.95) 0, rgba(255, 110, 50, 0.7) 30%, transparent 65%);
+  opacity: 0;
+  animation: confronto-impacto 0.45s 0.42s ease-out both;
+}
+/* derrotada: queima de baixo para cima (máscara + borda incandescente + fagulhas) */
+.confronto__carta--queima {
+  animation:
+    confronto-entra 0.3s cubic-bezier(0.2, 0.8, 0.3, 1) both,
+    confronto-queima 0.75s 0.85s ease-in both;
+}
+.confronto__carta--queima .confronto__corpo {
+  -webkit-mask-image: linear-gradient(to top, transparent calc(var(--queima) - 4%), #000 calc(var(--queima) + 6%));
+  mask-image: linear-gradient(to top, transparent calc(var(--queima) - 4%), #000 calc(var(--queima) + 6%));
+}
+.confronto__carta--queima .carta {
+  animation: confronto-carboniza 0.75s 0.85s ease-in both;
+}
+.confronto__brasa {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  border-radius: inherit;
+  pointer-events: none;
+  background: linear-gradient(
+    to top,
+    transparent calc(var(--queima) - 3%),
+    #fff3a0 calc(var(--queima) - 1%),
+    #ff8a1c calc(var(--queima) + 2%),
+    rgba(120, 30, 0, 0.85) calc(var(--queima) + 7%),
+    rgba(40, 10, 0, 0.4) calc(var(--queima) + 14%),
+    transparent calc(var(--queima) + 22%)
+  );
+  mix-blend-mode: hard-light;
+  opacity: 0;
+  animation: confronto-brasa 0.75s 0.85s linear both;
+}
+.confronto__chamas {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--queima) - 4%);
+  height: 0;
+  z-index: 6;
+}
+.confronto__fagulha {
+  position: absolute;
+  bottom: 0;
+  width: 1.6rem;
+  height: 2.4rem;
+  margin-left: -0.8rem;
+  border-radius: 50% 50% 45% 45% / 65% 65% 35% 35%;
+  background: radial-gradient(ellipse at 50% 75%, #fff6b0 0, #ffb52e 30%, #ff5a12 55%, transparent 72%);
+  filter: blur(0.5px);
+  opacity: 0;
+  animation: confronto-fagulha 0.5s ease-out both;
+}
+@keyframes confronto-cena {
+  0% {
+    opacity: 0;
+  }
+  10%,
+  88% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes confronto-entra {
+  from {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  to {
+    transform: none;
+    opacity: 1;
+  }
+}
+@keyframes confronto-avanca {
+  55% {
+    transform: translateX(var(--avanco)) scale(1.06);
+  }
+  100% {
+    transform: none;
+  }
+}
+@keyframes confronto-vibra {
+  0% {
+    filter: brightness(2.2) saturate(1.5);
+  }
+  10% {
+    transform: translate(-0.6rem, 0.15rem) rotate(-2deg);
+  }
+  20% {
+    transform: translate(0.6rem, -0.15rem) rotate(2deg);
+  }
+  30% {
+    transform: translate(-0.5rem, 0.1rem) rotate(-1.5deg);
+  }
+  40% {
+    transform: translate(0.5rem, -0.1rem) rotate(1.5deg);
+  }
+  55% {
+    transform: translate(-0.3rem, 0) rotate(-1deg);
+  }
+  70% {
+    transform: translate(0.3rem, 0) rotate(1deg);
+  }
+  85% {
+    transform: translate(-0.12rem, 0);
+  }
+  100% {
+    transform: none;
+    filter: none;
+  }
+}
+@keyframes confronto-impacto {
+  0% {
+    transform: scale(0.2);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.8);
+    opacity: 0;
+  }
+}
+@keyframes confronto-queima {
+  from {
+    --queima: 0%;
+  }
+  to {
+    --queima: 112%;
+  }
+}
+@keyframes confronto-carboniza {
+  from {
+    filter: none;
+  }
+  to {
+    filter: sepia(0.8) brightness(0.45) contrast(1.3);
+  }
+}
+@keyframes confronto-brasa {
+  0% {
+    opacity: 0;
+  }
+  8%,
+  90% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes confronto-fagulha {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+  30% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-3.5rem) scale(1.1);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .confronto {
+    display: none;
+  }
+}

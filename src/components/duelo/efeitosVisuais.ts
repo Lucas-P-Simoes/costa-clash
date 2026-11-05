@@ -132,3 +132,92 @@ export function useEfeitosVisuais(log: readonly Evento[], posicoes: Readonly<Rec
   )
   return fx
 }
+
+// ---------------------------------------------------------------- confronto (ataque entre unidades)
+
+/** Duração (ms) da cena de confronto: aproximação, impacto/vibração e, se houver, queima da carta derrotada. */
+export const DURACAO_CONFRONTO_MS = 1700
+
+export interface LadoConfronto {
+  lado: IdJogador
+  zona: number
+  /** null = carta continua desconhecida (desenhada pelo verso). */
+  cartaId: string | null
+  /** A unidade foi destruída neste combate (efeito de queima). */
+  destruida: boolean
+}
+
+export interface Confronto {
+  atacante: LadoConfronto
+  alvo: LadoConfronto
+}
+
+/**
+ * Função pura: entre os eventos novos, o último ataque de unidade contra unidade que não foi anulado.
+ * Identidades vêm da revelação no próprio combate ou das cartas visíveis antes dele (`cartasAnteriores`).
+ */
+export function derivarConfronto(novos: readonly Evento[], cartasAnteriores: Readonly<Record<string, string>> = {}): Confronto | null {
+  let r: Confronto | null = null
+  for (let i = 0; i < novos.length; i++) {
+    const e = novos[i]
+    if (e.tipo !== 'ataque_declarado' || e.alvo === 'direto') continue
+    const defensor = outroLado(e.jogador)
+    const atacante: LadoConfronto = { lado: e.jogador, zona: e.atacante, cartaId: cartasAnteriores[chaveZona(e.jogador, e.atacante)] ?? null, destruida: false }
+    const alvo: LadoConfronto = { lado: defensor, zona: e.alvo, cartaId: cartasAnteriores[chaveZona(defensor, e.alvo)] ?? null, destruida: false }
+    let anulado = false
+    for (let j = i + 1; j < novos.length; j++) {
+      const s = novos[j]
+      if (s.tipo === 'ataque_declarado') break
+      if (s.tipo === 'ataque_anulado') anulado = true
+      for (const p of [atacante, alvo]) {
+        if (s.tipo === 'unidade_revelada' && s.jogador === p.lado && s.zona === p.zona) p.cartaId = s.carta.cartaId
+        if (s.tipo === 'unidade_destruida' && s.jogador === p.lado && s.zona === p.zona) {
+          p.destruida = true
+          if (s.carta.cartaId !== '?') p.cartaId = s.carta.cartaId
+        }
+      }
+    }
+    if (!anulado) r = { atacante, alvo }
+  }
+  return r
+}
+
+/**
+ * Observa o registro público e devolve a cena de confronto do último ataque entre unidades (com `id`
+ * crescente para reiniciar as animações). Só apresentação: expira por timer; sem cena com movimento reduzido.
+ */
+export function useConfronto(
+  log: readonly Evento[],
+  cartas: Readonly<Record<string, string>>,
+  duracao: number = DURACAO_CONFRONTO_MS,
+): (Confronto & { id: number }) | null {
+  const [cena, setCena] = useState<(Confronto & { id: number }) | null>(null)
+  const vistos = useRef(log.length)
+  const timer = useRef<number | undefined>(undefined)
+  const cartasAnteriores = useRef(cartas)
+  const contador = useRef(0)
+
+  useEffect(() => {
+    const novos = log.slice(vistos.current)
+    vistos.current = log.length
+    if (novos.length === 0 || movimentoReduzido()) return
+    const c = derivarConfronto(novos, cartasAnteriores.current)
+    if (!c) return
+    contador.current += 1
+    setCena({ ...c, id: contador.current })
+    window.clearTimeout(timer.current)
+    timer.current = window.setTimeout(() => setCena(null), duracao)
+  }, [log, duracao])
+
+  useEffect(() => {
+    cartasAnteriores.current = cartas
+  })
+
+  useEffect(
+    () => () => {
+      window.clearTimeout(timer.current)
+    },
+    [],
+  )
+  return cena
+}

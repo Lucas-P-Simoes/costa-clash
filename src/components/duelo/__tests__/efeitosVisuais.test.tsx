@@ -3,7 +3,7 @@
 import { act, cleanup, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
 import type { Evento } from '../../../game'
-import { chaveZona, derivarEfeitos, DURACAO_EFEITO_MS, movimentoReduzido, SEM_EFEITOS, semEfeitos, useEfeitosVisuais } from '../efeitosVisuais'
+import { chaveZona, derivarConfronto, derivarEfeitos, DURACAO_CONFRONTO_MS, DURACAO_EFEITO_MS, movimentoReduzido, SEM_EFEITOS, semEfeitos, useConfronto, useEfeitosVisuais } from '../efeitosVisuais'
 
 const ev = (e: object): Evento => ({ turno: 2, texto: 't', ...e }) as Evento
 
@@ -115,5 +115,59 @@ describe('useEfeitosVisuais', () => {
     rerender({ log: [dano] })
     expect(semEfeitos(result.current)).toBe(true)
     expect(vi.getTimerCount()).toBe(0)
+  })
+})
+
+describe('derivarConfronto (cena de ataque entre unidades)', () => {
+  const declarado = (jogador: string, atacante: number, alvo: number | 'direto') => ev({ tipo: 'ataque_declarado', jogador, atacante, alvo })
+  const cartas = { [chaveZona('humano', 0)]: 'CC-003', [chaveZona('oponente', 1)]: 'CC-001' }
+
+  it('ataque direto ou sem ataque: sem cena', () => {
+    expect(derivarConfronto([declarado('humano', 0, 'direto')], cartas)).toBeNull()
+    expect(derivarConfronto([ev({ tipo: 'dano', jogador: 'oponente', valor: 100, lp: 1 })], cartas)).toBeNull()
+  })
+
+  it('identifica as cartas e marca para queimar só a unidade destruída', () => {
+    const r = derivarConfronto(
+      [
+        declarado('humano', 0, 1),
+        ev({ tipo: 'dano', jogador: 'oponente', valor: 400, lp: 4600 }),
+        ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 1, carta: { uid: 'x', cartaId: 'CC-001' } }),
+      ],
+      cartas,
+    )
+    expect(r).toEqual({
+      atacante: { lado: 'humano', zona: 0, cartaId: 'CC-003', destruida: false },
+      alvo: { lado: 'oponente', zona: 1, cartaId: 'CC-001', destruida: true },
+    })
+  })
+
+  it('atacante derrotado queima; carta virada para baixo usa a revelação do combate', () => {
+    const r = derivarConfronto([
+      declarado('oponente', 2, 0),
+      ev({ tipo: 'unidade_revelada', jogador: 'humano', zona: 0, carta: { uid: 'r', cartaId: 'CC-071' } }),
+      ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 2, carta: { uid: 'o', cartaId: 'CC-002' } }),
+    ])
+    expect(r?.atacante).toEqual({ lado: 'oponente', zona: 2, cartaId: 'CC-002', destruida: true })
+    expect(r?.alvo).toEqual({ lado: 'humano', zona: 0, cartaId: 'CC-071', destruida: false })
+  })
+
+  it('ataque anulado por armadilha não gera cena', () => {
+    expect(derivarConfronto([declarado('humano', 0, 1), ev({ tipo: 'ataque_anulado', jogador: 'humano', atacante: 0 })], cartas)).toBeNull()
+  })
+
+  it('hook: cena aparece com o ataque e expira sozinha; nada com movimento reduzido', () => {
+    const { result, rerender } = renderHook(({ log }) => useConfronto(log, cartas), { initialProps: { log: [] as Evento[] } })
+    rerender({ log: [declarado('humano', 0, 1)] })
+    expect(result.current?.alvo.cartaId).toBe('CC-001')
+    act(() => {
+      vi.advanceTimersByTime(DURACAO_CONFRONTO_MS)
+    })
+    expect(result.current).toBeNull()
+    expect(vi.getTimerCount()).toBe(0)
+
+    window.matchMedia = ((q: string) => ({ matches: q.includes('reduce') })) as unknown as typeof window.matchMedia
+    rerender({ log: [declarado('humano', 0, 1), declarado('humano', 0, 1)] })
+    expect(result.current).toBeNull()
   })
 })
