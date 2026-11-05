@@ -8,7 +8,7 @@ import { efeitoCurto } from '../../components/duelo/textoCarta'
 import { BARALHO_INICIAL } from '../../data/baralhoInicial'
 import { BARALHOS_OPONENTES } from '../../data/baralhosOponentes'
 import { CATALOGO } from '../../data/catalogo'
-import { buscarOponente } from '../../data/oponentes'
+import { OPONENTES, buscarOponente } from '../../data/oponentes'
 import { criarDuelo } from '../../game'
 import type { EstadoDuelo } from '../../game'
 import { cenario } from '../../game/__tests__/util'
@@ -366,6 +366,8 @@ describe('Integração com o Duelo Livre', () => {
 
   it('logado sem baralho no perfil: INICIAR DUELO usa o baralho inicial e VOLTAR retorna ao Duelo Livre mantendo o adversário', async () => {
     const servico: ServicoAuth = { entrar: vi.fn().mockResolvedValue({ ok: true, usuario: { id: 'u2', email: 'bia@exemplo.com' } }) }
+    // Porto é o 12º da ordem: libera os anteriores para poder escolhê-lo.
+    localStorage.setItem('costa-clash:derrotados:u2', JSON.stringify(OPONENTES.slice(0, 11).map((o) => o.id)))
     render(<App servicoAuth={servico} />)
     fireEvent.change(screen.getByLabelText('E-mail'), { target: { value: 'bia@exemplo.com' } })
     fireEvent.change(screen.getByLabelText('Senha'), { target: { value: 'senha-valida-1' } })

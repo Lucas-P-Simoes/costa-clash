@@ -415,3 +415,9 @@ Antes (baseline): 163 falhas em 288 medições; depois: 0 falhas (8 casos AD).
 - Bugs/limitações:
 - Estado Git (branch, commit se houver, alterações pendentes):
 - Próximo passo:
+
+## Progressão de adversários no Duelo Livre (Claude Code, sessão única; sem rodadas DEV/QA separadas)
+- Adversários seguem a ordem de `OPONENTES`: só o 1º (Guardião do Manguezal) começa liberado; vencer um libera o seguinte. Bloqueados aparecem em cinza com cadeado e não são selecionáveis.
+- Progresso guardado em `localStorage` por conta (`costa-clash:derrotados:<userId>`), **não no servidor** — trocar de navegador/dispositivo zera. Mover para o Worker/D1 é pendência possível.
+- Arquivos: `src/data/progressoOponentes.ts` (+ teste), `GradeOponentes.tsx`, `TelaDueloLivre.tsx`, `TelaDuelo.tsx` (`onVitoriaOponente`), `App.tsx`, `dueloLivre.css`.
+- Testes: `tsc -b`, `oxlint` e `vitest run` passam (857). Visual NÃO verificado no navegador.

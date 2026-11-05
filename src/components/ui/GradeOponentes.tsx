@@ -2,6 +2,7 @@ import { useRef } from 'react'
 import type { KeyboardEvent } from 'react'
 import { urlArquivoOponente } from '../../data/oponentes'
 import type { Oponente } from '../../data/oponentes'
+import { IconeCadeado } from './Icones'
 import { proximoIndice } from './navegacaoGrade'
 
 interface CartaoProps {
@@ -9,23 +10,28 @@ interface CartaoProps {
   selecionado: boolean
   onSelecionar: () => void
   refBotao: (el: HTMLButtonElement | null) => void
+  bloqueado?: boolean
 }
 
-/** Cartão de adversário: retrato pixel art + nome na faixa inferior. Radio com roving tabindex. */
-export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao }: CartaoProps) {
+/** Cartão de adversário: retrato pixel art + nome na faixa inferior. Radio com roving tabindex. Bloqueado: cinza com cadeado. */
+export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao, bloqueado = false }: CartaoProps) {
   return (
     <button
       ref={refBotao}
       type="button"
       role="radio"
       aria-checked={selecionado}
+      aria-disabled={bloqueado || undefined}
+      aria-label={bloqueado ? `${oponente.nome} (bloqueado: derrote o adversário anterior)` : undefined}
       tabIndex={selecionado ? 0 : -1}
       className="cartao-oponente"
       data-selecionado={selecionado || undefined}
-      onClick={onSelecionar}
+      data-bloqueado={bloqueado || undefined}
+      onClick={bloqueado ? undefined : onSelecionar}
     >
       <span className="cartao-oponente__arte">
         <img className="cartao-oponente__imagem" src={urlArquivoOponente(oponente.retrato)} alt="" draggable={false} />
+        {bloqueado ? <IconeCadeado className="cartao-oponente__cadeado" /> : null}
       </span>
       <span className="cartao-oponente__nome">{oponente.nome}</span>
     </button>
@@ -55,10 +61,14 @@ interface GradeProps {
   selecionadoId: string
   onSelecionar: (id: string) => void
   rotulo?: string
+  /** Ids bloqueados: não selecionáveis, exibidos em cinza com cadeado. */
+  bloqueados?: ReadonlySet<string>
+  /** Clique/Enter/Espaço num cartão liberado (setas só movem a seleção). */
+  onAbrir?: (id: string) => void
 }
 
 /** Grade de seleção (radiogroup). Setas movem foco e seleção; Home/End; Enter/Espaço selecionam via clique nativo. */
-export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo = 'Adversários' }: GradeProps) {
+export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo = 'Adversários', bloqueados, onAbrir }: GradeProps) {
   const grade = useRef<HTMLDivElement>(null)
   const botoes = useRef<Array<HTMLButtonElement | null>>([])
 
@@ -74,6 +84,7 @@ export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo 
     const destino = proximoIndice(e.key, atual < 0 ? 0 : atual, oponentes.length, colunas())
     if (destino === null) return
     e.preventDefault()
+    if (bloqueados?.has(oponentes[destino].id)) return
     onSelecionar(oponentes[destino].id)
     botoes.current[destino]?.focus()
   }
@@ -86,7 +97,11 @@ export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo 
             key={o.id}
             oponente={o}
             selecionado={o.id === selecionadoId}
-            onSelecionar={() => onSelecionar(o.id)}
+            bloqueado={bloqueados?.has(o.id)}
+            onSelecionar={() => {
+              onSelecionar(o.id)
+              onAbrir?.(o.id)
+            }}
             refBotao={(el) => {
               botoes.current[i] = el
             }}

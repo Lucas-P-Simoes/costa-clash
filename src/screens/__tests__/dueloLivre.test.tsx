@@ -215,3 +215,35 @@ describe('Integração com o App', () => {
     expect(servico.entrar).toHaveBeenCalledTimes(1)
   })
 })
+
+describe('Bloqueio de adversários por progressão', () => {
+  it('só o primeiro fica liberado; bloqueados não são selecionáveis; derrotar libera o seguinte', () => {
+    const ids = OPONENTES.map((o) => o.id)
+    const { rerender } = render(<TelaDueloLivre onDuelo={() => {}} derrotados={[]} />)
+    const radios = () => screen.getAllByRole('radio')
+    expect(radios()[0].getAttribute('aria-checked')).toBe('true')
+    expect(radios().filter((r) => r.getAttribute('aria-disabled') === 'true')).toHaveLength(ids.length - 1)
+    fireEvent.click(radios()[1])
+    expect(radios()[0].getAttribute('aria-checked')).toBe('true')
+    rerender(<TelaDueloLivre onDuelo={() => {}} derrotados={[ids[0]]} />)
+    fireEvent.click(radios()[1])
+    expect(radios()[1].getAttribute('aria-checked')).toBe('true')
+  })
+})
+
+describe('Modal de história do adversário', () => {
+  it('clicar abre a história com Duelar, que inicia a partida; bloqueado não abre; Esc fecha', () => {
+    const onDuelo = vi.fn()
+    render(<TelaDueloLivre onDuelo={onDuelo} derrotados={[OPONENTES[0].id]} />)
+    fireEvent.click(radios()[2])
+    expect(screen.queryByRole('dialog')).toBeNull()
+    fireEvent.click(radios()[1])
+    const dialogo = screen.getByRole('dialog', { name: OPONENTES[1].nome })
+    expect(within(dialogo).getAllByText(/./).length).toBeGreaterThan(3)
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(screen.queryByRole('dialog', { name: OPONENTES[1].nome })).toBeNull()
+    fireEvent.click(radios()[1])
+    fireEvent.click(within(screen.getByRole('dialog')).getByRole('button', { name: 'Duelar' }))
+    expect(onDuelo).toHaveBeenCalledWith(OPONENTES[1].id)
+  })
+})

@@ -217,6 +217,22 @@
   background: linear-gradient(var(--c), var(--c)) 0 0 / 0.9rem 0.18rem no-repeat, linear-gradient(var(--c), var(--c)) 0 0 / 0.18rem 0.9rem no-repeat, linear-gradient(var(--c), var(--c)) 100% 0 / 0.9rem 0.18rem no-repeat, linear-gradient(var(--c), var(--c)) 100% 0 / 0.18rem 0.9rem no-repeat, linear-gradient(var(--c), var(--c)) 0 100% / 0.9rem 0.18rem no-repeat, linear-gradient(var(--c), var(--c)) 0 100% / 0.18rem 0.9rem no-repeat, linear-gradient(var(--c), var(--c)) 100% 100% / 0.9rem 0.18rem no-repeat, linear-gradient(var(--c), var(--c)) 100% 100% / 0.18rem 0.9rem no-repeat;
 }
 .cartao-oponente:focus-visible { z-index: 4; outline: 0.18rem solid #fff; outline-offset: 0.28rem; }
+.cartao-oponente[data-bloqueado] { cursor: not-allowed; }
+.cartao-oponente[data-bloqueado] .cartao-oponente__imagem { filter: grayscale(1) brightness(0.5) contrast(0.95); }
+.cartao-oponente[data-bloqueado] .cartao-oponente__nome { color: #8a9aa6; }
+.cartao-oponente[data-bloqueado]:hover { filter: none; box-shadow: inset 0 0 0 0.09rem #2f7389, inset 0 0 0 0.18rem #06111a, 0 0 0 0.08rem #1592b2, 0 0.2rem 0 rgba(0, 0, 0, 0.72); }
+.cartao-oponente__arte { position: relative; }
+.cartao-oponente__cadeado {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 34%;
+  max-width: 3.4rem;
+  height: auto;
+  transform: translate(-50%, -50%);
+  filter: drop-shadow(0 0.15rem 0 rgba(0, 0, 0, 0.8));
+  pointer-events: none;
+}
 .cartao-oponente--baralho {
   cursor: default;
   box-shadow: inset 0 0 0 0.12rem #bff8ff, inset 0 0 0 0.24rem #17d9f4, 0 0 0 0.14rem #52eaff, 0 0 0.75rem 0.12rem rgba(23, 217, 244, 0.58), 0 0.22rem 0 rgba(0, 0, 0, 0.75);
@@ -611,3 +627,14 @@
 @media (prefers-reduced-motion: reduce) {
   .cartao-oponente[data-selecionado], .painel-oponente__imagem { animation: none; }
 }
+
+/* ===== Modal de história do adversário ===== */
+.historia-dialogo { width: min(40rem, 100%); }
+.historia-dialogo__corpo { display: grid; grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr); gap: 0.8rem; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.historia-dialogo__corpo:focus-visible { outline: 0.18rem solid #e7b94d; outline-offset: 0.12rem; }
+.historia-dialogo__retrato { width: 100%; aspect-ratio: 1; object-fit: cover; image-rendering: pixelated; border: 0.1rem solid #23738d; }
+.historia-dialogo__texto { display: grid; gap: 0.6rem; align-content: start; line-height: 1.4; font-size: 0.95rem; }
+.historia-dialogo__texto p { margin: 0; }
+.historia-dialogo__acoes { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.6rem; }
+.historia-dialogo__acoes .botao { min-width: 9rem; min-height: 44px; }
+@media (max-width: 36rem) { .historia-dialogo__corpo { grid-template-columns: 1fr; } .historia-dialogo__retrato { max-width: 9rem; justify-self: center; } }

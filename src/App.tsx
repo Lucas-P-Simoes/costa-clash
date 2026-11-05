@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { ResultadoAuth, ServicoAuth, UsuarioAutenticado } from './auth/servicoAuth'
 import { MENSAGEM_RECONEXAO } from './auth/servicoAuth'
+import { lerDerrotados, registrarVitoria } from './data/progressoOponentes'
 import { servicoAuthPadrao } from './auth/servicoPadrao'
 import { CabecalhoTela } from './components/ui/CabecalhoTela'
 import { TelaDueloLivre } from './screens/dueloLivre/TelaDueloLivre'
@@ -27,6 +28,8 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
   const [tela, setTela] = useState<Tela>(() => (servicoAuth.temSessaoSalva?.() ? { nome: 'restaurando' } : { nome: 'login' }))
   const [voltou, setVoltou] = useState(false)
   const [aviso, setAviso] = useState<string | undefined>()
+  // Progressão do Duelo Livre: derrotados por conta (localStorage), relida ao trocar de usuário.
+  const [progresso, setProgresso] = useState<{ dono?: string; ids: string[] } | undefined>()
   const irParaLogin = () => {
     setVoltou(true)
     setAviso(undefined)
@@ -63,6 +66,13 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
       /* o serviço já limpa o token local; seguimos para o login */
     }
     irParaLogin()
+  }
+
+  const usuarioAtual = 'usuario' in tela ? tela.usuario : undefined
+  const derrotados = progresso && progresso.dono === usuarioAtual?.id ? progresso.ids : lerDerrotados(usuarioAtual?.id)
+  function aoVencer(oponenteId: string) {
+    const dono = usuarioAtual?.id
+    setProgresso({ dono, ids: registrarVitoria(dono, oponenteId, derrotados) })
   }
 
   switch (tela.nome) {
@@ -116,6 +126,7 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
         <TelaDueloLivre
           usuario={usuario}
           oponenteInicialId={tela.oponenteId}
+          derrotados={derrotados}
           onVoltar={usuario ? undefined : irParaLogin}
           onSair={usuario ? sair : undefined}
           onDuelo={(oponenteId) => setTela({ nome: 'duelo', oponenteId, usuario })}
@@ -129,6 +140,7 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
           oponenteId={tela.oponenteId}
           usuario={usuario}
           servicoAuth={servicoAuth}
+          onVitoriaOponente={aoVencer}
           // Drop de carta: a coleção nova do servidor passa a valer no restante da sessão.
           onColecaoAtualizada={(colecao) => setTela((t) => (t.nome === 'duelo' && t.usuario ? { ...t, usuario: { ...t.usuario, colecao } } : t))}
           onVoltar={() => setTela({ nome: 'dueloLivre', usuario, oponenteId: tela.oponenteId })}

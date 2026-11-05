@@ -18,6 +18,8 @@ interface Props {
   servicoAuth?: ServicoAuth
   /** Coleção nova devolvida pelo servidor após um drop. */
   onColecaoAtualizada?: (colecao: ItemColecao[]) => void
+  /** Vitória do jogador nesta partida (alimenta a progressão de adversários). */
+  onVitoriaOponente?: (oponenteId: string) => void
   onVoltar: () => void
   /** Seed da primeira partida (testes/depuração); padrão: relógio. */
   seedInicial?: number
@@ -35,7 +37,7 @@ function atrasoPadrao(): number {
 }
 
 /** Inicia o duelo contra o adversário escolhido; erros de baralho ou de adversário aparecem sem quebrar a navegação. */
-export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizada, onVoltar, seedInicial, atrasoIA }: Props) {
+export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizada, onVitoriaOponente, onVoltar, seedInicial, atrasoIA }: Props) {
   // A seed fica no estado da tela (depuração); JOGAR NOVAMENTE gera outra e remonta a partida (key).
   const [seed, setSeed] = useState<number>(() => seedInicial ?? novaSeed())
   const oponente = buscarOponente(oponenteId)
@@ -70,7 +72,10 @@ export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizad
       oponente={oponente}
       atrasoIA={atraso}
       recompensa={recompensa}
-      onVitoria={aoVencer}
+      onVitoria={() => {
+        aoVencer()
+        onVitoriaOponente?.(oponenteId)
+      }}
       onVoltar={onVoltar}
       onNovamente={() => setSeed((s) => { const n = novaSeed(); return n === s ? s + 1 : n })}
     />
