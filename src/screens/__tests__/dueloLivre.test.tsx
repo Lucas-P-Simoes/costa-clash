@@ -6,6 +6,7 @@ import type { ServicoAuth, UsuarioAutenticado } from '../../auth/servicoAuth'
 import { proximoIndice } from '../../components/ui/navegacaoGrade'
 import { BARALHO_INICIAL, colecaoInicial } from '../../data/baralhoInicial'
 import { CATALOGO } from '../../data/catalogo'
+import { HISTORIAS_CARTAS } from '../../data/historiasCartas'
 import { OPONENTES } from '../../data/oponentes'
 import { TelaDueloLivre } from '../dueloLivre/TelaDueloLivre'
 
@@ -329,5 +330,46 @@ describe('Modal Baralho: montar o baralho', () => {
     fireEvent.click(within(d).getByRole('button', { name: 'Salvar baralho' }))
     expect(await within(d).findByText('Baralho inválido.')).toBeTruthy()
     expect(screen.getByRole('dialog', { name: 'Baralho' })).toBeTruthy()
+  })
+})
+
+describe('Modal da carta (Baralho)', () => {
+  const extra = CATALOGO.find((c) => !BARALHO_INICIAL.includes(c.id))!
+  const u: UsuarioAutenticado = { id: 'u8', email: 'c@x.co', baralho: [...BARALHO_INICIAL], colecao: [...colecaoInicial(), { cartaId: extra.id, quantidade: 1 }] }
+
+  it('clicar numa carta abre o modal com duas abas; a de trás conta a história; Esc fecha só o modal da carta', () => {
+    render(<TelaDueloLivre onDuelo={() => {}} usuario={u} onSalvarBaralho={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Coleção de cartas' }))
+    fireEvent.click(screen.getByRole('button', { name: `Ver carta ${extra.nome}` }))
+    const d = screen.getByRole('dialog', { name: extra.nome })
+    const abas = within(d).getAllByRole('tab')
+    expect(abas.map((a) => a.textContent)).toEqual(['Carta', 'História'])
+    expect(abas[0].getAttribute('aria-selected')).toBe('true')
+    expect(within(d).getByRole('tabpanel').textContent).toContain(extra.educacao)
+    fireEvent.click(abas[1])
+    expect(within(d).getByRole('tabpanel').textContent).toBe(HISTORIAS_CARTAS[extra.id])
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(screen.queryByRole('dialog', { name: extra.nome })).toBeNull()
+    expect(screen.getByRole('dialog', { name: 'Baralho' })).toBeTruthy() // o modal Baralho continua aberto
+  })
+
+  it('cartas do baralho também abrem o modal; setas trocam de aba', () => {
+    render(<TelaDueloLivre onDuelo={() => {}} usuario={u} onSalvarBaralho={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Coleção de cartas' }))
+    const nomeDeck = CATALOGO.find((c) => c.id === BARALHO_INICIAL[0])!.nome
+    const botoes = screen.getAllByRole('button', { name: `Ver carta ${nomeDeck}` })
+    expect(botoes).toHaveLength(2) // coleção e baralho
+    fireEvent.click(botoes[1])
+    const d = screen.getByRole('dialog', { name: nomeDeck })
+    fireEvent.keyDown(within(d).getByRole('tablist'), { key: 'ArrowRight' })
+    expect(within(d).getByRole('tab', { name: 'História' }).getAttribute('aria-selected')).toBe('true')
+    fireEvent.click(within(d).getByRole('button', { name: 'Fechar' }))
+    expect(screen.queryByRole('dialog', { name: nomeDeck })).toBeNull()
+  })
+
+  it('baralho vazio vindo do servidor é tratado como o baralho inicial', () => {
+    render(<TelaDueloLivre onDuelo={() => {}} usuario={{ ...u, baralho: [] }} onSalvarBaralho={vi.fn()} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Coleção de cartas' }))
+    expect(screen.getByLabelText('40 de 40 cartas no baralho')).toBeTruthy()
   })
 })

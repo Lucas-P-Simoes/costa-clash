@@ -430,3 +430,6 @@ Antes (baseline): 163 falhas em 288 medições; depois: 0 falhas (8 casos AD).
 
 ## Modal Baralho com edição (Claude Code, sessão única)
 - `DialogoColecao` ampliado: seção "Minhas cartas" (coleção, botão + Adicionar) e "Meu baralho" (X/40, − Remover), com Salvar/Desfazer. Usa o `PUT /api/baralho` e `salvarBaralho` já existentes (Worker inalterado: 40 cartas exatas, até 3 cópias, só o que possui). Após salvar, `App` atualiza `usuario.baralho` e os próximos duelos usam o novo baralho. Cada duelo sorteia 30 das 40 cartas. Visual não verificado no navegador.
+
+## Modal da carta com abas (Claude Code, sessão única)
+- Clicar numa carta (em "Minhas cartas" ou "Meu baralho") abre `DialogoCarta`: aba "Carta" (imagem, tipo, ATK/DEF, efeito, texto educativo) e aba "História" (lore em `src/data/historiasCartas.ts`, 100 textos PROVISÓRIOS aguardando revisão do dono). Esc fecha só o modal da carta. Baralho vazio vindo do servidor (`[]`) agora cai no baralho inicial no modal e no duelo. Testes: tsc, oxlint e vitest (873) passam; visual não verificado.

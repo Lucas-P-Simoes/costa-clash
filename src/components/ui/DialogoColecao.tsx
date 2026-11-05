@@ -8,6 +8,7 @@ import type { Carta } from '../../game/tipos'
 import { ArteCarta } from '../duelo/ArteCarta'
 import { rotuloTipo, tipoArte } from '../duelo/textoCarta'
 import { useFocoDialogo } from '../duelo/useFocoDialogo'
+import { DialogoCarta } from './DialogoCarta'
 import { IconeVoltar } from './Icones'
 
 interface Props {
@@ -41,9 +42,14 @@ function Arte({ carta }: { carta: Carta }) {
 export function DialogoColecao({ logado, colecao, baralho, onSalvarBaralho, onFechar }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   useFocoDialogo(ref)
+  const [cartaAberta, setCartaAberta] = useState<Carta | null>(null)
+  const cartaAbertaRef = useRef(false)
+  useEffect(() => {
+    cartaAbertaRef.current = cartaAberta !== null
+  }, [cartaAberta])
   useEffect(() => {
     const aoTeclar = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return
+      if (e.key !== 'Escape' || cartaAbertaRef.current) return // com o modal da carta aberto, Esc fecha só ele
       e.stopPropagation()
       e.preventDefault()
       onFechar()
@@ -102,8 +108,10 @@ export function DialogoColecao({ logado, colecao, baralho, onSalvarBaralho, onFe
       : `${minhas.length} de ${CATALOGO.length} cartas diferentes · ${copias} cópias`
 
   return (
+    <>
     <div
       className="drops-overlay"
+      inert={cartaAberta !== null}
       onClick={(e) => {
         if (e.target === e.currentTarget) onFechar()
       }}
@@ -128,15 +136,17 @@ export function DialogoColecao({ logado, colecao, baralho, onSalvarBaralho, onFe
                   const motivo = motivoAdicionar(carta)
                   return (
                     <li key={carta.id} className="colecao-item">
-                      <span className="colecao-item__arte" aria-hidden="true">
-                        <Arte carta={carta} />
-                        <span className="colecao-item__qtd">×{n}</span>
-                      </span>
-                      <span className="colecao-item__nome">{carta.nome}</span>
-                      <span className="colecao-item__tipo">
-                        {rotuloTipo(carta)}
-                        {podeEditar ? ` · no baralho ${uso}/${limite(carta.id)}` : n >= MAX_COPIAS_COLECAO ? ' · completa' : ''}
-                      </span>
+                      <button type="button" className="colecao-item__abrir" aria-label={`Ver carta ${carta.nome}`} onClick={() => setCartaAberta(carta)}>
+                        <span className="colecao-item__arte" aria-hidden="true">
+                          <Arte carta={carta} />
+                          <span className="colecao-item__qtd">×{n}</span>
+                        </span>
+                        <span className="colecao-item__nome">{carta.nome}</span>
+                        <span className="colecao-item__tipo">
+                          {rotuloTipo(carta)}
+                          {podeEditar ? ` · no baralho ${uso}/${limite(carta.id)}` : n >= MAX_COPIAS_COLECAO ? ' · completa' : ''}
+                        </span>
+                      </button>
                       {podeEditar ? (
                         <button type="button" className="colecao-item__botao" aria-disabled={motivo !== null || undefined} title={motivo ?? undefined} aria-label={`Adicionar ${carta.nome} ao baralho`} onClick={() => motivo === null && mudar(carta.id, 1)}>
                           + Adicionar
@@ -161,13 +171,15 @@ export function DialogoColecao({ logado, colecao, baralho, onSalvarBaralho, onFe
                   const n = deck.get(carta.id) ?? 0
                   return (
                     <li key={carta.id} className="colecao-linha">
-                      <span className="colecao-linha__arte" aria-hidden="true">
-                        <Arte carta={carta} />
-                      </span>
-                      <span className="colecao-linha__texto">
-                        <span className="colecao-item__nome">{carta.nome}</span>
-                        <span className="colecao-item__tipo">{rotuloTipo(carta)}</span>
-                      </span>
+                      <button type="button" className="colecao-linha__abrir" aria-label={`Ver carta ${carta.nome}`} onClick={() => setCartaAberta(carta)}>
+                        <span className="colecao-linha__arte" aria-hidden="true">
+                          <Arte carta={carta} />
+                        </span>
+                        <span className="colecao-linha__texto">
+                          <span className="colecao-item__nome">{carta.nome}</span>
+                          <span className="colecao-item__tipo">{rotuloTipo(carta)}</span>
+                        </span>
+                      </button>
                       <strong className="colecao-linha__qtd" aria-label={`${n} no baralho`}>
                         ×{n}
                       </strong>
@@ -206,5 +218,7 @@ export function DialogoColecao({ logado, colecao, baralho, onSalvarBaralho, onFe
         </button>
       </div>
     </div>
+    {cartaAberta ? <DialogoCarta carta={cartaAberta} onFechar={() => setCartaAberta(null)} /> : null}
+    </>
   )
 }

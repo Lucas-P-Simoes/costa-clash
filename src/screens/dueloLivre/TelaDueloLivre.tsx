@@ -137,7 +137,7 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onSalvarBaralho, onD
       </main>
       <RodapeControles inert={fundoInerte} />
       {historiaAberta ? <DialogoHistoriaOponente oponente={oponente} onDuelar={() => onDuelo(oponente.id)} onFechar={() => setHistoriaAberta(false)} /> : null}
-      {colecaoAberta ? <DialogoColecao logado={!!usuario} colecao={usuario?.colecao} baralho={usuario ? (usuario.baralho ?? BARALHO_INICIAL) : undefined} onSalvarBaralho={usuario ? onSalvarBaralho : undefined} onFechar={() => setColecaoAberta(false)} /> : null}
+      {colecaoAberta ? <DialogoColecao logado={!!usuario} colecao={usuario?.colecao} baralho={usuario ? (usuario.baralho?.length ? usuario.baralho : BARALHO_INICIAL) : undefined} onSalvarBaralho={usuario ? onSalvarBaralho : undefined} onFechar={() => setColecaoAberta(false)} /> : null}
       {dropsAbertos ? <DialogoDropsOponente oponente={oponente} colecao={usuario?.colecao} onFechar={() => setDropsAbertos(false)} /> : null}
     </div>
   )

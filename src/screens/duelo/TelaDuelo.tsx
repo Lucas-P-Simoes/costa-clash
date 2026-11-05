@@ -42,7 +42,7 @@ export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizad
   const [seed, setSeed] = useState<number>(() => seedInicial ?? novaSeed())
   const oponente = buscarOponente(oponenteId)
   const baralhoOponente = BARALHOS_OPONENTES[oponenteId]
-  const baralhoJogador = usuario?.baralho ?? BARALHO_INICIAL
+  const baralhoJogador = usuario?.baralho?.length ? usuario.baralho : BARALHO_INICIAL
   const atraso = useMemo(() => atrasoIA ?? atrasoPadrao(), [atrasoIA])
   const { recompensa, aoVencer } = useRecompensaDuelo(oponenteId, seed, usuario, servicoAuth, onColecaoAtualizada)
 

@@ -739,7 +739,7 @@
 .colecao-secao .colecao-dialogo__lista, .colecao-baralho__lista { flex: 1 1 auto; min-height: 0; }
 .colecao-baralho__lista { display: grid; align-content: start; gap: 0.3rem; margin: 0; padding: 0 0.2rem 0 0; overflow-y: auto; list-style: none; overscroll-behavior: contain; }
 .colecao-baralho__lista:focus-visible { outline: 0.18rem solid #e7b94d; outline-offset: 0.12rem; }
-.colecao-linha { display: grid; grid-template-columns: 3rem minmax(0, 1fr) auto auto; align-items: center; gap: 0.5rem; padding: 0.25rem 0.4rem 0.25rem 0.25rem; border: 0.08rem solid #15536b; background: rgba(4, 18, 30, 0.88); }
+.colecao-linha { display: grid; grid-template-columns: minmax(0, 1fr) auto auto; align-items: center; gap: 0.5rem; padding: 0.25rem 0.4rem 0.25rem 0.25rem; border: 0.08rem solid #15536b; background: rgba(4, 18, 30, 0.88); }
 .colecao-linha__arte { width: 3rem; aspect-ratio: 4 / 3; overflow: hidden; border: 0.08rem solid #0b3446; background: #0e2a3d; }
 .colecao-linha__arte img, .colecao-linha__arte svg { display: block; width: 100%; height: 100%; object-fit: cover; }
 .colecao-linha__texto { display: flex; flex-direction: column; min-width: 0; }
@@ -757,3 +757,33 @@
 .colecao-dialogo__rodape .botao { min-height: 44px; min-width: 9rem; }
 .colecao-dialogo__rodape .botao[aria-disabled='true'], .colecao-dialogo__rodape .botao:disabled { opacity: 0.5; cursor: not-allowed; }
 @media (max-width: 52rem) { .colecao-dialogo__corpo { grid-template-columns: minmax(0, 1fr); grid-template-rows: minmax(0, 1fr) minmax(0, 1fr); } }
+
+/* Botões que abrem o modal da carta (arte + nome) */
+.colecao-item__abrir, .colecao-linha__abrir { display: flex; min-width: 0; padding: 0; border: 0; background: transparent; color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.colecao-item__abrir { flex-direction: column; gap: 0.2rem; }
+.colecao-linha__abrir { align-items: center; gap: 0.5rem; }
+.colecao-linha__abrir .colecao-linha__arte { flex: none; }
+.colecao-item__abrir:hover .colecao-item__nome, .colecao-linha__abrir:hover .colecao-item__nome { color: #7deaff; }
+.colecao-item__abrir:focus-visible, .colecao-linha__abrir:focus-visible { outline: 0.18rem solid #fff; outline-offset: 0.12rem; }
+
+/* Modal da carta: duas abas (Carta / História) */
+.drops-overlay--carta { z-index: 70; }
+.carta-dialogo { width: min(46rem, 100%); }
+.carta-dialogo__abas { display: flex; gap: 0.3rem; justify-content: center; }
+.carta-dialogo__aba { min-width: 8rem; min-height: 40px; padding: 0.3rem 0.9rem; border: 0.1rem solid #2f7389; background: #06111a; color: #8eb4c2; font: inherit; font-weight: 700; letter-spacing: 0.06em; text-transform: uppercase; cursor: pointer; }
+.carta-dialogo__aba[aria-selected='true'] { border-color: #e7b94d; background: #0b2a3d; color: #ffe7a6; }
+.carta-dialogo__aba:focus-visible { outline: 0.18rem solid #fff; outline-offset: 0.12rem; }
+.carta-dialogo__painel { display: grid; gap: 0.8rem; min-height: 0; overflow-y: auto; overscroll-behavior: contain; }
+.carta-dialogo__painel--frente { grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr); align-items: start; }
+.carta-dialogo__arte { aspect-ratio: 4 / 3; overflow: hidden; border: 0.15rem solid #23738d; background: #0e2a3d; }
+.carta-dialogo__arte img, .carta-dialogo__arte svg { display: block; width: 100%; height: 100%; object-fit: cover; image-rendering: pixelated; }
+.carta-dialogo__dados { display: grid; gap: 0.5rem; align-content: start; }
+.carta-dialogo__dados p { margin: 0; }
+.carta-dialogo__tipo { color: #f0c857; font-weight: 700; text-transform: uppercase; letter-spacing: 0.05em; }
+.carta-dialogo__atributos { display: flex; gap: 0.8rem; font-size: 1.1rem; font-weight: 700; color: #7deaff; }
+.carta-dialogo__efeito { line-height: 1.35; }
+.carta-dialogo__educacao { color: #8eb4c2; font-size: 0.9rem; line-height: 1.35; }
+.carta-dialogo__painel--verso { padding: 1.2rem 1.4rem; border: 0.15rem solid #6a4a1d; background: linear-gradient(180deg, #1a1409, #0c0a06); }
+.carta-dialogo__painel--verso:focus-visible { outline: 0.18rem solid #e7b94d; outline-offset: 0.12rem; }
+.carta-dialogo__lore { margin: 0; color: #f1e3c0; font-size: 1.1rem; line-height: 1.6; font-style: italic; }
+@media (max-width: 40rem) { .carta-dialogo__painel--frente { grid-template-columns: minmax(0, 1fr); } }
