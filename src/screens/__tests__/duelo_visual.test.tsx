@@ -69,8 +69,8 @@ describe('Painéis OPONENTE e VOCÊ', () => {
   it('identificação, avatar, vida, contagens, 5 zonas de unidade e faixa de 5 suportes em cada lado', () => {
     montar()
     for (const [lado, nome, sub, vida, baralho] of [
-      ['oponente', 'Oponente', 'IA do Litoral', 'Vida do oponente: 8000', 'Baralho: 20'],
-      ['voce', 'Você', 'Protetor do Litoral', 'Sua vida: 8000', 'Baralho: 20'],
+      ['oponente', 'Oponente', 'IA do Litoral', 'Vida do oponente: 5000', 'Baralho: 20'],
+      ['voce', 'Você', 'Protetor do Litoral', 'Sua vida: 5000', 'Baralho: 20'],
     ] as const) {
       const painel = q(`.duelo-lado--${lado}`)
       expect(painel.className).toContain('moldura-orn')
@@ -140,10 +140,11 @@ describe('Coluna lateral', () => {
       expect(b.textContent).toContain(sub)
     }
     expect(screen.getByLabelText(/^Cartas restantes no baralho: [0-9]+$/)).toBeTruthy()
-    const dica = screen.getByRole('region', { name: 'Dica educativa' })
-    expect(dica.className).toContain('moldura-orn')
-    expect(dica.querySelectorAll('h2 svg').length).toBeGreaterThanOrEqual(2) // livro e lâmpada
-    expect(dica.querySelector('img')!.getAttribute('aria-hidden')).toBe('true')
+    const lixeira = screen.getByRole('region', { name: 'Lixeira' })
+    expect(lixeira.className).toContain('moldura-orn')
+    expect(lixeira.querySelector('h2 svg')).toBeTruthy()
+    expect(lixeira.querySelector('[data-destino="lixeira"]')).toBeTruthy()
+    expect(screen.queryByRole('region', { name: 'Dica educativa' })).toBeNull()
   })
 
   it('botão bloqueado: motivo visível ligado por aria-describedby, sem perder o foco nem a ação', () => {
@@ -268,7 +269,7 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
     montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'], mao: ['CC-001'] } })
     atacar()
     // lógica já aplicada (zona do oponente esvaziada, vida atualizada) ...
-    expect(screen.getByLabelText('Vida do oponente: 7600')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 4600')).toBeTruthy()
     expect(screen.queryByRole('button', { name: /Zona 1 do oponente/ })).toBeNull()
     // ... e os efeitos aparecem como classes temporárias
     expect(q('.duelo-lado--voce .zona .carta').className).toContain('carta--fx-atacando')
@@ -317,7 +318,7 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
     window.matchMedia = ((m: string) => ({ matches: m.includes('reduce'), media: m, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia
     montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'], mao: ['CC-001'] } })
     atacar()
-    expect(screen.getByLabelText('Vida do oponente: 7600')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 4600')).toBeTruthy()
     expect(fxAtivos()).toBe(0)
     expect(document.querySelector('[data-fantasma]')).toBeNull()
     expect(q('.duelo-vida--oponente').className).not.toContain('duelo-vida--dano')
@@ -356,7 +357,7 @@ describe('Tela de resultado (estilo Tela-derrota / Tela-recompensa)', () => {
     expect(d.textContent).toContain('Você desistiu do duelo.')
     const resumo = within(d).getByRole('region', { name: 'Resumo do duelo' })
     expect(within(resumo).getByLabelText('Vida final do oponente: 5000')).toBeTruthy()
-    expect(within(resumo).getByLabelText('Sua vida final: 8000')).toBeTruthy()
+    expect(within(resumo).getByLabelText('Sua vida final: 5000')).toBeTruthy()
     expect(within(resumo).getByLabelText('Unidades do oponente em campo: 2')).toBeTruthy()
     expect(within(resumo).getByLabelText('Suas unidades em campo: 1')).toBeTruthy()
     expect(d.textContent).toMatch(/Vença .+ para ganhar uma carta para a sua coleção\./)

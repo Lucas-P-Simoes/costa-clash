@@ -99,7 +99,7 @@ describe('Arrastar: unidade para zona livre', () => {
     expect(f.textContent).toContain('Recife de Coral')
     expect(mao(1).className).toContain('carta--arrastando')
     const destinos = qa('.zona--drop')
-    expect(destinos).toHaveLength(4) // 4 zonas livres; a ocupada não é destino
+    expect(destinos).toHaveLength(5) // 4 zonas livres + a lixeira; a zona ocupada não é destino
     destinos.forEach((d) => expect(d.getAttribute('aria-dropeffect')).toBe('move'))
     expect(qa('.duelo-lado--oponente .zona--drop')).toHaveLength(0)
     expect(zonaDoJogador(1).className).toContain('zona--sobre')
@@ -181,9 +181,9 @@ describe('Arrastar: outros tipos de carta', () => {
   })
 
   it('ação sem alvo (cura): soltar sobre o próprio campo', () => {
-    montar({ humano: { mao: ['CC-079'], lp: 5000 } })
+    montar({ humano: { mao: ['CC-079'], lp: 3000 } })
     arrastar(mao(1), q('.duelo-lado--voce'))
-    expect(screen.getByLabelText(/^Sua vida: [0-9]+$/).getAttribute('aria-label')).not.toBe('Sua vida: 5000')
+    expect(screen.getByLabelText(/^Sua vida: [0-9]+$/).getAttribute('aria-label')).not.toBe('Sua vida: 3000')
   })
 })
 
@@ -202,11 +202,21 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
     expect(tabuleiro()).toBe(antes)
   })
 
-  it('bloqueado (jogada da mão já feita): não inicia, mostra o motivo do motor', () => {
+  it('jogada da mão já feita: o arrasto inicia (só a lixeira vale) e soltar no campo mostra o motivo do motor', () => {
     montar({ jogadaFeita: true, humano: { mao: ['CC-003'] } })
     arrastar(mao(1), zonaDoJogador(0), false)
+    expect(document.querySelector('.duelo-arrasto-fantasma')).not.toBeNull()
+    expect(qa('.zona--drop')).toHaveLength(1) // só a lixeira
+    fireEvent.pointerUp(window, { ...P, clientX: 200, clientY: 300 })
     expect(document.querySelector('.duelo-arrasto-fantasma')).toBeNull()
     expect(aviso()).toBe('Você já fez a jogada da mão neste turno.')
+  })
+
+  it('soltar na lixeira descarta a carta (mesmo com a jogada da mão já feita) sem gastar a jogada', () => {
+    montar({ jogadaFeita: true, humano: { mao: ['CC-003', 'CC-004'] } })
+    arrastar(mao(1), q('[data-destino="lixeira"]'))
+    expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
+    expect(screen.getByLabelText('Cartas descartadas: 1')).toBeTruthy()
   })
 
   it('fora da vez (turno do oponente em reprodução): arrasto desabilitado com motivo', () => {

@@ -421,3 +421,9 @@ Antes (baseline): 163 falhas em 288 medições; depois: 0 falhas (8 casos AD).
 - Progresso guardado em `localStorage` por conta (`costa-clash:derrotados:<userId>`), **não no servidor** — trocar de navegador/dispositivo zera. Mover para o Worker/D1 é pendência possível.
 - Arquivos: `src/data/progressoOponentes.ts` (+ teste), `GradeOponentes.tsx`, `TelaDueloLivre.tsx`, `TelaDuelo.tsx` (`onVitoriaOponente`), `App.tsx`, `dueloLivre.css`.
 - Testes: `tsc -b`, `oxlint` e `vitest run` passam (857). Visual NÃO verificado no navegador.
+
+## Regras novas: 5.000 LP, 30 cartas por duelo, IA agressiva, lixeira (Claude Code, sessão única; sem rodadas DEV/QA separadas)
+- `VIDA_INICIAL` = 5000; `CARTAS_NO_DUELO` = 30 (`criarDuelo` embaralha o baralho de 40 e usa as 30 primeiras; perfil, Worker/D1 e baralhos de adversários continuam com 40, sem migração). Interpretação do pedido "30 cartas de início de partida" confirmada com o dono: baralho de 30 no duelo.
+- Descarte livre (lixeira): `validarDescartar` + evento `descarte_livre`; descarte forçado inalterado. UI: componente `Lixeira` no lugar de `DicaEducativa` (removida); arrastar carta da mão até a lixeira (`data-destino="lixeira"`) ou botão. A mão enche até 5 no início do próximo turno do jogador (comportamento já existente de `iniciarTurno`).
+- IA: `temVantagem` = vence ao menos um combate; `PESOS_ATAQUE_IA` com `limiarAtaque` -1000 e pesos de perda reduzidos. Testes de IA atualizados para a nova postura.
+- Testes: LP 8000→5000 e totais 40→30 ajustados; `tsc -b`, `oxlint` e `vitest run` passam (864). O Worker não foi alterado (DURACAO_MINIMA_DUELO_MS = 30 s permanece). Visual não verificado no navegador.

@@ -234,7 +234,6 @@
   pointer-events: none;
 }
 .cartao-oponente--baralho {
-  cursor: default;
   box-shadow: inset 0 0 0 0.12rem #bff8ff, inset 0 0 0 0.24rem #17d9f4, 0 0 0 0.14rem #52eaff, 0 0 0.75rem 0.12rem rgba(23, 217, 244, 0.58), 0 0.22rem 0 rgba(0, 0, 0, 0.75);
 }
 .cartao-oponente--baralho:hover { filter: none; }
@@ -707,3 +706,24 @@
 /* Primeira linha: o balão abre para baixo (acima dela a tela corta o conteúdo). */
 .cartao-oponente__balao[data-lado='baixo'] { bottom: auto; top: calc(100% + 0.55rem); }
 .cartao-oponente__balao[data-lado='baixo']::after { top: auto; bottom: 100%; border-top-color: transparent; border-bottom-color: #fff4f2; }
+
+/* ===== Modal Baralho (coleção) ===== */
+.colecao-dialogo { width: min(44rem, 100%); }
+.colecao-dialogo__lista {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(7.4rem, 1fr));
+  gap: 0.6rem;
+  min-height: 0;
+  margin: 0;
+  padding: 0 0.2rem 0 0;
+  overflow-y: auto;
+  list-style: none;
+  overscroll-behavior: contain;
+}
+.colecao-dialogo__lista:focus-visible { outline: 0.18rem solid #e7b94d; outline-offset: 0.12rem; }
+.colecao-item { display: flex; flex-direction: column; gap: 0.2rem; min-width: 0; padding: 0.3rem; border: 0.08rem solid #15536b; background: rgba(4, 18, 30, 0.88); }
+.colecao-item__arte { position: relative; display: block; aspect-ratio: 4 / 3; overflow: hidden; border: 0.08rem solid #0b3446; background: #0e2a3d; }
+.colecao-item__arte img, .colecao-item__arte svg { display: block; width: 100%; height: 100%; object-fit: cover; }
+.colecao-item__qtd { position: absolute; right: 0.2rem; bottom: 0.2rem; padding: 0.05rem 0.35rem; background: #04101d; border: 0.08rem solid #e7b94d; color: #ffe7a6; font-size: 0.8rem; font-weight: 700; }
+.colecao-item__nome { font-size: 0.82rem; font-weight: 700; line-height: 1.15; overflow-wrap: anywhere; }
+.colecao-item__tipo { color: #8eb4c2; font-size: var(--fs-min); }

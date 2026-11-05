@@ -110,8 +110,8 @@ describe('QA fuzz: estados aleatórios e turno completo da IA', () => {
       const e = cenario({
         ativo,
         turno: (ativo === 'humano' ? 3 : 2) + 2 * Math.floor(rng() * 5),
-        humano: { lp: 100 + Math.floor(rng() * 80) * 100, mao: cartas(5 - Math.floor(rng() * 3)), campo: campo(), suporte: [rng() < 0.5 ? { id: pick(rng, armadilhas), turno: 1 } : null], baralho: 12 },
-        oponente: { lp: 100 + Math.floor(rng() * 80) * 100, mao: cartas(5 - Math.floor(rng() * 3)), campo: campo(), suporte: [rng() < 0.5 ? { id: pick(rng, armadilhas), turno: 1 } : null], baralho: 12 },
+        humano: { lp: 100 + Math.floor(rng() * 49) * 100, mao: cartas(5 - Math.floor(rng() * 3)), campo: campo(), suporte: [rng() < 0.5 ? { id: pick(rng, armadilhas), turno: 1 } : null], baralho: 12 },
+        oponente: { lp: 100 + Math.floor(rng() * 49) * 100, mao: cartas(5 - Math.floor(rng() * 3)), campo: campo(), suporte: [rng() < 0.5 ? { id: pick(rng, armadilhas), turno: 1 } : null], baralho: 12 },
       })
       const turno0 = e.turno
       const r = executarTurnoIA(e)
@@ -122,6 +122,6 @@ describe('QA fuzz: estados aleatórios e turno completo da IA', () => {
       // invariantes estruturais (total de cartas varia por construção; checa só o resto)
       expect(invariantes(r.estado).filter((m) => !m.includes('total de cartas'))).toEqual([])
     }
-  })
+  }, 20_000)
 })
 

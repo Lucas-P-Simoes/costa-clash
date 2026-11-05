@@ -127,7 +127,7 @@ describe('D3: foco depois das ações', () => {
       screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }),
       screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
     )
-    expect(screen.getByLabelText('Vida do oponente: 7600')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 4600')).toBeTruthy()
   })
 })
 

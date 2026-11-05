@@ -21,8 +21,11 @@ export interface Carta {
   educacao: string
 }
 
-export const VIDA_INICIAL = 8000
+export const VIDA_INICIAL = 5000
+/** Tamanho do baralho montado/validado (perfil, adversários). */
 export const CARTAS_POR_BARALHO = 40
+/** Cartas de cada lado em um duelo: o baralho é embaralhado e só as 30 primeiras entram na partida. */
+export const CARTAS_NO_DUELO = 30
 export const MAX_COPIAS = 3
 export const TAMANHO_MAO = 5
 export const ZONAS_UNIDADE = 5

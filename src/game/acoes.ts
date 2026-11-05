@@ -326,19 +326,35 @@ function executarJogarCarta(ctx: Ctx, cmd: ComandoJogarCarta): void {
 
 // ---------------------------------------------------------------- demais comandos
 
+/**
+ * Motivo pelo qual o descarte é ilegal (null = legal). O descarte é livre (lixeira): na fase principal do próprio
+ * turno, qualquer carta da mão, quantas vezes quiser. Só o descarte FORÇADO (sem nenhuma jogada legal e sem
+ * jogada feita) conta como a jogada da mão. A mão é reposta até 5 no início do próximo turno do jogador.
+ */
+export function validarDescartar(e: EstadoDuelo, cmd: ComandoDescartar): string | null {
+  if (e.resultado) return 'A partida já terminou.'
+  if (cmd.jogador !== e.ativo) return 'Não é o seu turno.'
+  if (e.fase !== 'PRINCIPAL') return 'O descarte só é permitido na fase principal.'
+  if (!e.jogadores[cmd.jogador].mao.some((c) => c.uid === cmd.uid)) return 'Essa carta não está na sua mão.'
+  return null
+}
+
 function executarDescartar(ctx: Ctx, cmd: ComandoDescartar): void {
   const e = ctx.e
-  if (cmd.jogador !== e.ativo) throw new ErroRegra('Não é o seu turno.')
-  if (e.fase !== 'PRINCIPAL') throw new ErroRegra('O descarte só é permitido na fase principal.')
-  if (e.jogadaFeita) throw new ErroRegra('Você já fez a jogada da mão neste turno.')
+  const erro = validarDescartar(e, cmd)
+  if (erro) throw new ErroRegra(erro)
   const j = e.jogadores[cmd.jogador]
+  // Forçado: nenhuma jogada legal e a jogada da mão ainda não foi feita (avaliado antes de tirar a carta).
+  const forcado = !e.jogadaFeita && !existeJogadaLegal(e, ctx.cat)
   const idx = j.mao.findIndex((c) => c.uid === cmd.uid)
-  if (idx < 0) throw new ErroRegra('Essa carta não está na sua mão.')
-  if (existeJogadaLegal(e, ctx.cat)) throw new ErroRegra('Há jogada legal disponível: o descarte só vale quando não existe jogada possível.')
   const carta = j.mao.splice(idx, 1)[0] as CartaInstancia
   j.descarte.push(carta)
-  e.jogadaFeita = true
-  emitir(ctx, { tipo: 'descarte_forcado', jogador: cmd.jogador, carta }, `${nomeJogador(cmd.jogador)} descarta ${nomeCarta(ctx.cat, carta.cartaId)} (sem jogada legal).`)
+  if (forcado) {
+    e.jogadaFeita = true
+    emitir(ctx, { tipo: 'descarte_forcado', jogador: cmd.jogador, carta }, `${nomeJogador(cmd.jogador)} descarta ${nomeCarta(ctx.cat, carta.cartaId)} (sem jogada legal).`)
+  } else {
+    emitir(ctx, { tipo: 'descarte_livre', jogador: cmd.jogador, carta }, `${nomeJogador(cmd.jogador)} joga ${nomeCarta(ctx.cat, carta.cartaId)} na lixeira.`)
+  }
 }
 
 function executarMudarPosicao(ctx: Ctx, cmd: ComandoMudarPosicao): void {

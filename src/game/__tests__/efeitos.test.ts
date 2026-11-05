@@ -116,8 +116,8 @@ describe('destruir_grupo (075)', () => {
     expect(e.jogadores.oponente.campo[1]).toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
     expect(e.jogadores.oponente.descarte.map((c) => c.cartaId)).toEqual(['CC-049'])
-    expect(e.jogadores.oponente.lp).toBe(8000)
-    expect(e.jogadores.humano.lp).toBe(8000)
+    expect(e.jogadores.oponente.lp).toBe(5000)
+    expect(e.jogadores.humano.lp).toBe(5000)
     expect(e.jogadores.humano.descarte.map((c) => c.cartaId)).toEqual(['CC-075'])
   })
 
@@ -143,21 +143,21 @@ describe('cura (079, 080)', () => {
     ['CC-079', 500],
     ['CC-080', 700],
   ])('%s cura %i LP do controlador', (id, v) => {
-    const e = ok(jogar(cenario({ humano: { mao: [id], lp: 5000 } }), 'humano', id))
-    expect(e.jogadores.humano.lp).toBe(5000 + v)
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    const e = ok(jogar(cenario({ humano: { mao: [id], lp: 3000 } }), 'humano', id))
+    expect(e.jogadores.humano.lp).toBe(3000 + v)
+    expect(e.jogadores.oponente.lp).toBe(5000)
     expect(e.jogadores.humano.descarte).toHaveLength(1)
   })
 
-  it('nunca ultrapassa 8000 (cura parcial permitida)', () => {
-    const e = ok(jogar(cenario({ humano: { mao: ['CC-080'], lp: 7800 } }), 'humano', 'CC-080'))
-    expect(e.jogadores.humano.lp).toBe(8000)
-    const e2 = ok(jogar(cenario({ humano: { mao: ['CC-080'], lp: 7999 } }), 'humano', 'CC-080'))
-    expect(e2.jogadores.humano.lp).toBe(8000)
+  it('nunca ultrapassa 5000 (cura parcial permitida)', () => {
+    const e = ok(jogar(cenario({ humano: { mao: ['CC-080'], lp: 4800 } }), 'humano', 'CC-080'))
+    expect(e.jogadores.humano.lp).toBe(5000)
+    const e2 = ok(jogar(cenario({ humano: { mao: ['CC-080'], lp: 4999 } }), 'humano', 'CC-080'))
+    expect(e2.jogadores.humano.lp).toBe(5000)
   })
 
-  it('com LP já em 8000 a cura não pode ser jogada', () => {
-    const r = jogar(cenario({ humano: { mao: ['CC-079'], lp: 8000 } }), 'humano', 'CC-079')
+  it('com LP já em 5000 a cura não pode ser jogada', () => {
+    const r = jogar(cenario({ humano: { mao: ['CC-079'], lp: 5000 } }), 'humano', 'CC-079')
     expect(r.ok).toBe(false)
     if (!r.ok) expect(r.erro).toContain('máximo')
   })
@@ -256,8 +256,8 @@ describe('equipamentos (085, 086, 087, 088)', () => {
     const e = ok(atacar(cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-056'] }, humano: { campo: [{ id: 'CC-001', pos: 'DEFESA', equip: 'CC-088' }] } }), 0, 0))
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull() // 2200 < 2300: ninguém é destruído
-    expect(e.jogadores.oponente.lp).toBe(7900) // o atacante sofre 100 de dano
-    expect(e.jogadores.humano.lp).toBe(8000)
+    expect(e.jogadores.oponente.lp).toBe(4900) // o atacante sofre 100 de dano
+    expect(e.jogadores.humano.lp).toBe(5000)
   })
 })
 

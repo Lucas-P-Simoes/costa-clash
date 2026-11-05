@@ -24,12 +24,12 @@ const recusa = (e: EstadoDuelo, c: Parameters<typeof aplicarComando>[1]) => {
 }
 
 describe('QA 1 - compra e mão (§2, §3)', () => {
-  it('abertura: 5 cartas para ambos, 35 no baralho, humano começa na fase principal sem compra extra', () => {
+  it('abertura: 5 cartas para ambos, 25 no baralho, humano começa na fase principal sem compra extra', () => {
     const e = novoDuelo()
     for (const j of ['humano', 'oponente'] as const) {
       expect(e.jogadores[j].mao).toHaveLength(5)
-      expect(e.jogadores[j].baralho).toHaveLength(35)
-      expect(e.jogadores[j].lp).toBe(8000)
+      expect(e.jogadores[j].baralho).toHaveLength(25)
+      expect(e.jogadores[j].lp).toBe(5000)
       expect(e.jogadores[j].campo).toHaveLength(5)
       expect(e.jogadores[j].suporte).toHaveLength(5)
     }
@@ -39,8 +39,8 @@ describe('QA 1 - compra e mão (§2, §3)', () => {
     expect(e.log.filter((x) => x.tipo === 'compra')).toHaveLength(2) // só as duas mãos iniciais, nada no turno 1
     expect(invariantes(e)).toEqual([])
     const visao = visaoParaJogador(e, 'humano')
-    expect(visao.eu.baralhoTamanho).toBe(35) // "cartas restantes" = 40 - 5
-    expect(visao.oponente.baralhoTamanho).toBe(35)
+    expect(visao.eu.baralhoTamanho).toBe(25) // "cartas restantes" = 40 - 5
+    expect(visao.oponente.baralhoTamanho).toBe(25)
     expect(visao.oponente.maoTamanho).toBe(5)
   })
 
@@ -53,13 +53,13 @@ describe('QA 1 - compra e mão (§2, §3)', () => {
     expect(e.turno).toBe(2)
     expect(e.ativo).toBe('oponente')
     expect(e.jogadores.oponente.mao).toHaveLength(5)
-    expect(e.jogadores.oponente.baralho).toHaveLength(35) // sem compra
+    expect(e.jogadores.oponente.baralho).toHaveLength(25) // sem compra
     const o = jogadasLegais(e)[0]!
     e = ok(aplicarComando(e, o))
     e = ok(aplicarComando(e, { tipo: 'encerrarTurno', jogador: 'oponente' }))
     expect(e.turno).toBe(3)
     expect(e.jogadores.humano.mao).toHaveLength(5)
-    expect(e.jogadores.humano.baralho).toHaveLength(34)
+    expect(e.jogadores.humano.baralho).toHaveLength(24)
     expect(invariantes(e)).toEqual([])
   })
 
@@ -109,7 +109,7 @@ describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
     e = ok(jogar(e, 'oponente', 'CC-027', { posicao: 'ATAQUE' }))
     e = irParaCombate(e)
     const r = ok(atacar(e, 0, 'direto'))
-    expect(r.jogadores.humano.lp).toBe(6000)
+    expect(r.jogadores.humano.lp).toBe(3000)
   })
 
   it('uma jogada da mão por turno; avançar/encerrar exigem jogada; jogar fora da fase principal é recusado', () => {
@@ -154,7 +154,7 @@ describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
     recusa(e, { tipo: 'mudarPosicao', jogador: 'humano', zona: 0, posicao: 'DEFESA' }) // atacou: não muda
     e = ok(cmd(e, { tipo: 'mudarPosicao', jogador: 'humano', zona: 1, posicao: 'ATAQUE' })) // ainda pode
     e = ok(atacar(e, 1, 1)) // CC-033 1800 vs DEF 2000: repelido
-    expect(e.jogadores.humano.lp).toBe(7800)
+    expect(e.jogadores.humano.lp).toBe(4800)
     expect(e.jogadores.oponente.campo[1]).not.toBeNull()
     recusa(e, { tipo: 'mudarPosicao', jogador: 'humano', zona: 1, posicao: 'DEFESA' })
   })
@@ -185,9 +185,11 @@ describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
     expect(d.jogadores.humano.descarte).toHaveLength(1)
   })
 
-  it('descarte só quando não há jogada legal', () => {
+  it('descarte livre (lixeira) sempre vale; só o descarte sem jogada legal conta como a jogada da mão', () => {
     const e = cenario({ turno: 3, humano: { mao: ['CC-001', 'CC-073'] } })
-    recusa(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-073') })
+    const livre = ok(cmd(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-073') }))
+    expect(livre.jogadaFeita).toBe(false)
+    expect(livre.jogadores.humano.descarte).toHaveLength(1)
     const sem = cenario({ turno: 3, humano: { mao: ['CC-073', 'CC-075', 'CC-079'] } }) // debuff/destruir sem alvo; cura com LP cheio
     const j = jogadasLegais(sem)
     expect(j).toHaveLength(3)
@@ -205,15 +207,15 @@ describe('QA 3 - combate (§5)', () => {
 
   it('ATK x ATK: maior destrói a menor e o perdedor perde a diferença; empate destrói ambas sem dano', () => {
     let e = ok(duelo('CC-043', 'ATAQUE', 'CC-033')) // 2000 x 1800
-    expect(e.jogadores.oponente.lp).toBe(7800)
+    expect(e.jogadores.oponente.lp).toBe(4800)
     expect(e.jogadores.oponente.campo[0]).toBeNull()
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
     e = ok(duelo('CC-033', 'ATAQUE', 'CC-043')) // 1800 x 2000
-    expect(e.jogadores.humano.lp).toBe(7800)
+    expect(e.jogadores.humano.lp).toBe(4800)
     expect(e.jogadores.humano.campo[0]).toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
     e = ok(duelo('CC-043', 'ATAQUE', 'CC-027')) // 2000 x 2000
-    expect([e.jogadores.humano.lp, e.jogadores.oponente.lp]).toEqual([8000, 8000])
+    expect([e.jogadores.humano.lp, e.jogadores.oponente.lp]).toEqual([5000, 5000])
     expect(e.jogadores.humano.campo[0]).toBeNull()
     expect(e.jogadores.oponente.campo[0]).toBeNull()
     expect(e.jogadores.humano.descarte).toHaveLength(1)
@@ -223,14 +225,14 @@ describe('QA 3 - combate (§5)', () => {
   it('ATK x DEF: maior destrói sem dano; menor causa dano ao atacante sem destruir; empate nada', () => {
     let e = ok(duelo('CC-043', 'DEFESA', 'CC-033')) // 2000 > DEF 1600
     expect(e.jogadores.oponente.campo[0]).toBeNull()
-    expect([e.jogadores.humano.lp, e.jogadores.oponente.lp]).toEqual([8000, 8000])
+    expect([e.jogadores.humano.lp, e.jogadores.oponente.lp]).toEqual([5000, 5000])
     e = ok(duelo('CC-033', 'DEFESA', 'CC-001')) // 1800 < DEF 2000
-    expect(e.jogadores.humano.lp).toBe(7800)
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.humano.lp).toBe(4800)
+    expect(e.jogadores.oponente.lp).toBe(5000)
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
     e = ok(duelo('CC-033', 'DEFESA', 'CC-013')) // 1800 == DEF 1800
-    expect([e.jogadores.humano.lp, e.jogadores.oponente.lp]).toEqual([8000, 8000])
+    expect([e.jogadores.humano.lp, e.jogadores.oponente.lp]).toEqual([5000, 5000])
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
   })
@@ -242,7 +244,7 @@ describe('QA 3 - combate (§5)', () => {
     recusa(com, { tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 7 })
     recusa(com, { tipo: 'atacar', jogador: 'humano', atacante: 3, alvo: 1 }) // sem atacante
     const sem = cenarioCombate({ turno: 3, humano: { campo: ['CC-043'] } })
-    expect(ok(atacar(sem, 0, 'direto')).jogadores.oponente.lp).toBe(6000)
+    expect(ok(atacar(sem, 0, 'direto')).jogadores.oponente.lp).toBe(3000)
     recusa(sem, { tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 0 })
   })
 

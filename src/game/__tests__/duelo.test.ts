@@ -17,13 +17,13 @@ function novo(seed = 1): EstadoDuelo {
 }
 
 describe('criarDuelo', () => {
-  it('compra mão de 5 para ambos (baralho 35), humano começa em PRINCIPAL no turno 1 com 8000 LP', () => {
+  it('compra mão de 5 para ambos (baralho 25), humano começa em PRINCIPAL no turno 1 com 5000 LP', () => {
     const e = novo()
     for (const id of ['humano', 'oponente'] as const) {
       const j = e.jogadores[id]
       expect(j.mao).toHaveLength(5)
-      expect(j.baralho).toHaveLength(35)
-      expect(j.lp).toBe(8000)
+      expect(j.baralho).toHaveLength(25)
+      expect(j.lp).toBe(5000)
       expect(j.campo).toHaveLength(5)
       expect(j.suporte).toHaveLength(5)
       expect(j.descarte).toHaveLength(0)
@@ -39,7 +39,7 @@ describe('criarDuelo', () => {
   it('o primeiro jogador não compra carta extra no turno 1', () => {
     const e = novo()
     expect(e.jogadores.humano.mao).toHaveLength(5)
-    expect(e.jogadores.humano.baralho).toHaveLength(35)
+    expect(e.jogadores.humano.baralho).toHaveLength(25)
     // eventos de compra do turno 1 são só as mãos iniciais
     const compras = e.log.filter((x) => x.tipo === 'compra')
     expect(compras).toHaveLength(2)
@@ -57,8 +57,12 @@ describe('criarDuelo', () => {
     const r = criarDuelo({ baralhoJogador: BARALHO_INICIAL, baralhoOponente: OPP, seed: 0, rng: () => ((i++ * 0.37) % 1) })
     expect(r.ok).toBe(true)
     if (r.ok) {
-      const ids = [...r.estado.jogadores.humano.mao, ...r.estado.jogadores.humano.baralho].map((c) => c.cartaId).sort()
-      expect(ids).toEqual([...BARALHO_INICIAL].sort())
+      const ids = [...r.estado.jogadores.humano.mao, ...r.estado.jogadores.humano.baralho].map((c) => c.cartaId)
+      expect(ids).toHaveLength(30) // só 30 das 40 entram no duelo
+      const sobra = new Map<string, number>()
+      for (const id of BARALHO_INICIAL) sobra.set(id, (sobra.get(id) ?? 0) + 1)
+      for (const id of ids) sobra.set(id, (sobra.get(id) ?? 0) - 1)
+      expect([...sobra.values()].every((n) => n >= 0)).toBe(true)
     }
   })
 
@@ -88,7 +92,7 @@ describe('turnos, reposição da mão e derrota por compra incompleta', () => {
     expect(e.ativo).toBe('oponente')
     expect(e.turno).toBe(2)
     expect(e.jogadores.oponente.mao).toHaveLength(5) // não precisava comprar
-    expect(e.jogadores.oponente.baralho).toHaveLength(35)
+    expect(e.jogadores.oponente.baralho).toHaveLength(25)
   })
 
   it('a compra aumenta a mão de 4 para 5 e reduz o baralho em 1', () => {
@@ -223,7 +227,7 @@ describe('fim de partida', () => {
       tamanhos.push(e.jogadores[j].baralho.length)
     }
     expect(e.resultado).toBeNull()
-    expect(totalCartas(e, 'humano')).toBe(40)
+    expect(totalCartas(e, 'humano')).toBe(30)
     expect(Math.max(...Object.values(e.repeticoes))).toBe(1)
   })
 })

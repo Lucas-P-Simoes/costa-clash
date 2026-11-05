@@ -8,6 +8,7 @@ export {
   alvosAtaqueLegais,
   atacantesDisponiveis,
   simularAtaque,
+  validarDescartar,
   validarJogarCarta,
 } from './acoes'
 export type {

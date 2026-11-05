@@ -50,10 +50,14 @@ describe('QA 6 - invariantes, determinismo, JSON, imutabilidade', () => {
     const ia1 = simularIAxIA(BARALHO_INICIAL, BARALHOS_OPONENTES['ressaca']!, 9)
     const ia2 = simularIAxIA(BARALHO_INICIAL, BARALHOS_OPONENTES['ressaca']!, 9)
     expect(JSON.stringify(ia1.estado)).toBe(JSON.stringify(ia2.estado))
-    // o embaralhamento é uma permutação: 40 cartas, mesmas contagens
-    const ids = [...a.jogadores.humano.mao, ...a.jogadores.humano.baralho].map((c) => c.cartaId).sort()
-    expect(ids).toEqual([...BARALHO_INICIAL].sort())
-    expect(new Set([...a.jogadores.humano.mao, ...a.jogadores.humano.baralho].map((c) => c.uid)).size).toBe(40)
+    // 30 das 40 cartas entram no duelo: subconjunto do baralho, sem uids repetidos
+    const ids = [...a.jogadores.humano.mao, ...a.jogadores.humano.baralho].map((c) => c.cartaId)
+    expect(ids).toHaveLength(30)
+    const disponiveis = new Map<string, number>()
+    for (const id of BARALHO_INICIAL) disponiveis.set(id, (disponiveis.get(id) ?? 0) + 1)
+    for (const id of ids) disponiveis.set(id, (disponiveis.get(id) ?? 0) - 1)
+    expect([...disponiveis.values()].every((n) => n >= 0)).toBe(true)
+    expect(new Set([...a.jogadores.humano.mao, ...a.jogadores.humano.baralho].map((c) => c.uid)).size).toBe(30)
   })
 
   it('estado é JSON puro: round-trip idêntico e a partida continua igual a partir da cópia', () => {
@@ -73,7 +77,7 @@ describe('QA 6 - invariantes, determinismo, JSON, imutabilidade', () => {
     expect(e.resultado).not.toBeNull()
   })
 
-  it('conservação (40 por jogador), zonas <=5, uids únicos e entrada imutável durante partidas inteiras', () => {
+  it('conservação (30 por jogador), zonas <=5, uids únicos e entrada imutável durante partidas inteiras', () => {
     for (let seed = 1; seed <= 12; seed++) {
       let e = duelo(seed, BARALHO_INICIAL, BARALHOS_OPONENTES[Object.keys(BARALHOS_OPONENTES)[seed % 16]!]!)
       while (!e.resultado) {
@@ -81,8 +85,8 @@ describe('QA 6 - invariantes, determinismo, JSON, imutabilidade', () => {
         const r = executarTurnoIA(e)
         expect(JSON.stringify(e)).toBe(antes)
         if (!r.ok) throw new Error(r.erro)
-        expect(totalCartas(r.estado, 'humano')).toBe(40)
-        expect(totalCartas(r.estado, 'oponente')).toBe(40)
+        expect(totalCartas(r.estado, 'humano')).toBe(30)
+        expect(totalCartas(r.estado, 'oponente')).toBe(30)
         expect(invariantes(r.estado)).toEqual([])
         e = r.estado
       }
@@ -179,7 +183,7 @@ describe('QA 8 - IA', () => {
   const ia = (e: EstadoDuelo, quem = e.ativo) => decidirComando(visaoParaJogador(e, quem))
 
   it('sem jogada legal: descarta (carta de menor utilidade) e depois encerra o turno sem travar', () => {
-    const e = cenario({ turno: 4, ativo: 'oponente', oponente: { mao: ['CC-073', 'CC-075', 'CC-001'], campo: ['CC-002', 'CC-002', 'CC-002', 'CC-002', 'CC-002'] } })
+    const e = cenario({ turno: 4, ativo: 'oponente', oponente: { mao: ['CC-073', 'CC-075', 'CC-001'], campo: ['CC-002', 'CC-002', 'CC-002', 'CC-002', 'CC-002'].map((id) => ({ id, atacou: true })) } })
     expect(jogadasLegais(e).every((c) => c.tipo === 'descartar')).toBe(true)
     const r = executarTurnoIA(e)
     expect(r.ok && r.estado.turno === 5).toBe(true)
@@ -190,13 +194,13 @@ describe('QA 8 - IA', () => {
     }
   })
 
-  it('não ataca em suicídio: ATK menor, empate de destruição, ou contra DEF maior/igual; ataca quando vence', () => {
+  it('não ataca em suicídio (ATK menor ou DEF maior/igual); aceita troca equivalente e ataca quando vence', () => {
     const caso = (atkId: string, alvoId: string, pos: 'ATAQUE' | 'DEFESA') =>
       cenarioCombate({ turno: 4, ativo: 'oponente', oponente: { campo: [atkId] }, humano: { campo: [{ id: alvoId, pos }] } })
     expect(ia(caso('CC-033', 'CC-043', 'ATAQUE')).tipo).toBe('encerrarTurno') // 1800 x 2000
-    expect(ia(caso('CC-043', 'CC-027', 'ATAQUE')).tipo).toBe('encerrarTurno') // empate
-    expect(ia(caso('CC-033', 'CC-001', 'DEFESA')).tipo).toBe('encerrarTurno') // 1800 x DEF 2000
-    expect(ia(caso('CC-033', 'CC-013', 'DEFESA')).tipo).toBe('encerrarTurno') // 1800 x DEF 1800
+    expect(ia(caso('CC-043', 'CC-027', 'ATAQUE')).tipo).toBe('atacar') // empate de destruição: troca equivalente aceita (IA agressiva)
+    expect(ia(caso('CC-033', 'CC-001', 'DEFESA')).tipo).toBe('atacar') // 1800 x DEF 2000: só 200 de dano próprio, dentro do limiar agressivo da IA
+    expect(ia(caso('CC-033', 'CC-013', 'DEFESA')).tipo).toBe('atacar') // 1800 x DEF 1800: nada acontece, sem risco (IA agressiva ataca)
     expect(ia(caso('CC-043', 'CC-033', 'ATAQUE'))).toMatchObject({ tipo: 'atacar', atacante: 0, alvo: 0 })
     expect(ia(caso('CC-043', 'CC-033', 'DEFESA'))).toMatchObject({ tipo: 'atacar' })
     expect(ia(cenarioCombate({ turno: 4, ativo: 'oponente', oponente: { campo: ['CC-043'] } }))).toMatchObject({ tipo: 'atacar', alvo: 'direto' })

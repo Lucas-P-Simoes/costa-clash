@@ -8,6 +8,7 @@ import type { CartaInstancia, Ctx, Evento, EstadoDuelo } from './estado'
 import { decidirComando } from './ia'
 import { criarRng, embaralhar } from './rng'
 import type { Rng } from './rng'
+import { CARTAS_NO_DUELO } from './tipos'
 import type { Carta } from './tipos'
 import { visaoParaJogador } from './visao'
 
@@ -28,6 +29,7 @@ export type ResultadoCriarDuelo = { ok: true; estado: EstadoDuelo; eventos: Even
 /**
  * Valida os dois baralhos, embaralha (humano primeiro, depois oponente, mesmo RNG), compra a mão inicial de 5
  * para ambos e abre o turno 1 do humano (que não compra extra). O estado devolvido está na fase PRINCIPAL.
+ * Só 30 cartas por lado entram no duelo (as 30 primeiras após embaralhar).
  * uids: `h1..h40` (humano) e `o1..o40` (oponente), pela posição original no baralho informado.
  */
 export function criarDuelo(op: OpcoesDuelo): ResultadoCriarDuelo {
@@ -44,8 +46,9 @@ export function criarDuelo(op: OpcoesDuelo): ResultadoCriarDuelo {
 
   const rng = op.rng ?? criarRng(op.seed)
   const instancias = (prefixo: string, ids: readonly string[]): CartaInstancia[] => ids.map((cartaId, i) => ({ uid: `${prefixo}${i + 1}`, cartaId }))
-  const h = embaralhar(instancias('h', op.baralhoJogador), rng)
-  const o = embaralhar(instancias('o', op.baralhoOponente), rng)
+  // Baralhos de 40 são embaralhados e só as 30 primeiras entram no duelo (as demais ficam de fora).
+  const h = embaralhar(instancias('h', op.baralhoJogador), rng).slice(0, CARTAS_NO_DUELO)
+  const o = embaralhar(instancias('o', op.baralhoOponente), rng).slice(0, CARTAS_NO_DUELO)
   const e = criarEstadoInicial(h, o)
   const ctx: Ctx = { e, ev: [], cat: mapaCatalogo(catalogo) }
   emitir(ctx, { tipo: 'compra', jogador: 'humano', cartas: e.jogadores.humano.mao.map((c) => ({ ...c })) }, 'Você compra a mão inicial de 5 cartas.')

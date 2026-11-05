@@ -37,12 +37,9 @@ function vence(atk: number, inim: Inimigo[]): boolean {
   return inim.length === 0 || inim.some((t) => !t.oculta && atk > (t.posicao === 'ATAQUE' ? (t.atk as number) : (t.def as number)))
 }
 
-/** "Vantagem atual": vence algum combate e não é mais fraca que nenhum atacante inimigo. */
+/** Postura agressiva: basta vencer ao menos um combate (ou não haver unidades inimigas) para ficar em ataque. */
 function temVantagem(atk: number, inim: Inimigo[]): boolean {
-  return (
-    inim.length === 0 ||
-    (vence(atk, inim) && inim.filter((t) => t.posicao === 'ATAQUE').every((t) => !t.oculta && atk >= (t.atk as number)))
-  )
+  return vence(atk, inim)
 }
 
 function contarGrupo(e: EstadoDuelo, dono: IdJogador, grupo: string, cat: Catalogo): number {
@@ -166,6 +163,8 @@ function ajustarPosicao(e: EstadoDuelo, cat: Catalogo, eu: IdJogador): Comando |
 
 export interface PesosAtaqueIA {
   vitoriaImediata: number
+  /** Pontuação mínima para atacar: negativa = aceita trocas ligeiramente desfavoráveis (IA agressiva). */
+  limiarAtaque: number
   danoCausado: number
   danoSofrido: number
   unidadeInimigaDestruida: number
@@ -180,13 +179,14 @@ export interface PesosAtaqueIA {
 /** Pesos ficam concentrados e podem ser substituídos em testes/níveis futuros. */
 export const PESOS_ATAQUE_IA: Readonly<PesosAtaqueIA> = {
   vitoriaImediata: 1_000_000,
-  danoCausado: 2,
-  danoSofrido: 3,
+  limiarAtaque: -1_000,
+  danoCausado: 4,
+  danoSofrido: 2,
   unidadeInimigaDestruida: 3_000,
   ameacaRemovida: 10,
-  unidadePropriaPerdida: 8_000,
-  valorAtacantePerdido: 5,
-  riscoAlvoOculto: 250,
+  unidadePropriaPerdida: 3_000,
+  valorAtacantePerdido: 1,
+  riscoAlvoOculto: 40,
   fatorFuturo: 0.9,
   profundidadeMaxima: 3,
 }
@@ -316,14 +316,14 @@ function planejarAtaques(
   return melhor
 }
 
-/** Escolhe a primeira ação da melhor sequência limitada; null significa preservar o campo. */
+/** Escolhe a primeira ação da melhor sequência limitada; null significa preservar o campo (nada atinge o limiar). */
 export function escolherMelhorAtaque(
   estado: EstadoDuelo,
   catalogo: readonly Carta[] = CATALOGO,
   pesos: Readonly<PesosAtaqueIA> = PESOS_ATAQUE_IA,
 ): ComandoAtacar | null {
   const plano = planejarAtaques(estado, catalogo, mapaCatalogo(catalogo), pesos, Math.max(1, Math.floor(pesos.profundidadeMaxima)))
-  return plano && plano.score > 0 ? plano.primeiro : null
+  return plano && plano.score > pesos.limiarAtaque ? plano.primeiro : null
 }
 
 /** Próximo comando da IA para a visão dada (a perspectiva deve ser o jogador ativo). */

@@ -1,6 +1,6 @@
 // Tipos do estado do duelo e utilitários internos. Tudo aqui é serializável em JSON e sem React/DOM.
 import { CATALOGO } from '../data/catalogo'
-import { TAMANHO_MAO, VIDA_INICIAL, ZONAS_SUPORTE, ZONAS_UNIDADE } from './tipos'
+import { CARTAS_NO_DUELO, TAMANHO_MAO, VIDA_INICIAL, ZONAS_SUPORTE, ZONAS_UNIDADE } from './tipos'
 import type { Carta } from './tipos'
 
 export type IdJogador = 'humano' | 'oponente'
@@ -92,6 +92,8 @@ export type DadosEvento =
       alvo?: { jogador: IdJogador; zona: number }
     }
   | { tipo: 'descarte_forcado'; jogador: IdJogador; carta: CartaInstancia }
+  /** Descarte voluntário (lixeira): a mão é reposta até 5 no início do próximo turno do jogador. */
+  | { tipo: 'descarte_livre'; jogador: IdJogador; carta: CartaInstancia }
   | { tipo: 'posicao_alterada'; jogador: IdJogador; zona: number; posicao: Posicao; viradaParaBaixo?: boolean }
   | { tipo: 'unidade_revelada'; jogador: IdJogador; zona: number; carta: CartaInstancia }
   | {
@@ -302,7 +304,7 @@ export function assinatura(e: EstadoDuelo): string {
   return [e.ativo, e.terreno?.cartaId ?? '-', jog(e.jogadores.humano), jog(e.jogadores.oponente)].join('#')
 }
 
-/** Cartas totais de um jogador (baralho+mão+campo+suporte+descarte+terreno próprio): deve ser constante (40). */
+/** Cartas totais de um jogador (baralho+mão+campo+suporte+descarte+terreno próprio): deve ser constante (30 no duelo). */
 export function totalCartas(e: EstadoDuelo, jogador: IdJogador): number {
   const j = e.jogadores[jogador]
   return (
@@ -316,7 +318,7 @@ export function totalCartas(e: EstadoDuelo, jogador: IdJogador): number {
 }
 
 /** Verifica invariantes estruturais; devolve a lista de violações (vazia = estado consistente). */
-export function invariantes(e: EstadoDuelo, totalEsperado = 40): string[] {
+export function invariantes(e: EstadoDuelo, totalEsperado = CARTAS_NO_DUELO): string[] {
   const erros: string[] = []
   for (const id of ['humano', 'oponente'] as const) {
     const j = e.jogadores[id]

@@ -2426,3 +2426,16 @@ button.carta {
 .carta__def {
   font-size: min(var(--fs-atk), 16.5cqw);
 }
+
+/* lixeira (no lugar da dica educativa) */
+.duelo-lixeira__contagem { min-width: 2ch; padding: 0 0.4rem; text-align: center; font-size: 1.05rem; color: var(--cc-ouro); border: 0.125rem solid #11566c; background: #050d15; }
+.duelo-lixeira__zona { display: flex; flex: 1 1 auto; flex-direction: column; align-items: center; justify-content: center; gap: 0.3rem; min-height: 4rem; padding: 0.4rem; border: 0.15rem dashed #2f7389; background: rgba(4, 16, 27, 0.6); text-align: center; font-size: 0.85rem; line-height: 1.25; }
+.duelo-lixeira__zona p { margin: 0; }
+.duelo-lixeira__zona small { color: #8eb4c2; font-size: max(var(--fs-min), 0.75rem); }
+.duelo-lixeira__grande { width: 2.2rem; height: auto; opacity: 0.85; }
+.duelo-lixeira__zona.zona--drop { border-color: #f2c24a; background: rgba(60, 40, 6, 0.55); }
+.duelo-lixeira__zona.zona--sobre { border-style: solid; border-color: #ff6a70; background: rgba(90, 14, 20, 0.6); box-shadow: 0 0 0.9rem rgba(255, 74, 80, 0.55); }
+.duelo-lixeira__botao { flex: none; margin-top: 0.3rem; min-height: 44px; padding: 0.3rem 0.6rem; border: 0.12rem solid #2f7389; background: #06111a; color: #d9f3fb; font: inherit; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; cursor: pointer; }
+.duelo-lixeira__botao[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
+.duelo-lixeira__botao:not([aria-disabled="true"]):hover { border-color: #f2c24a; }
+.duelo-lixeira__botao:focus-visible { outline: 0.18rem solid #fff; outline-offset: 0.15rem; }

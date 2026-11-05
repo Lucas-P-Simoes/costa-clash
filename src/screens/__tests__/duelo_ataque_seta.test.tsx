@@ -50,7 +50,7 @@ describe('ataque por seta', () => {
     expect(alvo.closest('.zona')?.className).toContain('duelo-alvo-ataque--sobre')
     soltar()
     expect(document.querySelector('.duelo-seta-ataque')).toBeNull()
-    expect(screen.getByLabelText('Vida do oponente: 7600')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 4600')).toBeTruthy()
   })
 
   it('soltar fora de alvo cancela sem alterar vida/campo; Escape também cancela', () => {
@@ -60,26 +60,26 @@ describe('ataque por seta', () => {
     iniciar(atacante)
     mover()
     soltar()
-    expect(screen.getByLabelText('Vida do oponente: 8000')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 5000')).toBeTruthy()
     expect(document.querySelector('.duelo-aviso')?.textContent).toContain('Ataque cancelado')
     expect(screen.getByText('Fase: Principal')).toBeTruthy()
     iniciar(atacante)
     expect(document.querySelector('.duelo-seta-ataque')).toBeTruthy()
     fireEvent.keyDown(window, { key: 'Escape' })
     expect(document.querySelector('.duelo-seta-ataque')).toBeNull()
-    expect(screen.getByLabelText('Vida do oponente: 8000')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 5000')).toBeTruthy()
   })
 
   it('funciona por toque e permite direcionar aos pontos de vida quando o ataque direto é legal', () => {
     montar({ jogadaFeita: true, humano: { campo: ['CC-003'] } })
     const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })
-    const vida = screen.getByLabelText('Vida do oponente: 8000')
+    const vida = screen.getByLabelText('Vida do oponente: 5000')
     apontarPara(vida)
     iniciar(atacante, 'touch')
     mover('touch')
     expect(vida.className).toContain('duelo-vida--alvo-ataque')
     soltar('touch')
-    expect(screen.getByLabelText('Vida do oponente: 6400')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 3400')).toBeTruthy()
   })
 
   it('não inicia fora do turno, em defesa ou com unidade que já atacou', () => {
@@ -127,6 +127,6 @@ describe('ataque por seta', () => {
 
     // Encerrar o turno já consumiu a vez humana. Um pointerup atrasado não pode
     // restaurar a fotografia anterior nem executar um ataque daquele turno.
-    expect(screen.getByLabelText(/Vida do oponente:/).getAttribute('aria-label')).toBe('Vida do oponente: 8000')
+    expect(screen.getByLabelText(/Vida do oponente:/).getAttribute('aria-label')).toBe('Vida do oponente: 5000')
   })
 })

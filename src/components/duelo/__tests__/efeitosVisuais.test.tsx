@@ -44,9 +44,9 @@ describe('derivarEfeitos (função pura)', () => {
 
   it('dano e cura somam por lado; destruição guarda lado, zona e carta; turno iniciado marca a troca', () => {
     const r = derivarEfeitos([
-      ev({ tipo: 'dano', jogador: 'oponente', valor: 300, lp: 7700 }),
-      ev({ tipo: 'dano', jogador: 'oponente', valor: 200, lp: 7500 }),
-      ev({ tipo: 'cura', jogador: 'humano', valor: 500, lp: 8000 }),
+      ev({ tipo: 'dano', jogador: 'oponente', valor: 300, lp: 4700 }),
+      ev({ tipo: 'dano', jogador: 'oponente', valor: 200, lp: 4500 }),
+      ev({ tipo: 'cura', jogador: 'humano', valor: 500, lp: 5000 }),
       ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 4, carta: { uid: 'u', cartaId: 'CC-003' } }),
       ev({ tipo: 'turno_iniciado', jogador: 'humano' }),
     ])
@@ -74,7 +74,7 @@ describe('fantasma herda a posição', () => {
 
 describe('useEfeitosVisuais', () => {
   const novoLog = (n: number): Evento[] => Array.from({ length: n }, () => ev({ tipo: 'fase_alterada', jogador: 'humano', fase: 'PRINCIPAL' }))
-  const dano = ev({ tipo: 'dano', jogador: 'humano', valor: 100, lp: 7900 })
+  const dano = ev({ tipo: 'dano', jogador: 'humano', valor: 100, lp: 4900 })
 
   it('eventos já existentes na montagem não geram efeito; novos geram e expiram sozinhos por timer', () => {
     const { result, rerender } = renderHook(({ log }) => useEfeitosVisuais(log), { initialProps: { log: [dano] as Evento[] } })

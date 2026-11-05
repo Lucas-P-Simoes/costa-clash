@@ -53,7 +53,7 @@ describe('Toque: pressão longa arma o arrasto', () => {
       vi.advanceTimersByTime(250)
     })
     expect(fantasma()).not.toBeNull()
-    expect(document.querySelectorAll('.zona--drop')).toHaveLength(5)
+    expect(document.querySelectorAll('.zona--drop')).toHaveLength(6) // 5 zonas livres + lixeira
     expect(vibrar).toHaveBeenCalledTimes(1)
     fireEvent.pointerMove(window, { ...T, clientX: 140, clientY: 400 })
     fireEvent.pointerUp(window, { ...T, clientX: 140, clientY: 400 })
@@ -118,15 +118,15 @@ describe('Toque: pressão longa arma o arrasto', () => {
     expect(fantasma()).toBeNull()
   })
 
-  it('bloqueado (jogada da mão já feita): a pressão longa mostra o motivo e não arma', () => {
+  it('jogada da mão já feita: a pressão longa arma o arrasto (só a lixeira vale)', () => {
     vi.useFakeTimers()
     montar({ jogadaFeita: true })
     fireEvent.pointerDown(mao(1), { ...T, clientX: 100, clientY: 500 })
     act(() => {
       vi.advanceTimersByTime(250)
     })
-    expect(fantasma()).toBeNull()
-    expect(document.querySelector('.duelo-aviso')!.textContent).toBe('Você já fez a jogada da mão neste turno.')
+    expect(fantasma()).not.toBeNull()
+    expect(document.querySelectorAll('.zona--drop')).toHaveLength(1)
   })
 
   it('touchmove só é cancelado (impede rolagem) enquanto o arrasto está ativo', () => {

@@ -13,8 +13,8 @@ const cat = mapaCatalogo(CATALOGO)
 describe('ATK x ATK', () => {
   it('maior ATK destrói a menor e o perdedor recebe a diferença em LP', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'] } }), 0, 0))
-    expect(e.jogadores.oponente.lp).toBe(8000 - 400)
-    expect(e.jogadores.humano.lp).toBe(8000)
+    expect(e.jogadores.oponente.lp).toBe(5000 - 400)
+    expect(e.jogadores.humano.lp).toBe(5000)
     expect(e.jogadores.oponente.campo[0]).toBeNull()
     expect(e.jogadores.oponente.descarte.map((c) => c.cartaId)).toEqual(['CC-001'])
     expect(e.jogadores.humano.campo[0]?.cartaId).toBe('CC-003')
@@ -24,8 +24,8 @@ describe('ATK x ATK', () => {
 
   it('atacante com ATK menor é destruído e perde a diferença', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-001'] }, oponente: { campo: ['CC-003'] } }), 0, 0))
-    expect(e.jogadores.humano.lp).toBe(8000 - 400)
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.humano.lp).toBe(5000 - 400)
+    expect(e.jogadores.oponente.lp).toBe(5000)
     expect(e.jogadores.humano.campo[0]).toBeNull()
     expect(e.jogadores.humano.descarte.map((c) => c.cartaId)).toEqual(['CC-001'])
     expect(e.jogadores.oponente.campo[0]?.cartaId).toBe('CC-003')
@@ -38,7 +38,7 @@ describe('ATK x ATK', () => {
       0,
     )
     if (!r.ok) throw new Error(r.erro)
-    expect(r.estado.jogadores.humano.lp).toBe(7000) // 2200 - 1200
+    expect(r.estado.jogadores.humano.lp).toBe(4000) // 2200 - 1200
     expect(r.estado.jogadores.humano.campo[0]).toBeNull()
     expect(r.estado.jogadores.oponente.campo[0]).toMatchObject({ cartaId: 'CC-056', viradaParaBaixo: false })
     expect(r.eventos.map((e) => e.tipo)).toEqual([
@@ -107,8 +107,8 @@ describe('ATK x ATK', () => {
 
   it('empate destrói as duas unidades sem dano', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-003'] } }), 0, 0))
-    expect(e.jogadores.humano.lp).toBe(8000)
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.humano.lp).toBe(5000)
+    expect(e.jogadores.oponente.lp).toBe(5000)
     expect(e.jogadores.humano.campo[0]).toBeNull()
     expect(e.jogadores.oponente.campo[0]).toBeNull()
     expect(e.jogadores.humano.descarte).toHaveLength(1)
@@ -131,15 +131,15 @@ describe('ATK x DEF', () => {
   it('ATK maior que DEF destrói sem dano de LP (e sem transbordar)', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-003'] }, oponente: { campo: [{ id: 'CC-047', pos: 'DEFESA' }] } }), 0, 0))
     expect(e.jogadores.oponente.campo[0]).toBeNull()
-    expect(e.jogadores.oponente.lp).toBe(8000) // 1600 - 900 NÃO transborda
-    expect(e.jogadores.humano.lp).toBe(8000)
+    expect(e.jogadores.oponente.lp).toBe(5000) // 1600 - 900 NÃO transborda
+    expect(e.jogadores.humano.lp).toBe(5000)
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
   })
 
   it('ATK menor que DEF causa dano ao atacante igual à diferença e não destrói ninguém', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-001'] }, oponente: { campo: [{ id: 'CC-004', pos: 'DEFESA' }] } }), 0, 0))
-    expect(e.jogadores.humano.lp).toBe(8000 - 800)
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.humano.lp).toBe(5000 - 800)
+    expect(e.jogadores.oponente.lp).toBe(5000)
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
   })
@@ -152,14 +152,14 @@ describe('ATK x DEF', () => {
         0,
       ),
     )
-    expect(e.jogadores.humano.lp).toBe(7200)
+    expect(e.jogadores.humano.lp).toBe(4200)
     expect(e.jogadores.oponente.campo[0]).toMatchObject({ cartaId: 'CC-004', posicao: 'DEFESA', viradaParaBaixo: false })
   })
 
   it('empate de ATK e DEF: nada acontece (mas a unidade conta como tendo atacado)', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-007'] }, oponente: { campo: [{ id: 'CC-009', pos: 'DEFESA' }] } }), 0, 0))
-    expect(e.jogadores.humano.lp).toBe(8000)
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.humano.lp).toBe(5000)
+    expect(e.jogadores.oponente.lp).toBe(5000)
     expect(e.jogadores.humano.campo[0]?.atacou).toBe(true)
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
   })
@@ -168,7 +168,7 @@ describe('ATK x DEF', () => {
 describe('ataque direto, LP e vitória', () => {
   it('sem unidades adversárias, ataque direto subtrai o ATK efetivo dos LP', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-003'] } }), 0, 'direto'))
-    expect(e.jogadores.oponente.lp).toBe(6400)
+    expect(e.jogadores.oponente.lp).toBe(3400)
     expect(e.jogadores.humano.campo[0]?.atacou).toBe(true)
   })
 
@@ -263,7 +263,7 @@ describe('atributos efetivos e clamping', () => {
 
   it('ataque com ATK efetivo 0 não causa dano', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: [{ id: 'CC-013', buffAtk: -1000 }] } }), 0, 'direto'))
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.oponente.lp).toBe(5000)
   })
 
   it('buffs que somam acima/abaixo são limitados só no cálculo (um buff posterior compensa o debuff)', () => {
@@ -277,7 +277,7 @@ describe('atributos efetivos e clamping', () => {
     // Terreno: Manguezal (+300 ecossistema): CC-001 (1200) vira 1500; CC-005 (1500) vira 1800
     const e = ok(atacar(cenarioCombate({ terreno: { id: 'CC-089', dono: 'oponente' }, humano: { campo: ['CC-001'] }, oponente: { campo: ['CC-005'] } }), 0, 0))
     // 1500 x 1800: humano perde 300 e a unidade
-    expect(e.jogadores.humano.lp).toBe(7700)
+    expect(e.jogadores.humano.lp).toBe(4700)
     expect(e.jogadores.humano.campo[0]).toBeNull()
   })
 })

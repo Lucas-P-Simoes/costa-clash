@@ -4,6 +4,7 @@ import { aplicarComando } from '../acoes'
 import type { Comando, ResultadoComando } from '../acoes'
 import { criarEstadoInicial, mapaCatalogo } from '../estado'
 import type { CartaInstancia, EstadoDuelo, Fase, IdJogador, Posicao, SuporteEmZona, UnidadeEmCampo } from '../estado'
+import { CARTAS_NO_DUELO } from '../tipos'
 
 const cat = mapaCatalogo(CATALOGO)
 
@@ -17,7 +18,7 @@ export interface ConfigJogador {
   campo?: (CampoCfg | null)[]
   suporte?: (SuporteCfg | null)[]
   descarte?: string[]
-  /** Tamanho do baralho; padrão = completa até 40 cartas no total (cartas de enchimento CC-013). */
+  /** Tamanho do baralho; padrão = completa até 30 cartas no total (cartas de enchimento CC-013). */
   baralho?: number
 }
 
@@ -42,7 +43,7 @@ export function cenario(cfg: ConfigCenario = {}): EstadoDuelo {
   const montar = (id: IdJogador, c: ConfigJogador = {}) => {
     const p = id === 'humano' ? 'h' : 'o'
     const j = base.jogadores[id]
-    j.lp = c.lp ?? 8000
+    j.lp = c.lp ?? 5000
     j.mao = (c.mao ?? []).map((cid) => nova(p, cid))
     j.campo = [null, null, null, null, null]
     j.suporte = [null, null, null, null, null]
@@ -78,7 +79,7 @@ export function cenario(cfg: ConfigCenario = {}): EstadoDuelo {
     })
     j.descarte = (c.descarte ?? []).map((cid) => nova(p, cid))
     const usadas = j.mao.length + j.campo.filter(Boolean).length + j.suporte.filter(Boolean).length + j.descarte.length
-    const tamanho = c.baralho ?? Math.max(0, 40 - usadas)
+    const tamanho = c.baralho ?? Math.max(0, CARTAS_NO_DUELO - usadas)
     j.baralho = Array.from({ length: tamanho }, () => nova(p, ENCHIMENTO))
   }
   montar('humano', cfg.humano)

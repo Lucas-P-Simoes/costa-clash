@@ -4,11 +4,11 @@ import { BannerTurno } from '../../components/duelo/BannerTurno'
 import { BotaoAcao } from '../../components/duelo/BotaoAcao'
 import { CabecalhoDuelo } from '../../components/duelo/CabecalhoDuelo'
 import { CartaVerso, CartaView } from '../../components/duelo/CartaView'
-import { DicaEducativa } from '../../components/duelo/DicaEducativa'
 import { FaixaTerreno } from '../../components/duelo/FaixaTerreno'
 import { IconeEscudo, IconeRelogioPixel } from '../../components/duelo/iconesDuelo'
 import { InspecaoCarta } from '../../components/duelo/InspecaoCarta'
 import type { FonteInspecao } from '../../components/duelo/InspecaoCarta'
+import { Lixeira } from '../../components/duelo/Lixeira'
 import { PainelJogador } from '../../components/duelo/PainelJogador'
 import { SetaAtaque } from '../../components/duelo/SetaAtaque'
 import { chaveZona, useEfeitosVisuais } from '../../components/duelo/efeitosVisuais'
@@ -30,6 +30,7 @@ import {
   jogadasLegais,
   logPublico,
   mapaCatalogo,
+  validarDescartar,
   validarJogarCarta,
   visaoParaJogador,
 } from '../../game'
@@ -168,7 +169,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const [avisoBruto, setAviso] = useState<Aviso | null>(null)
   const [confirma, setConfirma] = useState(false)
   const [colocacaoPendente, setColocacaoPendente] = useState<ComandoJogarCarta | null>(null)
-  const [foco, setFoco] = useState<string | null>(null)
+  const [, setFoco] = useState<string | null>(null)
   const [gatilhosInspecao, setGatilhosInspecao] = useState<GatilhosInspecao>(SEM_GATILHOS_INSPECAO)
   const [setaHumana, setSetaHumana] = useState<SetaVisual | null>(null)
   const [setaIA, setSetaIA] = useState<SetaVisual | null>(null)
@@ -503,8 +504,16 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     }
   }
 
+  /** Motivo pelo qual a carta não pode ir para a lixeira agora (null = pode). */
+  function motivoDescartarLivre(uid: string | undefined): string | null {
+    if (!minhaVez) return 'Aguarde a sua vez.'
+    if (!uid) return 'Selecione uma carta da mão.'
+    return validarDescartar(estado, { tipo: 'descartar', jogador: 'humano', uid })
+  }
+
   function descartar() {
-    if (!sel.mao) return dizer('Selecione a carta a descartar.', true)
+    const motivo = motivoDescartarLivre(sel.mao)
+    if (motivo || !sel.mao) return dizer(motivo ?? 'Selecione a carta a descartar.', true)
     enviar({ tipo: 'descartar', jogador: 'humano', uid: sel.mao })
   }
 
@@ -657,6 +666,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   function bloqueioArrasto(uid: string): string | null {
     if (baixaPaisagem()) return 'Arrastar não está disponível nesta tela baixa: selecione a carta e use USAR CARTA.'
     if (!minhaVez) return 'Aguarde a sua vez.'
+    // Mesmo sem jogada possível a carta pode ser arrastada: a lixeira sempre aceita descartes na fase principal.
+    if (motivoDescartarLivre(uid) === null) return null
     return motivoUsarDe(uid)
   }
 
@@ -664,6 +675,10 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   function avaliarDestino(uid: string, key: string | null): { valido: boolean; motivo: string; cmd?: Comando } {
     const c = cartaDoUid(uid)
     if (!c) return { valido: false, motivo: 'Carta indisponível.' }
+    if (key === 'lixeira') {
+      const erro = validarDescartar(estado, { tipo: 'descartar', jogador: 'humano', uid })
+      return erro ? { valido: false, motivo: erro } : { valido: true, motivo: '', cmd: { tipo: 'descartar', jogador: 'humano', uid } }
+    }
     const [tipo, lado, zStr] = (key ?? '').split(':')
     const z = Number(zStr)
     const proprio = lado === 'humano'
@@ -692,7 +707,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const s = new Set<string>()
     const c = cartaDoUid(uid)
     if (!c) return s
-    const cand: string[] = []
+    const cand: string[] = ['lixeira']
     if (c.tipo === 'unidade') [0, 1, 2, 3, 4].forEach((z) => !v.eu.campo[z] && cand.push('zona:humano:' + z))
     else if (c.tipo === 'armadilha') [0, 1, 2, 3, 4].forEach((z) => !v.eu.suporte[z] && cand.push('suporte:humano:' + z))
     else {
@@ -891,9 +906,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const alvosAtaque = atacanteAtual === undefined ? [] : ataques.filter((a) => a.atacante === atacanteAtual)
   const podeDireto = alvosAtaque.some((a) => a.alvo === 'direto')
   const setaAtiva = setaHumana ?? setaIA
-  const ultimaJogada = [...log].reverse().find((e) => e.tipo === 'carta_jogada' && e.carta.cartaId !== '?')
-  const dicaCartaId = cartaSel?.id ?? foco ?? (ultimaJogada && ultimaJogada.tipo === 'carta_jogada' ? ultimaJogada.carta.cartaId : undefined)
-  const dicaCarta = dicaCartaId ? cat.get(dicaCartaId) : undefined
   const terrenoCarta = v.terreno ? cat.get(v.terreno.cartaId) : undefined
   const conceitos = useMemo(() => {
     const vistos = new Map<string, { nome: string; texto: string }>()
@@ -1243,7 +1255,13 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               <strong aria-label={`Cartas restantes no baralho: ${v.eu.baralhoTamanho}`}>{v.eu.baralhoTamanho}</strong>
             </MolduraOrnamentada>
 
-            <DicaEducativa carta={dicaCarta} />
+            <Lixeira
+              descartadas={v.eu.descarte.length}
+              classeDrop={classeDrop('lixeira')}
+              podeDescartarSelecionada={motivoDescartarLivre(sel.mao) === null}
+              motivo={motivoDescartarLivre(sel.mao)}
+              onDescartarSelecionada={descartar}
+            />
 
             {/* Registro oculto visualmente: continua anunciado a leitores de tela (aria-live). */}
             <section className="sr-only" aria-label="Registro do duelo">

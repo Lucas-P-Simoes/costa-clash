@@ -25,7 +25,7 @@ describe('visão parcial: não vaza informação oculta', () => {
     expect(Object.keys(v.oponente).sort()).toEqual(['baralhoTamanho', 'campo', 'descarte', 'id', 'lp', 'maoTamanho', 'suporte'])
     expect(Object.keys(v.eu).sort()).toEqual(['baralhoTamanho', 'campo', 'descarte', 'id', 'lp', 'mao', 'suporte'])
     expect(v.oponente.maoTamanho).toBe(5)
-    expect(v.oponente.baralhoTamanho).toBe(35)
+    expect(v.oponente.baralhoTamanho).toBe(25)
     const json = JSON.stringify(v)
     for (const c of [...e.jogadores.humano.mao, ...e.jogadores.humano.baralho]) expect(json).not.toContain(`"${c.uid}"`)
     expect(json).not.toMatch(/"uid":"h\d+"/)
@@ -151,7 +151,7 @@ describe('escolha da jogada (§9)', () => {
   })
 
   it('cura só é "eficaz" quando recupera o valor inteiro; senão fica atrás das unidades', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-079', 'CC-013'], lp: 7900 }, humano: { campo: ['CC-056'] } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-079', 'CC-013'], lp: 4900 }, humano: { campo: ['CC-056'] } })
     expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-013') })
     const e2 = cenario({ ativo: 'oponente', oponente: { mao: ['CC-079', 'CC-013'], lp: 4000 }, humano: { campo: ['CC-056'] } })
     expect(decide(e2)).toMatchObject({ uid: uidDe(e2, 'oponente', 'CC-079') })
@@ -234,11 +234,12 @@ describe('posições e ataques (§9)', () => {
     expect(decide(e)).toMatchObject({ tipo: 'atacar', atacante: 0, alvo: 1 })
   })
 
-  it('nunca ataca unidade em defesa mais alta (dano ao próprio LP) nem empata trocando unidades', () => {
+  it('nunca ataca em suicídio (defesa mais alta, alvo mais forte); aceita a troca equivalente', () => {
     const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-001'] }, humano: { campo: [{ id: 'CC-004', pos: 'DEFESA' }] } })
     expect(decide(e)).toEqual({ tipo: 'encerrarTurno', jogador: 'oponente' })
+    // IA agressiva: aceita a troca equivalente (ambas destruídas), mas nunca o suicídio contra alvo mais forte
     const empate = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-003'] }, humano: { campo: ['CC-003'] } })
-    expect(decide(empate)).toEqual({ tipo: 'encerrarTurno', jogador: 'oponente' })
+    expect(decide(empate)).toMatchObject({ tipo: 'atacar', atacante: 0, alvo: 0 })
     const fraco = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-001'] }, humano: { campo: ['CC-003'] } })
     expect(decide(fraco)).toEqual({ tipo: 'encerrarTurno', jogador: 'oponente' })
   })
@@ -262,13 +263,13 @@ describe('posições e ataques (§9)', () => {
     expect(decide(forte)).toEqual(decide(fraca))
   })
 
-  it('pode preservar uma unidade fraca quando o único alvo tem atributos ocultos', () => {
+  it('IA agressiva: ataca mesmo um alvo oculto com uma unidade fraca', () => {
     const e = cenarioCombate({
       ativo: 'oponente',
       oponente: { campo: ['CC-013'] },
       humano: { campo: [{ id: 'CC-056', pos: 'ATAQUE', viradaParaBaixo: true }] },
     })
-    expect(decide(e)).toEqual({ tipo: 'encerrarTurno', jogador: 'oponente' })
+    expect(decide(e)).toMatchObject({ tipo: 'atacar', atacante: 0, alvo: 0 })
   })
 
   it('unidades em DEFESA ou que já atacaram não atacam', () => {
@@ -332,7 +333,7 @@ describe('executarTurnoIA', () => {
   it('o IA descarta quando não há jogada e ainda assim encerra o turno', () => {
     const e = cenario({
       ativo: 'oponente',
-      oponente: { mao: ['CC-003', 'CC-013', 'CC-001', 'CC-007', 'CC-004'], campo: ['CC-002', 'CC-004', 'CC-005', 'CC-006', 'CC-009'], baralho: 20 },
+      oponente: { mao: ['CC-003', 'CC-013', 'CC-001', 'CC-007', 'CC-004'], campo: ['CC-002', 'CC-004', 'CC-005', 'CC-006', 'CC-009'].map((id) => ({ id, atacou: true })), baralho: 20 },
       humano: { baralho: 20 },
     })
     const r = executarTurnoIA(e)

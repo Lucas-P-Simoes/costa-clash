@@ -35,7 +35,7 @@ describe('ataque_recebido: reduzir_dano (CC-093 -600, CC-094 -800)', () => {
   ])('%s reduz o dano aos LP do controlador (mín. 0) mas não impede a destruição', (id, red) => {
     // CC-007 (1700) x CC-013 (700): dano base 1000
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-007'] }, oponente: { campo: ['CC-013'], suporte: [id] } }), 0, 0))
-    expect(e.jogadores.oponente.lp).toBe(8000 - (1000 - red))
+    expect(e.jogadores.oponente.lp).toBe(5000 - (1000 - red))
     expect(e.jogadores.oponente.campo[0]).toBeNull() // destruição mantida
     expect(restantes(e, 'oponente')).toEqual([])
     expect(e.jogadores.oponente.descarte.map((c) => c.cartaId).sort()).toEqual([id, 'CC-013'].sort())
@@ -45,13 +45,13 @@ describe('ataque_recebido: reduzir_dano (CC-093 -600, CC-094 -800)', () => {
   it('dano menor que a redução vira 0 (nunca cura)', () => {
     // 1300 vs 1200: dano 100 -> reduzido a 0
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-005'] }, oponente: { campo: ['CC-001'], suporte: ['CC-094'] } }), 0, 0)) // 1500 vs 1200 = 300
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.oponente.lp).toBe(5000)
   })
 
   it('só reduz dano do controlador: se o atacante perde, ele continua levando o dano e a armadilha é consumida', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-001'] }, oponente: { campo: ['CC-003'], suporte: ['CC-093'] } }), 0, 0))
-    expect(e.jogadores.humano.lp).toBe(8000 - 400)
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.humano.lp).toBe(5000 - 400)
+    expect(e.jogadores.oponente.lp).toBe(5000)
     expect(restantes(e, 'oponente')).toEqual([])
   })
 
@@ -66,8 +66,8 @@ describe('anular_ataque (CC-099 ataque_recebido, CC-095 ataque_direto)', () => {
   it('CC-099 cancela o ataque inteiro: sem dano nem destruição, e consome o ataque da unidade', () => {
     let e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'], suporte: ['CC-099'] } }), 0, 0))
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
-    expect(e.jogadores.oponente.lp).toBe(8000)
-    expect(e.jogadores.humano.lp).toBe(8000)
+    expect(e.jogadores.oponente.lp).toBe(5000)
+    expect(e.jogadores.humano.lp).toBe(5000)
     expect(e.jogadores.humano.campo[0]?.atacou).toBe(true)
     expect(e.log.some((x) => x.tipo === 'ataque_anulado')).toBe(true)
     expect(atacar(e, 0, 0).ok).toBe(false)
@@ -79,12 +79,12 @@ describe('anular_ataque (CC-099 ataque_recebido, CC-095 ataque_direto)', () => {
   it('CC-099 também anula quando o atacante perderia a luta (a unidade dele não é destruída)', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-001'] }, oponente: { campo: ['CC-003'], suporte: ['CC-099'] } }), 0, 0))
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
-    expect(e.jogadores.humano.lp).toBe(8000)
+    expect(e.jogadores.humano.lp).toBe(5000)
   })
 
   it('CC-095 anula ataque direto', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-003'] }, oponente: { suporte: ['CC-095'] } }), 0, 'direto'))
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.oponente.lp).toBe(5000)
     expect(e.jogadores.humano.campo[0]?.atacou).toBe(true)
     expect(restantes(e, 'oponente')).toEqual([])
   })
@@ -93,9 +93,9 @@ describe('anular_ataque (CC-099 ataque_recebido, CC-095 ataque_direto)', () => {
 describe('ataque_direto: reduzir_dano (CC-096 -1000) e cura (CC-100 +500)', () => {
   it('CC-096 reduz o dano direto em 1000 (mín. 0)', () => {
     const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-003'] }, oponente: { suporte: ['CC-096'] } }), 0, 'direto'))
-    expect(e.jogadores.oponente.lp).toBe(8000 - 600)
+    expect(e.jogadores.oponente.lp).toBe(5000 - 600)
     const e2 = ok(atacar(cenarioCombate({ humano: { campo: ['CC-013'] }, oponente: { suporte: ['CC-096'] } }), 0, 'direto'))
-    expect(e2.jogadores.oponente.lp).toBe(8000) // 700 - 1000 < 0 -> 0
+    expect(e2.jogadores.oponente.lp).toBe(5000) // 700 - 1000 < 0 -> 0
   })
 
   it('CC-100 cura 500 ANTES do dano; o ataque segue normalmente', () => {
@@ -110,9 +110,9 @@ describe('ataque_direto: reduzir_dano (CC-096 -1000) e cura (CC-100 +500)', () =
     expect(e.resultado).toEqual({ vencedor: 'humano', motivo: 'lp' })
   })
 
-  it('CC-100: a cura respeita o teto de 8000 e a armadilha vira descarte', () => {
-    const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-013'] }, oponente: { lp: 7900, suporte: ['CC-100'] } }), 0, 'direto'))
-    expect(e.jogadores.oponente.lp).toBe(8000 - 700)
+  it('CC-100: a cura respeita o teto de 5000 e a armadilha vira descarte', () => {
+    const e = ok(atacar(cenarioCombate({ humano: { campo: ['CC-013'] }, oponente: { lp: 4900, suporte: ['CC-100'] } }), 0, 'direto'))
+    expect(e.jogadores.oponente.lp).toBe(5000 - 700)
     expect(e.jogadores.oponente.descarte.map((c) => c.cartaId)).toEqual(['CC-100'])
   })
 })
@@ -180,7 +180,7 @@ describe('prioridade e ordem de ativação', () => {
     const e = ok(atacar(base, 0, 0))
     expect(restantes(e, 'oponente')).toEqual(['CC-093']) // a mais nova ficou armada
     expect(e.jogadores.oponente.descarte.map((c) => c.cartaId)).toContain('CC-094')
-    expect(e.jogadores.oponente.lp).toBe(8000 - (1000 - 800)) // reduziu 800 (CC-094), não 600
+    expect(e.jogadores.oponente.lp).toBe(5000 - (1000 - 800)) // reduziu 800 (CC-094), não 600
   })
 
   it('apenas UMA armadilha por evento, mesmo com três elegíveis', () => {
@@ -246,7 +246,7 @@ describe('só ativa a partir do turno seguinte ao da colocação', () => {
     e = ok(jogar(e, 'oponente', 'CC-003', { posicao: 'ATAQUE' }))
     e = ok(aplicarComando(e, { tipo: 'avancarFase', jogador: 'oponente' }))
     e = ok(atacar(e, 0, 'direto'))
-    expect(e.jogadores.humano.lp).toBe(8000)
+    expect(e.jogadores.humano.lp).toBe(5000)
     expect(ativadas(e)).toHaveLength(1)
   })
 })

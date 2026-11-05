@@ -5,6 +5,7 @@ import { CabecalhoTela } from '../../components/ui/CabecalhoTela'
 import { GradeOponentes } from '../../components/ui/GradeOponentes'
 import { IconeCartas, IconeEspadas, IconeVoltar } from '../../components/ui/Icones'
 import { MenuEngrenagem } from '../../components/ui/MenuEngrenagem'
+import { DialogoColecao } from '../../components/ui/DialogoColecao'
 import { DialogoHistoriaOponente } from '../../components/ui/DialogoHistoriaOponente'
 import { DialogoDropsOponente } from '../../components/ui/DialogoDropsOponente'
 import { PainelOponente } from '../../components/ui/PainelOponente'
@@ -33,7 +34,7 @@ interface Props {
   onSalvarLiberados?: (ids: string[]) => void
 }
 
-type Aviso = { tipo: 'baralho'; n: number } | { tipo: 'bloqueado'; n: number; alvo: string; bloqueado: string } | null
+type Aviso = { tipo: 'bloqueado'; n: number; alvo: string; bloqueado: string } | null
 
 /** Seleção de adversário do Duelo Livre; INICIAR DUELO abre a partida contra o adversário selecionado. */
 export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteInicialId, derrotados, liberados, onSalvarLiberados }: Props) {
@@ -47,7 +48,8 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
   const [dropsAbertos, setDropsAbertos] = useState(false)
   const [historiaAberta, setHistoriaAberta] = useState(false)
   const [engrenagem, setEngrenagem] = useState(false)
-  const fundoInerte = dropsAbertos || historiaAberta
+  const [colecaoAberta, setColecaoAberta] = useState(false)
+  const fundoInerte = dropsAbertos || historiaAberta || colecaoAberta
   useAtalhoVoltar(onVoltar)
   const oponente = buscarOponente(selecionadoId) ?? OPONENTES[0]
 
@@ -65,7 +67,7 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
     return () => clearTimeout(t)
   }, [alertaAtivo])
 
-  const balaoAtivo = aviso?.tipo === 'bloqueado' && alertaAtivo === aviso.n
+  const balaoAtivo = !!aviso && alertaAtivo === aviso.n
 
   function aoClicarBloqueado(id: string) {
     // Referencia o anterior imediato; se ele também estiver bloqueado, o mais próximo antes dele que já dá para enfrentar.
@@ -85,16 +87,6 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
     } finally {
       setSaindo(false)
     }
-  }
-
-  let mensagem: string | undefined
-  if (aviso?.tipo === 'baralho') {
-    const qtd = usuario?.baralho?.length
-    mensagem = !usuario
-      ? 'Em breve — baralhos ficarão disponíveis para quem entrar com uma conta.'
-      : qtd === undefined
-        ? 'Em breve — a montagem de baralho ainda está em desenvolvimento.'
-        : `Seu baralho atual tem ${qtd} cartas. A montagem de baralho ainda está em desenvolvimento.`
   }
 
   return (
@@ -120,14 +112,13 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
           <h2 id="titulo-escolha-oponente" className="tela-duelo__chamada">
             Escolha seu adversário
           </h2>
-          <GradeOponentes oponentes={OPONENTES} selecionadoId={selecionadoId} onSelecionar={selecionar} bloqueados={bloqueados} onAbrir={(id) => !bloqueados?.has(id) && setHistoriaAberta(true)} onBloqueadoClick={aoClicarBloqueado} alertaId={balaoAtivo ? aviso.alvo : undefined} balao={balaoAtivo ? `Vença-me primeiro para liberar ${buscarOponente(aviso.bloqueado)?.nome ?? 'o próximo'}!` : undefined} />
+          <GradeOponentes oponentes={OPONENTES} selecionadoId={selecionadoId} onSelecionar={selecionar} bloqueados={bloqueados} onAbrir={(id) => !bloqueados?.has(id) && setHistoriaAberta(true)} onBloqueadoClick={aoClicarBloqueado} onBaralho={() => setColecaoAberta(true)} alertaId={balaoAtivo ? aviso.alvo : undefined} balao={balaoAtivo ? `Vença-me primeiro para liberar ${buscarOponente(aviso.bloqueado)?.nome ?? 'o próximo'}!` : undefined} />
         </section>
-        {/* A chave força nova leitura quando o mesmo aviso é pedido de novo. */}
-        <PainelOponente oponente={oponente} aviso={mensagem ? <span key={aviso?.n}>{mensagem}</span> : undefined} onVerDrops={() => setDropsAbertos(true)}>
+        <PainelOponente oponente={oponente} onVerDrops={() => setDropsAbertos(true)}>
           <BotaoRetro variante="primario" icone={<IconeEspadas />} onClick={() => onDuelo(oponente.id)}>
             Iniciar duelo
           </BotaoRetro>
-          <BotaoRetro icone={<IconeCartas />} onClick={() => setAviso((a) => ({ tipo: 'baralho', n: (a?.n ?? 0) + 1 }))}>
+          <BotaoRetro icone={<IconeCartas />} onClick={() => setColecaoAberta(true)}>
             Baralho
           </BotaoRetro>
           {onSair ? (
@@ -143,6 +134,7 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
       </main>
       <RodapeControles inert={fundoInerte} />
       {historiaAberta ? <DialogoHistoriaOponente oponente={oponente} onDuelar={() => onDuelo(oponente.id)} onFechar={() => setHistoriaAberta(false)} /> : null}
+      {colecaoAberta ? <DialogoColecao logado={!!usuario} colecao={usuario?.colecao} tamanhoBaralho={usuario?.baralho?.length} onFechar={() => setColecaoAberta(false)} /> : null}
       {dropsAbertos ? <DialogoDropsOponente oponente={oponente} colecao={usuario?.colecao} onFechar={() => setDropsAbertos(false)} /> : null}
     </div>
   )

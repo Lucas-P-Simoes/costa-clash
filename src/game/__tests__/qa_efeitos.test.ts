@@ -91,7 +91,7 @@ describe('QA 4 - ações com alvo de unidade: debuff / buff / destruir (§6)', (
     recusa(e0, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e0, 'humano', 'CC-075'), alvo: 0 })
     const e = ok(usarAcao(e0, 'humano', 'CC-075', { alvo: 1 }))
     expect(e.jogadores.oponente.campo.map((u) => u?.cartaId ?? null)).toEqual(['CC-001', null, 'CC-056', null, null])
-    expect(e.jogadores.oponente.lp).toBe(8000)
+    expect(e.jogadores.oponente.lp).toBe(5000)
     expect(e.jogadores.oponente.descarte.map((c) => c.cartaId).sort()).toEqual(['CC-047', 'CC-088'])
     expect(e.jogadores.oponente.suporte.every((s) => s === null)).toBe(true)
     expect(totalCartas(e, 'oponente')).toBe(totalCartas(e0, 'oponente'))
@@ -109,18 +109,18 @@ describe('QA 4 - cura, revelar, equipamento, terreno', () => {
   it.each([
     ['CC-079', 500],
     ['CC-080', 700],
-  ])('%s: +%i LP, máximo 8000, só jogável se LP < 8000', (id, v) => {
+  ])('%s: +%i LP, máximo 5000, só jogável se LP < 5000', (id, v) => {
     const e1 = ok(usarAcao(cenario({ turno: 3, humano: { lp: 3000, mao: [id] } }), 'humano', id))
     expect(e1.jogadores.humano.lp).toBe(3000 + v)
     expect(e1.jogadores.humano.descarte).toHaveLength(1)
-    const e2 = ok(usarAcao(cenario({ turno: 3, humano: { lp: 7900, mao: [id] } }), 'humano', id))
-    expect(e2.jogadores.humano.lp).toBe(8000)
-    const e3 = ok(usarAcao(cenario({ turno: 3, humano: { lp: 7999, mao: [id] } }), 'humano', id))
-    expect(e3.jogadores.humano.lp).toBe(8000)
-    const cheio = cenario({ turno: 3, humano: { lp: 8000, mao: [id] } })
+    const e2 = ok(usarAcao(cenario({ turno: 3, humano: { lp: 4900, mao: [id] } }), 'humano', id))
+    expect(e2.jogadores.humano.lp).toBe(5000)
+    const e3 = ok(usarAcao(cenario({ turno: 3, humano: { lp: 4999, mao: [id] } }), 'humano', id))
+    expect(e3.jogadores.humano.lp).toBe(5000)
+    const cheio = cenario({ turno: 3, humano: { lp: 5000, mao: [id] } })
     recusa(cheio, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(cheio, 'humano', id) })
     // a cura é só do próprio controlador
-    expect(e1.jogadores.oponente.lp).toBe(8000)
+    expect(e1.jogadores.oponente.lp).toBe(5000)
     const op = ok(usarAcao(cenario({ turno: 4, ativo: 'oponente', oponente: { lp: 1000, mao: [id] } }), 'oponente', id))
     expect(op.jogadores.oponente.lp).toBe(1000 + v)
   })
@@ -208,8 +208,8 @@ describe('QA 4 - cura, revelar, equipamento, terreno', () => {
     expect(e.jogadores.humano.descarte.map((c) => c.cartaId)).toEqual(['CC-089'])
     expect(atk(e, 'oponente', 0)).toBe(1200)
     expect(atk(e, 'oponente', 1)).toBe(2100)
-    expect(totalCartas(e, 'humano')).toBe(40)
-    expect(totalCartas(e, 'oponente')).toBe(40)
+    expect(totalCartas(e, 'humano')).toBe(30)
+    expect(totalCartas(e, 'oponente')).toBe(30)
     const r = cenario({ turno: 3, terreno: { id: 'CC-089', dono: 'humano' }, humano: { mao: ['CC-089'] } })
     expect(ok(usarAcao(r, 'humano', 'CC-089')).jogadores.humano.descarte.map((c) => c.cartaId)).toEqual(['CC-089'])
   })
@@ -218,7 +218,7 @@ describe('QA 4 - cura, revelar, equipamento, terreno', () => {
     // sem terreno: 1700 (fauna CC-018) perde para 1800 (ativ CC-031 1400?) -> usar valores conhecidos: CC-043 2000 ativ vs CC-027 2000 fauna = empate
     const e = cenarioCombate({ turno: 3, terreno: { id: 'CC-091', dono: 'oponente' }, humano: { campo: ['CC-043'] }, oponente: { campo: ['CC-027'] } })
     const r = ok(atacar(e, 0, 0)) // fauna 2300 vence atividade 2000: atacante perde 300
-    expect(r.jogadores.humano.lp).toBe(7700)
+    expect(r.jogadores.humano.lp).toBe(4700)
     expect(r.jogadores.humano.campo[0]).toBeNull()
   })
 
@@ -240,7 +240,7 @@ describe('QA 5 - armadilhas (§6/§7)', () => {
     ['CC-094', 800],
   ])('%s reduzir_dano %i: reduz só o dano aos LP do controlador (mínimo 0) e não impede a destruição', (id, v) => {
     const e = ok(atacar(defende(id), 0, 0)) // diferença 1200
-    expect(e.jogadores.humano.lp).toBe(8000 - (1200 - v))
+    expect(e.jogadores.humano.lp).toBe(5000 - (1200 - v))
     expect(e.jogadores.humano.campo[0]).toBeNull() // destruída mesmo assim
     expect(e.jogadores.humano.suporte[0]).toBeNull()
     expect(e.jogadores.humano.descarte.map((c) => c.cartaId).sort()).toEqual([id, 'CC-001'].sort())
@@ -251,8 +251,8 @@ describe('QA 5 - armadilhas (§6/§7)', () => {
     expect(pq.jogadores.humano.lp).toBe(5000)
     // não reduz dano que o próprio controlador sofreria ao atacar? (não aplicável); mas defende unidade em DEFESA com atacante perdendo: sem efeito
     const rep = ok(atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { suporte: [id], campo: [{ id: 'CC-001', pos: 'DEFESA' }] }, oponente: { campo: ['CC-033'] } }), 0, 0)) // 1800 < DEF 2000: dano ao atacante
-    expect(rep.jogadores.oponente.lp).toBe(7800) // redução NÃO se aplica ao dano do atacante
-    expect(rep.jogadores.humano.lp).toBe(8000)
+    expect(rep.jogadores.oponente.lp).toBe(4800) // redução NÃO se aplica ao dano do atacante
+    expect(rep.jogadores.humano.lp).toBe(5000)
     expect(rep.jogadores.humano.suporte[0]).toBeNull() // gastou mesmo sem utilidade (§15.11)
   })
 
@@ -266,17 +266,17 @@ describe('QA 5 - armadilhas (§6/§7)', () => {
     const r = ok(atacar(e, 0, 0))
     // ordem 2 (CC-093, zona 1) é a mais antiga; só UMA dispara
     expect(r.jogadores.humano.suporte.map((s) => s?.cartaId ?? null)).toEqual(['CC-094', null, null, 'CC-099', null])
-    expect(r.jogadores.humano.lp).toBe(8000 - 600)
+    expect(r.jogadores.humano.lp).toBe(5000 - 600)
   })
 
   it('desempate: mesma ordem -> uid menor; armadilha de gatilho errado fica armada', () => {
     const e = defende('CC-096') // ataque_direto não dispara em ataque a unidade
     const r = ok(atacar(e, 0, 0))
     expect(r.jogadores.humano.suporte[0]?.cartaId).toBe('CC-096')
-    expect(r.jogadores.humano.lp).toBe(8000 - 1200)
+    expect(r.jogadores.humano.lp).toBe(5000 - 1200)
     const direto = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { suporte: ['CC-093', 'CC-099'] }, oponente: { campo: ['CC-071'] } })
     const rd = ok(atacar(direto, 0, 'direto')) // ataque_recebido não dispara no ataque direto
-    expect(rd.jogadores.humano.lp).toBe(8000 - 2400)
+    expect(rd.jogadores.humano.lp).toBe(5000 - 2400)
     expect(rd.jogadores.humano.suporte.filter(Boolean)).toHaveLength(2)
   })
 
@@ -289,7 +289,7 @@ describe('QA 5 - armadilhas (§6/§7)', () => {
         ? atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { suporte: [id] }, oponente: { campo: ['CC-071'] } }), 0, 'direto')
         : atacar(defende(id), 0, 0),
     )
-    expect(e.jogadores.humano.lp).toBe(8000)
+    expect(e.jogadores.humano.lp).toBe(5000)
     expect(e.jogadores.humano.campo.filter(Boolean)).toHaveLength(tipo === 'direto' ? 0 : 1)
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
     expect(e.jogadores.oponente.campo[0]!.atacou).toBe(true)
@@ -299,13 +299,13 @@ describe('QA 5 - armadilhas (§6/§7)', () => {
     expect(e.log.at(-1)?.tipo).toBe('ataque_anulado')
   })
 
-  it('CC-096 reduz ataque direto em 1000 (mínimo 0); CC-100 cura 500 ANTES do dano (cap 8000)', () => {
+  it('CC-096 reduz ataque direto em 1000 (mínimo 0); CC-100 cura 500 ANTES do dano (cap 5000)', () => {
     const r = ok(atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { suporte: ['CC-096'] }, oponente: { campo: ['CC-071'] } }), 0, 'direto'))
-    expect(r.jogadores.humano.lp).toBe(8000 - 1400)
+    expect(r.jogadores.humano.lp).toBe(5000 - 1400)
     const baixo = ok(atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { suporte: ['CC-096'] }, oponente: { campo: ['CC-004'] } }), 0, 'direto')) // 900 < 1000
-    expect(baixo.jogadores.humano.lp).toBe(8000)
-    const c = ok(atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { lp: 5000, suporte: ['CC-100'] }, oponente: { campo: ['CC-043'] } }), 0, 'direto'))
-    expect(c.jogadores.humano.lp).toBe(5000 + 500 - 2000)
+    expect(baixo.jogadores.humano.lp).toBe(5000)
+    const c = ok(atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { lp: 4000, suporte: ['CC-100'] }, oponente: { campo: ['CC-043'] } }), 0, 'direto'))
+    expect(c.jogadores.humano.lp).toBe(4000 + 500 - 2000)
     // cura antes do dano salva a vida: 1500 + 500 = 2000 - 2000 = 0 -> ainda morre; 1501 vive com 1
     const morre = ok(atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { lp: 1500, suporte: ['CC-100'] }, oponente: { campo: ['CC-043'] } }), 0, 'direto'))
     expect(morre.jogadores.humano.lp).toBe(0)
@@ -313,8 +313,8 @@ describe('QA 5 - armadilhas (§6/§7)', () => {
     const vive = ok(atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { lp: 1501, suporte: ['CC-100'] }, oponente: { campo: ['CC-043'] } }), 0, 'direto'))
     expect(vive.jogadores.humano.lp).toBe(1)
     expect(vive.resultado).toBeNull()
-    const cap = ok(atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { lp: 8000, suporte: ['CC-100'] }, oponente: { campo: ['CC-043'] } }), 0, 'direto'))
-    expect(cap.jogadores.humano.lp).toBe(6000)
+    const cap = ok(atacar(cenarioCombate({ ativo: 'oponente', turno: 4, humano: { lp: 5000, suporte: ['CC-100'] }, oponente: { campo: ['CC-043'] } }), 0, 'direto'))
+    expect(cap.jogadores.humano.lp).toBe(3000)
   })
 
   it('debuff_invocada: só unidade IMPACTO invocada pelo adversário; permanente; mínimo 0; uma por evento', () => {
@@ -366,14 +366,14 @@ describe('QA 5 - armadilhas (§6/§7)', () => {
     e = irParaCombateSeguro(e)
     const r = ok(atacar(e, 0, 'direto'))
     // a armadilha anulou o ataque do turno 2: leitura "turno absoluto"
-    expect(r.jogadores.humano.lp).toBe(8000)
+    expect(r.jogadores.humano.lp).toBe(5000)
     expect(r.jogadores.humano.suporte[0]).toBeNull()
   })
 
   it('a armadilha não é consumida por equipamento nem outro tipo de suporte', () => {
     const e = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { suporte: [{ id: 'CC-085', turno: 1 }], campo: [{ id: 'CC-001', equip: 'CC-088' }] }, oponente: { campo: ['CC-071'] } })
     const r = ok(atacar(e, 0, 0))
-    expect(r.jogadores.humano.lp).toBe(8000 - (2400 - 1200))
+    expect(r.jogadores.humano.lp).toBe(5000 - (2400 - 1200))
   })
 })
 

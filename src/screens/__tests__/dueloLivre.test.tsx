@@ -34,7 +34,7 @@ describe('Tela Duelo Livre: seleção', () => {
     expect(screen.getByRole('heading', { level: 2, name: 'Escolha seu adversário' })).toBeTruthy()
     expect(screen.getByRole('radiogroup', { name: 'Adversários' })).toBeTruthy()
     expect(radios()).toHaveLength(17)
-    expect(screen.getByRole('button', { name: 'Baralho (em breve)' }).getAttribute('aria-disabled')).toBe('true')
+    expect(screen.getByRole('button', { name: 'Coleção de cartas' })).toBeTruthy()
     expect(selecionado().map((r) => r.textContent)).toEqual(['Ressaca'])
     expect(radios().filter((r) => r.tabIndex === 0)).toEqual([radio('Ressaca')])
     expect(within(painel()).getByRole('heading', { level: 2, name: 'Ressaca' })).toBeTruthy()
@@ -109,24 +109,6 @@ describe('Tela Duelo Livre: seleção', () => {
     expect(selecionado()[0].textContent).toBe('Coral')
   })
 
-  it('Baralho é estritamente inerte e não participa da seleção ou da navegação dos adversários', () => {
-    const onDuelo = vi.fn()
-    render(<TelaDueloLivre onDuelo={onDuelo} onVoltar={() => {}} />)
-    fireEvent.click(radio('Oceano Limpo'))
-    const atalho = screen.getByRole('button', { name: 'Baralho (em breve)' })
-    fireEvent.click(atalho)
-    fireEvent.keyDown(atalho, { key: 'Enter' })
-    fireEvent.keyDown(atalho, { key: ' ' })
-    expect(selecionado().map((r) => r.textContent)).toEqual(['Oceano Limpo'])
-    expect(within(painel()).getByRole('heading', { level: 2 }).textContent).toBe('Oceano Limpo')
-    expect(within(painel()).getByRole('status').textContent).toBe('')
-    expect(onDuelo).not.toHaveBeenCalled()
-    teclar(radio('Oceano Limpo'), 'ArrowRight')
-    expect(selecionado().map((r) => r.textContent)).toEqual(['Oceano Limpo'])
-  })
-})
-
-describe('Tela Duelo Livre: ações', () => {
   it('"Ler mais" expande/recolhe a descrição (aria-expanded) e reinicia ao trocar de adversário', () => {
     render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     const mais = within(painel()).getByRole('button', { name: 'Ler mais' })
@@ -137,16 +119,6 @@ describe('Tela Duelo Livre: ações', () => {
     expect(painel().hasAttribute('data-expandido')).toBe(true)
     fireEvent.click(radio('Porto'))
     expect(within(painel()).getByRole('button', { name: 'Ler mais' }).getAttribute('aria-expanded')).toBe('false')
-  })
-
-  it('aviso repetido é reapresentado (novo nó na região status)', () => {
-    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
-    fireEvent.click(botao('Baralho'))
-    const antes = within(painel()).getByRole('status').firstElementChild
-    fireEvent.click(botao('Baralho'))
-    const depois = within(painel()).getByRole('status').firstElementChild
-    expect(depois).not.toBe(antes)
-    expect(depois?.textContent).toBe(antes?.textContent)
   })
 
   it('INICIAR DUELO inicia o duelo com o adversário selecionado (sem aviso "Em breve")', () => {
@@ -161,16 +133,6 @@ describe('Tela Duelo Livre: ações', () => {
     fireEvent.click(radio('Oceano Limpo'))
     fireEvent.click(botao('Iniciar duelo'))
     expect(onDuelo).toHaveBeenLastCalledWith('oceano-limpo')
-  })
-
-  it('BARALHO: logado sem dado de baralho e sem usuário mostram "Em breve"', () => {
-    const { unmount } = render(<TelaDueloLivre onDuelo={() => {}} usuario={{ id: 'x', email: 'a@b.co' }} onVoltar={() => {}} />)
-    fireEvent.click(botao('Baralho'))
-    expect(within(painel()).getByRole('status').textContent).toMatch(/^Em breve/)
-    unmount()
-    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
-    fireEvent.click(botao('Baralho'))
-    expect(within(painel()).getByRole('status').textContent).toMatch(/^Em breve.*conta/)
   })
 
   it('VOLTAR e Esc chamam onVoltar', () => {
@@ -211,7 +173,7 @@ describe('Integração com o App', () => {
     fireEvent.submit(document.querySelector('form')!)
     expect(await screen.findByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
     fireEvent.click(botao('Baralho'))
-    expect(screen.getByRole('status').textContent).toContain('40 cartas')
+    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toContain('40 cartas')
     expect(servico.entrar).toHaveBeenCalledTimes(1)
   })
 })
@@ -283,5 +245,31 @@ describe('Clique em bloqueado e engrenagem', () => {
     expect(within(radios()[0]).queryByRole('status')).toBeNull()
     fireEvent.click(radios()[4])
     expect(within(radios()[2]).getByRole('status').textContent).toContain(`liberar ${OPONENTES[4].nome}`)
+  })
+})
+
+describe('Modal Baralho (coleção)', () => {
+  it('lista as cartas ganhas com a quantidade; atalho e botão abrem; Esc fecha', () => {
+    const u: UsuarioAutenticado = { id: 'u9', email: 'z@x.co', colecao: [{ cartaId: 'CC-001', quantidade: 2 }] }
+    render(<TelaDueloLivre onDuelo={() => {}} usuario={u} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Coleção de cartas' }))
+    const d = screen.getByRole('dialog', { name: 'Baralho' })
+    expect(d.textContent).toContain('1 de 100 cartas diferentes')
+    expect(within(d).getAllByRole('listitem')).toHaveLength(1)
+    expect(d.textContent).toContain('×2')
+    fireEvent.keyDown(document, { key: 'Escape' })
+    expect(screen.queryByRole('dialog')).toBeNull()
+    fireEvent.click(botao('Baralho'))
+    expect(screen.getByRole('dialog', { name: 'Baralho' })).toBeTruthy()
+  })
+
+  it('sem conta convida a entrar; conta sem cartas explica como ganhar', () => {
+    const { unmount } = render(<TelaDueloLivre onDuelo={() => {}} />)
+    fireEvent.click(botao('Baralho'))
+    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toMatch(/Entre com uma conta/)
+    unmount()
+    render(<TelaDueloLivre onDuelo={() => {}} usuario={{ id: 'u', email: 'a@b.co', colecao: [] }} />)
+    fireEvent.click(botao('Baralho'))
+    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toMatch(/Vença duelos/)
   })
 })

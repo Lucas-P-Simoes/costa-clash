@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { alvosAtaqueLegais, aplicarComando, atacantesDisponiveis, ataquesLegais, jogadasLegais, simularAtaque } from '../acoes'
 import type { Comando } from '../acoes'
+import { executarTurnoIA } from '../duelo'
 import { invariantes } from '../estado'
 import { atacar, cenario, cenarioCombate, irParaCombate, jogar, ok, uidDe } from './util'
 
@@ -81,11 +82,28 @@ describe('jogar carta: regras de fase, turno e uma jogada por turno', () => {
 })
 
 describe('descarte forçado', () => {
-  it('é rejeitado enquanto existir qualquer jogada legal', () => {
-    const e = cenario({ humano: { mao: ['CC-001', 'CC-002'] } })
-    const r = aplicarComando(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-002') })
-    expect(r.ok).toBe(false)
-    if (!r.ok) expect(r.erro).toContain('jogada legal')
+  it('com jogada legal disponível o descarte é livre (lixeira): não gasta a jogada da mão e a mão é reposta no próximo turno', () => {
+    const e = cenario({ humano: { mao: ['CC-001', 'CC-002'] }, oponente: { mao: [] } })
+    const r = ok(aplicarComando(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-002') }))
+    expect(r.jogadaFeita).toBe(false)
+    expect(r.jogadores.humano.mao).toHaveLength(1)
+    expect(r.jogadores.humano.descarte).toHaveLength(1)
+    expect(r.log.at(-1)?.tipo).toBe('descarte_livre')
+    // pode continuar jogando normalmente e descartar de novo
+    expect(jogadasLegais(r).some((c) => c.tipo === 'jogarCarta')).toBe(true)
+    const r2 = ok(aplicarComando(r, { tipo: 'descartar', jogador: 'humano', uid: r.jogadores.humano.mao[0]!.uid }))
+    expect(r2.jogadores.humano.mao).toHaveLength(0)
+    expect(r2.jogadores.humano.descarte).toHaveLength(2)
+    // no início do próximo turno do jogador a mão volta a 5
+    const volta = ok(executarTurnoIA(ok(aplicarComando(r2, { tipo: 'encerrarTurno', jogador: 'humano' }))))
+    expect(volta.jogadores.humano.mao).toHaveLength(5)
+  })
+
+  it('descarte livre só vale na fase principal do próprio turno, com carta da própria mão', () => {
+    const e = cenario({ humano: { mao: ['CC-001'] } })
+    expect(aplicarComando(e, { tipo: 'descartar', jogador: 'oponente', uid: 'x' }).ok).toBe(false)
+    expect(aplicarComando(e, { tipo: 'descartar', jogador: 'humano', uid: 'inexistente' }).ok).toBe(false)
+    expect(aplicarComando({ ...e, fase: 'COMBATE' }, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-001') }).ok).toBe(false)
   })
 
   it('campo cheio + só unidades na mão: descarte é a jogada (e a única opção listada)', () => {
@@ -98,9 +116,9 @@ describe('descarte forçado', () => {
     expect(e2.jogadores.humano.mao).toHaveLength(1)
     expect(e2.jogadores.humano.descarte).toHaveLength(1)
     expect(e2.log.at(-1)?.tipo).toBe('descarte_forcado')
-    // depois de descartar, não há mais jogadas nem novo descarte
+    // depois do descarte forçado, não há mais jogadas; a lixeira continua aceitando descartes livres
     expect(jogadasLegais(e2)).toEqual([])
-    expect(aplicarComando(e2, { tipo: 'descartar', jogador: 'humano', uid: e2.jogadores.humano.mao[0]!.uid }).ok).toBe(false)
+    expect(aplicarComando(e2, { tipo: 'descartar', jogador: 'humano', uid: e2.jogadores.humano.mao[0]!.uid }).ok).toBe(true)
   })
 
   it('ação sem alvo válido não é jogável; se só há essas cartas, o descarte é forçado', () => {

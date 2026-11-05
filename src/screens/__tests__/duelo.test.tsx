@@ -72,11 +72,11 @@ describe('CartaView', () => {
 })
 
 describe('Partida: leitura do tabuleiro e jogadas', () => {
-  it('mostra vida 8000, 5 zonas de unidade e 5 de suporte por lado, mão e contadores', () => {
+  it('mostra vida 5000, 5 zonas de unidade e 5 de suporte por lado, mão e contadores', () => {
     montarCenario({ humano: { mao: ['CC-001', 'CC-003', 'CC-077', 'CC-093', 'CC-089'], baralho: 35 }, oponente: { mao: ['CC-001'], baralho: 35 } })
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Ressaca' })).toBeTruthy()
-    expect(screen.getByLabelText('Sua vida: 8000')).toBeTruthy()
-    expect(screen.getByLabelText('Vida do oponente: 8000')).toBeTruthy()
+    expect(screen.getByLabelText('Sua vida: 5000')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 5000')).toBeTruthy()
     expect(screen.getByRole('group', { name: 'Suas zonas de unidade' }).querySelectorAll('.zona')).toHaveLength(5)
     expect(screen.getByRole('group', { name: 'Suas zonas de suporte' }).querySelectorAll('.suporte')).toHaveLength(5)
     expect(screen.getByRole('group', { name: 'Zonas de unidade do oponente' }).querySelectorAll('.zona')).toHaveLength(5)
@@ -178,14 +178,14 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })
     const alvo = screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ })
     arrastarAtaque(atacante, alvo)
-    expect(screen.getByLabelText('Vida do oponente: 7600')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 4600')).toBeTruthy()
     expect(screen.queryByRole('button', { name: /Zona 1 do oponente/ })).toBeNull() // zona esvaziada
   })
 
   it('ataque direto só aparece quando o oponente não tem unidades', () => {
     montarCenario({ jogadaFeita: true, humano: { campo: ['CC-003'] } })
-    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }), screen.getByLabelText('Vida do oponente: 8000'))
-    expect(screen.getByLabelText('Vida do oponente: 6400')).toBeTruthy()
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }), screen.getByLabelText('Vida do oponente: 5000'))
+    expect(screen.getByLabelText('Vida do oponente: 3400')).toBeTruthy()
   })
 
   it('sem botão ATACAR, unidades ilegais não iniciam a seta no primeiro turno nem antes da jogada', () => {
@@ -195,7 +195,7 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     cleanup()
     montarCenario({ humano: { mao: ['CC-001'], campo: ['CC-003'] } })
     expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }).className).not.toContain('carta--arrastavel')
-    expect(screen.getByLabelText('Vida do oponente: 8000')).toBeTruthy()
+    expect(screen.getByLabelText('Vida do oponente: 5000')).toBeTruthy()
   })
 
   it('ENCERRAR TURNO exige a jogada e depois aciona a IA (sem atraso) devolvendo a vez', () => {
@@ -273,7 +273,7 @@ describe('Partida: informação oculta', () => {
     expect(oculta.className).toContain('carta--verso')
     arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Manguezal Protegido.*pode atacar/ }), oculta)
     expect(screen.getByRole('button', { name: /Zona 1 do oponente: Derramamento de Óleo, ATK 2200, DEF 700/ })).toBeTruthy()
-    expect(screen.getByLabelText('Sua vida: 7000')).toBeTruthy()
+    expect(screen.getByLabelText('Sua vida: 4000')).toBeTruthy()
   })
 
   it('o log só traz eventos públicos: compras e armadilhas colocadas pelo oponente não vazam', () => {
@@ -350,9 +350,9 @@ describe('Partida: desistência, resultado e jogar novamente', () => {
     fireEvent.click(botao('Jogar novamente'))
     expect(screen.queryByRole('dialog')).toBeNull()
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Porto' })).toBeTruthy()
-    expect(screen.getByLabelText('Sua vida: 8000')).toBeTruthy()
+    expect(screen.getByLabelText('Sua vida: 5000')).toBeTruthy()
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(5)
-    expect(screen.getByLabelText('Cartas restantes no baralho: 35')).toBeTruthy()
+    expect(screen.getByLabelText('Cartas restantes no baralho: 25')).toBeTruthy()
   })
 })
 
@@ -400,7 +400,7 @@ describe('Integração com o Duelo Livre', () => {
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo Livre' })).toBeTruthy()
     expect(botao('Sair')).toBeTruthy()
     fireEvent.click(botao('Baralho'))
-    expect(screen.getByRole('status').textContent).toContain('40 cartas')
+    expect(screen.getByRole('dialog', { name: 'Baralho' }).textContent).toContain('40 cartas')
   })
 
   it('baralho inválido do perfil mostra erro claro e permite voltar, sem quebrar', () => {
@@ -418,7 +418,7 @@ describe('Integração com o Duelo Livre', () => {
     render(<TelaDuelo oponenteId="oceano-limpo" seedInicial={27} atrasoIA={0} onVoltar={() => {}} />)
     expect(screen.queryByRole('alert')).toBeNull()
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Oceano Limpo' })).toBeTruthy()
-    expect(screen.getByLabelText('Sua vida: 8000')).toBeTruthy()
+    expect(screen.getByLabelText('Sua vida: 5000')).toBeTruthy()
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(5)
   })
 

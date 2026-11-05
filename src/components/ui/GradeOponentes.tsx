@@ -53,16 +53,10 @@ export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao, 
   )
 }
 
-/** Atalho visual reservado para a futura montagem de baralho. Intencionalmente inerte nesta etapa. */
-export function CartaoBaralho() {
+/** Atalho que abre a coleção de cartas do jogador. */
+export function CartaoBaralho({ onClick }: { onClick?: () => void }) {
   return (
-    <button
-      type="button"
-      className="cartao-oponente cartao-oponente--baralho"
-      aria-label="Baralho (em breve)"
-      aria-disabled="true"
-      title="Em breve"
-    >
+    <button type="button" className="cartao-oponente cartao-oponente--baralho" aria-haspopup="dialog" aria-label="Coleção de cartas" onClick={onClick}>
       <span className="cartao-oponente__arte">
         <img className="cartao-oponente__imagem" src={urlArquivoOponente('baralho.png')} alt="" draggable={false} />
       </span>
@@ -84,12 +78,14 @@ interface GradeProps {
   onBloqueadoClick?: (id: string) => void
   /** Id do cartão que pulsa em vermelho. */
   alertaId?: string
+  /** Clique no cartão Baralho. */
+  onBaralho?: () => void
   /** Texto do balão exibido sobre o cartão `alertaId`. */
   balao?: string
 }
 
 /** Grade de seleção (radiogroup). Setas movem foco e seleção; Home/End; Enter/Espaço selecionam via clique nativo. */
-export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo = 'Adversários', bloqueados, onAbrir, onBloqueadoClick, alertaId, balao }: GradeProps) {
+export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo = 'Adversários', bloqueados, onAbrir, onBloqueadoClick, alertaId, balao, onBaralho }: GradeProps) {
   const grade = useRef<HTMLDivElement>(null)
   const botoes = useRef<Array<HTMLButtonElement | null>>([])
 
@@ -134,7 +130,7 @@ export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo 
           />
         ))}
       </div>
-      <CartaoBaralho />
+      <CartaoBaralho onClick={onBaralho} />
     </div>
   )
 }
