@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest'
 import { OPONENTES } from '../oponentes'
-import { idsBloqueados, lerDerrotados, proximoAdversarioId, registrarVitoria } from '../progressoOponentes'
+import { idsBloqueados, lerDerrotados, lerLiberados, proximoAdversarioId, registrarVitoria, salvarLiberados } from '../progressoOponentes'
 
 function memoria() {
   const d = new Map<string, string>()
@@ -42,5 +42,13 @@ describe('progressão de adversários', () => {
     m.setItem('costa-clash:derrotados:u1', '{lixo')
     expect(lerDerrotados('u1', m)).toEqual([])
     expect(lerDerrotados('u1', null)).toEqual([])
+  })
+
+  it('liberados manuais desbloqueiam sem vitórias e persistem por conta', () => {
+    const m = memoria()
+    expect(idsBloqueados([], [OPONENTES[4].id]).has(OPONENTES[4].id)).toBe(false)
+    expect(salvarLiberados('u1', [OPONENTES[4].id, OPONENTES[4].id, 'inexistente'], m)).toEqual([OPONENTES[4].id])
+    expect(lerLiberados('u1', m)).toEqual([OPONENTES[4].id])
+    expect(lerLiberados('u2', m)).toEqual([])
   })
 })

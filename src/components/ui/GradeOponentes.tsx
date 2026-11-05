@@ -11,10 +11,13 @@ interface CartaoProps {
   onSelecionar: () => void
   refBotao: (el: HTMLButtonElement | null) => void
   bloqueado?: boolean
+  /** Pulsa em vermelho (adversário que precisa ser enfrentado). */
+  alerta?: boolean
+  onBloqueadoClick?: () => void
 }
 
 /** Cartão de adversário: retrato pixel art + nome na faixa inferior. Radio com roving tabindex. Bloqueado: cinza com cadeado. */
-export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao, bloqueado = false }: CartaoProps) {
+export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao, bloqueado = false, alerta = false, onBloqueadoClick }: CartaoProps) {
   return (
     <button
       ref={refBotao}
@@ -27,7 +30,8 @@ export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao, 
       className="cartao-oponente"
       data-selecionado={selecionado || undefined}
       data-bloqueado={bloqueado || undefined}
-      onClick={bloqueado ? undefined : onSelecionar}
+      data-alerta={alerta || undefined}
+      onClick={bloqueado ? onBloqueadoClick : onSelecionar}
     >
       <span className="cartao-oponente__arte">
         <img className="cartao-oponente__imagem" src={urlArquivoOponente(oponente.retrato)} alt="" draggable={false} />
@@ -65,10 +69,14 @@ interface GradeProps {
   bloqueados?: ReadonlySet<string>
   /** Clique/Enter/Espaço num cartão liberado (setas só movem a seleção). */
   onAbrir?: (id: string) => void
+  /** Clique num cartão bloqueado. */
+  onBloqueadoClick?: (id: string) => void
+  /** Id do cartão que pulsa em vermelho. */
+  alertaId?: string
 }
 
 /** Grade de seleção (radiogroup). Setas movem foco e seleção; Home/End; Enter/Espaço selecionam via clique nativo. */
-export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo = 'Adversários', bloqueados, onAbrir }: GradeProps) {
+export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo = 'Adversários', bloqueados, onAbrir, onBloqueadoClick, alertaId }: GradeProps) {
   const grade = useRef<HTMLDivElement>(null)
   const botoes = useRef<Array<HTMLButtonElement | null>>([])
 
@@ -98,6 +106,8 @@ export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo 
             oponente={o}
             selecionado={o.id === selecionadoId}
             bloqueado={bloqueados?.has(o.id)}
+            alerta={o.id === alertaId}
+            onBloqueadoClick={() => onBloqueadoClick?.(o.id)}
             onSelecionar={() => {
               onSelecionar(o.id)
               onAbrir?.(o.id)

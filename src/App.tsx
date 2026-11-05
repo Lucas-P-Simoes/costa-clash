@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import type { ResultadoAuth, ServicoAuth, UsuarioAutenticado } from './auth/servicoAuth'
 import { MENSAGEM_RECONEXAO } from './auth/servicoAuth'
-import { lerDerrotados, registrarVitoria } from './data/progressoOponentes'
+import { lerDerrotados, lerLiberados, registrarVitoria, salvarLiberados } from './data/progressoOponentes'
 import { servicoAuthPadrao } from './auth/servicoPadrao'
 import { CabecalhoTela } from './components/ui/CabecalhoTela'
 import { TelaDueloLivre } from './screens/dueloLivre/TelaDueloLivre'
@@ -29,7 +29,7 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
   const [voltou, setVoltou] = useState(false)
   const [aviso, setAviso] = useState<string | undefined>()
   // Progressão do Duelo Livre: derrotados por conta (localStorage), relida ao trocar de usuário.
-  const [progresso, setProgresso] = useState<{ dono?: string; ids: string[] } | undefined>()
+  const [progresso, setProgresso] = useState<{ dono?: string; ids: string[]; liberados: string[] } | undefined>()
   const irParaLogin = () => {
     setVoltou(true)
     setAviso(undefined)
@@ -69,10 +69,12 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
   }
 
   const usuarioAtual = 'usuario' in tela ? tela.usuario : undefined
-  const derrotados = progresso && progresso.dono === usuarioAtual?.id ? progresso.ids : lerDerrotados(usuarioAtual?.id)
+  const progressoAtual = progresso && progresso.dono === usuarioAtual?.id ? progresso : undefined
+  const derrotados = progressoAtual ? progressoAtual.ids : lerDerrotados(usuarioAtual?.id)
+  const liberados = progressoAtual ? progressoAtual.liberados : lerLiberados(usuarioAtual?.id)
   function aoVencer(oponenteId: string) {
     const dono = usuarioAtual?.id
-    setProgresso({ dono, ids: registrarVitoria(dono, oponenteId, derrotados) })
+    setProgresso({ dono, ids: registrarVitoria(dono, oponenteId, derrotados), liberados })
   }
 
   switch (tela.nome) {
@@ -127,6 +129,8 @@ export default function App({ servicoAuth = servicoAuthPadrao }: { servicoAuth?:
           usuario={usuario}
           oponenteInicialId={tela.oponenteId}
           derrotados={derrotados}
+          liberados={liberados}
+          onSalvarLiberados={(ids) => setProgresso({ dono: usuario?.id, ids: derrotados, liberados: salvarLiberados(usuario?.id, ids) })}
           onVoltar={usuario ? undefined : irParaLogin}
           onSair={usuario ? sair : undefined}
           onDuelo={(oponenteId) => setTela({ nome: 'duelo', oponenteId, usuario })}

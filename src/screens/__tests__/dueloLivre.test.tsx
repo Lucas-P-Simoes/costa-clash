@@ -247,3 +247,31 @@ describe('Modal de história do adversário', () => {
     expect(onDuelo).toHaveBeenCalledWith(OPONENTES[1].id)
   })
 })
+
+describe('Clique em bloqueado e engrenagem', () => {
+  it('bloqueado avisa qual adversário enfrentar e o faz pulsar', () => {
+    render(<TelaDueloLivre onDuelo={() => {}} derrotados={[]} />)
+    fireEvent.click(radios()[3])
+    expect(screen.getByText(new RegExp(`Enfrente ${OPONENTES[0].nome} primeiro`))).toBeTruthy()
+    expect(radios()[0].getAttribute('data-alerta')).toBe('true')
+    expect(screen.queryByRole('dialog')).toBeNull()
+  })
+
+  it('engrenagem lista os adversários e Salvar libera só os marcados', () => {
+    const onSalvar = vi.fn()
+    render(<TelaDueloLivre onDuelo={() => {}} derrotados={[]} liberados={[]} onSalvarLiberados={onSalvar} />)
+    fireEvent.click(screen.getByRole('button', { name: 'Configurações' }))
+    const grupo = screen.getByRole('group', { name: 'Desbloquear adversários' })
+    expect(within(grupo).getAllByRole('checkbox')).toHaveLength(OPONENTES.length)
+    expect((within(grupo).getByRole('checkbox', { name: new RegExp(OPONENTES[0].nome) }) as HTMLInputElement).disabled).toBe(true)
+    fireEvent.click(within(grupo).getByRole('checkbox', { name: new RegExp(OPONENTES[3].nome) }))
+    fireEvent.click(within(grupo).getByRole('button', { name: 'Salvar' }))
+    expect(onSalvar).toHaveBeenCalledWith([OPONENTES[3].id])
+  })
+
+  it('liberado manualmente deixa de ser bloqueado', () => {
+    render(<TelaDueloLivre onDuelo={() => {}} derrotados={[]} liberados={[OPONENTES[3].id]} />)
+    expect(radios()[3].getAttribute('aria-disabled')).toBeNull()
+    expect(radios()[2].getAttribute('aria-disabled')).toBe('true')
+  })
+})
