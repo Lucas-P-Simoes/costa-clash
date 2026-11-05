@@ -2439,7 +2439,7 @@ button.carta {
   place-items: center;
   pointer-events: none;
   background: radial-gradient(ellipse at center, rgba(4, 10, 20, 0.72) 0, rgba(4, 10, 20, 0.45) 55%, transparent 85%);
-  animation: confronto-cena 3.2s ease both;
+  animation: confronto-cena 5s ease both;
 }
 .confronto__palco {
   position: relative;
@@ -2453,7 +2453,7 @@ button.carta {
   width: var(--largura);
   aspect-ratio: 3 / 4;
   container-type: size;
-  animation: confronto-entra 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) both;
+  animation: confronto-entra 0.8s cubic-bezier(0.2, 0.8, 0.3, 1) both;
 }
 .confronto__corpo {
   position: relative;
@@ -2474,14 +2474,14 @@ button.carta {
   --avanco: max(-5vw, -3rem);
 }
 .confronto__carta--atacante .confronto__corpo {
-  animation: confronto-avanca 0.8s 0.55s cubic-bezier(0.5, 0, 0.3, 1) both;
+  animation: confronto-avanca 1.25s 0.86s cubic-bezier(0.5, 0, 0.3, 1) both;
 }
 .confronto__carta--atacante .carta {
   box-shadow: inset 0 0 0 1px #07101a, 0 0 0 0.125rem #ff4a3a, 0 0 1.5rem 0.4rem rgba(255, 74, 58, 0.85);
 }
 /* a carta atacada vibra */
 .confronto__carta--alvo .confronto__corpo {
-  animation: confronto-vibra 0.9s 0.99s linear both;
+  animation: confronto-vibra 1.4s 1.55s linear both;
 }
 .confronto__impacto {
   position: absolute;
@@ -2493,20 +2493,20 @@ button.carta {
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 245, 190, 0.95) 0, rgba(255, 110, 50, 0.7) 30%, transparent 65%);
   opacity: 0;
-  animation: confronto-impacto 0.7s 0.99s ease-out both;
+  animation: confronto-impacto 1.1s 1.55s ease-out both;
 }
 /* derrotada: queima de baixo para cima (máscara + borda incandescente + fagulhas) */
 .confronto__carta--queima {
   animation:
-    confronto-entra 0.5s cubic-bezier(0.2, 0.8, 0.3, 1) both,
-    confronto-queima 1.1s 1.95s ease-in both;
+    confronto-entra 0.8s cubic-bezier(0.2, 0.8, 0.3, 1) both,
+    confronto-queima 1.7s 3.05s ease-in both;
 }
 .confronto__carta--queima .confronto__corpo {
   -webkit-mask-image: linear-gradient(to top, transparent calc(var(--queima) - 4%), #000 calc(var(--queima) + 6%));
   mask-image: linear-gradient(to top, transparent calc(var(--queima) - 4%), #000 calc(var(--queima) + 6%));
 }
 .confronto__carta--queima .carta {
-  animation: confronto-carboniza 1.1s 1.95s ease-in both;
+  animation: confronto-carboniza 1.7s 3.05s ease-in both;
 }
 .confronto__brasa {
   position: absolute;
@@ -2525,7 +2525,7 @@ button.carta {
   );
   mix-blend-mode: hard-light;
   opacity: 0;
-  animation: confronto-brasa 1.1s 1.95s linear both;
+  animation: confronto-brasa 1.7s 3.05s linear both;
 }
 .confronto__chamas {
   position: absolute;
@@ -2545,14 +2545,14 @@ button.carta {
   background: radial-gradient(ellipse at 50% 75%, #fff6b0 0, #ffb52e 30%, #ff5a12 55%, transparent 72%);
   filter: blur(0.5px);
   opacity: 0;
-  animation: confronto-fagulha 0.8s ease-out both;
+  animation: confronto-fagulha 1.25s ease-out both;
 }
 @keyframes confronto-cena {
   0% {
     opacity: 0;
   }
-  8%,
-  93% {
+  6%,
+  95% {
     opacity: 1;
   }
   100% {

@@ -21,7 +21,7 @@ function CartaConfronto({ p, papel, carta }: { p: LadoConfronto; papel: 'atacant
       {p.destruida ? (
         <span className="confronto__chamas">
           {FAGULHAS.map((x, i) => (
-            <span key={x} className="confronto__fagulha" style={{ left: `${x}%`, animationDelay: `${1.95 + i * 0.12}s` }} />
+            <span key={x} className="confronto__fagulha" style={{ left: `${x}%`, animationDelay: `${3.05 + i * 0.19}s` }} />
           ))}
         </span>
       ) : null}

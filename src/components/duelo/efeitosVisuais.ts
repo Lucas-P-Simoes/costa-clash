@@ -136,7 +136,7 @@ export function useEfeitosVisuais(log: readonly Evento[], posicoes: Readonly<Rec
 // ---------------------------------------------------------------- confronto (ataque entre unidades)
 
 /** Duração (ms) da cena de confronto: aproximação, impacto/vibração e, se houver, queima da carta derrotada. */
-export const DURACAO_CONFRONTO_MS = 3200
+export const DURACAO_CONFRONTO_MS = 5000
 
 export interface LadoConfronto {
   lado: IdJogador

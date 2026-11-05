@@ -290,7 +290,7 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
     expect(document.querySelector('[data-fantasma]')).toBeNull()
     expect(q('.duelo-vida--oponente').className).not.toContain('duelo-vida--dano')
     act(() => {
-      vi.advanceTimersByTime(2600)
+      vi.advanceTimersByTime(4400)
     })
     expect(document.querySelector('.confronto')).toBeNull()
     expect(vi.getTimerCount()).toBe(0)
