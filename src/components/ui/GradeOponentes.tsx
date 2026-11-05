@@ -17,11 +17,13 @@ interface CartaoProps {
   balao?: string
   /** Posição horizontal do balão, para não sair da grade nas pontas. */
   ancora?: 'inicio' | 'centro' | 'fim'
+  /** Lado do balão: 'baixo' na primeira linha, onde não há espaço acima (a tela corta o excesso). */
+  lado?: 'cima' | 'baixo'
   onBloqueadoClick?: () => void
 }
 
 /** Cartão de adversário: retrato pixel art + nome na faixa inferior. Radio com roving tabindex. Bloqueado: cinza com cadeado. */
-export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao, bloqueado = false, alerta = false, balao, ancora = 'centro', onBloqueadoClick }: CartaoProps) {
+export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao, bloqueado = false, alerta = false, balao, ancora = 'centro', lado = 'cima', onBloqueadoClick }: CartaoProps) {
   return (
     <button
       ref={refBotao}
@@ -43,7 +45,7 @@ export function CartaoOponente({ oponente, selecionado, onSelecionar, refBotao, 
       </span>
       <span className="cartao-oponente__nome">{oponente.nome}</span>
       {balao ? (
-        <span className="cartao-oponente__balao" data-ancora={ancora} role="status">
+        <span className="cartao-oponente__balao" data-ancora={ancora} data-lado={lado} role="status">
           {balao}
         </span>
       ) : null}
@@ -119,6 +121,7 @@ export function GradeOponentes({ oponentes, selecionadoId, onSelecionar, rotulo 
             bloqueado={bloqueados?.has(o.id)}
             alerta={o.id === alertaId}
             balao={o.id === alertaId ? balao : undefined}
+            lado={i < 6 ? 'baixo' : 'cima'}
             ancora={i % 6 === 0 ? 'inicio' : i % 6 === 5 ? 'fim' : 'centro'}
             onBloqueadoClick={() => onBloqueadoClick?.(o.id)}
             onSelecionar={() => {

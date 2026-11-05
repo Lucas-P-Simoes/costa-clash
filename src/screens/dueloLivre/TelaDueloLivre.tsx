@@ -68,7 +68,10 @@ export function TelaDueloLivre({ usuario, onVoltar, onSair, onDuelo, oponenteIni
   const balaoAtivo = aviso?.tipo === 'bloqueado' && alertaAtivo === aviso.n
 
   function aoClicarBloqueado(id: string) {
-    const alvo = proximoAdversarioId(derrotados ?? [])
+    // Referencia o anterior imediato; se ele também estiver bloqueado, o mais próximo antes dele que já dá para enfrentar.
+    const i = OPONENTES.findIndex((o) => o.id === id)
+    const anterior = OPONENTES.slice(0, Math.max(i, 0)).reverse().find((o) => !bloqueados?.has(o.id))
+    const alvo = anterior?.id ?? proximoAdversarioId(derrotados ?? [])
     const n = (aviso?.n ?? 0) + 1
     setAviso({ tipo: 'bloqueado', n, alvo, bloqueado: id })
     setAlertaAtivo(n)

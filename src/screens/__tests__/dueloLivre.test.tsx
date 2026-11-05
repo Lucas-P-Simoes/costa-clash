@@ -275,4 +275,13 @@ describe('Clique em bloqueado e engrenagem', () => {
     expect(radios()[3].getAttribute('aria-disabled')).toBeNull()
     expect(radios()[2].getAttribute('aria-disabled')).toBe('true')
   })
+
+  it('o balão aponta para o anterior imediato, mesmo com liberações manuais', () => {
+    render(<TelaDueloLivre onDuelo={() => {}} derrotados={[]} liberados={[OPONENTES[2].id, OPONENTES[5].id]} />)
+    fireEvent.click(radios()[6])
+    expect(within(radios()[5]).getByRole('status').textContent).toContain(`liberar ${OPONENTES[6].nome}`)
+    expect(within(radios()[0]).queryByRole('status')).toBeNull()
+    fireEvent.click(radios()[4])
+    expect(within(radios()[2]).getByRole('status').textContent).toContain(`liberar ${OPONENTES[4].nome}`)
+  })
 })
