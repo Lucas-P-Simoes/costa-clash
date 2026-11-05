@@ -77,7 +77,7 @@ describe('QA Partida: cena de confronto', () => {
     expect(cena.querySelector('button, [tabindex], a, input')).toBeNull()
     expect(screen.queryAllByRole('img', { name: 'Recife de Coral' })).toHaveLength(0)
     act(() => {
-      vi.advanceTimersByTime(2000)
+      vi.advanceTimersByTime(3500)
     })
     expect(document.querySelector('.confronto')).toBeNull()
     expect(screen.getByRole('dialog').textContent).toContain('Vitória')
@@ -90,7 +90,7 @@ describe('QA Partida: cena de confronto', () => {
     const dentro = Array.from(document.querySelectorAll('.confronto .carta__nome')).map((n) => n.textContent)
     expect(dentro).toEqual(['Recife de Coral', 'Manguezal Protegido'])
     act(() => {
-      vi.advanceTimersByTime(2000)
+      vi.advanceTimersByTime(3500)
     })
     expect(vi.getTimerCount()).toBe(0)
   })
