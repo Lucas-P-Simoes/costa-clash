@@ -14,7 +14,7 @@ afterEach(() => {
 })
 
 const botao = (n: string | RegExp) => screen.getByRole('button', { name: n })
-const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
+const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
 
 function montar(cfg: ConfigCenario = {}, atrasoIA = 0) {
   const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
@@ -107,7 +107,7 @@ describe('D3: foco depois das ações', () => {
     fireEvent.click(botao(/Usar carta/))
     expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     fireEvent.click(document.activeElement as HTMLElement)
-    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Virada para cima' }))
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Colocar carta' }))
     confirmarFaceParaCima()
     expect(document.activeElement).toBe(botao(/Encerrar turno/))
   })

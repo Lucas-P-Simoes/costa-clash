@@ -82,6 +82,13 @@ describe('ataque por seta', () => {
     expect(screen.getByLabelText('Vida do oponente: 3400')).toBeTruthy()
   })
 
+  it('unidade que já atacou neste turno fica cinza claro (classe zona--ja-atacou); a que não atacou não', () => {
+    montar({ fase: 'COMBATE', jogadaFeita: true, humano: { campo: [{ id: 'CC-003', atacou: true }, { id: 'CC-001' }] } })
+    const zonas = document.querySelectorAll('.duelo-lado--voce .zona')
+    expect(zonas[0]!.classList.contains('zona--ja-atacou')).toBe(true)
+    expect(zonas[1]!.classList.contains('zona--ja-atacou')).toBe(false)
+  })
+
   it('não inicia fora do turno, em defesa ou com unidade que já atacou', () => {
     montar({ ativo: 'oponente', jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'] } })
     expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }).className).not.toContain('carta--arrastavel')

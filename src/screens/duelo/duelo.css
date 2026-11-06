@@ -2557,3 +2557,172 @@ button.carta {
     display: none;
   }
 }
+
+/* ---- carta solta na lixeira: queima no lugar (reaproveita --queima e os keyframes da cena de confronto) ---- */
+.lixeira-queima {
+  position: fixed;
+  z-index: 70;
+  width: 7rem;
+  height: 9.3333rem;
+  pointer-events: none;
+  transform: translate(-50%, -60%);
+  filter: drop-shadow(0 0 0.9rem rgba(255, 120, 20, 0.55));
+  animation: confronto-queima 1.3s ease-in both;
+}
+.lixeira-queima__corpo {
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(to top, transparent calc(var(--queima) - 4%), #000 calc(var(--queima) + 6%));
+  mask-image: linear-gradient(to top, transparent calc(var(--queima) - 4%), #000 calc(var(--queima) + 6%));
+}
+.lixeira-queima__corpo .carta {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  transform: none;
+  animation: confronto-carboniza 1.3s ease-in both;
+}
+.lixeira-queima__brasa {
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: linear-gradient(
+    to top,
+    transparent calc(var(--queima) - 3%),
+    #fff3a0 calc(var(--queima) - 1%),
+    #ff8a1c calc(var(--queima) + 2%),
+    rgba(120, 30, 0, 0.85) calc(var(--queima) + 7%),
+    rgba(40, 10, 0, 0.4) calc(var(--queima) + 14%),
+    transparent calc(var(--queima) + 22%)
+  );
+  mix-blend-mode: hard-light;
+  opacity: 0;
+  animation: confronto-brasa 1.3s linear both;
+}
+.lixeira-queima__chamas {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: calc(var(--queima) - 4%);
+  height: 0;
+  z-index: 6;
+}
+.lixeira-queima__fagulha {
+  animation-duration: 0.9s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .lixeira-queima {
+    display: none;
+  }
+}
+
+/* ---- prévia da colocação: carta grande com seta à direita que a vira para baixo ---- */
+.previa-colocacao {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 1rem 1.25rem;
+  max-width: min(92vw, 30rem);
+  max-height: 94vh;
+}
+.previa-colocacao__palco {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+.previa-colocacao__carta {
+  position: relative;
+  width: min(15rem, 52vw, 52vh * 0.75);
+  aspect-ratio: 3 / 4;
+  perspective: 60rem;
+  transform-style: preserve-3d;
+  transition: transform 0.45s ease;
+}
+.previa-colocacao__carta--baixo {
+  transform: rotateY(180deg);
+}
+.previa-colocacao__face {
+  position: absolute;
+  inset: 0;
+  container-type: size;
+  backface-visibility: hidden;
+}
+.previa-colocacao__face--verso {
+  transform: rotateY(180deg);
+}
+.previa-colocacao__face .carta--mao {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+  transform: none;
+}
+.previa-colocacao__seta {
+  flex: none;
+  display: grid;
+  place-items: center;
+  width: max(44px, 3.25rem);
+  height: max(44px, 3.25rem);
+  padding: 0;
+  color: #d6f6ff;
+  background: rgba(6, 28, 44, 0.9);
+  border: 0.125rem solid var(--cc-turquesa, #3fdcf0);
+  border-radius: 50%;
+  cursor: pointer;
+  box-shadow: 0 0 0.75rem rgba(63, 220, 240, 0.45);
+}
+.previa-colocacao__seta svg {
+  width: 55%;
+  height: 55%;
+}
+.previa-colocacao__seta:hover,
+.previa-colocacao__seta:focus-visible {
+  background: rgba(14, 60, 84, 0.95);
+}
+.previa-colocacao__dica {
+  margin: 0;
+  font-size: 0.9rem;
+  color: #a4c4d0;
+}
+@media (prefers-reduced-motion: reduce) {
+  .previa-colocacao__carta {
+    transition: none;
+  }
+}
+
+/* unidade que já atacou neste turno (turno do seu dono): cinza claro, indica que não pode mais atacar */
+.zona--ja-atacou .carta {
+  filter: grayscale(1) brightness(1.18) contrast(0.85);
+  opacity: 0.85;
+  transition: filter 0.25s ease, opacity 0.25s ease;
+}
+
+/* seta sobre a unidade do campo: alterna ataque/defesa */
+.zona__girar {
+  position: absolute;
+  top: 0.25rem;
+  right: 0.25rem;
+  z-index: 4;
+  display: grid;
+  place-items: center;
+  width: max(44px, 2rem);
+  height: max(44px, 2rem);
+  padding: 0;
+  color: #d6f6ff;
+  background: rgba(6, 28, 44, 0.88);
+  border: 0.125rem solid var(--cc-turquesa, #3fdcf0);
+  border-radius: 50%;
+  cursor: pointer;
+}
+.zona__girar svg {
+  width: 60%;
+  height: 60%;
+}
+.zona__girar:hover,
+.zona__girar:focus-visible {
+  background: rgba(14, 60, 84, 0.96);
+}
+.zona__girar[aria-disabled='true'] {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

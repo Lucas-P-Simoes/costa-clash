@@ -48,9 +48,9 @@ describe('QA arrasto: bordas', () => {
     expect(campoV()).toBe('')
     expect(document.querySelector('.duelo-arrasto-fantasma')).not.toBeNull()
     fireEvent.pointerUp(window, { ...P, clientX: 200, clientY: 300 })
-    expect(screen.getByRole('dialog', { name: 'Como colocar a unidade?' })).toBeTruthy()
+    expect(screen.getByRole('dialog', { name: /^Colocar / })).toBeTruthy()
     await tick()
-    fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
     expect(campoV()).toMatch(/Zona 3 sua: Recife de Coral/)
   })
 

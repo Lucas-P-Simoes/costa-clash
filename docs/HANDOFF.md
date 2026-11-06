@@ -1,5 +1,18 @@
 # Handoff — continuidade entre Codex e Claude Code
 
+## Prévia de colocação, unidade cinza após atacar e seta de posição (coordenador Claude Code; DEV sessão, sem QA independente, 2026-11-06; sem commit/publicação)
+- **Colocação:** o diálogo "Como colocar a unidade?" saiu. Ao soltar/escolher a zona aparece `PreviaColocacao` (carta grande, seta à direita que vira a carta para baixo/cima com animação, botões COLOCAR CARTA e CANCELAR). O comando sai com `viradaParaBaixo` conforme a seta.
+- **Já atacou:** unidade que atacou no turno do seu dono recebe `zona--ja-atacou` (cinza claro).
+- **Seta de posição:** botão `.zona__girar` no canto superior direito de cada unidade do jogador alterna ATAQUE/DEFESA via `mudarPosicao` (bloqueado fora da vez ou depois de atacar).
+- **Testes:** vitest 719 + 1 ignorado, oxlint, tsc e build ok; E2E 288/295 (mesmas 7 falhas pré-existentes). Testes de face foram adaptados (`Colocar carta`, `Virar a carta para baixo`).
+- **Limite:** sem captura visual; a seta fica sobre o canto da carta (pode cobrir parte da moldura) — ajustar posição com o dono.
+
+## Queima da carta solta na lixeira (coordenador Claude Code; DEV sessão, sem rodada QA independente, 2026-11-06; sem commit/publicação)
+- **Pedido:** ao arrastar uma carta e soltá-la na lixeira, mostrar um efeito de queima.
+- **Implementação:** `src/components/duelo/CartaQueimando.tsx` (decorativo, `aria-hidden`, `pointer-events: none`, dura 1,4 s) e CSS `.lixeira-queima*` no fim de `duelo.css`, reaproveitando `--queima` e os keyframes da cena de confronto. `Partida.tsx` (`soltarArrasto`) mostra a carta no ponto da soltura quando o comando é `descartar` e limpa por timer. Só vale para o arrasto (o botão "Jogar selecionada na lixeira" não anima). Oculto com `prefers-reduced-motion`.
+- **Testes:** novo caso em `duelo_arrasto.test.tsx`; vitest 716 + 1 ignorado, oxlint, tsc e build ok. E2E não rodado.
+- **Limite:** o visual da animação não foi visto (janela do navegador oculta); aprovação com o dono.
+
 ## Remoção das cartas de ação (coordenador Claude Code; DEV sessão → QA subagente `qa` APROVADO COM RESSALVAS, fixtures corrigidas depois, 2026-11-05; sem commit/publicação)
 - **Pedido:** "remova as cartas de ação do baralho também" (após a remoção dos suportes, já publicada em `8dd1485` + Worker). Interpretado como as 15 cartas `acao` restantes, **incluindo terrenos** (a confirmar). Catálogo: **72 unidades**. Detalhes e decisões em `docs/REGRAS_DO_JOGO.md` §17.
 - **Código:** `efeitos.ts`, `FaixaTerreno`, terreno/buffs/cura/alvos e fluxos de ação em `Partida.tsx` removidos; dados, drops (regra 4/2/1, ranking ATK+DEF), histórias, arte (manifesto regenerado, piloto 4 cartas) e testes atualizados; 15 artes em `docs/arte/cartas-removidas/`.

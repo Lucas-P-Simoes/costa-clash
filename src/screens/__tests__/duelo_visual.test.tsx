@@ -20,7 +20,7 @@ afterEach(() => {
 
 const botao = (n: string | RegExp) => screen.getByRole('button', { name: n })
 const q = <T extends Element = HTMLElement>(s: string) => document.querySelector<T>(s)!
-const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
+const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
 
 function montar(cfg: ConfigCenario = {}, atrasoIA = 0) {
   const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })

@@ -42,7 +42,7 @@ function arrastar(card: Element, sobre: Element | null, soltar = true) {
 const zonaDoJogador = (i: number) => qa('.duelo-lado--voce .duelo-zonas > .zona')[i]
 const aviso = () => q('.duelo-aviso').textContent
 const tabuleiro = () => qa('.duelo-zonas .carta').map((c) => c.getAttribute('aria-label')).join('|') + '#' + qa('.duelo-log li').map((l) => l.textContent).join('|')
-const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
+const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
 
 describe('Arrastar: unidade para zona livre', () => {
   it('entra na zona solta, com a animação de entrada, e o resultado é igual ao do fluxo por botão', async () => {
@@ -80,10 +80,11 @@ describe('Arrastar: unidade para zona livre', () => {
   it('ao soltar, não baixa ainda: abre a mesma escolha e aceita virada para baixo', async () => {
     montar({ humano: { mao: ['CC-003'] } })
     arrastar(mao(1), zonaDoJogador(0))
-    const dialogo = screen.getByRole('dialog', { name: 'Como colocar a unidade?' })
+    const dialogo = screen.getByRole('dialog', { name: /^Colocar / })
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
     await tick()
-    fireEvent.click(screen.getByRole('button', { name: 'Virada para baixo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Virar a carta para baixo' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
     expect(dialogo.isConnected).toBe(false)
     expect(screen.queryAllByRole('button', { name: /^Mão \d/ })).toHaveLength(0)
     expect(document.querySelector('[role="log"]')?.textContent).toContain('virada para baixo em ataque')
@@ -155,6 +156,28 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
     arrastar(mao(1), q('[data-destino="lixeira"]'))
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
     expect(screen.getByLabelText('Cartas descartadas: 1')).toBeTruthy()
+  })
+
+  it('soltar na lixeira mostra a carta queimando (decorativa) e o efeito some sozinho; jogar no campo não queima', () => {
+    vi.useFakeTimers()
+    try {
+      montar({ jogadaFeita: true, humano: { mao: ['CC-003', 'CC-004'] } })
+      arrastar(mao(1), q('[data-destino="lixeira"]'))
+      const queima = document.querySelector('[data-testid="lixeira-queima"]')
+      expect(queima).toBeTruthy()
+      expect(queima!.getAttribute('aria-hidden')).toBe('true')
+      expect(queima!.textContent).toContain('Recife de Coral')
+      act(() => {
+        vi.advanceTimersByTime(2000)
+      })
+      expect(document.querySelector('[data-testid="lixeira-queima"]')).toBeNull()
+    } finally {
+      vi.useRealTimers()
+    }
+    cleanup()
+    montar({ humano: { mao: ['CC-003', 'CC-004'] } })
+    arrastar(mao(1), zonaDoJogador(0))
+    expect(document.querySelector('[data-testid="lixeira-queima"]')).toBeNull()
   })
 
   it('fora da vez (turno do oponente em reprodução): arrasto desabilitado com motivo', () => {

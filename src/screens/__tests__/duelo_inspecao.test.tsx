@@ -74,7 +74,7 @@ describe('mão em leque e inspeção ampliada', () => {
     fireEvent.click(cartaMao())
     fireEvent.click(screen.getByRole('button', { name: /Usar carta/ }))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
-    fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
     fireEvent.click(screen.getByRole('button', { name: /Encerrar turno/ }))
 
     const primeira = cartaMao()
@@ -148,7 +148,7 @@ describe('mão em leque e inspeção ampliada', () => {
     fireEvent.pointerMove(window, { pointerId: 1, pointerType: 'mouse', button: 0, isPrimary: true, clientX: 100, clientY: 480 })
     expect(inspecao()).toBeNull()
     fireEvent.pointerUp(window, { pointerId: 1, pointerType: 'mouse', button: 0, isPrimary: true, clientX: 100, clientY: 480 })
-    expect(screen.queryByRole('dialog', { name: 'Como colocar a unidade?' })).toBeNull()
+    expect(screen.queryByRole('dialog', { name: /^Colocar / })).toBeNull()
   })
 
   it('invalida a inspeção quando a fonte é removida sem mudar a chave guardada', () => {

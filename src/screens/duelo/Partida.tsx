@@ -3,11 +3,13 @@ import type { CSSProperties, FocusEvent as ReactFocusEvent, PointerEvent as Reac
 import { BannerTurno } from '../../components/duelo/BannerTurno'
 import { BotaoAcao } from '../../components/duelo/BotaoAcao'
 import { CabecalhoDuelo } from '../../components/duelo/CabecalhoDuelo'
+import { CartaQueimando, DURACAO_QUEIMA_LIXEIRA_MS } from '../../components/duelo/CartaQueimando'
 import { CartaVerso, CartaView } from '../../components/duelo/CartaView'
 import { IconeEscudo, IconeRelogioPixel } from '../../components/duelo/iconesDuelo'
 import { InspecaoCarta } from '../../components/duelo/InspecaoCarta'
 import type { FonteInspecao } from '../../components/duelo/InspecaoCarta'
 import { Lixeira } from '../../components/duelo/Lixeira'
+import { PreviaColocacao } from '../../components/duelo/PreviaColocacao'
 import { PainelJogador } from '../../components/duelo/PainelJogador'
 import { SetaAtaque } from '../../components/duelo/SetaAtaque'
 import { chaveZona, DURACAO_CONFRONTO_MS, movimentoReduzido, useConfronto, useEfeitosVisuais } from '../../components/duelo/efeitosVisuais'
@@ -115,42 +117,6 @@ function DialogoDesistir({ onConfirmar, onCancelar }: { onConfirmar: () => void;
           </button>
           <button type="button" className="botao botao--secundario" data-foco-inicial onClick={onCancelar}>
             <span>Continuar jogando</span>
-          </button>
-        </div>
-      </div>
-    </div>
-  )
-}
-
-function DialogoFaceUnidade({
-  posicao,
-  onEscolher,
-  onCancelar,
-}: {
-  posicao: Posicao
-  onEscolher: (viradaParaBaixo: boolean) => void
-  onCancelar: () => void
-}) {
-  const ref = useRef<HTMLDivElement>(null)
-  useFocoDialogo(ref, 'b-usar')
-  return (
-    <div className="duelo-overlay">
-      <div ref={ref} className="duelo-dialogo moldura textura-pedra" role="dialog" aria-modal="true" aria-labelledby="duelo-face-titulo" aria-describedby="duelo-face-descricao">
-        <h2 id="duelo-face-titulo" className="duelo-dialogo__titulo duelo-dialogo__titulo--pequeno">
-          Como colocar a unidade?
-        </h2>
-        <p id="duelo-face-descricao" className="duelo-dialogo__motivo">
-          Posição {posicao === 'ATAQUE' ? 'de ataque' : 'de defesa'}. Escolha a face da carta.
-        </p>
-        <div className="duelo-dialogo__botoes">
-          <button type="button" className="botao botao--primario" data-foco-inicial onClick={() => onEscolher(false)}>
-            <span>Virada para cima</span>
-          </button>
-          <button type="button" className="botao botao--primario" onClick={() => onEscolher(true)}>
-            <span>Virada para baixo</span>
-          </button>
-          <button type="button" className="botao botao--secundario" onClick={onCancelar}>
-            <span>Cancelar</span>
           </button>
         </div>
       </div>
@@ -498,6 +464,15 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     }
   }
 
+  /** Seta sobre a unidade do campo: alterna ataque/defesa pelo mesmo comando do botão DEFENDER. */
+  function girarUnidade(zona: number) {
+    const u = v.eu.campo[zona]
+    if (!u) return
+    if (!minhaVez) return dizer('Aguarde a sua vez.', true)
+    if (u.atacou) return dizer('Uma unidade que já atacou não muda de posição neste turno.', true)
+    if (enviar({ tipo: 'mudarPosicao', jogador: 'humano', zona, posicao: u.posicao === 'ATAQUE' ? 'DEFESA' : 'ATAQUE' })) setSel({ unidade: zona })
+  }
+
   /** Motivo pelo qual a carta não pode ir para a lixeira agora (null = pode). */
   function motivoDescartarLivre(uid: string | undefined): string | null {
     if (!minhaVez) return 'Aguarde a sua vez.'
@@ -637,6 +612,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     window.addEventListener('click', engolir, true)
     window.setTimeout(() => engolirRef.current === engolir && pararDeEngolirClique(), 0)
   }
+  const contadorQueima = useRef(0)
+  const [queimando, setQueimando] = useState<{ id: number; cartaId: string; x: number; y: number } | null>(null)
   const [arr, setArr] = useState<{ uid: string; x: number; y: number; sobre: string | null } | null>(null)
 
   function cartaDoUid(uid: string | undefined) {
@@ -807,10 +784,20 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     setArr(null)
     if (a.toque && !a.moveu) return // pressão longa solta sem mover: não joga (a carta fica selecionada)
     const r = avaliarDestino(a.uid, destinoSob(e.clientX, e.clientY))
+    if (r.cmd?.tipo === 'descartar') {
+      const descartada = cartaDoUid(a.uid)
+      if (descartada) setQueimando({ id: ++contadorQueima.current, cartaId: descartada.id, x: e.clientX, y: e.clientY })
+    }
     if (r.cmd) enviarOuEscolherFace(r.cmd)
     else dizer(r.motivo, true)
   }
 
+  // A queima da carta solta na lixeira é só visual: some sozinha.
+  useEffect(() => {
+    if (!queimando) return
+    const t = window.setTimeout(() => setQueimando(null), DURACAO_QUEIMA_LIXEIRA_MS)
+    return () => window.clearTimeout(t)
+  }, [queimando])
   useEffect(() => {
     apiArrasto.current = { mover: moverArrasto, soltar: soltarArrasto, cancelar: cancelarArrasto }
   })
@@ -916,7 +903,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const sobreAtaque = !!setaHumana && lado === 'oponente' && setaHumana.alvo === z
     const proibidoAtaque =
       !!setaHumana && !!u && ((lado === 'oponente' && !alvoAtaqueHumano) || (lado === 'humano' && z !== setaHumana.atacante))
-    const classeAtaque = `${alvoAtaqueHumano ? ' duelo-alvo-ataque--valido' : ''}${sobreAtaque ? ' duelo-alvo-ataque--sobre' : ''}${alvoAtaqueIA ? ' duelo-alvo-ataque--ia' : ''}${proibidoAtaque ? ' duelo-alvo-ataque--invalido' : ''}${atacanteIA ? ' duelo-atacante-ia' : ''}`
+    const classeAtaque = `${alvoAtaqueHumano ? ' duelo-alvo-ataque--valido' : ''}${sobreAtaque ? ' duelo-alvo-ataque--sobre' : ''}${alvoAtaqueIA ? ' duelo-alvo-ataque--ia' : ''}${proibidoAtaque ? ' duelo-alvo-ataque--invalido' : ''}${atacanteIA ? ' duelo-atacante-ia' : ''}${u && u.atacou && estado.ativo === lado ? ' zona--ja-atacou' : ''}`
     if (!u) {
       const rot = `Zona ${z + 1} ${quem}: vazia, escolher esta zona`
       if (livreEscolha) {
@@ -1004,6 +991,20 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
             onPointerDown={lado === 'humano' && atacantePossivel ? (e) => iniciarAtaquePointer(z, e) : undefined}
           />
         </span>
+        {lado === 'humano' ? (
+          <button
+            type="button"
+            className="zona__girar"
+            aria-label={`Zona ${z + 1}: mudar ${c.nome} para ${unidade.posicao === 'ATAQUE' ? 'defesa' : 'ataque'}`}
+            aria-disabled={!minhaVez || unidade.atacou || undefined}
+            title={unidade.posicao === 'ATAQUE' ? 'Mudar para defesa' : 'Mudar para ataque'}
+            onClick={() => girarUnidade(z)}
+          >
+            <svg viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
+              <path d="M3 8V6h2V4h5V2h2v2h2v2h-2v2h-2V6H6v2H3zm10 0v2h-2v2H6v2H4v-2H2v-2h2v-2h2v2h5V8z" fill="currentColor" />
+            </svg>
+          </button>
+        ) : null}
       </div>
     )
   }
@@ -1208,6 +1209,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
         />
       ) : null}
 
+      {queimando && cat.get(queimando.cartaId) ? <CartaQueimando key={queimando.id} carta={cat.get(queimando.cartaId)!} x={queimando.x} y={queimando.y} /> : null}
+
       {arr && cartaDoUid(arr.uid) ? (
         <div className="duelo-arrasto-fantasma" aria-hidden="true" style={{ left: arr.x, top: arr.y }}>
           <CartaView carta={cartaDoUid(arr.uid)!} tamanho="mao" rotulo="Carta sendo arrastada" />
@@ -1224,10 +1227,11 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
         />
       ) : null}
 
-      {colocacaoPendente ? (
-        <DialogoFaceUnidade
+      {colocacaoPendente && cartaDoUid(colocacaoPendente.uid) ? (
+        <PreviaColocacao
+          carta={cartaDoUid(colocacaoPendente.uid)!}
           posicao={colocacaoPendente.posicao ?? 'ATAQUE'}
-          onEscolher={(viradaParaBaixo) => {
+          onColocar={(viradaParaBaixo) => {
             const cmd = colocacaoPendente
             setColocacaoPendente(null)
             enviar({ ...cmd, viradaParaBaixo })

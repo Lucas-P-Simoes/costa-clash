@@ -57,11 +57,11 @@ describe('Toque: pressão longa arma o arrasto', () => {
     expect(vibrar).toHaveBeenCalledTimes(1)
     fireEvent.pointerMove(window, { ...T, clientX: 140, clientY: 400 })
     fireEvent.pointerUp(window, { ...T, clientX: 140, clientY: 400 })
-    expect(screen.getByRole('dialog', { name: 'Como colocar a unidade?' })).toBeTruthy()
+    expect(screen.getByRole('dialog', { name: /^Colocar / })).toBeTruthy()
     act(() => {
       vi.advanceTimersByTime(0)
     })
-    fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
     expect(campoV()).toMatch(/^Zona 3 sua: Recife de Coral/)
   })
 
@@ -191,7 +191,7 @@ describe('Dica e tela baixa', () => {
     fireEvent.click(mao(1))
     fireEvent.click(screen.getByRole('button', { name: /Usar carta/ }))
     fireEvent.click(document.querySelector<HTMLElement>('.duelo-lado--voce .duelo-zonas button.zona--vazia')!)
-    fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
+    fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
     expect(campoV()).toContain('Recife de Coral')
   })
 })
