@@ -115,6 +115,17 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     expect(screen.getByRole('button', { name: /Zona 2 sua: Manguezal Protegido.*em ataque/ })).toBeTruthy()
   })
 
+  it('depois de baixar uma carta, as cartas da mão ficam cinza (sem jogada neste turno); antes, não', () => {
+    montarCenario({ humano: { mao: ['CC-003', 'CC-004'] } })
+    const maoCartas = () => document.querySelector('.duelo-mao__cartas')!
+    expect(maoCartas().classList.contains('duelo-mao__cartas--sem-jogada')).toBe(false)
+    fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
+    fireEvent.click(botao(/Usar carta/))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    confirmarFaceParaCima()
+    expect(maoCartas().classList.contains('duelo-mao__cartas--sem-jogada')).toBe(true)
+  })
+
   it('DEFENDER com unidade da mão escolhe a posição de entrada', () => {
     montarCenario({ humano: { mao: ['CC-003'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
@@ -150,6 +161,10 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     expect(screen.queryByText('Como colocar a unidade?')).toBeNull()
     fireEvent.click(within(previa).getByRole('button', { name: 'Virar a carta para baixo' }))
     expect(previa.querySelector('.previa-colocacao__carta')?.getAttribute('data-face')).toBe('baixo')
+    fireEvent.click(within(previa).getByRole('button', { name: 'Virar a carta para cima (seta esquerda)' }))
+    expect(previa.querySelector('.previa-colocacao__carta')?.getAttribute('data-face')).toBe('cima')
+    fireEvent.click(within(previa).getByRole('button', { name: 'Virar a carta para baixo (seta esquerda)' }))
+    expect(previa.querySelector('.previa-colocacao__carta')?.getAttribute('data-face')).toBe('baixo')
     fireEvent.click(within(previa).getByRole('button', { name: 'Virar a carta para cima' }))
     expect(previa.querySelector('.previa-colocacao__carta')?.getAttribute('data-face')).toBe('cima')
   })
@@ -161,7 +176,7 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     const zona = screen.getByRole('button', { name: /Zona 1 sua: vazia/ })
     fireEvent.click(zona)
     const dialogo = screen.getByRole('dialog', { name: /^Colocar / })
-    const cima = within(dialogo).getByRole('button', { name: 'Virar a carta para baixo' }) // primeiro foco da ordem de Tab
+    const cima = within(dialogo).getByRole('button', { name: 'Virar a carta para baixo (seta esquerda)' }) // primeiro foco da ordem de Tab
     const cancelar = within(dialogo).getByRole('button', { name: 'Cancelar' })
     cancelar.focus()
     fireEvent.keyDown(document, { key: 'Tab' })

@@ -27,6 +27,17 @@ export function PreviaColocacao({
     <div className="duelo-overlay">
       <div ref={ref} className="previa-colocacao moldura textura-pedra" role="dialog" aria-modal="true" aria-label={`Colocar ${carta.nome}`}>
         <div className="previa-colocacao__palco">
+          <button
+            type="button"
+            className="previa-colocacao__seta previa-colocacao__seta--esq"
+            aria-label={baixo ? 'Virar a carta para cima (seta esquerda)' : 'Virar a carta para baixo (seta esquerda)'}
+            aria-pressed={baixo}
+            onClick={() => setBaixo((v) => !v)}
+          >
+            <svg viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
+              <path d="M11 1H8v2H6v2H4v2H2v2h2v2h2v2h2v2h3v-2H9v-2H7v-2H5V8h2V6h2V4h2z" fill="currentColor" />
+            </svg>
+          </button>
           <div className={`previa-colocacao__carta${baixo ? ' previa-colocacao__carta--baixo' : ''}`} data-face={baixo ? 'baixo' : 'cima'}>
             <div className="previa-colocacao__face previa-colocacao__face--frente">
               <CartaView carta={carta} tamanho="mao" rotulo={`${carta.nome}, virada para cima`} />
@@ -37,7 +48,7 @@ export function PreviaColocacao({
           </div>
           <button
             type="button"
-            className="previa-colocacao__seta"
+            className="previa-colocacao__seta previa-colocacao__seta--dir"
             aria-label={baixo ? 'Virar a carta para cima' : 'Virar a carta para baixo'}
             aria-pressed={baixo}
             onClick={() => setBaixo((v) => !v)}

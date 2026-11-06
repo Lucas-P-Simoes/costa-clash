@@ -2697,32 +2697,45 @@ button.carta {
   transition: filter 0.25s ease, opacity 0.25s ease;
 }
 
-/* seta sobre a unidade do campo: alterna ataque/defesa */
+/* seta sobre a unidade do campo: alterna ataque/defesa. O botão tem 44 px (área de toque) e só o círculo da seta aparece,
+   no canto superior direito, metade para fora da carta (não cobre ATK/DEF nem o selo de posição). */
 .zona__girar {
   position: absolute;
-  top: 0.25rem;
-  right: 0.25rem;
-  z-index: 4;
+  top: -1.25rem;
+  right: -1.1rem;
+  z-index: 8;
   display: grid;
   place-items: center;
-  width: max(44px, 2rem);
-  height: max(44px, 2rem);
+  width: max(44px, 2.75rem);
+  height: max(44px, 2.75rem);
   padding: 0;
   color: #d6f6ff;
-  background: rgba(6, 28, 44, 0.88);
-  border: 0.125rem solid var(--cc-turquesa, #3fdcf0);
-  border-radius: 50%;
+  background: none;
+  border: 0;
   cursor: pointer;
 }
 .zona__girar svg {
-  width: 60%;
-  height: 60%;
+  box-sizing: border-box;
+  width: 1.9rem;
+  height: 1.9rem;
+  padding: 0.3rem;
+  background: rgba(6, 28, 44, 0.95);
+  border: 0.125rem solid var(--cc-turquesa, #3fdcf0);
+  border-radius: 50%;
+  box-shadow: 0 0 0.5rem rgba(63, 220, 240, 0.5);
 }
-.zona__girar:hover,
-.zona__girar:focus-visible {
+.zona__girar:hover svg,
+.zona__girar:focus-visible svg {
   background: rgba(14, 60, 84, 0.96);
 }
 .zona__girar[aria-disabled='true'] {
   opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* jogada da mão já feita neste turno: cartas da mão em cinza (não podem mais ser baixadas; a lixeira continua valendo) */
+.duelo-mao__cartas--sem-jogada .carta {
+  filter: grayscale(1) brightness(1.1) contrast(0.85);
+  opacity: 0.8;
+  transition: filter 0.25s ease, opacity 0.25s ease;
 }

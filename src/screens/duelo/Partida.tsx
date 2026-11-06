@@ -1000,8 +1000,11 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
             title={unidade.posicao === 'ATAQUE' ? 'Mudar para defesa' : 'Mudar para ataque'}
             onClick={() => girarUnidade(z)}
           >
-            <svg viewBox="0 0 16 16" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
-              <path d="M3 8V6h2V4h5V2h2v2h2v2h-2v2h-2V6H6v2H3zm10 0v2h-2v2H6v2H4v-2H2v-2h2v-2h2v2h5V8z" fill="currentColor" />
+            <svg viewBox="0 0 16 16" aria-hidden="true" focusable="false">
+              <path d="M3 9a5 5 0 0 1 8.5-3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M13 1.5v5H8z" fill="currentColor" />
+              <path d="M13 7a5 5 0 0 1-8.5 3.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+              <path d="M3 14.5v-5h5z" fill="currentColor" />
             </svg>
           </button>
         ) : null}
@@ -1090,7 +1093,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
                 Sua mão <small>({mao.length} cartas)</small>
               </h2>
               {telaBaixa ? null : <p className="duelo-mao__dica">{telaToque ? 'Segure e arraste a carta até o campo, ou use USAR CARTA' : 'Arraste a carta até o campo ou use USAR CARTA'}</p>}
-              <div className="duelo-mao__cartas">
+              <div className={`duelo-mao__cartas${minhaVez && estado.jogadaFeita ? ' duelo-mao__cartas--sem-jogada' : ''}`} data-sem-jogada={minhaVez && estado.jogadaFeita ? 'true' : undefined}>
                 {mao.map((m, i) => {
                   const c = cat.get(m.cartaId)!
                   const leque = calcularEstiloLeque(i, mao.length)
