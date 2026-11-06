@@ -2750,9 +2750,12 @@ button.carta {
   font-weight: 900;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  -webkit-text-stroke: 0.1em #07101a;
-  paint-order: stroke fill;
-  text-shadow: 0 0.12em 0.4em rgba(0, 0, 0, 0.85);
+  padding: 0.12em 0.5em 0.08em;
+  background: rgba(0, 0, 0, 0.88);
+  border: 0.08em solid currentColor;
+  border-radius: 0.2em;
+  box-shadow: 0 0 0 0.12em #000, 0 0.3em 1.2em rgba(0, 0, 0, 0.9);
+  text-shadow: 0 0.06em 0.2em #000;
   opacity: 0;
   animation: confronto-veredito 0.5s 1.7s cubic-bezier(0.2, 1.4, 0.4, 1) both;
 }
