@@ -3,22 +3,20 @@
 // Normalização de sinais (decisão registrada em REGRAS_DO_JOGO.md): o sinal do catálogo NÃO é usado
 // diretamente. `debuff_grupo` e `debuff_invocada` SEMPRE reduzem (|valor|); `buff_*` SEMPRE aumentam (|valor|).
 import { curar, destruirUnidade, emitir, nomeCarta, outro, zonaValida } from './estado'
-import type { Catalogo, CartaInstancia, Ctx, EstadoDuelo, IdJogador, SuporteEmZona } from './estado'
-import { ZONAS_SUPORTE, ZONAS_UNIDADE, VIDA_INICIAL } from './tipos'
+import type { Catalogo, CartaInstancia, Ctx, EstadoDuelo, IdJogador } from './estado'
+import { ZONAS_UNIDADE, VIDA_INICIAL } from './tipos'
 import type { Carta, Grupo } from './tipos'
 
 const GRUPOS: ReadonlySet<string> = new Set(['ecossistema', 'fauna', 'atividade', 'impacto'])
 
-type Destino = 'descarte' | 'suporte' | 'terreno'
+type Destino = 'descarte' | 'terreno'
 
 interface Operacao {
   /** De quem é a unidade alvo (null = sem alvo). */
   lado: 'aliada' | 'inimiga' | null
-  /** Unidade já equipada não é alvo válido. */
-  semEquipamento?: boolean
   destino: Destino
   bloqueio?: (e: EstadoDuelo, jogador: IdJogador) => string | null
-  aplicar: (ctx: Ctx, jogador: IdJogador, carta: Carta, inst: CartaInstancia, alvo: number | undefined, zonaSuporte: number | undefined) => void
+  aplicar: (ctx: Ctx, jogador: IdJogador, carta: Carta, inst: CartaInstancia, alvo: number | undefined) => void
 }
 
 function grupoFiltro(carta: Carta): Grupo | null {
@@ -44,36 +42,6 @@ function alterarAtributos(ctx: Ctx, jogador: IdJogador, carta: Carta, lado: IdJo
       ...(u.viradaParaBaixo ? { alvoViradoParaBaixo: true } : {}),
     },
     `${u.viradaParaBaixo ? 'Uma unidade virada para baixo' : nomeCarta(ctx.cat, u.cartaId)}: ${sinal}${delta} de ATK e DEF.`,
-  )
-}
-
-function equipar(ctx: Ctx, jogador: IdJogador, carta: Carta, inst: CartaInstancia, alvo: number | undefined, zonaSuporte: number | undefined): void {
-  const j = ctx.e.jogadores[jogador]
-  const u = j.campo[alvo as number]
-  if (!u) throw new Error('equipar: alvo ausente')
-  const z = zonaSuporte ?? j.suporte.findIndex((s) => s === null)
-  const s: SuporteEmZona = {
-    uid: inst.uid,
-    cartaId: inst.cartaId,
-    tipo: 'equipamento',
-    colocadaNoTurno: ctx.e.turno,
-    ordem: ctx.e.proximaOrdem++,
-    vinculadaA: u.uid,
-  }
-  j.suporte[z] = s
-  u.equipamentoUid = inst.uid
-  emitir(
-    ctx,
-    {
-      tipo: 'efeito_aplicado',
-      jogador,
-      cartaId: carta.id,
-      operacao: carta.efeito?.operacao ?? '',
-      valor: carta.efeito?.valor ?? 0,
-      alvo: { jogador, zona: alvo as number },
-      ...(u.viradaParaBaixo ? { alvoViradoParaBaixo: true } : {}),
-    },
-    `${carta.nome} equipada em ${u.viradaParaBaixo ? 'uma unidade virada para baixo' : nomeCarta(ctx.cat, u.cartaId)}.`,
   )
 }
 
@@ -113,26 +81,6 @@ const OPERACOES: Readonly<Record<string, Operacao>> = {
       curar(ctx, jogador, Math.abs(carta.efeito?.valor ?? 0))
     },
   },
-  revelar: {
-    lado: null,
-    destino: 'descarte',
-    aplicar: (ctx, jogador, carta) => {
-      ctx.e.revelacao = jogador
-      const armadilhas: { zona: number; cartaId: string }[] = []
-      ctx.e.jogadores[outro(jogador)].suporte.forEach((s, zona) => {
-        if (s?.tipo === 'armadilha') armadilhas.push({ zona, cartaId: s.cartaId })
-      })
-      emitir(
-        ctx,
-        { tipo: 'armadilhas_reveladas', jogador, armadilhas },
-        armadilhas.length
-          ? `${carta.nome}: ${armadilhas.length} armadilha(s) do adversário reveladas até o fim do turno.`
-          : `${carta.nome}: o adversário não tem armadilhas viradas.`,
-      )
-    },
-  },
-  equip_buff_atk: { lado: 'aliada', semEquipamento: true, destino: 'suporte', bloqueio: bloqueioSuporte, aplicar: equipar },
-  equip_buff_def: { lado: 'aliada', semEquipamento: true, destino: 'suporte', bloqueio: bloqueioSuporte, aplicar: equipar },
   field_bonus: {
     lado: null,
     destino: 'terreno',
@@ -147,10 +95,6 @@ const OPERACOES: Readonly<Record<string, Operacao>> = {
       )
     },
   },
-}
-
-function bloqueioSuporte(e: EstadoDuelo, jogador: IdJogador): string | null {
-  return e.jogadores[jogador].suporte.some((s) => s === null) ? null : 'Não há zona de suporte livre.'
 }
 
 export interface AnaliseAcao {
@@ -179,7 +123,6 @@ export function analisarAcao(e: EstadoDuelo, jogador: IdJogador, carta: Carta, c
     // Não use grupo/identidade ocultos para oferecer ao adversário um alvo que ele não poderia conhecer.
     if (dono !== jogador && u.viradaParaBaixo) return
     if (grupo && cat.get(u.cartaId)?.grupo !== grupo) return
-    if (op.semEquipamento && u.equipamentoUid) return
     alvos.push(z)
   })
   return {
@@ -192,24 +135,20 @@ export function analisarAcao(e: EstadoDuelo, jogador: IdJogador, carta: Carta, c
 }
 
 /** Validação completa dos parâmetros de uma ação da mão (null = ok). */
-export function validarAcao(e: EstadoDuelo, jogador: IdJogador, carta: Carta, cat: Catalogo, alvo: number | undefined, zona: number | undefined): string | null {
+export function validarAcao(e: EstadoDuelo, jogador: IdJogador, carta: Carta, cat: Catalogo, alvo: number | undefined): string | null {
   const a = analisarAcao(e, jogador, carta, cat)
   if (a.bloqueio) return a.bloqueio
   if (a.exigeAlvo) {
     if (alvo === undefined) return 'Escolha uma unidade como alvo.'
     if (!zonaValida(alvo, ZONAS_UNIDADE) || !a.alvos.includes(alvo)) return 'Alvo inválido para esta carta.'
   }
-  if (a.destino === 'suporte' && zona !== undefined) {
-    if (!zonaValida(zona, ZONAS_SUPORTE)) return 'Zona de suporte inválida.'
-    if (e.jogadores[jogador].suporte[zona]) return 'A zona de suporte escolhida está ocupada.'
-  }
   return null
 }
 
 /** Aplica a ação (já validada) e coloca a carta no destino correto. */
-export function resolverAcao(ctx: Ctx, jogador: IdJogador, carta: Carta, inst: CartaInstancia, alvo: number | undefined, zonaSuporte: number | undefined): Destino {
+export function resolverAcao(ctx: Ctx, jogador: IdJogador, carta: Carta, inst: CartaInstancia, alvo: number | undefined): Destino {
   const op = OPERACOES[carta.efeito?.operacao ?? ''] as Operacao
-  op.aplicar(ctx, jogador, carta, inst, alvo, zonaSuporte)
+  op.aplicar(ctx, jogador, carta, inst, alvo)
   if (op.destino === 'descarte') ctx.e.jogadores[jogador].descarte.push({ ...inst })
   return op.destino
 }

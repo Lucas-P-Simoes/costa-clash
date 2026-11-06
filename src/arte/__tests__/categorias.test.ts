@@ -27,7 +27,7 @@ describe('mapa categoria -> cor/selo', () => {
     expect(CATEGORIAS.ondas.selo).toBe('onda')
   })
 
-  it('classifica as 100 cartas com categoria e selo existentes', () => {
+  it('classifica as 87 cartas com categoria e selo existentes', () => {
     for (const c of CATALOGO) {
       const v = classificarCarta(c)
       expect(CATEGORIAS[v.categoria], c.id).toBeTruthy()
@@ -50,8 +50,6 @@ describe('mapa categoria -> cor/selo', () => {
     expect(classificarCarta(carta('CC-034')).categoria).toBe('planejamento') // atividade
     expect(classificarCarta(carta('CC-049')).categoria).toBe('impacto') // impacto
     expect(classificarCarta(carta('CC-078')).categoria).toBe('planejamento') // ação
-    expect(classificarCarta(carta('CC-086')).categoria).toBe('protegida') // equipamento
-    expect(classificarCarta(carta('CC-093')).categoria).toBe('protegida') // armadilha
     expect(classificarCarta(carta('CC-004')).categoria).toBe('verde') // ecossistema
   })
 

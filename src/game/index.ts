@@ -28,7 +28,7 @@ export type { ResultadoValidacaoBaralho } from './baralho'
 export { criarRng, embaralhar } from './rng'
 export type { Rng } from './rng'
 export { visaoParaJogador, logPublico, eventosPublicos } from './visao'
-export type { VisaoDuelo, VisaoPropria, VisaoAdversario, SuporteVisivel, UnidadeVisivel } from './visao'
+export type { VisaoDuelo, VisaoPropria, VisaoAdversario, UnidadeVisivel } from './visao'
 export { decidirComando, avaliarAtaque, escolherMelhorAtaque, PESOS_ATAQUE_IA } from './ia'
 export type { AvaliacaoAtaque, PesosAtaqueIA } from './ia'
 export { mapaCatalogo, invariantes, totalCartas, outro } from './estado'
@@ -36,7 +36,6 @@ export type {
   EstadoDuelo,
   EstadoJogador,
   UnidadeEmCampo,
-  SuporteEmZona,
   TerrenoAtivo,
   CartaInstancia,
   IdJogador,

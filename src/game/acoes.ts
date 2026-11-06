@@ -1,6 +1,5 @@
 // Comandos do duelo. Funções puras: (estado, comando) => { ok: true, estado, eventos } | { ok: false, erro, estado }.
 // Jogada ilegal NÃO altera o estado (o mesmo objeto é devolvido). Todas as transições são validadas aqui.
-import { reagirInvocacao } from './armadilhas'
 import { resolverAtaque, validarAtaque } from './combate'
 import { analisarAcao, resolverAcao, validarAcao } from './efeitos'
 import {
@@ -17,9 +16,9 @@ import {
   verificarResultado,
   zonaValida,
 } from './estado'
-import type { Catalogo, CartaInstancia, Ctx, Evento, EstadoDuelo, IdJogador, Posicao, SuporteEmZona, UnidadeEmCampo } from './estado'
+import type { Catalogo, CartaInstancia, Ctx, Evento, EstadoDuelo, IdJogador, Posicao, UnidadeEmCampo } from './estado'
 import { CATALOGO } from '../data/catalogo'
-import { TAMANHO_MAO, ZONAS_SUPORTE, ZONAS_UNIDADE } from './tipos'
+import { TAMANHO_MAO, ZONAS_UNIDADE } from './tipos'
 import type { Carta } from './tipos'
 
 // ---------------------------------------------------------------- tipos públicos
@@ -29,13 +28,13 @@ export interface ComandoJogarCarta {
   jogador: IdJogador
   /** uid da carta na mão. */
   uid: string
-  /** Unidade: zona de unidade; armadilha/equipamento: zona de suporte. Omitida = primeira livre. */
+  /** Unidade: zona de unidade. Omitida = primeira livre. */
   zona?: number
   /** Só para unidades (padrão: ATAQUE). */
   posicao?: Posicao
   /** Só para unidades (padrão: false/virada para cima). */
   viradaParaBaixo?: boolean
-  /** Zona da unidade-alvo (lado definido pela carta: aliada para buff/equipamento, inimiga para debuff/destruir). */
+  /** Zona da unidade-alvo (lado definido pela carta: aliada para buff, inimiga para debuff/destruir). */
   alvo?: number
 }
 export interface ComandoMudarPosicao {
@@ -107,7 +106,6 @@ export function iniciarTurno(ctx: Ctx): void {
     emitir(ctx, { tipo: 'compra', jogador: e.ativo, cartas }, `${nomeJogador(e.ativo)} compra ${falta} carta(s).`)
   }
   e.jogadaFeita = false
-  e.revelacao = null
   if (registrarRepeticaoCtx(ctx)) return
   e.fase = 'PRINCIPAL'
   emitir(ctx, { tipo: 'fase_alterada', jogador: e.ativo, fase: 'PRINCIPAL' }, 'Fase principal.')
@@ -163,14 +161,7 @@ export function validarJogarCarta(e: EstadoDuelo, cat: Catalogo, cmd: ComandoJog
     } else if (primeiraZonaLivre(j.campo) < 0) return 'Não há zona de unidade livre.'
     return null
   }
-  if (carta.tipo === 'armadilha') {
-    if (cmd.zona !== undefined) {
-      if (!zonaValida(cmd.zona, ZONAS_SUPORTE)) return 'Zona de suporte inválida.'
-      if (j.suporte[cmd.zona]) return 'A zona de suporte escolhida está ocupada.'
-    } else if (primeiraZonaLivre(j.suporte) < 0) return 'Não há zona de suporte livre.'
-    return null
-  }
-  return validarAcao(e, cmd.jogador, carta, cat, cmd.alvo, cmd.zona)
+  return validarAcao(e, cmd.jogador, carta, cat, cmd.alvo)
 }
 
 /** Parâmetros legais mínimos para uma carta da mão (um por combinação de alvo/posição). */
@@ -185,8 +176,6 @@ function opcoesDeCarta(e: EstadoDuelo, cat: Catalogo, jogador: IdJogador, inst: 
       { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'DEFESA', viradaParaBaixo: false },
       { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'DEFESA', viradaParaBaixo: true },
     ]
-  } else if (carta.tipo === 'armadilha') {
-    base = [{ tipo: 'jogarCarta', jogador, uid: inst.uid }]
   } else {
     const a = analisarAcao(e, jogador, carta, cat)
     base = a.exigeAlvo
@@ -247,7 +236,7 @@ export function atacantesDisponiveis(estado: EstadoDuelo): number[] {
 
 /**
  * Simula sem alterar o estado recebido e pelo mesmo caminho da execução real.
- * Útil para planejamento: armadilhas, dano, destruição e vitória nunca são
+ * Útil para planejamento: dano, destruição e vitória nunca são
  * reimplementados pela IA.
  */
 export function simularAtaque(estado: EstadoDuelo, comando: ComandoAtacar, catalogo: readonly Carta[] = CATALOGO): ResultadoComando {
@@ -277,7 +266,6 @@ function executarJogarCarta(ctx: Ctx, cmd: ComandoJogarCarta): void {
       atacou: false,
       buffAtk: 0,
       buffDef: 0,
-      equipamentoUid: null,
       invocadaNoTurno: e.turno,
     }
     j.campo[zona] = u
@@ -288,25 +276,9 @@ function executarJogarCarta(ctx: Ctx, cmd: ComandoJogarCarta): void {
         ? `${nomeJogador(cmd.jogador)} coloca ${nome} virada para baixo em ${posicao === 'ATAQUE' ? 'ataque' : 'defesa'}.`
         : `${nomeJogador(cmd.jogador)} invoca ${nome} em ${posicao === 'ATAQUE' ? 'ataque' : 'defesa'}.`,
     )
-    // A face oculta também oculta o grupo: não consulte `impacto` nem dispare seu gatilho.
-    // Revelar a unidade mais tarde não reabre o timing de invocação.
-    if (!viradaParaBaixo) reagirInvocacao(ctx, cmd.jogador, zona)
-  } else if (carta.tipo === 'armadilha') {
-    const zona = cmd.zona ?? primeiraZonaLivre(j.suporte)
-    const s: SuporteEmZona = {
-      uid: inst.uid,
-      cartaId: inst.cartaId,
-      tipo: 'armadilha',
-      colocadaNoTurno: e.turno,
-      ordem: e.proximaOrdem++,
-      vinculadaA: null,
-    }
-    j.suporte[zona] = s
-    emitir(ctx, { tipo: 'carta_jogada', jogador: cmd.jogador, carta: inst, destino: 'suporte', zona }, `${nomeJogador(cmd.jogador)} coloca uma carta virada para baixo.`)
   } else {
     const a = analisarAcao(e, cmd.jogador, carta, ctx.cat)
-    const destino = a.destino as 'descarte' | 'suporte' | 'terreno'
-    const zonaSup = destino === 'suporte' ? (cmd.zona ?? primeiraZonaLivre(j.suporte)) : undefined
+    const destino = a.destino as 'descarte' | 'terreno'
     emitir(
       ctx,
       {
@@ -314,12 +286,11 @@ function executarJogarCarta(ctx: Ctx, cmd: ComandoJogarCarta): void {
         jogador: cmd.jogador,
         carta: inst,
         destino,
-        ...(zonaSup !== undefined ? { zona: zonaSup } : {}),
         ...(a.exigeAlvo && a.donoAlvo && cmd.alvo !== undefined ? { alvo: { jogador: a.donoAlvo, zona: cmd.alvo } } : {}),
       },
       `${nomeJogador(cmd.jogador)} usa ${nome}.`,
     )
-    resolverAcao(ctx, cmd.jogador, carta, inst, a.exigeAlvo ? cmd.alvo : undefined, zonaSup)
+    resolverAcao(ctx, cmd.jogador, carta, inst, a.exigeAlvo ? cmd.alvo : undefined)
   }
   verificarResultado(ctx)
 }
@@ -390,7 +361,6 @@ function executarEncerrarTurno(ctx: Ctx, cmd: ComandoEncerrarTurno): void {
   if (e.fase !== 'PRINCIPAL' && e.fase !== 'COMBATE') throw new ErroRegra('Não é possível encerrar o turno agora.')
   if (!podeSeguir(e)) throw new ErroRegra('Faça uma jogada da mão (ou descarte) antes de encerrar o turno.')
   e.fase = 'FIM'
-  e.revelacao = null
   emitir(ctx, { tipo: 'turno_encerrado', jogador: cmd.jogador }, `${nomeJogador(cmd.jogador)} encerra o turno.`)
   e.ativo = outro(e.ativo)
   e.turno += 1

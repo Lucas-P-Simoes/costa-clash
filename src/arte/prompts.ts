@@ -57,16 +57,6 @@ export const PALETAS: Readonly<Record<PaletaId, TextoPaleta>> = {
     pt: 'azul-céu e turquesa do mar (#4aa8e8, #2fc4d8), concreto claro e janelas refletindo o sol (#d8e0e8, #f2cf6e), verdes de vegetação urbana (#37b05f), areia clara (#e8d49a)',
     en: 'sky blue and turquoise sea (#4aa8e8, #2fc4d8), light concrete and sun-reflecting windows (#d8e0e8, #f2cf6e), urban vegetation greens (#37b05f), pale sand (#e8d49a)',
   },
-  equipamento: {
-    rotulo: 'Equipamentos: metal escuro, turquesa e dourado',
-    pt: 'metal escuro azulado (#143a52) com detalhes dourados (#e6b648) e brilho turquesa (#3fdcf0), fundo atmosférico simples',
-    en: 'dark bluish metal (#143a52) with golden details (#e6b648) and turquoise glow (#3fdcf0), simple atmospheric background',
-  },
-  armadilha: {
-    rotulo: 'Armadilhas: roxo místico, dourado de alerta e turquesa',
-    pt: 'roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro',
-    en: 'dark mystic purple (#2a1a40, #8a5ac4), warning gold (#f2cf6e), energy turquoise (#3fdcf0), strong light contrast on a dark background',
-  },
 }
 
 /** Enquadramento por forma. A janela de arte do jogo é mais larga que 3:4: manter o essencial na faixa central. */

@@ -59,16 +59,13 @@ const PESO_ACAO: Readonly<Record<string, number>> = {
   debuff_grupo: 5,
   buff_unidade: 4,
   buff_grupo: 4,
-  equip_buff_atk: 4,
-  equip_buff_def: 4,
   field_bonus: 3,
   cura: 2,
-  revelar: 1,
 }
 
 interface Candidato {
   cmd: ComandoJogarCarta
-  /** 0 = unidade que vence combate; 1 = ação eficaz; 2 = unidade (maior DEF); 3 = armadilha; 4 = demais. */
+  /** 0 = unidade que vence combate; 1 = ação eficaz; 2 = unidade (maior DEF); 4 = demais (ação ineficaz). */
   nivel: number
   /** Maior = melhor (comparação lexicográfica). */
   chave: number[]
@@ -102,7 +99,6 @@ function avaliar(e: EstadoDuelo, cat: Catalogo, eu: IdJogador, cmd: ComandoJogar
       ? { cmd, nivel: 0, chave: [atk, def], cartaId: carta.id }
       : { cmd, nivel: 2, chave: [def, atk], cartaId: carta.id }
   }
-  if (carta.tipo === 'armadilha') return { cmd, nivel: 3, chave: [0], cartaId: carta.id }
   const ef = carta.efeito
   const op = ef?.operacao ?? ''
   const peso = PESO_ACAO[op] ?? 0
@@ -116,9 +112,6 @@ function avaliar(e: EstadoDuelo, cat: Catalogo, eu: IdJogador, cmd: ComandoJogar
   } else if (op === 'cura') {
     eficaz = e.jogadores[eu].lp <= VIDA_INICIAL - Math.abs(ef?.valor ?? 0)
     qualidade = Math.abs(ef?.valor ?? 0)
-  } else if (op === 'revelar') {
-    // A IA não usa a informação revelada (não há estratégia que a aproveite): nunca é "eficaz" (nível 4).
-    eficaz = false
   } else if (op === 'field_bonus') {
     const saldo = saldoTerreno(e, eu, carta, cat)
     const atual = e.terreno ? saldoTerreno(e, eu, cat.get(e.terreno.cartaId), cat) : 0

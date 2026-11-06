@@ -106,12 +106,11 @@ describe('QA fuzz: estados aleatórios e turno completo da IA', () => {
       const cartas = (n: number) => Array.from({ length: n }, () => pick(rng, IDS))
       const unidades = IDS.filter((i) => CATALOGO.find((c) => c.id === i)?.tipo === 'unidade')
       const campo = () => Array.from({ length: 5 }, () => (rng() < 0.5 ? { id: pick(rng, unidades), pos: rng() < 0.5 ? ('ATAQUE' as const) : ('DEFESA' as const), buffAtk: Math.floor(rng() * 9 - 4) * 300 } : null))
-      const armadilhas = IDS.filter((i) => CATALOGO.find((c) => c.id === i)?.tipo === 'armadilha')
       const e = cenario({
         ativo,
         turno: (ativo === 'humano' ? 3 : 2) + 2 * Math.floor(rng() * 5),
-        humano: { lp: 100 + Math.floor(rng() * 49) * 100, mao: cartas(5 - Math.floor(rng() * 3)), campo: campo(), suporte: [rng() < 0.5 ? { id: pick(rng, armadilhas), turno: 1 } : null], baralho: 12 },
-        oponente: { lp: 100 + Math.floor(rng() * 49) * 100, mao: cartas(5 - Math.floor(rng() * 3)), campo: campo(), suporte: [rng() < 0.5 ? { id: pick(rng, armadilhas), turno: 1 } : null], baralho: 12 },
+        humano: { lp: 100 + Math.floor(rng() * 49) * 100, mao: cartas(5 - Math.floor(rng() * 3)), campo: campo(), baralho: 12 },
+        oponente: { lp: 100 + Math.floor(rng() * 49) * 100, mao: cartas(5 - Math.floor(rng() * 3)), campo: campo(), baralho: 12 },
       })
       const turno0 = e.turno
       const r = executarTurnoIA(e)

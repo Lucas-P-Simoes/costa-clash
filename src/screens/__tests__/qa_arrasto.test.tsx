@@ -110,13 +110,13 @@ describe('QA arrasto: bordas', () => {
   })
 
   it('o fantasma do arrasto contém só a carta do jogador (nada do oponente) e é aria-hidden', () => {
-    montar({ oponente: { baralho: 20, mao: ['CC-034'], suporte: ['CC-094'] } })
+    montar({ oponente: { baralho: 20, mao: ['CC-034'] } })
     document.elementFromPoint = () => zona(0)
     fireEvent.pointerDown(mao(1), { ...P, clientX: 100, clientY: 500 })
     fireEvent.pointerMove(window, { ...P, clientX: 200, clientY: 300 })
     const f = document.querySelector('.duelo-arrasto-fantasma')!
     expect(f.getAttribute('aria-hidden')).toBe('true')
     expect(f.textContent).toContain('Recife de Coral')
-    expect(document.documentElement.outerHTML).not.toMatch(/Barreira Natural|CC-094|Pesquisa Oceanogr|CC-034/)
+    expect(document.documentElement.outerHTML).not.toMatch(/Pesquisa Oceanogr|CC-034/)
   })
 })

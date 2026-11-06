@@ -40,10 +40,9 @@ function arrastar(card: Element, sobre: Element | null, soltar = true) {
 }
 
 const zonaDoJogador = (i: number) => qa('.duelo-lado--voce .duelo-zonas > .zona')[i]
-const suporteDoJogador = (i: number) => qa('.duelo-lado--voce .duelo-suportes > .suporte')[i]
 const zonaDoOponente = (i: number) => qa('.duelo-lado--oponente .duelo-zonas > .zona')[i]
 const aviso = () => q('.duelo-aviso').textContent
-const tabuleiro = () => qa('.duelo-zonas .carta, .duelo-suportes .carta').map((c) => c.getAttribute('aria-label')).join('|') + '#' + q('.duelo-terreno').textContent + '#' + qa('.duelo-log li').map((l) => l.textContent).join('|')
+const tabuleiro = () => qa('.duelo-zonas .carta').map((c) => c.getAttribute('aria-label')).join('|') + '#' + q('.duelo-terreno').textContent + '#' + qa('.duelo-log li').map((l) => l.textContent).join('|')
 const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
 
 describe('Arrastar: unidade para zona livre', () => {
@@ -128,18 +127,6 @@ describe('Arrastar: unidade para zona livre', () => {
 })
 
 describe('Arrastar: outros tipos de carta', () => {
-  it('armadilha vai para um suporte livre', () => {
-    montar({ humano: { mao: ['CC-093'] } })
-    arrastar(mao(1), suporteDoJogador(1))
-    expect(screen.getByRole('button', { name: /^Suporte 2 sua: Fiscalização Surpresa/ })).toBeTruthy()
-  })
-
-  it('armadilha solta numa zona de unidade: motivo, sem alterar nada', () => {
-    montar({ humano: { mao: ['CC-093'] } })
-    arrastar(mao(1), zonaDoJogador(0))
-    expect(aviso()).toBe('Solte a armadilha em uma zona de suporte livre.')
-  })
-
   it('ação com alvo: soltar sobre a unidade-alvo válida aplica o efeito; igual ao fluxo por botão', async () => {
     const cfg: ConfigCenario = { humano: { mao: ['CC-073'] }, oponente: { campo: ['CC-056'], mao: ['CC-001'] } }
     montar(cfg)
@@ -161,12 +148,6 @@ describe('Arrastar: outros tipos de carta', () => {
     arrastar(mao(1), zonaDoJogador(0))
     expect(aviso()).toBe('Solte sobre uma unidade alvo válida (destacada).')
     expect(q('.duelo-lado--oponente .zona .carta').getAttribute('aria-label')).toContain('ATK 2200')
-  })
-
-  it('equipamento: soltar sobre a unidade aliada válida escolhe o alvo (suporte automático)', () => {
-    montar({ humano: { mao: ['CC-085'], campo: ['CC-001'] } })
-    arrastar(mao(1), zonaDoJogador(0))
-    expect(q('.duelo-lado--voce .zona .carta').getAttribute('aria-label')).toContain('equipada')
   })
 
   it('terreno: soltar sobre a faixa de terreno (e destacada durante o arrasto)', () => {

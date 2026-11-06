@@ -25,7 +25,6 @@ describe('criarDuelo', () => {
       expect(j.baralho).toHaveLength(25)
       expect(j.lp).toBe(5000)
       expect(j.campo).toHaveLength(5)
-      expect(j.suporte).toHaveLength(5)
       expect(j.descarte).toHaveLength(0)
     }
     expect(e.ativo).toBe('humano')

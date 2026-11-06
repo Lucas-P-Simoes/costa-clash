@@ -44,7 +44,7 @@ describe('Tela Duelo Livre: seleção', () => {
     expect(within(painel()).getByText('Médio')).toBeTruthy()
     expect(within(painel()).getByText(/Domina cartas de impacto costeiro/)).toBeTruthy()
     expect(within(painel()).getByRole('heading', { level: 3, name: 'Cartas que podem ser obtidas' })).toBeTruthy()
-    expect(within(painel()).getByRole('button', { name: 'Ver 25 cartas e chances' }).getAttribute('aria-haspopup')).toBe('dialog')
+    expect(within(painel()).getByRole('button', { name: 'Ver 19 cartas e chances' }).getAttribute('aria-haspopup')).toBe('dialog')
   })
 
   it('clique seleciona e atualiza o painel (anúncio fica só no aviso role=status)', () => {
@@ -257,7 +257,7 @@ describe('Modal Baralho (coleção)', () => {
     render(<TelaDueloLivre onDuelo={() => {}} usuario={u} />)
     fireEvent.click(screen.getByRole('button', { name: 'Coleção de cartas' }))
     const d = screen.getByRole('dialog', { name: 'Baralho' })
-    expect(d.textContent).toContain('1 de 100 cartas diferentes')
+    expect(d.textContent).toContain('1 de 87 cartas diferentes')
     expect(within(d).getAllByRole('listitem')).toHaveLength(1)
     expect(d.textContent).toContain('×2')
     fireEvent.keyDown(document, { key: 'Escape' })

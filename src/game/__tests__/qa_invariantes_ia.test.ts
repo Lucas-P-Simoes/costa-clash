@@ -110,27 +110,24 @@ describe('QA 6 - invariantes, determinismo, JSON, imutabilidade', () => {
 
 describe('QA 7 - vazamento de informação', () => {
   const montar = () => {
-    // meio de partida: turno 3, humano com armadilha virada e oponente com armadilha virada
-    let e = cenario({ turno: 4, ativo: 'oponente', fase: 'PRINCIPAL', humano: { mao: ['CC-001', 'CC-003'], suporte: ['CC-093'], campo: ['CC-043'] }, oponente: { mao: ['CC-082', 'CC-019', 'CC-027'], suporte: ['CC-099', { id: 'CC-097', turno: 2 }], baralho: 30 } })
+    // meio de partida: turno 4, mãos e baralhos ocultos dos dois lados
+    let e = cenario({ turno: 4, ativo: 'oponente', fase: 'PRINCIPAL', humano: { mao: ['CC-001', 'CC-003'], campo: ['CC-043'] }, oponente: { mao: ['CC-084', 'CC-019', 'CC-027'], baralho: 30 } })
     e = { ...e }
     return e
   }
-  it('visaoParaJogador(humano) não contém uid nem carta da mão/baralho/armadilhas viradas do oponente', () => {
+  it('visaoParaJogador(humano) não contém uid nem carta da mão/baralho do oponente', () => {
     const e = montar()
     const json = JSON.stringify(visaoParaJogador(e, 'humano'))
     const o = e.jogadores.oponente
     for (const c of [...o.mao, ...o.baralho]) expect(json, `vazou ${c.uid}`).not.toContain(`"${c.uid}"`)
-    for (const s of o.suporte) if (s) expect(json, `vazou armadilha ${s.uid}`).not.toContain(`"${s.uid}"`)
-    expect(json).not.toContain('CC-099')
-    expect(json).not.toContain('CC-097')
+    expect(json).not.toContain('CC-084')
     const v = visaoParaJogador(e, 'humano')
     expect(v.oponente.maoTamanho).toBe(3)
-    expect(v.oponente.suporte.filter(Boolean)).toEqual([{ oculta: true }, { oculta: true }])
     expect(Object.keys(v)).not.toContain('log')
     // vale também na perspectiva da IA
     const jsonIA = JSON.stringify(visaoParaJogador(e, 'oponente'))
     for (const c of [...e.jogadores.humano.mao, ...e.jogadores.humano.baralho]) expect(jsonIA).not.toContain(`"${c.uid}"`)
-    expect(jsonIA).not.toContain('CC-093')
+    expect(jsonIA).not.toContain('CC-001')
   })
 
   it('a visão é uma cópia: alterá-la não corrompe o estado', () => {
@@ -155,8 +152,6 @@ describe('QA 7 - vazamento de informação', () => {
       const adv = e.ativo === 'humano' ? 'oponente' : 'humano'
       const j = alt.jogadores[adv]
       alt.jogadores[adv] = { ...j, mao: [...j.mao].reverse(), baralho: embaralhar(j.baralho, criarRng(seed)) }
-      // troca armadilhas viradas do adversário por outras
-      alt.jogadores[adv].suporte = alt.jogadores[adv].suporte.map((s) => (s && s.tipo === 'armadilha' ? { ...s, cartaId: 'CC-095' } : s))
       const d1 = decidirComando(visaoParaJogador(e, e.ativo))
       const d2 = decidirComando(visaoParaJogador(alt, e.ativo))
       expect(d2).toEqual(d1)
@@ -164,12 +159,12 @@ describe('QA 7 - vazamento de informação', () => {
   })
 
   it('RISCO DOCUMENTADO: estado.log/eventos vazam informação oculta (a UI NÃO deve renderizar o log cru do adversário)', () => {
-    // 1) colocar armadilha: o evento carrega a carta embora o texto diga "virada para baixo"
-    let e = cenario({ turno: 4, ativo: 'oponente', oponente: { mao: ['CC-099'] } })
-    e = ok(cmd(e, { tipo: 'jogarCarta', jogador: 'oponente', uid: uidDe(e, 'oponente', 'CC-099') }))
+    // 1) unidade colocada virada para baixo: o evento carrega a carta embora o texto cru também cita o nome
+    let e = cenario({ turno: 4, ativo: 'oponente', oponente: { mao: ['CC-056'] } })
+    e = ok(cmd(e, { tipo: 'jogarCarta', jogador: 'oponente', uid: uidDe(e, 'oponente', 'CC-056'), viradaParaBaixo: true }))
     const ev = e.log.find((x) => x.tipo === 'carta_jogada')!
-    expect(ev.texto).not.toContain('Proteção')
-    expect(JSON.stringify(ev)).toContain('CC-099') // vazamento via dados do evento
+    expect(ev.texto).toContain('virada para baixo') // o texto cru ainda cita o nome: a UI usa logPublico
+    expect(JSON.stringify(ev)).toContain('CC-056') // vazamento via dados do evento
     // 2) compra do oponente lista as cartas
     const d = duelo(1)
     const compra = d.log.find((x) => x.tipo === 'compra' && x.jogador === 'oponente')!
@@ -211,33 +206,28 @@ describe('QA 8 - IA', () => {
     expect(ia(t1).tipo).toBe('encerrarTurno')
   })
 
-  it('prioridade §9: unidade que vence > ação eficaz > unidade de maior DEF > armadilha; desempate por ID', () => {
+  it('prioridade §9: unidade que vence > ação eficaz > unidade de maior DEF > ação ineficaz; desempate por ID', () => {
     // unidade que vence (CC-071 2400) antes da ação eficaz
-    let e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-075', 'CC-071', 'CC-093'] } })
+    let e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-075', 'CC-071', 'CC-084'] } })
     let c = ia(e)
     expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-071') })
     // sem unidade que vença: ação eficaz (destruir impacto)
-    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-075', 'CC-001', 'CC-093'] } })
+    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-075', 'CC-001', 'CC-084'] } })
     c = ia(e)
     expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-075'), alvo: 0 })
     // sem ação eficaz: maior DEF
-    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-001', 'CC-007', 'CC-093'] } })
+    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-001', 'CC-007', 'CC-084'] } })
     c = ia(e)
     expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-007'), posicao: 'DEFESA' })
-    // só armadilha e cura inútil
-    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-079', 'CC-093'] } })
+    // só ação ineficaz (terreno sem saldo) e cura inútil
+    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-079', 'CC-090'] } })
     c = ia(e)
-    expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-093') })
+    expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-090') })
   })
 
   it('usa efeitos úteis: cura quando LP baixo; evita desperdiçar cura com LP cheio (nunca legal)', () => {
     const e = cenario({ turno: 4, ativo: 'oponente', oponente: { lp: 2000, mao: ['CC-079'] } })
     expect(ia(e)).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-079') })
-  })
-
-  it('QA-3 corrigido: com armadilha inimiga virada, a IA reforça o campo em vez de gastar a jogada em `revelar`', () => {
-    const e = cenario({ turno: 4, ativo: 'oponente', humano: { suporte: ['CC-093'], campo: ['CC-033'] }, oponente: { mao: ['CC-082', 'CC-007'] } })
-    expect(ia(e)).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-007') })
   })
 
   it('posição: ataque com vantagem, defesa sem; sempre termina o turno (6 cenários de 0 a 5 unidades)', () => {
@@ -288,11 +278,10 @@ describe('QA 9 - baralhos', () => {
     expect(Object.keys(BARALHOS_OPONENTES).sort()).toEqual(OPONENTES.map((o) => o.id).sort())
   })
 
-  it('baralho inicial tem 26 unidades, 10 ações, 4 armadilhas (como documentado)', () => {
+  it('baralho inicial tem 32 unidades e 8 ações (como documentado)', () => {
     const tipos = BARALHO_INICIAL.map((i) => cat.get(i)!.tipo)
-    expect(tipos.filter((t) => t === 'unidade')).toHaveLength(26)
-    expect(tipos.filter((t) => t === 'acao')).toHaveLength(10)
-    expect(tipos.filter((t) => t === 'armadilha')).toHaveLength(4)
+    expect(tipos.filter((t) => t === 'unidade')).toHaveLength(32)
+    expect(tipos.filter((t) => t === 'acao')).toHaveLength(8)
   })
 
   it('composição temática: unidades do grupo do oponente são a maior fatia (ou ao menos >=30%) e a dificuldade cresce em ATK médio', () => {

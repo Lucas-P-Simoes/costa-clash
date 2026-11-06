@@ -80,22 +80,9 @@ CC-078,Plano Diretor Costeiro,acao,instantanea,,,"{""operacao"": ""buff_grupo"",
 CC-079,Campanha Educativa,acao,instantanea,,,"{""operacao"": ""cura"", ""alvo"": ""jogador"", ""valor"": 500}",Campanhas podem apoiar mudanças de comportamento.
 CC-080,Mutirão Comunitário,acao,instantanea,,,"{""operacao"": ""cura"", ""alvo"": ""jogador"", ""valor"": 700}",Ações comunitárias podem complementar políticas públicas.
 CC-081,Barreira de Contenção,acao,instantanea,,,"{""operacao"": ""debuff_grupo"", ""alvo"": ""impacto"", ""valor"": -600}",Barreiras ajudam em situações específicas de vazamento.
-CC-082,Estudo de Impacto,acao,instantanea,,,"{""operacao"": ""revelar"", ""alvo"": ""oponente"", ""valor"": 0}",A avaliação antecipada identifica impactos potenciais.
 CC-083,Monitoramento Contínuo,acao,instantanea,,,"{""operacao"": ""buff_unidade"", ""alvo"": ""qualquer"", ""valor"": 300}",Medições repetidas permitem observar tendências.
 CC-084,Manejo da Bacia,acao,instantanea,,,"{""operacao"": ""buff_grupo"", ""alvo"": ""ecossistema"", ""valor"": 400}",Ações na bacia influenciam as águas costeiras.
-CC-085,Raízes Protetoras,acao,equipamento,,,"{""operacao"": ""equip_buff_def"", ""alvo"": ""ecossistema"", ""valor"": 500}",Raízes podem favorecer retenção de sedimentos.
-CC-086,Tecnologia Limpa,acao,equipamento,,,"{""operacao"": ""equip_buff_atk"", ""alvo"": ""atividade"", ""valor"": 500}",Tecnologias podem diminuir pressões quando bem operadas.
-CC-087,Vigilância Ambiental,acao,equipamento,,,"{""operacao"": ""equip_buff_def"", ""alvo"": ""atividade"", ""valor"": 400}",Acompanhamento e fiscalização favorecem respostas.
-CC-088,Adaptação Climática,acao,equipamento,,,"{""operacao"": ""equip_buff_def"", ""alvo"": ""qualquer"", ""valor"": 300}","Adaptação reduz vulnerabilidades, não elimina riscos."
 CC-089,Terreno: Manguezal,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""ecossistema"", ""valor"": 300}",Manguezais são sistemas costeiros sujeitos às marés.
 CC-090,Terreno: Zona Urbana,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""atividade"", ""valor"": 300}",Cidades costeiras combinam infraestrutura e ecossistemas.
 CC-091,Terreno: Mar Aberto,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""fauna"", ""valor"": 300}",As condições do mar influenciam organismos e atividades.
 CC-092,Terreno: Costa Pressionada,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""impacto"", ""valor"": 300}",Pressões antrópicas podem se acumular na zona costeira.
-CC-093,Fiscalização Surpresa,armadilha,,,,"{""gatilho"": ""ataque_recebido"", ""operacao"": ""reduzir_dano"", ""valor"": 600}",Inspeções podem revelar infrações ambientais.
-CC-094,Barreira Natural,armadilha,,,,"{""gatilho"": ""ataque_recebido"", ""operacao"": ""reduzir_dano"", ""valor"": 800}",Ecossistemas naturais podem atenuar alguns impactos.
-CC-095,Plano de Contingência,armadilha,,,,"{""gatilho"": ""ataque_direto"", ""operacao"": ""anular_ataque"", ""valor"": 0}",Planos prévios auxiliam respostas a emergências.
-CC-096,Alerta Meteorológico,armadilha,,,,"{""gatilho"": ""ataque_direto"", ""operacao"": ""reduzir_dano"", ""valor"": 1000}",Previsões permitem preparar ações preventivas.
-CC-097,Denúncia Comunitária,armadilha,,,,"{""gatilho"": ""invocacao_impacto"", ""operacao"": ""debuff_invocada"", ""valor"": 500}",Denúncias podem apoiar respostas dos órgãos competentes.
-CC-098,Monitoramento Cidadão,armadilha,,,,"{""gatilho"": ""invocacao_impacto"", ""operacao"": ""debuff_invocada"", ""valor"": 400}",Observações locais ajudam a sinalizar problemas.
-CC-099,Proteção Emergencial,armadilha,,,,"{""gatilho"": ""ataque_recebido"", ""operacao"": ""anular_ataque"", ""valor"": 0}",Ações emergenciais devem considerar contexto e segurança.
-CC-100,Rede de Proteção,armadilha,,,,"{""gatilho"": ""ataque_direto"", ""operacao"": ""cura"", ""valor"": 500}",Colaboração pode fortalecer a gestão ambiental.

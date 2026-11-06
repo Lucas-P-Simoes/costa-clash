@@ -22,9 +22,9 @@ describe('tabelas de drop', () => {
     }
   })
 
-  it('juntas, as tabelas cobrem as 100 cartas do catálogo (coleção completável)', () => {
+  it('juntas, as tabelas cobrem as 87 cartas do catálogo (coleção completável)', () => {
     const cobertas = new Set(Object.values(TABELAS_DROP).flatMap((t) => t.map(([id]) => id)))
-    expect(CATALOGO).toHaveLength(100)
+    expect(CATALOGO).toHaveLength(87)
     for (const c of CATALOGO) expect(cobertas.has(c.id), c.id).toBe(true)
   })
 })

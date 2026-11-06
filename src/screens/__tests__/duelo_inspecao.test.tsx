@@ -270,7 +270,7 @@ describe('inspeção no campo e ocultação', () => {
   it('mostra carta completa no campo, mas uma unidade oculta do oponente continua somente como verso', () => {
     montar({
       humano: { campo: ['CC-003'] },
-      oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA', viradaParaBaixo: true }], suporte: ['CC-095'], mao: ['CC-002'] },
+      oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA', viradaParaBaixo: true }], mao: ['CC-002'] },
     })
     const propria = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ })
     fireEvent.pointerEnter(propria, { pointerType: 'mouse' })
@@ -286,7 +286,7 @@ describe('inspeção no campo e ocultação', () => {
     expect(painel.textContent).not.toContain('Manguezal Protegido')
 
     fireEvent.pointerLeave(oculta, { pointerType: 'mouse' })
-    for (const verso of [document.querySelector<HTMLElement>('.duelo-mao-oponente .carta--verso')!, document.querySelector<HTMLElement>('.duelo-lado--oponente .suporte .carta--verso')!]) {
+    for (const verso of [document.querySelector<HTMLElement>('.duelo-mao-oponente .carta--verso')!]) {
       fireEvent.pointerEnter(verso, { pointerType: 'mouse' })
       expect(inspecao()?.dataset.inspecao).toBe('verso')
       expect(inspecao()?.querySelector('.duelo-inspecao__detalhes')).toBeNull()

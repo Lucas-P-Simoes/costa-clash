@@ -71,14 +71,6 @@ describe('jogar carta: regras de fase, turno e uma jogada por turno', () => {
     expect(r.ok).toBe(false)
     if (!r.ok) expect(r.erro).toContain('zona de unidade livre')
   })
-
-  it('suporte cheio: armadilha e equipamento não podem ser jogados', () => {
-    const e = cenario({
-      humano: { mao: ['CC-093', 'CC-088'], campo: ['CC-001'], suporte: ['CC-094', 'CC-095', 'CC-096', 'CC-099', 'CC-100'] },
-    })
-    expect(jogar(e, 'humano', 'CC-093').ok).toBe(false)
-    expect(jogar(e, 'humano', 'CC-088', { alvo: 0 }).ok).toBe(false)
-  })
 })
 
 describe('descarte forçado', () => {
@@ -250,12 +242,12 @@ describe('validação no motor (não só na interface)', () => {
 })
 
 describe('listagens de jogadas legais', () => {
-  it('jogadasLegais lista unidades nas duas posições e duas faces, ações com cada alvo e armadilhas', () => {
-    const e = cenario({ humano: { mao: ['CC-001', 'CC-077', 'CC-093'], campo: ['CC-002', 'CC-004'] } })
+  it('jogadasLegais lista unidades nas duas posições e duas faces, ações com cada alvo e terrenos', () => {
+    const e = cenario({ humano: { mao: ['CC-001', 'CC-077', 'CC-089'], campo: ['CC-002', 'CC-004'] } })
     const legais = jogadasLegais(e)
     expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-001'))).toHaveLength(4)
     expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-077'))).toHaveLength(2) // 2 alvos
-    expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-093'))).toHaveLength(1)
+    expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-089'))).toHaveLength(1) // terreno, sem alvo
     for (const c of legais) expect(aplicarComando(e, c).ok).toBe(true)
   })
 

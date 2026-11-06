@@ -164,11 +164,9 @@ export function derivarConfronto(novos: readonly Evento[], cartasAnteriores: Rea
     const defensor = outroLado(e.jogador)
     const atacante: LadoConfronto = { lado: e.jogador, zona: e.atacante, cartaId: cartasAnteriores[chaveZona(e.jogador, e.atacante)] ?? null, destruida: false }
     const alvo: LadoConfronto = { lado: defensor, zona: e.alvo, cartaId: cartasAnteriores[chaveZona(defensor, e.alvo)] ?? null, destruida: false }
-    let anulado = false
     for (let j = i + 1; j < novos.length; j++) {
       const s = novos[j]
       if (s.tipo === 'ataque_declarado') break
-      if (s.tipo === 'ataque_anulado') anulado = true
       for (const p of [atacante, alvo]) {
         if (s.tipo === 'unidade_revelada' && s.jogador === p.lado && s.zona === p.zona) p.cartaId = s.carta.cartaId
         if (s.tipo === 'unidade_destruida' && s.jogador === p.lado && s.zona === p.zona) {
@@ -177,7 +175,7 @@ export function derivarConfronto(novos: readonly Evento[], cartasAnteriores: Rea
         }
       }
     }
-    if (!anulado) r = { atacante, alvo }
+    r = { atacante, alvo }
   }
   return r
 }

@@ -97,7 +97,7 @@ describe('ataque por seta', () => {
       {
         jogadaFeita: true,
         humano: { campo: ['CC-001'], baralho: 20 },
-        oponente: { campo: ['CC-071'], mao: ['CC-093', 'CC-094', 'CC-095', 'CC-096', 'CC-099'], baralho: 20 },
+        oponente: { campo: ['CC-071'], mao: [], baralho: 20 },
       },
       100,
     )

@@ -48,7 +48,6 @@ describe('propriedade: nenhuma sequência de comandos produz estado inválido', 
     let aceitos = 0
     let recusados = 0
     const tiposVistos = new Set<string>()
-    const traps = new Set<string>()
     for (let seed = 1; seed <= 80; seed++) {
       const rng = criarRng(seed * 7919)
       const r = criarDuelo({ baralhoJogador: baralhoAleatorio(rng), baralhoOponente: baralhoAleatorio(rng), seed })
@@ -70,7 +69,6 @@ describe('propriedade: nenhuma sequência de comandos produz estado inválido', 
           const inv = invariantes(res.estado)
           expect(inv, `seed ${seed} passo ${passo} cmd ${JSON.stringify(cmd)}`).toEqual([])
           if (passo % 10 === 0) expect(JSON.parse(JSON.stringify(res.estado))).toEqual(res.estado)
-          for (const ev of res.eventos) if (ev.tipo === 'armadilha_ativada') traps.add(ev.carta.cartaId)
           e = congelar(res.estado)
         } else {
           recusados++
@@ -84,7 +82,5 @@ describe('propriedade: nenhuma sequência de comandos produz estado inválido', 
     expect([...tiposVistos].sort()).toEqual(['atacar', 'avancarFase', 'descartar', 'desistir', 'encerrarTurno', 'jogarCarta', 'mudarPosicao'].filter((t) => tiposVistos.has(t)))
     for (const t of ['atacar', 'avancarFase', 'encerrarTurno', 'jogarCarta', 'mudarPosicao']) expect(tiposVistos.has(t), t).toBe(true)
     expect(totalComandos).toBeGreaterThan(aceitos)
-    // as armadilhas realmente dispararam em partidas aleatórias
-    expect(traps.size).toBeGreaterThan(0)
   }, 60000)
 })

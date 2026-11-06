@@ -5,8 +5,9 @@ import { CabecalhoTela } from '../../components/ui/CabecalhoTela'
 import { IconeVoltar } from '../../components/ui/Icones'
 import { BARALHO_INICIAL } from '../../data/baralhoInicial'
 import { BARALHOS_OPONENTES } from '../../data/baralhosOponentes'
+import { CATALOGO } from '../../data/catalogo'
 import { buscarOponente } from '../../data/oponentes'
-import { criarDuelo } from '../../game'
+import { criarDuelo, mapaCatalogo } from '../../game'
 import { Partida } from './Partida'
 import { useRecompensaDuelo } from './recompensa'
 
@@ -42,7 +43,9 @@ export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizad
   const [seed, setSeed] = useState<number>(() => seedInicial ?? novaSeed())
   const oponente = buscarOponente(oponenteId)
   const baralhoOponente = BARALHOS_OPONENTES[oponenteId]
-  const baralhoJogador = usuario?.baralho?.length ? usuario.baralho : BARALHO_INICIAL
+  // Baralho salvo vazio, ou com cartas que saíram do catálogo (ex.: suportes removidos), cai no baralho inicial.
+  const baralhoSalvoUsavel = !!usuario?.baralho?.length && usuario.baralho.every((id) => mapaCatalogo(CATALOGO).has(id))
+  const baralhoJogador = baralhoSalvoUsavel ? (usuario?.baralho as string[]) : BARALHO_INICIAL
   const atraso = useMemo(() => atrasoIA ?? atrasoPadrao(), [atrasoIA])
   const { recompensa, aoVencer } = useRecompensaDuelo(oponenteId, seed, usuario, servicoAuth, onColecaoAtualizada)
 

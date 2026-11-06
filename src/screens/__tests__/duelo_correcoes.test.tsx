@@ -3,7 +3,6 @@
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
 import { buscarOponente } from '../../data/oponentes'
-import { aplicarComando } from '../../game'
 import { cenario } from '../../game/__tests__/util'
 import type { ConfigCenario } from '../../game/__tests__/util'
 import { Partida } from '../duelo/Partida'
@@ -15,7 +14,6 @@ afterEach(() => {
 })
 
 const botao = (n: string | RegExp) => screen.getByRole('button', { name: n })
-const aviso = () => document.querySelector('.duelo-aviso')!.textContent
 const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
 
 function montar(cfg: ConfigCenario = {}, atrasoIA = 0) {
@@ -163,17 +161,5 @@ describe('D8 a D11: textos', () => {
     expect(document.getElementById('b-atacar')).toBeNull()
     expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })).toBeTruthy()
     expect(document.querySelector('.duelo-turno__rotulo')!.textContent).toBe('Rodada 2') // turno absoluto 3
-  })
-
-  it('log da armadilha com redação correta para os dois lados', () => {
-    const e = cenario({ ativo: 'oponente', jogadaFeita: true, fase: 'COMBATE', oponente: { campo: ['CC-003'] }, humano: { suporte: ['CC-099'], campo: ['CC-001'] } })
-    const r = aplicarComando(e, { tipo: 'atacar', jogador: 'oponente', atacante: 0, alvo: 0 })
-    if (!r.ok) throw new Error(r.erro)
-    expect(r.eventos.find((x) => x.tipo === 'armadilha_ativada')!.texto).toMatch(/^Sua armadilha foi ativada: Proteção Emergencial/)
-    const e2 = cenario({ jogadaFeita: true, fase: 'COMBATE', humano: { campo: ['CC-003'] }, oponente: { suporte: ['CC-099'], campo: ['CC-001'] } })
-    const r2 = aplicarComando(e2, { tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 0 })
-    if (!r2.ok) throw new Error(r2.erro)
-    expect(r2.eventos.find((x) => x.tipo === 'armadilha_ativada')!.texto).toMatch(/^Armadilha do oponente ativada/)
-    void aviso
   })
 })

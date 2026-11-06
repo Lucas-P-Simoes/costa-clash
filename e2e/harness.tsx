@@ -3,7 +3,7 @@
 //   ?cena=conta                      TelaConta com serviço de auth FALSO injetado (nenhuma API é chamada)
 //   ?cena=autenticado                App com sessão FALSA restaurada direto no Duelo Livre
 //   ?cena=codigo                     TelaCodigoRecuperacao com um código FICTÍCIO (nenhuma API é chamada)
-//   ?cena=duelo-campo[&seed=N]       Partida com unidades em ataque e em defesa e suportes dos dois lados (estado gerado pelo motor)
+//   ?cena=duelo-campo[&seed=N]       Partida com unidades em ataque e em defesa dos dois lados (estado gerado pelo motor)
 //   ?cena=resultado-vitoria|resultado-derrota|resultado-empate   Partida já encerrada (diálogo de resultado)
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
@@ -49,7 +49,7 @@ function comVersoPublico(estado: EstadoDuelo): EstadoDuelo {
   }
 }
 
-/** Procura (determinístico) um estado na vez do humano com unidade em ataque e em defesa, um verso e suportes. */
+/** Procura (determinístico) um estado na vez do humano com unidade em ataque e em defesa, um verso. */
 function estadoComCampo(seedPedida: number | null): EstadoDuelo {
   const ok = (e: EstadoDuelo) => {
     const eu = e.jogadores.humano
@@ -60,7 +60,6 @@ function estadoComCampo(seedPedida: number | null): EstadoDuelo {
       e.ativo === 'humano' &&
       un.some((u) => u!.posicao === 'ATAQUE') &&
       un.some((u) => u!.posicao === 'DEFESA') &&
-      eu.suporte.some(Boolean) &&
       op.campo.filter(Boolean).length >= 2
     )
   }

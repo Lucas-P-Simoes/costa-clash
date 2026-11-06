@@ -2,7 +2,7 @@ import { PixelArt } from '../ui/PixelArt'
 import type { Grade, Paleta } from '../ui/PixelArt'
 
 // Arte própria por GRUPO/TIPO (pixel art desenhada em grade, 16x12; não vem de arquivos de referência).
-export type TipoArte = 'ecossistema' | 'fauna' | 'atividade' | 'impacto' | 'acao' | 'equipamento' | 'terreno' | 'armadilha'
+export type TipoArte = 'ecossistema' | 'fauna' | 'atividade' | 'impacto' | 'acao' | 'terreno'
 
 const ARTES: Readonly<Record<TipoArte, { grade: Grade; paleta: Paleta }>> = {
   ecossistema: {
@@ -90,23 +90,6 @@ const ARTES: Readonly<Record<TipoArte, { grade: Grade; paleta: Paleta }>> = {
       'cccccccccccccccc',
     ],
   },
-  equipamento: {
-    paleta: { c: '#143a52', T: '#3fdcf0', t: '#1fa0bc', u: '#145f78' },
-    grade: [
-      'cccccccccccccccc',
-      'ccTTTTTTTTTTTTcc',
-      'ccTttttttttttTcc',
-      'ccTtttttTtttttTc',
-      'ccTtttTTTTTtttTc',
-      'cccTtttTTTtttTcc',
-      'cccTtttTTTtttTcc',
-      'ccccTttttttTcccc',
-      'cccccTttttTccccc',
-      'ccccccTttTcccccc',
-      'cccccccTTccccccc',
-      'cccccccccccccccc',
-    ],
-  },
   terreno: {
     paleta: { a: '#0e2a3d', m: '#2a5a4a', M: '#1a3a30', y: '#f2cf6e', b: '#1f6f9c', B: '#3fdcf0' },
     grade: [
@@ -122,23 +105,6 @@ const ARTES: Readonly<Record<TipoArte, { grade: Grade; paleta: Paleta }>> = {
       'bBbbbbBbbbbBbbbb',
       'bbbbbbbbbbbbbbbb',
       'bbbBbbbbbBbbbbbb',
-    ],
-  },
-  armadilha: {
-    paleta: { p: '#2a1a40', P: '#8a5ac4', W: '#e8e2c8', K: '#0a0a14' },
-    grade: [
-      'pppppppppppppppp',
-      'pppppppppppppppp',
-      'pppppPPPPPPpppp p'.replace(' ', ''),
-      'ppppPPPPPPPPpppp',
-      'pppPPPWWWWPPPppp',
-      'ppPPPWWKKWWPPPpp',
-      'pppPPPWWWWPPPppp',
-      'ppppPPPPPPPPpppp',
-      'pppppPPPPPPppppp',
-      'pppppppppppppppp',
-      'pppppppppppppppp',
-      'pppppppppppppppp',
     ],
   },
 }

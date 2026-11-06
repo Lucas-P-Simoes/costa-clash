@@ -1,10 +1,10 @@
-// Sujeitos visuais das 100 cartas, escritos à mão (um por ID), em português e inglês.
+// Sujeitos visuais das 87 cartas, escritos à mão (um por ID), em português e inglês.
 // Regras: o sujeito descreve o que aparece NA IMAGEM; nunca contém o nome da carta como letreiro,
 // ATK/DEF ou texto a ser desenhado. Impactos são criaturas sombrias que representam o fenômeno
 // (sem apologia e sem demonizar pessoas); soluções nunca "eliminam" um risco, apenas o reduzem.
 // Este arquivo é só texto: nenhuma ilustração foi gerada a partir dele (ver docs/ARTE_DAS_CARTAS.md).
 
-export type PaletaId = 'ecossistema' | 'vidaMarinha' | 'impacto' | 'fenomeno' | 'solucao' | 'comunidade' | 'urbano' | 'equipamento' | 'armadilha'
+export type PaletaId = 'ecossistema' | 'vidaMarinha' | 'impacto' | 'fenomeno' | 'solucao' | 'comunidade' | 'urbano'
 
 /** Forma de composição do assunto principal (define o texto de enquadramento). */
 export type Forma = 'criatura' | 'cena' | 'objeto' | 'paisagem' | 'personagem' | 'simbolo'
@@ -463,7 +463,7 @@ export const SUJEITOS: Readonly<Record<string, Sujeito>> = {
     'a creature of neon-green blooming algae over murky greenish water, dense foam, faded fish in the background, ember-red eyes',
   ),
 
-  // ---------- Ações instantâneas (CC-073 a CC-084) ----------
+  // ---------- Ações instantâneas (CC-073 a CC-084, exceto a removida CC-082) ----------
   'CC-073': s(
     'cena',
     'solucao',
@@ -518,12 +518,6 @@ export const SUJEITOS: Readonly<Record<string, Sujeito>> = {
     'barreira flutuante laranja em arco cercando uma mancha escura na água, barcos de apoio nas pontas, boias reluzentes, mar calmo',
     'an orange floating barrier arcing around a dark patch on the water, support boats at the ends, shining buoys, calm sea',
   ),
-  'CC-082': s(
-    'simbolo',
-    'solucao',
-    'balança dourada com uma folha verde de um lado e um prédio do outro, lupa sobre um mapa da costa ao fundo, prancheta, luz de lamparina, sem letras nem números',
-    'a golden scale with a green leaf on one side and a building on the other, a magnifying glass over a coastal map behind, clipboard, lamp light, no letters or numbers',
-  ),
   'CC-083': s(
     'objeto',
     'solucao',
@@ -537,31 +531,6 @@ export const SUJEITOS: Readonly<Record<string, Sujeito>> = {
     'an aerial view of a river basin, forested mountains, a winding river with riparian forest, small reservoirs, flowing into the sea in the background, clear daylight',
   ),
 
-  // ---------- Equipamentos (CC-085 a CC-088) ----------
-  'CC-085': s(
-    'objeto',
-    'equipamento',
-    'manto de raízes de mangue entrelaçadas como armadura orgânica, brilho verde e turquesa percorrendo as raízes, folhas pequenas, exposto como relíquia em destaque',
-    'a cloak of interwoven mangrove roots as organic armor, green and turquoise glow running through the roots, small leaves, displayed as a relic',
-  ),
-  'CC-086': s(
-    'objeto',
-    'equipamento',
-    'módulo tecnológico compacto com painel solar, pequena turbina eólica e filtro cilíndrico, brilho turquesa, metal escuro com detalhes dourados, exposto como equipamento de coleção',
-    'a compact technology module with a solar panel, small wind turbine and cylindrical filter, turquoise glow, dark metal with golden details, displayed as a collectible equipment piece',
-  ),
-  'CC-087': s(
-    'objeto',
-    'equipamento',
-    'drone de vigilância com câmera e luzes turquesa pairando sobre a costa, feixe de luz varrendo a água, binóculo preso ao corpo, céu de fim de tarde',
-    'a surveillance drone with a camera and turquoise lights hovering over the coast, a light beam sweeping the water, binoculars attached to its body, late-afternoon sky',
-  ),
-  'CC-088': s(
-    'objeto',
-    'equipamento',
-    'casa em palafita moderna elevada sobre a maré, telhado de captação de água, jardim de mangue e muro-verde ao redor, adaptada à maré alta, luzes douradas nas janelas',
-    'a modern elevated stilt house above the tide, a rainwater-collecting roof, mangrove garden and green wall around it, adapted to high tides, golden lights in the windows',
-  ),
 
   // ---------- Terrenos (CC-089 a CC-092) ----------
   'CC-089': s(
@@ -589,53 +558,4 @@ export const SUJEITOS: Readonly<Record<string, Sujeito>> = {
     'a parched pressured coast, cracked soil, dry leafless trees, dark rocks, a huge red sun setting over the sea, dramatic orange and red sky',
   ),
 
-  // ---------- Armadilhas (CC-093 a CC-100) ----------
-  'CC-093': s(
-    'simbolo',
-    'armadilha',
-    'feixe de holofote iluminando de surpresa uma mancha suspeita de despejo numa água escura, silhueta de fiscal com binóculo na margem, sombras roxas e dourado de alerta',
-    'a spotlight beam suddenly lighting a suspicious dumping patch in dark water, an inspector silhouette with binoculars on the shore, purple shadows and warning gold',
-  ),
-  'CC-094': s(
-    'simbolo',
-    'armadilha',
-    'parede viva de mangue e recife emergindo da água e absorvendo uma onda grande, espuma se dispersando nas raízes, brilho roxo e turquesa de proteção',
-    'a living wall of mangrove and reef rising from the water and absorbing a big wave, foam dispersing in the roots, purple and turquoise protective glow',
-  ),
-  'CC-095': s(
-    'simbolo',
-    'armadilha',
-    'mapa tático de emergência numa mesa com rota luminosa de evacuação, kit de emergência aberto e lanterna, luz dourada de alerta sobre fundo roxo-escuro, sem escrita',
-    'a tactical emergency map on a table with a glowing evacuation route, an open emergency kit and flashlight, golden warning light on dark purple, no writing',
-  ),
-  'CC-096': s(
-    'simbolo',
-    'armadilha',
-    'antena e radar de previsão do tempo com varredura luminosa, sirene de alerta e tempestade com raios se aproximando no horizonte, tons roxos e dourados',
-    'a weather forecast antenna and radar with a glowing sweep, a warning siren and a storm with lightning approaching on the horizon, purple and golden tones',
-  ),
-  'CC-097': s(
-    'simbolo',
-    'armadilha',
-    'silhueta de pessoa fotografando um despejo suspeito na água com um celular, feixe de luz do celular iluminando a mancha, pictograma luminoso de balão de fala, tons roxos',
-    'a silhouette of a person photographing a suspicious discharge in the water with a phone, the phone light beam illuminating the patch, a glowing speech-bubble pictogram, purple tones',
-  ),
-  'CC-098': s(
-    'simbolo',
-    'armadilha',
-    'grupo de moradores em silhueta com binóculos, cadernos e celulares registrando observações numa praia, uma ave pousada em destaque, brilho roxo e dourado',
-    'a group of residents in silhouette with binoculars, notebooks and phones recording observations on a beach, a perched bird in focus, purple and golden glow',
-  ),
-  'CC-099': s(
-    'simbolo',
-    'armadilha',
-    'escudo de energia turquesa e dourada cobrindo uma enseada, barreiras de contenção flutuantes e equipe de resgate em silhueta, céu roxo-escuro',
-    'a turquoise and golden energy shield covering a cove, floating containment barriers and a rescue crew in silhouette, dark purple sky',
-  ),
-  'CC-100': s(
-    'simbolo',
-    'armadilha',
-    'rede luminosa tecida de fios dourados e turquesa ligando um manguezal, um recife, um barco e uma casa, nós brilhantes, fundo roxo-escuro',
-    'a luminous net woven of golden and turquoise threads linking a mangrove, a reef, a boat and a house, glowing knots, dark purple background',
-  ),
 }

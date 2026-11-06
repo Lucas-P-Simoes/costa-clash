@@ -849,20 +849,6 @@
       "educacao": "Barreiras ajudam em situações específicas de vazamento."
     },
     {
-      "id": "CC-082",
-      "nome": "Estudo de Impacto",
-      "tipo": "acao",
-      "subtipo": "instantanea",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "operacao": "revelar",
-        "alvo": "oponente",
-        "valor": 0
-      },
-      "educacao": "A avaliação antecipada identifica impactos potenciais."
-    },
-    {
       "id": "CC-083",
       "nome": "Monitoramento Contínuo",
       "tipo": "acao",
@@ -889,62 +875,6 @@
         "valor": 400
       },
       "educacao": "Ações na bacia influenciam as águas costeiras."
-    },
-    {
-      "id": "CC-085",
-      "nome": "Raízes Protetoras",
-      "tipo": "acao",
-      "subtipo": "equipamento",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "operacao": "equip_buff_def",
-        "alvo": "ecossistema",
-        "valor": 500
-      },
-      "educacao": "Raízes podem favorecer retenção de sedimentos."
-    },
-    {
-      "id": "CC-086",
-      "nome": "Tecnologia Limpa",
-      "tipo": "acao",
-      "subtipo": "equipamento",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "operacao": "equip_buff_atk",
-        "alvo": "atividade",
-        "valor": 500
-      },
-      "educacao": "Tecnologias podem diminuir pressões quando bem operadas."
-    },
-    {
-      "id": "CC-087",
-      "nome": "Vigilância Ambiental",
-      "tipo": "acao",
-      "subtipo": "equipamento",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "operacao": "equip_buff_def",
-        "alvo": "atividade",
-        "valor": 400
-      },
-      "educacao": "Acompanhamento e fiscalização favorecem respostas."
-    },
-    {
-      "id": "CC-088",
-      "nome": "Adaptação Climática",
-      "tipo": "acao",
-      "subtipo": "equipamento",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "operacao": "equip_buff_def",
-        "alvo": "qualquer",
-        "valor": 300
-      },
-      "educacao": "Adaptação reduz vulnerabilidades, não elimina riscos."
     },
     {
       "id": "CC-089",
@@ -1001,110 +931,6 @@
         "valor": 300
       },
       "educacao": "Pressões antrópicas podem se acumular na zona costeira."
-    },
-    {
-      "id": "CC-093",
-      "nome": "Fiscalização Surpresa",
-      "tipo": "armadilha",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "gatilho": "ataque_recebido",
-        "operacao": "reduzir_dano",
-        "valor": 600
-      },
-      "educacao": "Inspeções podem revelar infrações ambientais."
-    },
-    {
-      "id": "CC-094",
-      "nome": "Barreira Natural",
-      "tipo": "armadilha",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "gatilho": "ataque_recebido",
-        "operacao": "reduzir_dano",
-        "valor": 800
-      },
-      "educacao": "Ecossistemas naturais podem atenuar alguns impactos."
-    },
-    {
-      "id": "CC-095",
-      "nome": "Plano de Contingência",
-      "tipo": "armadilha",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "gatilho": "ataque_direto",
-        "operacao": "anular_ataque",
-        "valor": 0
-      },
-      "educacao": "Planos prévios auxiliam respostas a emergências."
-    },
-    {
-      "id": "CC-096",
-      "nome": "Alerta Meteorológico",
-      "tipo": "armadilha",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "gatilho": "ataque_direto",
-        "operacao": "reduzir_dano",
-        "valor": 1000
-      },
-      "educacao": "Previsões permitem preparar ações preventivas."
-    },
-    {
-      "id": "CC-097",
-      "nome": "Denúncia Comunitária",
-      "tipo": "armadilha",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "gatilho": "invocacao_impacto",
-        "operacao": "debuff_invocada",
-        "valor": 500
-      },
-      "educacao": "Denúncias podem apoiar respostas dos órgãos competentes."
-    },
-    {
-      "id": "CC-098",
-      "nome": "Monitoramento Cidadão",
-      "tipo": "armadilha",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "gatilho": "invocacao_impacto",
-        "operacao": "debuff_invocada",
-        "valor": 400
-      },
-      "educacao": "Observações locais ajudam a sinalizar problemas."
-    },
-    {
-      "id": "CC-099",
-      "nome": "Proteção Emergencial",
-      "tipo": "armadilha",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "gatilho": "ataque_recebido",
-        "operacao": "anular_ataque",
-        "valor": 0
-      },
-      "educacao": "Ações emergenciais devem considerar contexto e segurança."
-    },
-    {
-      "id": "CC-100",
-      "nome": "Rede de Proteção",
-      "tipo": "armadilha",
-      "atk": null,
-      "defesa": null,
-      "efeito": {
-        "gatilho": "ataque_direto",
-        "operacao": "cura",
-        "valor": 500
-      },
-      "educacao": "Colaboração pode fortalecer a gestão ambiental."
     }
   ]
 }

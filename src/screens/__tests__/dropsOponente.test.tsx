@@ -10,7 +10,7 @@ import { TelaDueloLivre } from '../dueloLivre/TelaDueloLivre'
 afterEach(cleanup)
 
 const nome = (id: string) => CATALOGO.find((c) => c.id === id)!.nome
-const abrir = (n = 25) => {
+const abrir = (n = 19) => {
   const b = screen.getByRole('button', { name: `Ver ${n} cartas e chances` })
   b.focus() // num navegador real o clique foca o botão
   fireEvent.click(b)
@@ -51,7 +51,7 @@ describe('Pop-up de drops do adversário', () => {
     abrir()
     fireEvent.click(within(dialogo()).getByRole('button', { name: 'Fechar' }))
     expect(screen.queryByRole('dialog')).toBeNull()
-    expect(document.activeElement!.textContent).toBe('Ver 25 cartas e chances')
+    expect(document.activeElement!.textContent).toBe('Ver 19 cartas e chances')
     abrir()
     fireEvent.keyDown(within(dialogo()).getByRole('button', { name: 'Fechar' }), { key: 'Escape' })
     expect(screen.queryByRole('dialog')).toBeNull()

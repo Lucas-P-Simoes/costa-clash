@@ -382,7 +382,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
           }
         }, inicio + atrasoIA),
       )
-      const combateUnidades = ataque && ataque.alvo !== 'direto' && !p.eventos.some((ev) => ev.tipo === 'ataque_anulado')
+      const combateUnidades = ataque && ataque.alvo !== 'direto'
       inicio += atrasoIA + (combateUnidades ? pausaConfronto : 0)
     })
   }
@@ -479,10 +479,10 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const m = motivoUsar()
     if (m) return dizer(m, true)
     const c = cartaSel!
-    if (c.tipo === 'unidade' || c.tipo === 'armadilha') {
+    if (c.tipo === 'unidade') {
       setModo({ tipo: 'zona' })
       pedidoFoco.current = '[data-foco="alvo"]'
-      dizer(c.tipo === 'unidade' ? 'Escolha uma zona livre do seu campo.' : 'Escolha uma zona de suporte livre.')
+      dizer('Escolha uma zona livre do seu campo.')
       return
     }
     const a = analisarAcao(estado, 'humano', c, cat)
@@ -547,15 +547,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       setFoco(u.cartaId)
       if (lado === 'humano') setSel({ unidade: z })
     }
-  }
-
-  function cliqueSuporte(lado: IdJogador, z: number) {
-    const s = (lado === 'humano' ? v.eu.suporte : v.oponente.suporte)[z]
-    if (modo?.tipo === 'zona' && lado === 'humano' && cartaSel?.tipo === 'armadilha' && !s) {
-      enviar({ tipo: 'jogarCarta', jogador: 'humano', uid: sel.mao as string, zona: z })
-      return
-    }
-    if (s && !('oculta' in s && s.oculta)) setFoco((s as { cartaId: string }).cartaId)
   }
 
   // ---------------------------------------------------------------- arrastar a carta da mão até o campo (Pointer Events)
@@ -677,7 +668,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     return motivoUsarDe(uid)
   }
 
-  /** Destino -> executar (ou motivo). Chaves: zona:humano:z (unidade livre), unidade:lado:z, suporte:humano:z, terreno, campo. */
+  /** Destino -> executar (ou motivo). Chaves: zona:humano:z (unidade livre), unidade:lado:z, terreno, campo. */
   function avaliarDestino(uid: string, key: string | null): { valido: boolean; motivo: string; cmd?: Comando } {
     const c = cartaDoUid(uid)
     if (!c) return { valido: false, motivo: 'Carta indisponível.' }
@@ -696,16 +687,12 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       if (proprio && (tipo === 'zona' || tipo === 'unidade')) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid, zona: z, posicao: posPend }, '')
       return { valido: false, motivo: 'Solte a unidade em uma zona livre do seu campo.' }
     }
-    if (c.tipo === 'armadilha') {
-      if (proprio && tipo === 'suporte') return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid, zona: z }, '')
-      return { valido: false, motivo: 'Solte a armadilha em uma zona de suporte livre.' }
-    }
     const a = analisarAcao(estado, 'humano', c, cat)
     if (a.exigeAlvo && a.donoAlvo) {
       if (tipo === 'unidade' && lado === a.donoAlvo && a.alvos.includes(z)) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid, alvo: z }, '')
       return { valido: false, motivo: 'Solte sobre uma unidade alvo válida (destacada).' }
     }
-    if (key === 'terreno' || key === 'campo' || (proprio && (tipo === 'zona' || tipo === 'unidade' || tipo === 'suporte'))) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid }, '')
+    if (key === 'terreno' || key === 'campo' || (proprio && (tipo === 'zona' || tipo === 'unidade'))) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid }, '')
     return { valido: false, motivo: 'Solte a carta sobre o seu campo ou sobre o terreno.' }
   }
 
@@ -715,7 +702,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     if (!c) return s
     const cand: string[] = ['lixeira']
     if (c.tipo === 'unidade') [0, 1, 2, 3, 4].forEach((z) => !v.eu.campo[z] && cand.push('zona:humano:' + z))
-    else if (c.tipo === 'armadilha') [0, 1, 2, 3, 4].forEach((z) => !v.eu.suporte[z] && cand.push('suporte:humano:' + z))
     else {
       const a = analisarAcao(estado, 'humano', c, cat)
       if (a.exigeAlvo && a.donoAlvo) a.alvos.forEach((z) => cand.push('unidade:' + a.donoAlvo + ':' + z))
@@ -1007,9 +993,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const unidade = u as UnidadeEmCampo
     const c = cat.get(unidade.cartaId)!
     const { atk, def } = efet(lado, unidade)
-    const rot = `Zona ${z + 1} ${quem}: ${c.nome}, ATK ${atk}, DEF ${def}, em ${u.posicao === 'ATAQUE' ? 'ataque' : 'defesa'}${u.atacou ? ', já atacou' : ''}${
-      unidade.equipamentoUid ? ', equipada' : ''
-    }${alvoValido ? ', alvo válido' : ''}${atacantePossivel ? ', pode atacar' : ''}`
+    const rot = `Zona ${z + 1} ${quem}: ${c.nome}, ATK ${atk}, DEF ${def}, em ${u.posicao === 'ATAQUE' ? 'ataque' : 'defesa'}${u.atacou ? ', já atacou' : ''}${alvoValido ? ', alvo válido' : ''}${atacantePossivel ? ', pode atacar' : ''}`
     const efeito = fx.atacando.includes(chave) ? 'atacando' : fx.impacto.includes(chave) ? 'impacto' : fx.entrando.includes(chave) ? 'entrando' : null
     const chaveInspecao = `unidade:${lado}:${z}`
     if (unidade.viradaParaBaixo) {
@@ -1049,45 +1033,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
             onPointerDown={lado === 'humano' && atacantePossivel ? (e) => iniciarAtaquePointer(z, e) : undefined}
           />
         </span>
-      </div>
-    )
-  }
-
-  function renderSuporte(lado: IdJogador, z: number) {
-    const s = (lado === 'humano' ? v.eu.suporte : v.oponente.suporte)[z]
-    const quem = lado === 'humano' ? 'sua' : 'do oponente'
-    const livre = modo?.tipo === 'zona' && lado === 'humano' && cartaSel?.tipo === 'armadilha' && !s
-    const keyS = 'suporte:' + lado + ':' + z
-    const dropS = lado === 'humano' ? classeDrop(keyS) : ''
-    const dataS = lado === 'humano' ? keyS : undefined
-    const dropSAttr = dropS ? ({ 'aria-dropeffect': 'move' } as const) : {}
-    if (!s) {
-      const rot = `Suporte ${z + 1} ${quem}: vazio, escolher esta zona`
-      return livre ? (
-        <button key={z} type="button" className={'suporte suporte--vazio zona--valida' + dropS} data-destino={dataS} {...dropSAttr} data-foco="alvo" aria-label={rot} onClick={() => cliqueSuporte(lado, z)}>
-          <span className="zona__losango" aria-hidden="true" />
-        </button>
-      ) : (
-        <div key={z} className={'suporte suporte--vazio' + dropS} data-destino={dataS} {...dropSAttr} aria-hidden="true">
-          <span className="zona__losango" aria-hidden="true" />
-        </div>
-      )
-    }
-    if ('oculta' in s && s.oculta) {
-      const chaveInspecao = `suporte:${lado}:${z}`
-      return (
-        <div key={z} className="suporte" data-destino={dataS} {...eventosInspecao(chaveInspecao)}>
-          <CartaVerso rotulo={`Suporte ${z + 1} ${quem}: carta virada para baixo`} />
-        </div>
-      )
-    }
-    const full = s as { cartaId: string; tipo: string }
-    const c = cat.get(full.cartaId)!
-    const extra = full.tipo === 'armadilha' ? ', armadilha virada (visível só para você)' : ', equipamento'
-    const chaveInspecao = `suporte:${lado}:${z}`
-    return (
-      <div key={z} className={'suporte' + dropS} data-destino={dataS} {...dropSAttr} {...eventosInspecao(chaveInspecao)}>
-        <CartaView carta={c} tamanho="mini" rotulo={`Suporte ${z + 1} ${quem}: ${c.nome}${extra}`} onClick={() => cliqueSuporte(lado, z)} />
       </div>
     )
   }
@@ -1136,9 +1081,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               vida={v.oponente.lp}
               rotuloVida={`Vida do oponente: ${v.oponente.lp}`}
               rotuloZonas="Zonas de unidade do oponente"
-              rotuloSuportes="Zonas de suporte do oponente"
               zonas={[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('oponente', z))}
-              suportes={[0, 1, 2, 3, 4].map((z) => renderSuporte('oponente', z))}
               vidaFx={{ dano: fx.dano.oponente, cura: fx.cura.oponente }}
               alvoVida={podeDireto ? 'direto' : undefined}
               vidaDestacada={podeDireto || (!!setaHumana && setaHumana.alvo === 'direto')}
@@ -1162,9 +1105,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               vida={v.eu.lp}
               rotuloVida={`Sua vida: ${v.eu.lp}`}
               rotuloZonas="Suas zonas de unidade"
-              rotuloSuportes="Suas zonas de suporte"
               zonas={[0, 1, 2, 3, 4].map((z) => renderZonaUnidade('humano', z))}
-              suportes={[0, 1, 2, 3, 4].map((z) => renderSuporte('humano', z))}
               vidaFx={{ dano: fx.dano.humano, cura: fx.cura.humano }}
               vidaDestacada={!!setaIA && setaIA.alvo === 'direto'}
               drop={validos.has('campo')}

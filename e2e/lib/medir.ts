@@ -188,7 +188,7 @@ export function medirNaPagina(minFonte: number): Medicao {
     // na viewport atual; nos demais casos ela fica alcançável após a rolagem.
     const paginaRolavel = raiz.scrollHeight > vh + 1
     if (naViewport && (!paginaRolavel || inteiraNaViewport) && !acessivel) problemasMao.push("carta da mão sem faixa clicável")
-    document.querySelectorAll<HTMLElement>(".duelo-lado, .zona, .suporte").forEach((z) => {
+    document.querySelectorAll<HTMLElement>(".duelo-lado, .zona").forEach((z) => {
       if (visivel(z) && !z.closest("[inert]") && inter(r, z.getBoundingClientRect())) problemasMao.push("carta da mão sobre o campo (" + desc(z) + ")")
     })
   })

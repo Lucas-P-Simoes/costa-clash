@@ -6,10 +6,10 @@ import { SUJEITOS } from '../sujeitos'
 
 const idiomas = ['pt', 'en'] as const
 
-describe('sujeitos das 100 cartas', () => {
+describe('sujeitos das 87 cartas', () => {
   it('há um sujeito por ID do catálogo, nem a mais nem a menos', () => {
     expect(Object.keys(SUJEITOS).sort()).toEqual(CATALOGO.map((c) => c.id).sort())
-    expect(CATALOGO).toHaveLength(100)
+    expect(CATALOGO).toHaveLength(87)
   })
 
   it('nenhum sujeito vazio, com forma e paleta válidas', () => {
@@ -25,7 +25,7 @@ describe('sujeitos das 100 cartas', () => {
   it('nenhum sujeito duplicado (em português nem em inglês)', () => {
     for (const idioma of idiomas) {
       const textos = CATALOGO.map((c) => SUJEITOS[c.id][idioma].trim().toLowerCase())
-      expect(new Set(textos).size, idioma).toBe(100)
+      expect(new Set(textos).size, idioma).toBe(87)
     }
   })
 
@@ -50,9 +50,7 @@ describe('sujeitos das 100 cartas', () => {
 
   it('impactos são criaturas ou fenômenos (sem apologia), ações e soluções são cenas/objetos', () => {
     for (const c of CATALOGO.filter((x) => x.grupo === 'impacto')) expect(['criatura', 'cena', 'paisagem'], c.id).toContain(SUJEITOS[c.id].forma)
-    for (const c of CATALOGO.filter((x) => x.tipo === 'armadilha')) expect(SUJEITOS[c.id].forma, c.id).toBe('simbolo')
     for (const c of CATALOGO.filter((x) => x.subtipo === 'terreno')) expect(SUJEITOS[c.id].forma, c.id).toBe('paisagem')
-    for (const c of CATALOGO.filter((x) => x.subtipo === 'equipamento')) expect(SUJEITOS[c.id].forma, c.id).toBe('objeto')
   })
 })
 
@@ -87,7 +85,7 @@ describe('gerador de prompts', () => {
 
   it('prompts diferentes para cartas diferentes; contêm assunto, paleta e composição', () => {
     const todos = promptsDoCatalogo(CATALOGO)
-    expect(new Set(todos.map((p) => p.prompt)).size).toBe(100)
+    expect(new Set(todos.map((p) => p.prompt)).size).toBe(87)
     const t = promptDaCarta(CATALOGO[0])
     expect(t.prompt).toContain(SUJEITOS['CC-001'].pt)
     expect(t.prompt).toContain(PALETAS.ecossistema.pt)

@@ -4,7 +4,7 @@ import { BARALHOS_OPONENTES } from '../../data/baralhosOponentes'
 import { aplicarComando } from '../acoes'
 import type { Comando } from '../acoes'
 import { criarDuelo, executarTurnoIA } from '../duelo'
-import { invariantes } from '../estado'
+
 import type { EstadoDuelo } from '../estado'
 import { avaliarAtaque, decidirComando, escolherMelhorAtaque } from '../ia'
 import { estadoDeVisao, visaoParaJogador } from '../visao'
@@ -22,8 +22,8 @@ describe('visão parcial: não vaza informação oculta', () => {
   it('a visão do oponente não contém mão, baralho nem uids/cartas do humano', () => {
     const e = novoDuelo(4)
     const v = visaoParaJogador(e, 'oponente')
-    expect(Object.keys(v.oponente).sort()).toEqual(['baralhoTamanho', 'campo', 'descarte', 'id', 'lp', 'maoTamanho', 'suporte'])
-    expect(Object.keys(v.eu).sort()).toEqual(['baralhoTamanho', 'campo', 'descarte', 'id', 'lp', 'mao', 'suporte'])
+    expect(Object.keys(v.oponente).sort()).toEqual(['baralhoTamanho', 'campo', 'descarte', 'id', 'lp', 'maoTamanho'])
+    expect(Object.keys(v.eu).sort()).toEqual(['baralhoTamanho', 'campo', 'descarte', 'id', 'lp', 'mao'])
     expect(v.oponente.maoTamanho).toBe(5)
     expect(v.oponente.baralhoTamanho).toBe(25)
     const json = JSON.stringify(v)
@@ -32,15 +32,6 @@ describe('visão parcial: não vaza informação oculta', () => {
     expect(json).not.toContain('"log"')
     // nem a ordem do próprio baralho é exposta
     for (const c of e.jogadores.oponente.baralho) expect(json).not.toContain(`"${c.uid}"`)
-  })
-
-  it('armadilhas viradas do adversário aparecem só como zona ocupada (sem carta nem uid)', () => {
-    const e = cenario({ humano: { suporte: ['CC-093', null, 'CC-095'] }, ativo: 'oponente' })
-    const v = visaoParaJogador(e, 'oponente')
-    expect(v.oponente.suporte).toEqual([{ oculta: true }, null, { oculta: true }, null, null])
-    expect(JSON.stringify(v)).not.toContain('CC-093')
-    // o dono vê as suas
-    expect(visaoParaJogador(e, 'humano').eu.suporte[0]?.cartaId).toBe('CC-093')
   })
 
   it('unidade virada para baixo aparece sem identidade, uid, arte lógica, ATK, DEF ou buffs', () => {
@@ -52,25 +43,6 @@ describe('visão parcial: não vaza informação oculta', () => {
     expect(visaoParaJogador(e, 'humano').eu.campo[0]).toMatchObject({ cartaId: 'CC-056', viradaParaBaixo: true })
   })
 
-  it('equipamentos do adversário são públicos (estão vinculados a unidades visíveis)', () => {
-    const e = cenario({ humano: { campo: [{ id: 'CC-001', equip: 'CC-085' }] }, ativo: 'oponente' })
-    const v = visaoParaJogador(e, 'oponente')
-    const unidade = v.oponente.campo[0]
-    expect(unidade?.oculta).toBe(false)
-    if (!unidade || unidade.oculta) throw new Error('A unidade deveria estar visível.')
-    expect(v.oponente.suporte[0]).toMatchObject({ oculta: false, cartaId: 'CC-085', vinculadaA: unidade.uid })
-  })
-
-  it('equipamento público não expõe o uid interno da unidade oculta vinculada', () => {
-    const e = cenario({ humano: { campo: [{ id: 'CC-056', viradaParaBaixo: true, equip: 'CC-085' }] }, ativo: 'oponente' })
-    const uidOculto = e.jogadores.humano.campo[0]!.uid
-    const v = visaoParaJogador(e, 'oponente')
-    expect(v.oponente.campo[0]).toEqual({ oculta: true, posicao: 'ATAQUE', atacou: false })
-    expect(v.oponente.suporte[0]).toMatchObject({ oculta: false, cartaId: 'CC-085', vinculadaA: '?u0' })
-    expect.soft(JSON.stringify(v.oponente)).not.toContain(uidOculto)
-    expect.soft(invariantes(estadoDeVisao(v)).filter((erro) => !erro.includes('total de cartas'))).toEqual([])
-  })
-
   it('o estado reconstruído para planejamento só tem marcadores no lugar do oculto', () => {
     const e = novoDuelo(2)
     const r = estadoDeVisao(visaoParaJogador(e, 'oponente'))
@@ -79,15 +51,15 @@ describe('visão parcial: não vaza informação oculta', () => {
     expect(r.jogadores.oponente.mao.map((c) => c.cartaId).sort()).toEqual(e.jogadores.oponente.mao.map((c) => c.cartaId).sort())
   })
 
-  it('a decisão da IA é idêntica quando só muda a informação oculta do humano (mão, baralho, armadilha)', () => {
-    const mk = (maoH: string[], armadilha: string) =>
+  it('a decisão da IA é idêntica quando só muda a informação oculta do humano (mão e baralho)', () => {
+    const mk = (maoH: string[]) =>
       cenario({
         ativo: 'oponente',
-        oponente: { mao: ['CC-003', 'CC-001', 'CC-077', 'CC-075', 'CC-093'], campo: ['CC-007'] },
-        humano: { mao: maoH, campo: ['CC-047'], suporte: [armadilha] },
+        oponente: { mao: ['CC-003', 'CC-001', 'CC-077', 'CC-075', 'CC-084'], campo: ['CC-007'] },
+        humano: { mao: maoH, campo: ['CC-047'] },
       })
-    const a = mk(['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], 'CC-099')
-    const b = mk(['CC-100', 'CC-094', 'CC-096', 'CC-056', 'CC-071'], 'CC-093')
+    const a = mk(['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'])
+    const b = mk(['CC-079', 'CC-080', 'CC-083', 'CC-056', 'CC-071'])
     // embaralha também o baralho do humano em um deles
     b.jogadores.humano.baralho.reverse()
     b.jogadores.humano.baralho.forEach((c, i) => (c.cartaId = i % 2 ? 'CC-020' : 'CC-025'))
@@ -110,7 +82,7 @@ describe('visão parcial: não vaza informação oculta', () => {
 
 describe('escolha da jogada (§9)', () => {
   it('1º: unidade capaz de vencer combate (e a coloca em ATAQUE quando há vantagem)', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-047', 'CC-077', 'CC-093'] }, humano: { campo: ['CC-007'] } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-047', 'CC-077', 'CC-084'] }, humano: { campo: ['CC-007'] } })
     const c = decide(e)
     expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-047'), posicao: 'ATAQUE', viradaParaBaixo: false }) // 1800 > 1700
   })
@@ -134,14 +106,14 @@ describe('escolha da jogada (§9)', () => {
   })
 
   it('3º: sem vitória possível nem ação eficaz, a unidade de maior DEFESA, em DEFESA', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-013', 'CC-004', 'CC-093'] }, humano: { campo: ['CC-056'] } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-013', 'CC-004', 'CC-084'] }, humano: { campo: ['CC-056'] } })
     expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-004'), posicao: 'DEFESA', viradaParaBaixo: true })
   })
 
-  it('4º: armadilha só depois de unidades e ações eficazes; entre armadilhas, ID crescente', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-099', 'CC-093'] } })
-    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-093') })
-    const e2 = cenario({ ativo: 'oponente', oponente: { mao: ['CC-093', 'CC-013'] }, humano: { campo: ['CC-056'] } })
+  it('4º: ação ineficaz só depois de unidades e ações eficazes; entre ineficazes, ID crescente', () => {
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-090', 'CC-089'] } })
+    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-089') })
+    const e2 = cenario({ ativo: 'oponente', oponente: { mao: ['CC-089', 'CC-013'] }, humano: { campo: ['CC-056'] } })
     expect(decide(e2)).toMatchObject({ uid: uidDe(e2, 'oponente', 'CC-013') })
   })
 
@@ -162,13 +134,6 @@ describe('escolha da jogada (§9)', () => {
     expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-089') })
     const ruim = cenario({ ativo: 'oponente', oponente: { mao: ['CC-089', 'CC-013'] }, humano: { campo: ['CC-001'] } })
     expect(decide(ruim)).toMatchObject({ uid: uidDe(ruim, 'oponente', 'CC-013') })
-  })
-
-  it('revelar nunca é preferido a unidades: a IA não usa a informação revelada', () => {
-    const sem = cenario({ ativo: 'oponente', oponente: { mao: ['CC-082', 'CC-013'] }, humano: { campo: ['CC-056'] } })
-    expect(decide(sem)).toMatchObject({ uid: uidDe(sem, 'oponente', 'CC-013') })
-    const com = cenario({ ativo: 'oponente', oponente: { mao: ['CC-082', 'CC-013'] }, humano: { campo: ['CC-056'], suporte: ['CC-093'] } })
-    expect(decide(com)).toMatchObject({ uid: uidDe(com, 'oponente', 'CC-013') })
   })
 
   it('sem jogada legal descarta (a carta de menor utilidade; empate por ID)', () => {

@@ -652,14 +652,6 @@ Arquivo: `081.webp` | Paleta: solucao | Forma: objeto
 Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: barreira flutuante laranja em arco cercando uma mancha escura na água, barcos de apoio nas pontas, boias reluzentes, mar calmo. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
 ```
 
-## CC-082 — Estudo de Impacto
-
-Arquivo: `082.webp` | Paleta: solucao | Forma: simbolo
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: balança dourada com uma folha verde de um lado e um prédio do outro, lupa sobre um mapa da costa ao fundo, prancheta, luz de lamparina, sem letras nem números. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
 ## CC-083 — Monitoramento Contínuo
 
 Arquivo: `083.webp` | Paleta: solucao | Forma: objeto
@@ -674,38 +666,6 @@ Arquivo: `084.webp` | Paleta: ecossistema | Forma: paisagem
 
 ```text
 Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: vista aérea de uma bacia hidrográfica, serra coberta de mata, rio serpenteando com mata ciliar, pequenos reservatórios, desembocando no mar ao fundo, luz clara de dia. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-085 — Raízes Protetoras
-
-Arquivo: `085.webp` | Paleta: equipamento | Forma: objeto
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: manto de raízes de mangue entrelaçadas como armadura orgânica, brilho verde e turquesa percorrendo as raízes, folhas pequenas, exposto como relíquia em destaque. Paleta e luz: metal escuro azulado (#143a52) com detalhes dourados (#e6b648) e brilho turquesa (#3fdcf0), fundo atmosférico simples. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-086 — Tecnologia Limpa
-
-Arquivo: `086.webp` | Paleta: equipamento | Forma: objeto
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: módulo tecnológico compacto com painel solar, pequena turbina eólica e filtro cilíndrico, brilho turquesa, metal escuro com detalhes dourados, exposto como equipamento de coleção. Paleta e luz: metal escuro azulado (#143a52) com detalhes dourados (#e6b648) e brilho turquesa (#3fdcf0), fundo atmosférico simples. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-087 — Vigilância Ambiental
-
-Arquivo: `087.webp` | Paleta: equipamento | Forma: objeto
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: drone de vigilância com câmera e luzes turquesa pairando sobre a costa, feixe de luz varrendo a água, binóculo preso ao corpo, céu de fim de tarde. Paleta e luz: metal escuro azulado (#143a52) com detalhes dourados (#e6b648) e brilho turquesa (#3fdcf0), fundo atmosférico simples. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-088 — Adaptação Climática
-
-Arquivo: `088.webp` | Paleta: equipamento | Forma: objeto
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: casa em palafita moderna elevada sobre a maré, telhado de captação de água, jardim de mangue e muro-verde ao redor, adaptada à maré alta, luzes douradas nas janelas. Paleta e luz: metal escuro azulado (#143a52) com detalhes dourados (#e6b648) e brilho turquesa (#3fdcf0), fundo atmosférico simples. Composição: objeto ou equipamento em destaque ao centro, vista levemente inclinada, como item de coleção, em cenário atmosférico simples; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
 ```
 
 ## CC-089 — Terreno: Manguezal
@@ -738,69 +698,5 @@ Arquivo: `092.webp` | Paleta: fenomeno | Forma: paisagem
 
 ```text
 Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: costa ressecada sob pressão, solo rachado, árvores secas sem folhas, rochas escuras, sol vermelho enorme se pondo sobre o mar, céu laranja e vermelho dramático. Paleta e luz: azuis profundos (#0b1d33, #1f6f9c), cinzas de tempestade (#6a6a72, #9a9aa4), espuma branco-azulada (#e8f4ff), energia turquesa brilhante (#3fdcf0) e céu de pôr do sol laranja e roxo (#e8803a, #8a4a90) quando houver horizonte. Composição: paisagem com profundidade e horizonte na altura central, ponto de interesse no centro, primeiro plano rico em detalhes; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-093 — Fiscalização Surpresa
-
-Arquivo: `093.webp` | Paleta: armadilha | Forma: simbolo
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: feixe de holofote iluminando de surpresa uma mancha suspeita de despejo numa água escura, silhueta de fiscal com binóculo na margem, sombras roxas e dourado de alerta. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-094 — Barreira Natural
-
-Arquivo: `094.webp` | Paleta: armadilha | Forma: simbolo
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: parede viva de mangue e recife emergindo da água e absorvendo uma onda grande, espuma se dispersando nas raízes, brilho roxo e turquesa de proteção. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-095 — Plano de Contingência
-
-Arquivo: `095.webp` | Paleta: armadilha | Forma: simbolo
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: mapa tático de emergência numa mesa com rota luminosa de evacuação, kit de emergência aberto e lanterna, luz dourada de alerta sobre fundo roxo-escuro, sem escrita. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-096 — Alerta Meteorológico
-
-Arquivo: `096.webp` | Paleta: armadilha | Forma: simbolo
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: antena e radar de previsão do tempo com varredura luminosa, sirene de alerta e tempestade com raios se aproximando no horizonte, tons roxos e dourados. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-097 — Denúncia Comunitária
-
-Arquivo: `097.webp` | Paleta: armadilha | Forma: simbolo
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: silhueta de pessoa fotografando um despejo suspeito na água com um celular, feixe de luz do celular iluminando a mancha, pictograma luminoso de balão de fala, tons roxos. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-098 — Monitoramento Cidadão
-
-Arquivo: `098.webp` | Paleta: armadilha | Forma: simbolo
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: grupo de moradores em silhueta com binóculos, cadernos e celulares registrando observações numa praia, uma ave pousada em destaque, brilho roxo e dourado. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-099 — Proteção Emergencial
-
-Arquivo: `099.webp` | Paleta: armadilha | Forma: simbolo
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: escudo de energia turquesa e dourada cobrindo uma enseada, barreiras de contenção flutuantes e equipe de resgate em silhueta, céu roxo-escuro. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-## CC-100 — Rede de Proteção
-
-Arquivo: `100.webp` | Paleta: armadilha | Forma: simbolo
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: rede luminosa tecida de fios dourados e turquesa ligando um manguezal, um recife, um barco e uma casa, nós brilhantes, fundo roxo-escuro. Paleta e luz: roxo escuro místico (#2a1a40, #8a5ac4), dourado de alerta (#f2cf6e), turquesa de energia (#3fdcf0), contraste forte de luz sobre fundo escuro. Composição: situação ou símbolo central iluminado com contraste forte, centralizado, fundo escuro simplificado mas completo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
 ```
 

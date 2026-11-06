@@ -25,11 +25,10 @@ describe('baralhos dos oponentes (provisórios)', () => {
     expect(validarBaralhoDuelo(b as string[])).toEqual({ ok: true })
   })
 
-  it.each(OPONENTES.map((o) => [o.id] as const))('%s: tem ações e armadilhas jogáveis e unidades do próprio grupo', (id) => {
+  it.each(OPONENTES.map((o) => [o.id] as const))('%s: tem ações jogáveis e unidades do próprio grupo', (id) => {
     const o = OPONENTES.find((x) => x.id === id)!
     const cartas = (baralhoDoOponente(id) as string[]).map((c) => porId.get(c)!)
-    expect(cartas.filter((c) => c.tipo === 'acao').length).toBeGreaterThanOrEqual(6)
-    expect(cartas.filter((c) => c.tipo === 'armadilha').length).toBeGreaterThanOrEqual(3)
+    expect(cartas.filter((c) => c.tipo === 'acao').length).toBeGreaterThanOrEqual(4)
     const unidades = cartas.filter((c) => c.tipo === 'unidade')
     const doGrupo = unidades.filter((c) => c.grupo === o.grupo).length
     // unidades temáticas dominam o baralho (>= 50% das unidades)

@@ -23,7 +23,7 @@ r = await c('GET', '/api/me'); log('me sem token', r)
 r = await c('PUT', '/api/baralho', { cartas: [...baralho].reverse() }, tok); log('put baralho valido', r)
 r = await c('PUT', '/api/baralho', { cartas: baralho.slice(1) }, tok); log('put 39 cartas', r, r.j.erro.mensagem)
 r = await c('PUT', '/api/baralho', { cartas: [...baralho.slice(1), 'CC-999'] }, tok); log('put id desconhecido', r, r.j.erro.mensagem)
-r = await c('PUT', '/api/baralho', { cartas: [...baralho.filter((i) => i !== 'CC-002'), 'CC-100'] }, tok); log('put alem da colecao', r, r.j.erro.mensagem)
+r = await c('PUT', '/api/baralho', { cartas: [...baralho.filter((i) => i !== 'CC-018'), 'CC-092'] }, tok); log('put alem da colecao', r, r.j.erro.mensagem)
 r = await c('POST', '/api/login', { email, senha: 'senha-forte-1' }); log('login ok', r, `baralho[0]=${r.j.usuario.baralho[0]}`)
 const tok2 = r.j.token
 r = await c('POST', '/api/login', { email: 'naoexiste@x.com', senha: 'senha-forte-1' }); const a = r.txt; log('login email inexistente', r, r.j.erro.mensagem)

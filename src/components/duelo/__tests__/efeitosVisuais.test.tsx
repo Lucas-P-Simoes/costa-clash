@@ -23,11 +23,11 @@ describe('derivarEfeitos (função pura)', () => {
     expect(semEfeitos(derivarEfeitos([ev({ tipo: 'fase_alterada', jogador: 'humano', fase: 'COMBATE' }), ev({ tipo: 'compra', jogador: 'humano', cartas: [] })]))).toBe(true)
   })
 
-  it('carta jogada no campo vira entrada na zona certa; em suporte/descarte/terreno, não', () => {
+  it('carta jogada no campo vira entrada na zona certa; em descarte/terreno, não', () => {
     const r = derivarEfeitos([
       ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'a', cartaId: 'CC-001' }, destino: 'campo', zona: 2 }),
       ev({ tipo: 'carta_jogada', jogador: 'oponente', carta: { uid: 'b', cartaId: 'CC-001' }, destino: 'campo', zona: 0 }),
-      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'c', cartaId: 'CC-070' }, destino: 'suporte', zona: 1 }),
+      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'c', cartaId: 'CC-070' }, destino: 'descarte' }),
       ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'd', cartaId: 'CC-089' }, destino: 'terreno' }),
     ])
     expect(r.entrando).toEqual([chaveZona('humano', 2), chaveZona('oponente', 0)])
@@ -150,10 +150,6 @@ describe('derivarConfronto (cena de ataque entre unidades)', () => {
     ])
     expect(r?.atacante).toEqual({ lado: 'oponente', zona: 2, cartaId: 'CC-002', destruida: true })
     expect(r?.alvo).toEqual({ lado: 'humano', zona: 0, cartaId: 'CC-071', destruida: false })
-  })
-
-  it('ataque anulado por armadilha não gera cena', () => {
-    expect(derivarConfronto([declarado('humano', 0, 1), ev({ tipo: 'ataque_anulado', jogador: 'humano', atacante: 0 })], cartas)).toBeNull()
   })
 
   it('hook: cena aparece com o ataque e expira sozinha; nada com movimento reduzido', () => {

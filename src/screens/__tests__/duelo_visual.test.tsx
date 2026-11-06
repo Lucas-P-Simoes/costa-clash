@@ -66,7 +66,7 @@ describe('MolduraOrnamentada (componente reutilizável)', () => {
 })
 
 describe('Painéis OPONENTE e VOCÊ', () => {
-  it('identificação, avatar, vida, 5 zonas de unidade e faixa de 5 suportes em cada lado', () => {
+  it('identificação, avatar, vida e 5 zonas de unidade em cada lado (sem faixa de suportes)', () => {
     montar()
     for (const [lado, nome, sub, vida] of [
       ['oponente', 'Oponente', 'IA do Litoral', 'Vida do oponente: 5000'],
@@ -81,7 +81,7 @@ describe('Painéis OPONENTE e VOCÊ', () => {
       expect(painel.querySelector('.duelo-vida svg')).toBeTruthy() // coração
       expect(painel.querySelector('.duelo-contagens')).toBeNull() // contagens de baralho/descarte removidas do painel
       expect(painel.querySelectorAll('.zona')).toHaveLength(5)
-      expect(painel.querySelectorAll('.suporte')).toHaveLength(5)
+      expect(painel.querySelector('.duelo-suportes, .suporte')).toBeNull()
     }
     // mão do oponente só como versos, com a quantidade
     expect(screen.getByRole('group', { name: 'Mão do oponente: 1 cartas' })).toBeTruthy()
@@ -97,10 +97,10 @@ describe('Painéis OPONENTE e VOCÊ', () => {
   it('todo verso usa a arte costeira padrão sem o antigo losango decorativo', () => {
     montar({
       humano: { campo: [{ id: 'CC-001', viradaParaBaixo: true }] },
-      oponente: { campo: [{ id: 'CC-003', pos: 'DEFESA', viradaParaBaixo: true }], suporte: ['CC-095'], mao: ['CC-001', 'CC-002'] },
+      oponente: { campo: [{ id: 'CC-003', pos: 'DEFESA', viradaParaBaixo: true }], mao: ['CC-001', 'CC-002'] },
     })
     const versos = Array.from(document.querySelectorAll('.carta--verso'))
-    expect(versos.length).toBeGreaterThanOrEqual(5)
+    expect(versos.length).toBeGreaterThanOrEqual(4)
     for (const verso of versos) {
       const arte = verso.querySelector<HTMLImageElement>('.carta__verso-imagem')
       expect(arte?.getAttribute('src')).toContain('verso-carta.webp')

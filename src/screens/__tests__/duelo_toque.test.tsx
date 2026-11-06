@@ -205,7 +205,7 @@ describe('Nomes por palavra e selo de posição', () => {
     expect(nomeCurto('Derramamento de Óleo')).toBe('Derramam. de Óleo')
   })
 
-  it('carta de campo guarda nome completo e curto (CSS escolhe pela largura); mão e suporte mostram o nome inteiro', () => {
+  it('carta de campo guarda nome completo e curto (CSS escolhe pela largura); a mão mostra o nome inteiro', () => {
     const c = CATALOGO.find((x) => x.nome === 'Pesquisa Oceanográfica')!
     const { container } = render(<CartaView carta={c} tamanho="campo" posicao="DEFESA" rotulo="x" />)
     expect(container.querySelector('.nome-completo')!.textContent).toBe('Pesquisa Oceanográfica')

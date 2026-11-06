@@ -22,9 +22,10 @@ interface Props {
   onFechar: () => void
 }
 
+/** Conta as cópias por ID; IDs fora do catálogo atual (ex.: cartas removidas do jogo) são ignorados. */
 function contar(ids: readonly string[]): Map<string, number> {
   const m = new Map<string, number>()
-  for (const id of ids) m.set(id, (m.get(id) ?? 0) + 1)
+  for (const id of ids) if (CATALOGO.some((c) => c.id === id)) m.set(id, (m.get(id) ?? 0) + 1)
   return m
 }
 

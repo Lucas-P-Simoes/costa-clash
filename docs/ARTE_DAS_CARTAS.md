@@ -6,7 +6,7 @@
 Pixel art retrô estilo PlayStation 1 / 16-bit moderno, aparência de carta colecionável:
 - **Cena completa** preenchendo todo o quadro (não ícones soltos), com **elemento principal grande e centralizado**, primeiro plano, plano médio e fundo.
 - Contornos escuros finos e definidos; cores vibrantes e saturadas, harmonizadas (contraste de laranja quente com azul-turquesa); sombras profundas; pixels visíveis com dithering sutil; alta densidade de detalhes.
-- Iluminação dramática: raios de luz subaquáticos, pôr do sol dourado/laranja/roxo, céu azul com nuvens brancas em pixels (dia), tempestade roxa (impactos). A noite azul-lunar das telas do jogo continua válida para armadilhas e cenas específicas.
+- Iluminação dramática: raios de luz subaquáticos, pôr do sol dourado/laranja/roxo, céu azul com nuvens brancas em pixels (dia), tempestade roxa (impactos). A noite azul-lunar das telas do jogo continua válida para cenas específicas.
 
 **Proibido:** fotografia, realismo, genérico, estilo infantil simplificado, emojis, ícones de biblioteca, estilos misturados, e qualquer **texto, nome, ATK/DEF, moldura, selo ou logotipo dentro da imagem** (a moldura, o selo e a placa de nome são desenhados pelo jogo).
 
@@ -26,11 +26,11 @@ Borda colorida por categoria, **selo octogonal no canto superior esquerdo** com 
 | verde | verde `#2f9e54` | folha | ecossistemas, fauna costeira, restauração, turismo sustentável |
 | fenomeno | vermelho `#c4402a` | triângulo / termômetro | fenômenos naturais, recifes, mudanças climáticas |
 | impacto | roxo `#8a4ac4` | diabinho / caveira | impactos ambientais, espécies exóticas |
-| protegida | cinza `#8e9aa6` | concha / engrenagem | restinga, áreas protegidas, saneamento, equipamentos, armadilhas |
+| protegida | cinza `#8e9aa6` | concha / engrenagem | restinga, áreas protegidas, saneamento |
 | planejamento | dourado `#e0a82e` | estrela | planejamento, pesquisa, ações |
 | ondas | azul-ondas `#2ab4e8` | onda | comunidades tradicionais, ressaca, mobilização |
 
-Padrão por tipo+grupo: ecossistema=verde, fauna=marinha, atividade=planejamento, impacto=impacto, ação=planejamento, equipamento=protegida, terreno=verde, armadilha=protegida; mais ~40 ajustes por carta (ex.: CC-018 marinha/gota; CC-047 impacto/diabinho; CC-073 protegida/engrenagem). A atribuição das 100 cartas a categorias é uma **proposta do DEV** para o dono revisar (só apresentação).
+Padrão por tipo+grupo: ecossistema=verde, fauna=marinha, atividade=planejamento, impacto=impacto, ação=planejamento, terreno=verde (equipamentos e armadilhas foram removidos do jogo em 05/11/2026; as artes arquivadas estão em `docs/arte/cartas-removidas/`); mais ~40 ajustes por carta (ex.: CC-018 marinha/gota; CC-047 impacto/diabinho; CC-073 protegida/engrenagem). A atribuição das 87 cartas a categorias é uma **proposta do DEV** para o dono revisar (só apresentação).
 
 ## 2. Requisitos técnicos da imagem
 - **Vertical 3:4, preferencial 768x1024**; mínimo 384x512; PNG ou WebP; ideal < 1,5 MB (erro acima de 5 MB).
@@ -49,8 +49,6 @@ Padrão por tipo+grupo: ecossistema=verde, fauna=marinha, atividade=planejamento
 | solucao | planejamento e soluções | dourado, verdes, turquesa tecnológico, céu limpo |
 | comunidade | comunidades tradicionais | madeira, palha, areia, azul-mar, pôr do sol |
 | urbano | orla/terreno urbano | azul-céu, concreto claro, janelas douradas, verde |
-| equipamento | equipamentos | metal escuro azulado, dourado, turquesa |
-| armadilha | armadilhas | roxo místico, dourado de alerta, turquesa |
 
 Textos completos e hex em `PALETAS` (`src/arte/prompts.ts`).
 
@@ -61,12 +59,12 @@ Textos completos e hex em `PALETAS` (`src/arte/prompts.ts`).
 - Comunidades tradicionais (pescador artesanal, caiçara): retrato digno e respeitoso, sem estereótipos ou caricatura; embarcações e ferramentas reais.
 
 ## 5. Arquivos
-- `src/arte/sujeitos.ts`: **100 sujeitos escritos à mão** (PT e EN), forma de composição e paleta por ID. Os do estilo da referência (tartaruga sobre recife com raios de luz, mangue com raízes, falésia com ondas, monstro de lixo, restinga com flores, onda-criatura, orla urbana, estação de tratamento, garça no mangue, barco com rede, recife de coral, peixe-leão, mudas de mangue, golfinhos, navio de pesquisa, ilha rochosa, passarela) foram ajustados para cenas ricas.
+- `src/arte/sujeitos.ts`: **87 sujeitos escritos à mão** (PT e EN), forma de composição e paleta por ID. Os do estilo da referência (tartaruga sobre recife com raios de luz, mangue com raízes, falésia com ondas, monstro de lixo, restinga com flores, onda-criatura, orla urbana, estação de tratamento, garça no mangue, barco com rede, recife de coral, peixe-leão, mudas de mangue, golfinhos, navio de pesquisa, ilha rochosa, passarela) foram ajustados para cenas ricas.
 - `src/arte/prompts.ts`: gerador determinístico (prefixo + assunto + paleta e luz + composição + negativos; termina com "Sem texto, sem moldura, sem ATK/DEF, sem logotipo."). Também em inglês.
 - `src/arte/{categorias,manifesto,arteDisponivel,piloto,referencia}.ts`, `src/arte/indiceArte.json` (índice do build).
 - `scripts/arte/*.mjs` e `scripts/{arte-manifesto,arte-verificar,arte-prompts,gerar-arte}.mjs` (Node 22.18+/24; carregam os `.ts` por remoção de tipos).
-- `public/assets/cards/art/manifest.json`: 100 entradas (id, nome, arquivo, estado, prompt, promptHash, promptHashGerado, origem, observacao, verificacao{largura, altura, bytes, sha256}).
-- `docs/arte/lote-piloto.md` + `prompts-piloto.json` (5 pilotos), `prompts-catalogo.{md,json}` (100), `candidatos-referencia.md`.
+- `public/assets/cards/art/manifest.json`: 87 entradas (id, nome, arquivo, estado, prompt, promptHash, promptHashGerado, origem, observacao, verificacao{largura, altura, bytes, sha256}).
+- `docs/arte/lote-piloto.md` + `prompts-piloto.json` (5 pilotos), `prompts-catalogo.{md,json}` (87), `candidatos-referencia.md`.
 
 ## 6. Estados e regras do manifesto
 `pendente | provisoria | gerada | aprovada | rejeitada`.

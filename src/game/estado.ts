@@ -1,6 +1,6 @@
 // Tipos do estado do duelo e utilitários internos. Tudo aqui é serializável em JSON e sem React/DOM.
 import { CATALOGO } from '../data/catalogo'
-import { CARTAS_NO_DUELO, TAMANHO_MAO, VIDA_INICIAL, ZONAS_SUPORTE, ZONAS_UNIDADE } from './tipos'
+import { CARTAS_NO_DUELO, TAMANHO_MAO, VIDA_INICIAL, ZONAS_UNIDADE } from './tipos'
 import type { Carta } from './tipos'
 
 export type IdJogador = 'humano' | 'oponente'
@@ -23,17 +23,7 @@ export interface UnidadeEmCampo extends CartaInstancia {
   /** Soma dos buffs/debuffs de ATK (pode ser negativa; o ATK efetivo é limitado a >= 0 só no cálculo). */
   buffAtk: number
   buffDef: number
-  equipamentoUid: string | null
   invocadaNoTurno: number
-}
-
-export interface SuporteEmZona extends CartaInstancia {
-  tipo: 'armadilha' | 'equipamento'
-  colocadaNoTurno: number
-  /** Ordem global de colocação (menor = mais antiga). */
-  ordem: number
-  /** Equipamento: uid da unidade vinculada. */
-  vinculadaA: string | null
 }
 
 export interface EstadoJogador {
@@ -43,7 +33,6 @@ export interface EstadoJogador {
   baralho: CartaInstancia[]
   mao: CartaInstancia[]
   campo: (UnidadeEmCampo | null)[]
-  suporte: (SuporteEmZona | null)[]
   descarte: CartaInstancia[]
 }
 
@@ -67,9 +56,6 @@ export interface EstadoDuelo {
   turno: number
   /** Já fez a jogada da mão (ou descarte) neste turno. */
   jogadaFeita: boolean
-  /** Jogador que vê as armadilhas do adversário até o fim do turno atual (efeito `revelar`). */
-  revelacao: IdJogador | null
-  proximaOrdem: number
   resultado: Resultado | null
   /** Contagem de assinaturas de estado no início dos turnos (salvaguarda de repetição 3x). */
   repeticoes: Record<string, number>
@@ -85,7 +71,7 @@ export type DadosEvento =
       tipo: 'carta_jogada'
       jogador: IdJogador
       carta: CartaInstancia
-      destino: 'campo' | 'suporte' | 'descarte' | 'terreno'
+      destino: 'campo' | 'descarte' | 'terreno'
       zona?: number
       posicao?: Posicao
       viradaParaBaixo?: boolean
@@ -108,12 +94,9 @@ export type DadosEvento =
     }
   | { tipo: 'cura'; jogador: IdJogador; valor: number; lp: number }
   | { tipo: 'dano'; jogador: IdJogador; valor: number; lp: number }
-  | { tipo: 'unidade_destruida'; jogador: IdJogador; zona: number; carta: CartaInstancia; equipamentoDescartado?: CartaInstancia }
+  | { tipo: 'unidade_destruida'; jogador: IdJogador; zona: number; carta: CartaInstancia }
   | { tipo: 'terreno_alterado'; cartaId: string; dono: IdJogador; anterior?: string }
-  | { tipo: 'armadilhas_reveladas'; jogador: IdJogador; armadilhas: { zona: number; cartaId: string }[] }
-  | { tipo: 'armadilha_ativada'; dono: IdJogador; zona: number; carta: CartaInstancia; gatilho: string; operacao: string; valor: number }
   | { tipo: 'ataque_declarado'; jogador: IdJogador; atacante: number; alvo: number | 'direto' }
-  | { tipo: 'ataque_anulado'; jogador: IdJogador; atacante: number }
   | {
       tipo: 'combate_resolvido'
       jogador: IdJogador
@@ -196,7 +179,6 @@ export function criarEstadoJogador(id: IdJogador, baralhoEmbaralhado: CartaInsta
     baralho,
     mao,
     campo: Array<UnidadeEmCampo | null>(ZONAS_UNIDADE).fill(null),
-    suporte: Array<SuporteEmZona | null>(ZONAS_SUPORTE).fill(null),
     descarte: [],
   }
 }
@@ -214,8 +196,6 @@ export function criarEstadoInicial(baralhoHumano: CartaInstancia[], baralhoOpone
     ativo: 'humano',
     turno: 1,
     jogadaFeita: false,
-    revelacao: null,
-    proximaOrdem: 1,
     resultado: null,
     repeticoes: {},
     log: [],
@@ -263,28 +243,18 @@ export function curar(ctx: Ctx, jogador: IdJogador, valor: number): number {
   return ganho
 }
 
-/** Remove a unidade do campo, manda para o descarte e leva junto o equipamento vinculado. */
+/** Remove a unidade do campo e a manda para o descarte. */
 export function destruirUnidade(ctx: Ctx, jogador: IdJogador, zona: number): void {
   const j = ctx.e.jogadores[jogador]
   const u = j.campo[zona]
   if (!u) throw new Error(`destruirUnidade: zona ${zona} vazia`)
   j.campo[zona] = null
   j.descarte.push({ uid: u.uid, cartaId: u.cartaId })
-  let equip: CartaInstancia | undefined
-  if (u.equipamentoUid) {
-    const z = j.suporte.findIndex((s) => s?.uid === u.equipamentoUid)
-    if (z >= 0) {
-      const s = j.suporte[z] as SuporteEmZona
-      equip = { uid: s.uid, cartaId: s.cartaId }
-      j.suporte[z] = null
-      j.descarte.push(equip)
-    }
-  }
   const nome = nomeCarta(ctx.cat, u.cartaId)
   emitir(
     ctx,
-    { tipo: 'unidade_destruida', jogador, zona, carta: { uid: u.uid, cartaId: u.cartaId }, ...(equip ? { equipamentoDescartado: equip } : {}) },
-    `${nome} (${nomeJogador(jogador)}) foi destruída${equip ? ' junto com seu equipamento' : ''}.`,
+    { tipo: 'unidade_destruida', jogador, zona, carta: { uid: u.uid, cartaId: u.cartaId } },
+    `${nome} (${nomeJogador(jogador)}) foi destruída.`,
   )
 }
 
@@ -297,21 +267,19 @@ export function assinatura(e: EstadoDuelo): string {
       j.lp,
       j.baralho.length,
       j.mao.map((c) => c.cartaId).sort().join(','),
-      j.campo.map((u) => (u ? `${u.cartaId}/${u.posicao}/${u.viradaParaBaixo ? 'B' : 'C'}/${u.buffAtk}/${u.buffDef}/${u.equipamentoUid ? 'E' : '-'}` : '_')).join(','),
-      j.suporte.map((s) => (s ? `${s.cartaId}` : '_')).join(','),
+      j.campo.map((u) => (u ? `${u.cartaId}/${u.posicao}/${u.viradaParaBaixo ? 'B' : 'C'}/${u.buffAtk}/${u.buffDef}` : '_')).join(','),
       j.descarte.length,
     ].join('|')
   return [e.ativo, e.terreno?.cartaId ?? '-', jog(e.jogadores.humano), jog(e.jogadores.oponente)].join('#')
 }
 
-/** Cartas totais de um jogador (baralho+mão+campo+suporte+descarte+terreno próprio): deve ser constante (30 no duelo). */
+/** Cartas totais de um jogador (baralho+mão+campo+descarte+terreno próprio): deve ser constante (30 no duelo). */
 export function totalCartas(e: EstadoDuelo, jogador: IdJogador): number {
   const j = e.jogadores[jogador]
   return (
     j.baralho.length +
     j.mao.length +
     j.campo.filter(Boolean).length +
-    j.suporte.filter(Boolean).length +
     j.descarte.length +
     (e.terreno?.dono === jogador ? 1 : 0)
   )
@@ -324,19 +292,8 @@ export function invariantes(e: EstadoDuelo, totalEsperado = CARTAS_NO_DUELO): st
     const j = e.jogadores[id]
     if (j.lp < 0 || j.lp > VIDA_INICIAL) erros.push(`${id}: LP fora de [0, ${VIDA_INICIAL}]: ${j.lp}`)
     if (j.campo.length !== ZONAS_UNIDADE) erros.push(`${id}: campo com ${j.campo.length} zonas`)
-    if (j.suporte.length !== ZONAS_SUPORTE) erros.push(`${id}: suporte com ${j.suporte.length} zonas`)
     if (j.mao.length > TAMANHO_MAO) erros.push(`${id}: mão com ${j.mao.length} cartas`)
     if (totalCartas(e, id) !== totalEsperado) erros.push(`${id}: total de cartas ${totalCartas(e, id)} != ${totalEsperado}`)
-    for (const u of j.campo) {
-      if (!u) continue
-      if (u.equipamentoUid) {
-        const s = j.suporte.find((x) => x?.uid === u.equipamentoUid)
-        if (!s || s.tipo !== 'equipamento' || s.vinculadaA !== u.uid) erros.push(`${id}: equipamento de ${u.uid} inconsistente`)
-      }
-    }
-    for (const s of j.suporte) {
-      if (s?.tipo === 'equipamento' && !j.campo.some((u) => u?.uid === s.vinculadaA)) erros.push(`${id}: equipamento ${s.uid} órfão`)
-    }
   }
   const uids = new Set<string>()
   for (const id of ['humano', 'oponente'] as const) {
@@ -345,7 +302,6 @@ export function invariantes(e: EstadoDuelo, totalEsperado = CARTAS_NO_DUELO): st
       ...j.baralho,
       ...j.mao,
       ...j.campo.filter((x): x is UnidadeEmCampo => !!x),
-      ...j.suporte.filter((x): x is SuporteEmZona => !!x),
       ...j.descarte,
       ...(e.terreno?.dono === id ? [e.terreno] : []),
     ]

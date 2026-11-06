@@ -1,6 +1,6 @@
 export type Grupo = 'ecossistema' | 'fauna' | 'atividade' | 'impacto'
-export type TipoCarta = 'unidade' | 'acao' | 'armadilha'
-export type SubtipoAcao = 'instantanea' | 'equipamento' | 'terreno'
+export type TipoCarta = 'unidade' | 'acao'
+export type SubtipoAcao = 'instantanea' | 'terreno'
 
 export interface Efeito {
   gatilho?: string
@@ -29,4 +29,3 @@ export const CARTAS_NO_DUELO = 30
 export const MAX_COPIAS = 3
 export const TAMANHO_MAO = 5
 export const ZONAS_UNIDADE = 5
-export const ZONAS_SUPORTE = 5

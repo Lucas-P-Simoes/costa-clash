@@ -52,18 +52,6 @@ describe('ATK x ATK', () => {
     expect(r.eventos[1]?.texto).toContain('Derramamento de Óleo')
   })
 
-  it('não revela alvo oculto quando armadilha anula antes do cálculo', () => {
-    const r = atacar(
-      cenarioCombate({ humano: { campo: ['CC-001'] }, oponente: { campo: [{ id: 'CC-056', viradaParaBaixo: true }], suporte: [{ id: 'CC-099', turno: 1 }] } }),
-      0,
-      0,
-    )
-    if (!r.ok) throw new Error(r.erro)
-    expect(r.estado.jogadores.oponente.campo[0]?.viradaParaBaixo).toBe(true)
-    expect(r.eventos.some((e) => e.tipo === 'unidade_revelada')).toBe(false)
-    expect(r.eventos.some((e) => e.tipo === 'ataque_anulado')).toBe(true)
-  })
-
   it('revela também um atacante oculto antes do cálculo e o mantém revelado', () => {
     const r = atacar(cenarioCombate({ humano: { campo: [{ id: 'CC-003', viradaParaBaixo: true }] }, oponente: { campo: ['CC-001'] } }), 0, 0)
     if (!r.ok) throw new Error(r.erro)
@@ -88,21 +76,6 @@ describe('ATK x ATK', () => {
       { jogador: 'humano', zona: 0, carta: { cartaId: 'CC-001' } },
       { jogador: 'oponente', zona: 0, carta: { cartaId: 'CC-056' } },
     ])
-  })
-
-  it('ataque anulado mantém atacante e alvo ocultos', () => {
-    const r = atacar(
-      cenarioCombate({
-        humano: { campo: [{ id: 'CC-001', viradaParaBaixo: true }] },
-        oponente: { campo: [{ id: 'CC-056', viradaParaBaixo: true }], suporte: [{ id: 'CC-099', turno: 1 }] },
-      }),
-      0,
-      0,
-    )
-    if (!r.ok) throw new Error(r.erro)
-    expect(r.estado.jogadores.humano.campo[0]?.viradaParaBaixo).toBe(true)
-    expect(r.estado.jogadores.oponente.campo[0]?.viradaParaBaixo).toBe(true)
-    expect(r.eventos.some((e) => e.tipo === 'unidade_revelada')).toBe(false)
   })
 
   it('empate destrói as duas unidades sem dano', () => {

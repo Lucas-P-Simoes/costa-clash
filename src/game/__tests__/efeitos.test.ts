@@ -4,7 +4,6 @@ import { aplicarComando } from '../acoes'
 import { atkEfetivo, defEfetiva } from '../combate'
 import { invariantes, mapaCatalogo } from '../estado'
 import type { EstadoDuelo } from '../estado'
-import { visaoParaJogador } from '../visao'
 import { atacar, cenario, cenarioCombate, jogar, ok } from './util'
 
 const cat = mapaCatalogo(CATALOGO)
@@ -28,7 +27,6 @@ describe('debuff_grupo (073, 076, 081): sinal normalizado, reduz ATK e DEF de UM
     expect(def(e, 'oponente', 0)).toBe(900)
     expect(e.jogadores.humano.descarte.map((c) => c.cartaId)).toEqual([id])
     expect(e.jogadores.humano.mao).toHaveLength(0)
-    expect(e.jogadores.humano.suporte.every((s) => s === null)).toBe(true)
     expect(invariantes(e)).toEqual([])
   })
 
@@ -127,15 +125,6 @@ describe('destruir_grupo (075)', () => {
     const sem = cenario({ humano: { mao: ['CC-075'], campo: ['CC-047'] } }) // impacto só do lado do próprio jogador
     expect(jogar(sem, 'humano', 'CC-075', { alvo: 0 }).ok).toBe(false)
   })
-
-  it('destrói também o equipamento da unidade alvo', () => {
-    const e0 = cenario({ humano: { mao: ['CC-075'] }, oponente: { campo: [{ id: 'CC-047', equip: 'CC-088' }] } })
-    expect(e0.jogadores.oponente.suporte[0]?.cartaId).toBe('CC-088')
-    const e = ok(jogar(e0, 'humano', 'CC-075', { alvo: 0 }))
-    expect(e.jogadores.oponente.suporte[0]).toBeNull()
-    expect(e.jogadores.oponente.descarte.map((c) => c.cartaId).sort()).toEqual(['CC-047', 'CC-088'])
-    expect(invariantes(e)).toEqual([])
-  })
 })
 
 describe('cura (079, 080)', () => {
@@ -163,104 +152,6 @@ describe('cura (079, 080)', () => {
   })
 })
 
-describe('revelar (082)', () => {
-  it('revela as armadilhas do oponente ao jogador até o fim do turno, sem desarmá-las', () => {
-    const base = cenario({ humano: { mao: ['CC-082'] }, oponente: { suporte: ['CC-093', null, 'CC-095'] } })
-    const antes = visaoParaJogador(base, 'humano')
-    expect(antes.oponente.suporte[0]).toEqual({ oculta: true })
-    const e = ok(jogar(base, 'humano', 'CC-082'))
-    expect(e.revelacao).toBe('humano')
-    const v = visaoParaJogador(e, 'humano')
-    expect(v.armadilhasReveladas).toBe(true)
-    expect(v.oponente.suporte[0]).toMatchObject({ oculta: false, cartaId: 'CC-093' })
-    expect(v.oponente.suporte[2]).toMatchObject({ oculta: false, cartaId: 'CC-095' })
-    expect(e.jogadores.oponente.suporte.filter(Boolean)).toHaveLength(2) // não desarma
-    expect(e.log.some((x) => x.tipo === 'armadilhas_reveladas')).toBe(true)
-    // o oponente não ganha informação
-    expect(visaoParaJogador(e, 'oponente').armadilhasReveladas).toBe(false)
-  })
-
-  it('a revelação termina no fim do turno atual', () => {
-    let e = cenario({ humano: { mao: ['CC-082'], baralho: 20 }, oponente: { suporte: ['CC-093'], mao: ['CC-001'], baralho: 20 } })
-    e = ok(jogar(e, 'humano', 'CC-082'))
-    e = ok(aplicarComando(e, { tipo: 'encerrarTurno', jogador: 'humano' }))
-    expect(e.revelacao).toBeNull()
-    expect(visaoParaJogador(e, 'humano').oponente.suporte[0]).toEqual({ oculta: true })
-  })
-
-  it('é jogável mesmo sem armadilhas no campo adversário (não vira descarte forçado)', () => {
-    const e = ok(jogar(cenario({ humano: { mao: ['CC-082'] } }), 'humano', 'CC-082'))
-    expect(e.log.at(-1)?.texto).toContain('não tem armadilhas')
-  })
-})
-
-describe('equipamentos (085, 086, 087, 088)', () => {
-  it.each([
-    ['CC-085', 'CC-001', 'def', 500],
-    ['CC-086', 'CC-031', 'atk', 500],
-    ['CC-087', 'CC-031', 'def', 400],
-    ['CC-088', 'CC-047', 'def', 300],
-  ] as const)('%s em %s: +%i só em %s, na zona de suporte, vinculado', (id, alvoId, attr, m) => {
-    const e0 = cenario({ humano: { mao: [id], campo: [alvoId] } })
-    const base = CATALOGO.find((c) => c.id === alvoId)!
-    const e = ok(jogar(e0, 'humano', id, { alvo: 0 }))
-    expect(atk(e, 'humano', 0)).toBe((base.atk ?? 0) + (attr === 'atk' ? m : 0))
-    expect(def(e, 'humano', 0)).toBe((base.defesa ?? 0) + (attr === 'def' ? m : 0))
-    expect(e.jogadores.humano.suporte[0]).toMatchObject({ cartaId: id, tipo: 'equipamento', vinculadaA: e.jogadores.humano.campo[0]!.uid })
-    expect(e.jogadores.humano.campo[0]?.equipamentoUid).toBe(e.jogadores.humano.suporte[0]?.uid)
-    expect(e.jogadores.humano.descarte).toHaveLength(0)
-    expect(invariantes(e)).toEqual([])
-  })
-
-  it('só uma unidade aliada do grupo exigido (ou qualquer, para CC-088)', () => {
-    const e = cenario({ humano: { mao: ['CC-085', 'CC-088'], campo: ['CC-018', 'CC-001'] }, oponente: { campo: ['CC-001'] } })
-    expect(jogar(e, 'humano', 'CC-085', { alvo: 0 }).ok).toBe(false) // fauna
-    expect(jogar(e, 'humano', 'CC-085', { alvo: 1 }).ok).toBe(true)
-    expect(jogar(e, 'humano', 'CC-088', { alvo: 0 }).ok).toBe(true)
-  })
-
-  it('limite de 1 equipamento por unidade: unidade equipada deixa de ser alvo', () => {
-    const e = cenario({ humano: { mao: ['CC-088'], campo: [{ id: 'CC-018', equip: 'CC-088' }, 'CC-001'] } })
-    expect(jogar(e, 'humano', 'CC-088', { alvo: 0 }).ok).toBe(false)
-    expect(jogar(e, 'humano', 'CC-088', { alvo: 1 }).ok).toBe(true)
-    const so = cenario({ humano: { mao: ['CC-088'], campo: [{ id: 'CC-018', equip: 'CC-088' }] } })
-    const r = jogar(so, 'humano', 'CC-088', { alvo: 0 })
-    expect(r.ok).toBe(false)
-    if (!r.ok) expect(r.erro).toContain('alvo válido')
-  })
-
-  it('sem unidade aliada, ou sem zona de suporte livre, o equipamento não pode ser jogado', () => {
-    expect(jogar(cenario({ humano: { mao: ['CC-088'] } }), 'humano', 'CC-088', { alvo: 0 }).ok).toBe(false)
-    const cheio = cenario({ humano: { mao: ['CC-088'], campo: ['CC-001'], suporte: ['CC-093', 'CC-094', 'CC-095', 'CC-096', 'CC-099'] } })
-    expect(jogar(cheio, 'humano', 'CC-088', { alvo: 0 }).ok).toBe(false)
-  })
-
-  it('escolha explícita de zona de suporte e rejeição de zona ocupada', () => {
-    const e0 = cenario({ humano: { mao: ['CC-088'], campo: ['CC-001'], suporte: ['CC-093'] } })
-    expect(jogar(e0, 'humano', 'CC-088', { alvo: 0, zona: 0 }).ok).toBe(false)
-    const e = ok(jogar(e0, 'humano', 'CC-088', { alvo: 0, zona: 4 }))
-    expect(e.jogadores.humano.suporte[4]?.cartaId).toBe('CC-088')
-  })
-
-  it('o equipamento sai junto com a unidade destruída em combate (ambos ao descarte, zona de suporte liberada)', () => {
-    let e = cenarioCombate({ humano: { campo: [{ id: 'CC-001', equip: 'CC-085' }] }, oponente: { campo: ['CC-056'] } })
-    e = ok(atacar(e, 0, 0)) // 1200 x 2200
-    expect(e.jogadores.humano.campo[0]).toBeNull()
-    expect(e.jogadores.humano.suporte[0]).toBeNull()
-    expect(e.jogadores.humano.descarte.map((c) => c.cartaId).sort()).toEqual(['CC-001', 'CC-085'])
-    expect(invariantes(e)).toEqual([])
-  })
-
-  it('equipamento de ATK/DEF altera o resultado do combate', () => {
-    // CC-001 1200 + CC-086? (atividade). Usa CC-088 (+300 DEF): DEF 2000 -> 2300 contra ATK 2200 não destrói
-    const e = ok(atacar(cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-056'] }, humano: { campo: [{ id: 'CC-001', pos: 'DEFESA', equip: 'CC-088' }] } }), 0, 0))
-    expect(e.jogadores.humano.campo[0]).not.toBeNull()
-    expect(e.jogadores.oponente.campo[0]).not.toBeNull() // 2200 < 2300: ninguém é destruído
-    expect(e.jogadores.oponente.lp).toBe(4900) // o atacante sofre 100 de dano
-    expect(e.jogadores.humano.lp).toBe(5000)
-  })
-})
-
 describe('terrenos (089, 090, 091, 092)', () => {
   it.each([
     ['CC-089', 'ecossistema', 'CC-001', 'CC-018'],
@@ -279,8 +170,7 @@ describe('terrenos (089, 090, 091, 092)', () => {
       expect(atk(e, j, 1)).toBe(b.atk)
       expect(def(e, j, 1)).toBe(b.defesa)
     }
-    // não ocupa zona de suporte nem vai ao descarte enquanto ativo
-    expect(e.jogadores.humano.suporte.every((s) => s === null)).toBe(true)
+    // não vai ao descarte enquanto ativo
     expect(e.jogadores.humano.descarte).toHaveLength(0)
     expect(invariantes(e)).toEqual([])
   })
@@ -309,7 +199,7 @@ describe('terrenos (089, 090, 091, 092)', () => {
   })
 })
 
-describe('cobertura: todas as 20 ações do catálogo são jogáveis com alvo válido', () => {
+describe('cobertura: todas as 15 ações do catálogo são jogáveis com alvo válido', () => {
   const acoes = CATALOGO.filter((c) => c.tipo === 'acao')
   const campoCompleto = ['CC-047', 'CC-001', 'CC-031', 'CC-018']
   it.each(acoes.map((c) => [c.id, c.efeito!.operacao] as const))('%s (%s)', (id) => {
@@ -317,7 +207,7 @@ describe('cobertura: todas as 20 ações do catálogo são jogáveis com alvo v�
     const op = carta.efeito!.operacao
     const ehInimigo = op === 'debuff_grupo' || op === 'destruir_grupo'
     const e0 = cenario({ humano: { mao: [id], campo: campoCompleto, lp: 4000 }, oponente: { campo: campoCompleto } })
-    const precisaAlvo = ['debuff_grupo', 'destruir_grupo', 'buff_grupo', 'buff_unidade', 'equip_buff_atk', 'equip_buff_def'].includes(op)
+    const precisaAlvo = ['debuff_grupo', 'destruir_grupo', 'buff_grupo', 'buff_unidade'].includes(op)
     let alvo: number | undefined
     if (precisaAlvo) {
       const dono = ehInimigo ? 'oponente' : 'humano'
@@ -330,10 +220,10 @@ describe('cobertura: todas as 20 ações do catálogo são jogáveis com alvo v�
     expect(invariantes(e)).toEqual([])
   })
 
-  it('o catálogo tem exatamente 20 ações e todas usam operações conhecidas', () => {
-    expect(acoes).toHaveLength(20)
+  it('o catálogo tem exatamente 15 ações e todas usam operações conhecidas', () => {
+    expect(acoes).toHaveLength(15)
     const ops = new Set(acoes.map((c) => c.efeito!.operacao))
-    expect([...ops].sort()).toEqual(['buff_grupo', 'buff_unidade', 'cura', 'debuff_grupo', 'destruir_grupo', 'equip_buff_atk', 'equip_buff_def', 'field_bonus', 'revelar'])
+    expect([...ops].sort()).toEqual(['buff_grupo', 'buff_unidade', 'cura', 'debuff_grupo', 'destruir_grupo', 'field_bonus'])
   })
 })
 
@@ -343,8 +233,6 @@ describe('ações sem alvo válido não podem ser jogadas', () => {
     ['CC-074', {}], // buff eco sem unidade aliada eco
     ['CC-075', {}],
     ['CC-077', {}], // buff_unidade sem nenhuma unidade aliada
-    ['CC-085', {}],
-    ['CC-088', {}],
   ])('%s sem alvo', (id) => {
     const e = cenario({ humano: { mao: [id, 'CC-001'] }, oponente: { campo: ['CC-001'] } })
     const r = jogar(e, 'humano', id, { alvo: 0 })

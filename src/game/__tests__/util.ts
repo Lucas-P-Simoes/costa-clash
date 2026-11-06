@@ -1,22 +1,17 @@
 // Utilitários de teste: monta cenários arbitrários (estado válido e serializável) e atalhos de comando.
-import { CATALOGO } from '../../data/catalogo'
 import { aplicarComando } from '../acoes'
 import type { Comando, ResultadoComando } from '../acoes'
-import { criarEstadoInicial, mapaCatalogo } from '../estado'
-import type { CartaInstancia, EstadoDuelo, Fase, IdJogador, Posicao, SuporteEmZona, UnidadeEmCampo } from '../estado'
+import { criarEstadoInicial } from '../estado'
+import type { CartaInstancia, EstadoDuelo, Fase, IdJogador, Posicao, UnidadeEmCampo } from '../estado'
 import { CARTAS_NO_DUELO } from '../tipos'
 
-const cat = mapaCatalogo(CATALOGO)
-
-export type CampoCfg = string | { id: string; pos?: Posicao; viradaParaBaixo?: boolean; atacou?: boolean; buffAtk?: number; buffDef?: number; equip?: string }
-export type SuporteCfg = string | { id: string; turno?: number; ordem?: number }
+export type CampoCfg = string | { id: string; pos?: Posicao; viradaParaBaixo?: boolean; atacou?: boolean; buffAtk?: number; buffDef?: number }
 
 export interface ConfigJogador {
   lp?: number
   mao?: string[]
   /** Por zona (índice); `null` = vazia. */
   campo?: (CampoCfg | null)[]
-  suporte?: (SuporteCfg | null)[]
   descarte?: string[]
   /** Tamanho do baralho; padrão = completa até 30 cartas no total (cartas de enchimento CC-013). */
   baralho?: number
@@ -30,7 +25,6 @@ export interface ConfigCenario {
   fase?: Fase
   jogadaFeita?: boolean
   terreno?: { id: string; dono: IdJogador }
-  revelacao?: IdJogador | null
 }
 
 const ENCHIMENTO = 'CC-013'
@@ -39,14 +33,12 @@ export function cenario(cfg: ConfigCenario = {}): EstadoDuelo {
   let n = 0
   const nova = (prefixo: string, cartaId: string): CartaInstancia => ({ uid: `${prefixo}${++n}`, cartaId })
   const base = criarEstadoInicial([], [])
-  let ordem = 1
   const montar = (id: IdJogador, c: ConfigJogador = {}) => {
     const p = id === 'humano' ? 'h' : 'o'
     const j = base.jogadores[id]
     j.lp = c.lp ?? 5000
     j.mao = (c.mao ?? []).map((cid) => nova(p, cid))
     j.campo = [null, null, null, null, null]
-    j.suporte = [null, null, null, null, null]
     ;(c.campo ?? []).forEach((cc, z) => {
       if (cc === null || cc === undefined) return
       const o = typeof cc === 'string' ? { id: cc } : cc
@@ -58,27 +50,12 @@ export function cenario(cfg: ConfigCenario = {}): EstadoDuelo {
         atacou: o.atacou ?? false,
         buffAtk: o.buffAtk ?? 0,
         buffDef: o.buffDef ?? 0,
-        equipamentoUid: null,
         invocadaNoTurno: 1,
-      }
-      if (o.equip) {
-        const ei = nova(p, o.equip)
-        const zs = j.suporte.findIndex((s) => s === null)
-        j.suporte[zs] = { ...ei, tipo: 'equipamento', colocadaNoTurno: 1, ordem: ordem++, vinculadaA: u.uid }
-        u.equipamentoUid = ei.uid
       }
       j.campo[z] = u
     })
-    ;(c.suporte ?? []).forEach((ss, z) => {
-      if (ss === null || ss === undefined) return
-      const o = typeof ss === 'string' ? { id: ss } : ss
-      const inst = nova(p, o.id)
-      const tipo = cat.get(o.id)?.tipo === 'armadilha' ? 'armadilha' : 'equipamento'
-      const s: SuporteEmZona = { ...inst, tipo, colocadaNoTurno: o.turno ?? 1, ordem: o.ordem ?? ordem++, vinculadaA: null }
-      j.suporte[z] = s
-    })
     j.descarte = (c.descarte ?? []).map((cid) => nova(p, cid))
-    const usadas = j.mao.length + j.campo.filter(Boolean).length + j.suporte.filter(Boolean).length + j.descarte.length
+    const usadas = j.mao.length + j.campo.filter(Boolean).length + j.descarte.length
     const tamanho = c.baralho ?? Math.max(0, CARTAS_NO_DUELO - usadas)
     j.baralho = Array.from({ length: tamanho }, () => nova(p, ENCHIMENTO))
   }
@@ -88,8 +65,6 @@ export function cenario(cfg: ConfigCenario = {}): EstadoDuelo {
   base.turno = cfg.turno ?? (base.ativo === 'humano' ? 3 : 4)
   base.fase = cfg.fase ?? 'PRINCIPAL'
   base.jogadaFeita = cfg.jogadaFeita ?? false
-  base.revelacao = cfg.revelacao ?? null
-  base.proximaOrdem = ordem
   if (cfg.terreno) {
     base.terreno = { ...nova(cfg.terreno.dono === 'humano' ? 'h' : 'o', cfg.terreno.id), dono: cfg.terreno.dono }
     // a carta de terreno conta no total do dono: tira uma de enchimento do baralho (se ele foi preenchido automaticamente)

@@ -323,32 +323,12 @@
     "arquivo": "081.webp",
     "estado": "gerada"
   },
-  "CC-082": {
-    "arquivo": "082.webp",
-    "estado": "gerada"
-  },
   "CC-083": {
     "arquivo": "083.webp",
     "estado": "gerada"
   },
   "CC-084": {
     "arquivo": "084.webp",
-    "estado": "gerada"
-  },
-  "CC-085": {
-    "arquivo": "085.webp",
-    "estado": "gerada"
-  },
-  "CC-086": {
-    "arquivo": "086.webp",
-    "estado": "gerada"
-  },
-  "CC-087": {
-    "arquivo": "087.webp",
-    "estado": "gerada"
-  },
-  "CC-088": {
-    "arquivo": "088.webp",
     "estado": "gerada"
   },
   "CC-089": {
@@ -365,38 +345,6 @@
   },
   "CC-092": {
     "arquivo": "092.webp",
-    "estado": "gerada"
-  },
-  "CC-093": {
-    "arquivo": "093.webp",
-    "estado": "gerada"
-  },
-  "CC-094": {
-    "arquivo": "094.webp",
-    "estado": "gerada"
-  },
-  "CC-095": {
-    "arquivo": "095.webp",
-    "estado": "gerada"
-  },
-  "CC-096": {
-    "arquivo": "096.webp",
-    "estado": "gerada"
-  },
-  "CC-097": {
-    "arquivo": "097.webp",
-    "estado": "gerada"
-  },
-  "CC-098": {
-    "arquivo": "098.webp",
-    "estado": "gerada"
-  },
-  "CC-099": {
-    "arquivo": "099.webp",
-    "estado": "gerada"
-  },
-  "CC-100": {
-    "arquivo": "100.webp",
     "estado": "gerada"
   }
 }

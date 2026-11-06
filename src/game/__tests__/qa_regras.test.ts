@@ -31,7 +31,6 @@ describe('QA 1 - compra e mão (§2, §3)', () => {
       expect(e.jogadores[j].baralho).toHaveLength(25)
       expect(e.jogadores[j].lp).toBe(5000)
       expect(e.jogadores[j].campo).toHaveLength(5)
-      expect(e.jogadores[j].suporte).toHaveLength(5)
     }
     expect(e.ativo).toBe('humano')
     expect(e.turno).toBe(1)
@@ -264,29 +263,19 @@ describe('QA 3 - combate (§5)', () => {
     expect(e.jogadores.oponente.lp).toBe(1)
   })
 
-  it('atributos efetivos: buffs + terreno + equipamento, com clamp >= 0 só no resultado', () => {
+  it('atributos efetivos: buffs + terreno, com clamp >= 0 só no resultado', () => {
     const e = cenario({
       terreno: { id: 'CC-092', dono: 'oponente' }, // +300 impacto, vale para os dois
-      humano: { campo: [{ id: 'CC-056', buffAtk: -2300, buffDef: -1000 }, { id: 'CC-043', equip: 'CC-086' }] }, // 2200/700 impacto; 2000/1700 atividade +500 atk
+      humano: { campo: [{ id: 'CC-056', buffAtk: -2300, buffDef: -1000 }, 'CC-043'] }, // 2200/700 impacto; 2000/1700 atividade
       oponente: { campo: [{ id: 'CC-056' }] },
     })
     const h = e.jogadores.humano.campo
     expect(atkEfetivo(e, 'humano', h[0]!, cat)).toBe(200) // 2200-2300+300
     expect(defEfetiva(e, 'humano', h[0]!, cat)).toBe(0) // 700-1000+300 = 0
-    expect(atkEfetivo(e, 'humano', h[1]!, cat)).toBe(2500) // atividade: terreno não afeta, equip +500
+    expect(atkEfetivo(e, 'humano', h[1]!, cat)).toBe(2000) // atividade: o terreno de impacto não afeta
     expect(atkEfetivo(e, 'oponente', e.jogadores.oponente.campo[0]!, cat)).toBe(2500) // terreno afeta o dono do terreno e o outro
     const neg = cenario({ humano: { campo: [{ id: 'CC-056', buffAtk: -9000, buffDef: -9000 }] } })
     expect(atkEfetivo(neg, 'humano', neg.jogadores.humano.campo[0]!, cat)).toBe(0)
     expect(defEfetiva(neg, 'humano', neg.jogadores.humano.campo[0]!, cat)).toBe(0)
-  })
-
-  it('equipamento sai junto com a unidade destruída (para o descarte do dono da unidade)', () => {
-    const e = ok(
-      atacar(cenarioCombate({ turno: 3, humano: { campo: ['CC-043'] }, oponente: { campo: [{ id: 'CC-033', equip: 'CC-087' }] } }), 0, 0),
-    )
-    expect(e.jogadores.oponente.campo[0]).toBeNull()
-    expect(e.jogadores.oponente.suporte.every((s) => s === null)).toBe(true)
-    expect(e.jogadores.oponente.descarte.map((c) => c.cartaId).sort()).toEqual(['CC-033', 'CC-087'])
-    expect(invariantes(e)).toEqual([])
   })
 })

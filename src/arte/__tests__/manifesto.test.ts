@@ -14,15 +14,15 @@ const cartas = CATALOGO.map((c) => ({ id: c.id, nome: c.nome, prompt: promptDaCa
 const info = (arquivo: string, sha = 'a'.repeat(64)): InfoArquivo => ({ arquivo, largura: 768, altura: 1024, bytes: 1000, sha256: sha })
 
 describe('sincronizarManifesto (lógica pura)', () => {
-  it('sem arquivos: 100 entradas únicas, todas pendentes, nomes estáveis NNN.webp', () => {
+  it('sem arquivos: 87 entradas únicas, todas pendentes, nomes estáveis NNN.webp', () => {
     const { manifesto, alertas } = sincronizarManifesto({ cartas, arquivos: {} })
     expect(alertas).toEqual([])
-    expect(manifesto.entradas).toHaveLength(100)
-    expect(new Set(manifesto.entradas.map((e) => e.id)).size).toBe(100)
+    expect(manifesto.entradas).toHaveLength(87)
+    expect(new Set(manifesto.entradas.map((e) => e.id)).size).toBe(87)
     expect(manifesto.entradas.every((e) => e.estado === 'pendente')).toBe(true)
     expect(manifesto.entradas[0].arquivo).toBe('001.webp')
-    expect(manifesto.entradas[99].arquivo).toBe('100.webp')
-    expect(new Set(manifesto.entradas.map((e) => e.arquivo)).size).toBe(100)
+    expect(manifesto.entradas[86].arquivo).toBe('092.webp')
+    expect(new Set(manifesto.entradas.map((e) => e.arquivo)).size).toBe(87)
     expect(manifesto.entradas[0].verificacao).toEqual({ largura: null, altura: null, bytes: null, sha256: null })
     expect(manifesto.estados).toEqual(['pendente', 'provisoria', 'gerada', 'aprovada', 'rejeitada'])
   })
@@ -80,7 +80,7 @@ describe('sincronizarManifesto (lógica pura)', () => {
     base.entradas[1].estado = 'aprovada'
     base.entradas[2].estado = 'rejeitada'
     expect(gerarIndice(base)).toEqual({ 'CC-001': { arquivo: '001.png', estado: 'gerada' }, 'CC-002': { arquivo: '002.webp', estado: 'aprovada' } })
-    expect(contarPorEstado(base)).toEqual({ pendente: 97, provisoria: 0, gerada: 1, aprovada: 1, rejeitada: 1 })
+    expect(contarPorEstado(base)).toEqual({ pendente: 84, provisoria: 0, gerada: 1, aprovada: 1, rejeitada: 1 })
   })
 
   it('nomeDeArquivo valida o ID', () => {
@@ -93,7 +93,7 @@ describe('sincronizarManifesto (lógica pura)', () => {
 describe('manifesto real do repositório (public/assets/cards/art/manifest.json)', () => {
   const m = lerManifesto() as Manifesto
 
-  it('100 entradas com IDs do catálogo, únicas, na ordem, nomes estáveis', () => {
+  it('87 entradas com IDs do catálogo, únicas, na ordem, nomes estáveis', () => {
     expect(m.versao).toBe(1)
     expect(m.entradas.map((e) => e.id)).toEqual(CATALOGO.map((c) => c.id))
     for (const e of m.entradas) {
@@ -103,8 +103,8 @@ describe('manifesto real do repositório (public/assets/cards/art/manifest.json)
     }
   })
 
-  it('exatamente 5 provisórias e 95 geradas; nada pendente, aprovado ou rejeitado', () => {
-    expect(contarPorEstado(m)).toEqual({ pendente: 0, provisoria: 5, gerada: 95, aprovada: 0, rejeitada: 0 })
+  it('exatamente 5 provisórias e 82 geradas; nada pendente, aprovado ou rejeitado', () => {
+    expect(contarPorEstado(m)).toEqual({ pendente: 0, provisoria: 5, gerada: 82, aprovada: 0, rejeitada: 0 })
     const prov = m.entradas.filter((e) => e.estado === 'provisoria')
     expect(prov.map((e) => e.id).sort()).toEqual(['CC-001', 'CC-018', 'CC-031', 'CC-047', 'CC-073'])
     for (const e of prov) {
@@ -121,7 +121,7 @@ describe('manifesto real do repositório (public/assets/cards/art/manifest.json)
     }
   })
 
-  it('os 100 arquivos existem e batem com sha256/bytes/dimensões registrados', () => {
+  it('os 87 arquivos existem e batem com sha256/bytes/dimensões registrados', () => {
     for (const e of m.entradas) {
       const dados = readFileSync(join(CAMINHOS.dirArte, e.arquivo))
       expect(createHash('sha256').update(dados).digest('hex')).toBe(e.verificacao.sha256)
@@ -131,7 +131,7 @@ describe('manifesto real do repositório (public/assets/cards/art/manifest.json)
     }
   })
 
-  it('não falta nenhuma das 100 imagens do catálogo', () => {
+  it('não falta nenhuma das 87 imagens do catálogo', () => {
     for (const e of m.entradas) expect(existsSync(join(CAMINHOS.dirArte, e.arquivo)), e.arquivo).toBe(true)
   })
 

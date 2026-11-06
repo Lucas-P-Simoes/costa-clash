@@ -1,6 +1,5 @@
 // Cálculo de atributos efetivos e resolução de ataques.
-import { dispararPorEvento } from './armadilhas'
-import { causarDano, curar, destruirUnidade, emitir, nomeCarta, outro, verificarResultado, zonaValida } from './estado'
+import { causarDano, destruirUnidade, emitir, nomeCarta, outro, verificarResultado, zonaValida } from './estado'
 import type { Catalogo, Ctx, EstadoDuelo, IdJogador, UnidadeEmCampo } from './estado'
 import { ZONAS_UNIDADE } from './tipos'
 import type { Grupo } from './tipos'
@@ -13,25 +12,18 @@ export function bonusTerreno(e: EstadoDuelo, grupo: Grupo | undefined, cat: Cata
   return ef.alvo === 'qualquer' || ef.alvo === grupo ? ef.valor : 0
 }
 
-function bonusEquipamento(e: EstadoDuelo, dono: IdJogador, u: UnidadeEmCampo, op: 'equip_buff_atk' | 'equip_buff_def', cat: Catalogo): number {
-  if (!u.equipamentoUid) return 0
-  const s = e.jogadores[dono].suporte.find((x) => x?.uid === u.equipamentoUid)
-  const ef = s ? cat.get(s.cartaId)?.efeito : undefined
-  return ef && ef.operacao === op ? ef.valor : 0
-}
-
-/** ATK_EFETIVO = max(0, ATK_BASE + buffs + equipamento + terreno). */
-export function atkEfetivo(e: EstadoDuelo, dono: IdJogador, u: UnidadeEmCampo, cat: Catalogo): number {
+/** ATK_EFETIVO = max(0, ATK_BASE + buffs + terreno). */
+export function atkEfetivo(e: EstadoDuelo, _dono: IdJogador, u: UnidadeEmCampo, cat: Catalogo): number {
   const c = cat.get(u.cartaId)
   const base = c?.atk ?? 0
-  return Math.max(0, base + u.buffAtk + bonusEquipamento(e, dono, u, 'equip_buff_atk', cat) + bonusTerreno(e, c?.grupo, cat))
+  return Math.max(0, base + u.buffAtk + bonusTerreno(e, c?.grupo, cat))
 }
 
-/** DEF_EFETIVA = max(0, DEF_BASE + buffs + equipamento + terreno). */
-export function defEfetiva(e: EstadoDuelo, dono: IdJogador, u: UnidadeEmCampo, cat: Catalogo): number {
+/** DEF_EFETIVA = max(0, DEF_BASE + buffs + terreno). */
+export function defEfetiva(e: EstadoDuelo, _dono: IdJogador, u: UnidadeEmCampo, cat: Catalogo): number {
   const c = cat.get(u.cartaId)
   const base = c?.defesa ?? 0
-  return Math.max(0, base + u.buffDef + bonusEquipamento(e, dono, u, 'equip_buff_def', cat) + bonusTerreno(e, c?.grupo, cat))
+  return Math.max(0, base + u.buffDef + bonusTerreno(e, c?.grupo, cat))
 }
 
 /** Motivo pelo qual o ataque é ilegal (null = legal). Não altera nada. */
@@ -54,7 +46,7 @@ export function validarAtaque(e: EstadoDuelo, jogador: IdJogador, atacante: numb
   return null
 }
 
-/** Resolve o ataque (já validado): armadilha do defensor, depois combate, dano, destruição e checagem de vitória. */
+/** Resolve o ataque (já validado): revelação, combate, dano, destruição e checagem de vitória. */
 export function resolverAtaque(ctx: Ctx, jogador: IdJogador, zonaAtk: number, alvo: number | 'direto'): void {
   const e = ctx.e
   const def = outro(jogador)
@@ -78,18 +70,6 @@ export function resolverAtaque(ctx: Ctx, jogador: IdJogador, zonaAtk: number, al
           : `${nomeAtk} ataca ${nomeCarta(ctx.cat, alvoInicial!.cartaId)}.`,
   )
 
-  // armadilha do atacado: ataque_direto se direto; senão ataque_recebido
-  let reducao = 0
-  const trap = dispararPorEvento(ctx, def, alvo === 'direto' ? 'ataque_direto' : 'ataque_recebido')
-  if (trap) {
-    if (trap.operacao === 'anular_ataque') {
-      emitir(ctx, { tipo: 'ataque_anulado', jogador, atacante: zonaAtk }, 'O ataque foi anulado.')
-      return
-    }
-    if (trap.operacao === 'reduzir_dano') reducao = Math.abs(trap.valor)
-    else if (trap.operacao === 'cura') curar(ctx, def, Math.abs(trap.valor))
-  }
-
   if (atacante.viradaParaBaixo) {
     atacante.viradaParaBaixo = false
     emitir(
@@ -100,7 +80,7 @@ export function resolverAtaque(ctx: Ctx, jogador: IdJogador, zonaAtk: number, al
   }
   const atk = atkEfetivo(e, jogador, atacante, ctx.cat)
   if (alvo === 'direto') {
-    causarDano(ctx, def, Math.max(0, atk - reducao))
+    causarDano(ctx, def, atk)
     emitir(ctx, { tipo: 'combate_resolvido', jogador, atacante: zonaAtk, alvo, resultado: 'direto' }, 'Ataque direto resolvido.')
   } else {
     const alvoU = e.jogadores[def].campo[alvo] as UnidadeEmCampo
@@ -115,7 +95,7 @@ export function resolverAtaque(ctx: Ctx, jogador: IdJogador, zonaAtk: number, al
     if (alvoU.posicao === 'ATAQUE') {
       const atkAlvo = atkEfetivo(e, def, alvoU, ctx.cat)
       if (atk > atkAlvo) {
-        causarDano(ctx, def, Math.max(0, atk - atkAlvo - reducao))
+        causarDano(ctx, def, atk - atkAlvo)
         destruirUnidade(ctx, def, alvo)
         emitir(ctx, { tipo: 'combate_resolvido', jogador, atacante: zonaAtk, alvo, resultado: 'atacante_vence' }, 'O atacante venceu o combate.')
       } else if (atk < atkAlvo) {

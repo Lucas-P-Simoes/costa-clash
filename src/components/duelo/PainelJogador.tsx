@@ -12,11 +12,8 @@ interface Props {
   /** Texto acessível da vida (ex.: "Sua vida: 8000"). */
   rotuloVida: string
   rotuloZonas: string
-  rotuloSuportes: string
   /** As 5 zonas de unidade (já renderizadas). */
   zonas: ReactNode
-  /** As 5 zonas de suporte (já renderizadas). */
-  suportes: ReactNode
   /** Versos da mão do oponente (nunca cartas reais). */
   maoOponente?: ReactNode
   /** Ação extra no cabeçalho (ex.: ATAQUE DIRETO). */
@@ -33,9 +30,9 @@ interface Props {
 
 /**
  * Painel de um lado do tabuleiro: placa com avatar e identificação, VIDA com coração,
- * as 5 zonas de unidade e a faixa de 5 suportes. Só apresentação: zonas e suportes chegam prontos.
+ * e as 5 zonas de unidade. Só apresentação: as zonas chegam prontas.
  */
-export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloZonas, rotuloSuportes, zonas, suportes, maoOponente, acao, vidaFx, drop, dataDestino, alvoVida, vidaDestacada }: Props) {
+export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloZonas, zonas, maoOponente, acao, vidaFx, drop, dataDestino, alvoVida, vidaDestacada }: Props) {
   const oponente = lado === 'oponente'
   const efeitoVida = vidaFx?.dano ? ' duelo-vida--dano' : vidaFx?.cura ? ' duelo-vida--cura' : ''
   return (
@@ -74,9 +71,6 @@ export function PainelJogador({ lado, nome, subtitulo, vida, rotuloVida, rotuloZ
       <div className="duelo-lado__campo">
         <div className="duelo-zonas" role="group" aria-label={rotuloZonas}>
           {zonas}
-        </div>
-        <div className="duelo-suportes" role="group" aria-label={rotuloSuportes}>
-          {suportes}
         </div>
       </div>
     </MolduraOrnamentada>

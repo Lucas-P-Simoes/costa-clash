@@ -72,14 +72,11 @@ const AJUSTES: Readonly<Record<string, Ajuste>> = {
   'CC-076': { categoria: 'ondas' }, // Limpeza de praia (mutirão)
   'CC-077': { categoria: 'ondas' }, // Alerta de ressaca
   'CC-080': { categoria: 'ondas' }, // Mutirão comunitário
-  // Equipamentos e terrenos
-  'CC-085': { categoria: 'verde' }, // Raízes protetoras
+  // Terrenos
   'CC-089': { categoria: 'verde' }, // Terreno: Manguezal
   'CC-090': { categoria: 'planejamento' }, // Terreno: Zona Urbana
   'CC-091': { categoria: 'marinha' }, // Terreno: Mar Aberto
   'CC-092': { categoria: 'fenomeno', selo: 'termometro' }, // Terreno: Costa Pressionada
-  // Armadilhas
-  'CC-094': { categoria: 'verde' }, // Barreira natural
 }
 
 function padrao(c: Carta): Ajuste {
@@ -95,8 +92,6 @@ function padrao(c: Carta): Ajuste {
         return { categoria: 'verde' }
     }
   }
-  if (c.tipo === 'armadilha') return { categoria: 'protegida' }
-  if (c.subtipo === 'equipamento') return { categoria: 'protegida', selo: 'engrenagem' }
   if (c.subtipo === 'terreno') return { categoria: 'verde' }
   return { categoria: 'planejamento' } // ação instantânea
 }

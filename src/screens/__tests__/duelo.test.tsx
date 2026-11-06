@@ -72,13 +72,15 @@ describe('CartaView', () => {
 })
 
 describe('Partida: leitura do tabuleiro e jogadas', () => {
-  it('mostra vida 5000, 5 zonas de unidade e 5 de suporte por lado, mão e contadores', () => {
-    montarCenario({ humano: { mao: ['CC-001', 'CC-003', 'CC-077', 'CC-093', 'CC-089'], baralho: 35 }, oponente: { mao: ['CC-001'], baralho: 35 } })
+  it('mostra vida 5000, 5 zonas de unidade por lado (sem faixa de suportes), mão e contadores', () => {
+    montarCenario({ humano: { mao: ['CC-001', 'CC-003', 'CC-077', 'CC-084', 'CC-089'], baralho: 35 }, oponente: { mao: ['CC-001'], baralho: 35 } })
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Ressaca' })).toBeTruthy()
     expect(screen.getByLabelText('Sua vida: 5000')).toBeTruthy()
     expect(screen.getByLabelText('Vida do oponente: 5000')).toBeTruthy()
     expect(screen.getByRole('group', { name: 'Suas zonas de unidade' }).querySelectorAll('.zona')).toHaveLength(5)
-    expect(screen.getByRole('group', { name: 'Suas zonas de suporte' }).querySelectorAll('.suporte')).toHaveLength(5)
+    expect(screen.queryByRole('group', { name: /suporte/i })).toBeNull()
+    expect(document.querySelector('.duelo-suportes, .suporte')).toBeNull()
+    expect(document.body.textContent).not.toMatch(/suporte|armadilha|equipamento/i)
     expect(screen.getByRole('group', { name: 'Zonas de unidade do oponente' }).querySelectorAll('.zona')).toHaveLength(5)
     expect(screen.getByLabelText('Cartas restantes no baralho: 35')).toBeTruthy()
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(5)
@@ -237,28 +239,18 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
 })
 
 describe('Partida: informação oculta', () => {
-  const secretas = ['Elevação do Nível do Mar', 'Contaminação Industrial', 'Proteção Emergencial', 'Plano de Contingência']
+  const secretas = ['Elevação do Nível do Mar', 'Contaminação Industrial', 'Tratamento de Esgoto']
 
-  it('mão e armadilhas do oponente não aparecem no DOM (nomes, IDs, atributos)', () => {
+  it('mão do oponente não aparece no DOM (nomes, IDs, atributos)', () => {
     const { container } = montarCenario({
       humano: { mao: ['CC-001'] },
-      oponente: { mao: ['CC-071', 'CC-068', 'CC-095'], suporte: ['CC-099'], baralho: 20 },
+      oponente: { mao: ['CC-071', 'CC-068', 'CC-073'], baralho: 20 },
     })
     const html = container.innerHTML
     for (const nome of secretas) expect(html).not.toContain(nome)
-    for (const id of ['CC-071', 'CC-068', 'CC-095', 'CC-099']) expect(html).not.toContain(id)
+    for (const id of ['CC-071', 'CC-068', 'CC-073']) expect(html).not.toContain(id)
     expect(html).not.toMatch(/data-uid|data-carta|"uid"/)
     expect(screen.getByRole('group', { name: 'Mão do oponente: 3 cartas' })).toBeTruthy()
-    expect(screen.getByRole('img', { name: /Suporte 1 do oponente: carta virada para baixo/ })).toBeTruthy()
-  })
-
-  it('as próprias armadilhas aparecem para o dono; as do oponente só com `revelar`', () => {
-    const { container, unmount } = montarCenario({ humano: { suporte: ['CC-099'] }, oponente: { suporte: ['CC-095'], mao: ['CC-001'] } })
-    expect(container.innerHTML).toContain('Proteção Emergencial')
-    expect(container.innerHTML).not.toContain('Plano de Contingência')
-    unmount()
-    const c2 = montarCenario({ revelacao: 'humano', oponente: { suporte: ['CC-095'], mao: ['CC-001'] } })
-    expect(c2.container.innerHTML).toContain('Plano de Contingência')
   })
 
   it('unidade adversária oculta mostra só o verso, continua atacável e revela antes do combate', () => {
@@ -276,17 +268,17 @@ describe('Partida: informação oculta', () => {
     expect(screen.getByLabelText('Sua vida: 4000')).toBeTruthy()
   })
 
-  it('o log só traz eventos públicos: compras e armadilhas colocadas pelo oponente não vazam', () => {
+  it('o log só traz eventos públicos: compras do oponente não vazam', () => {
     const { container } = montarCenario(
-      { humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-099', 'CC-099', 'CC-099', 'CC-099', 'CC-099'], baralho: 30 } },
+      { humano: { mao: ['CC-003'], campo: [null, 'CC-071'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-001', 'CC-001', 'CC-001', 'CC-001'], baralho: 30 } },
     )
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
-    expect(container.innerHTML).not.toContain('Proteção Emergencial')
-    expect(container.innerHTML).not.toContain('CC-099')
+    expect(container.innerHTML).not.toContain('Manguezal Protegido')
+    expect(container.innerHTML).not.toContain('CC-001')
   })
 
   it('em um duelo real semeado, nenhum nome exclusivo da mão do oponente aparece antes de ser jogado', () => {
