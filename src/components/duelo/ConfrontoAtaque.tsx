@@ -9,11 +9,12 @@ interface Props {
 
 const FAGULHAS = [12, 28, 44, 60, 76, 90]
 
-function CartaConfronto({ p, papel, carta }: { p: LadoConfronto; papel: 'atacante' | 'alvo'; carta: (id: string) => Carta | undefined }) {
+function CartaConfronto({ p, papel, carta, venceu }: { p: LadoConfronto; papel: 'atacante' | 'alvo'; carta: (id: string) => Carta | undefined; venceu: boolean }) {
   const c = p.cartaId ? carta(p.cartaId) : undefined
   const classe = ['confronto__carta', `confronto__carta--${papel}`, p.destruida ? 'confronto__carta--queima' : ''].filter(Boolean).join(' ')
   return (
     <div className={classe} data-confronto={papel} data-queima={p.destruida || undefined}>
+      {venceu ? <span className="confronto__veredito confronto__veredito--vitoria">VITÓRIA</span> : null}
       <div className="confronto__corpo">
         {c ? <CartaView carta={c} tamanho="mao" rotulo={c.nome} /> : <CartaVerso tamanho="mao" rotulo="Carta virada para baixo" />}
         {p.destruida ? <span className="confronto__brasa" /> : null}
@@ -35,16 +36,17 @@ function CartaConfronto({ p, papel, carta }: { p: LadoConfronto; papel: 'atacant
  * A carta do jogador fica sempre à esquerda.
  */
 export function ConfrontoAtaque({ confronto, carta }: Props) {
-  const { atacante, alvo } = confronto
+  const { atacante, alvo, veredito } = confronto
   const esquerda = atacante.lado === 'humano' ? atacante : alvo
   const direita = atacante.lado === 'humano' ? alvo : atacante
   const papel = (p: LadoConfronto) => (p === atacante ? 'atacante' : 'alvo')
   return (
     <div key={confronto.id} className={`confronto confronto--atq-${atacante.lado === 'humano' ? 'esquerda' : 'direita'}`} aria-hidden="true">
       <div className="confronto__palco">
-        <CartaConfronto p={esquerda} papel={papel(esquerda)} carta={carta} />
+        <CartaConfronto p={esquerda} papel={papel(esquerda)} carta={carta} venceu={veredito === papel(esquerda)} />
         <span className="confronto__impacto" />
-        <CartaConfronto p={direita} papel={papel(direita)} carta={carta} />
+        {veredito === 'empate' ? <span className="confronto__veredito confronto__veredito--empate">EMPATE</span> : null}
+        <CartaConfronto p={direita} papel={papel(direita)} carta={carta} venceu={veredito === papel(direita)} />
       </div>
     </div>
   )

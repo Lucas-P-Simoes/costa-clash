@@ -1,8 +1,10 @@
 // @vitest-environment jsdom
 // Efeitos visuais temporários do duelo: derivação pura a partir de eventos públicos e hook com timers (sem alterar o jogo).
-import { act, cleanup, renderHook } from '@testing-library/react'
+import { act, cleanup, render, renderHook } from '@testing-library/react'
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
+import { CATALOGO } from '../../../data/catalogo'
 import type { Evento } from '../../../game'
+import { ConfrontoAtaque } from '../ConfrontoAtaque'
 import { chaveZona, derivarConfronto, derivarEfeitos, DURACAO_CONFRONTO_MS, DURACAO_EFEITO_MS, movimentoReduzido, SEM_EFEITOS, semEfeitos, useConfronto, useEfeitosVisuais } from '../efeitosVisuais'
 
 const ev = (e: object): Evento => ({ turno: 2, texto: 't', ...e }) as Evento
@@ -137,7 +139,20 @@ describe('derivarConfronto (cena de ataque entre unidades)', () => {
     expect(r).toEqual({
       atacante: { lado: 'humano', zona: 0, cartaId: 'CC-003', destruida: false },
       alvo: { lado: 'oponente', zona: 1, cartaId: 'CC-001', destruida: true },
+      veredito: null,
     })
+  })
+
+  it.each([
+    ['atacante_vence', 'atacante'],
+    ['defesa_destruida', 'atacante'],
+    ['alvo_vence', 'alvo'],
+    ['ataque_repelido', 'alvo'],
+    ['empate', 'empate'],
+    ['defesa_empate', 'empate'],
+  ] as const)('veredito: combate %s => %s', (resultado, esperado) => {
+    const r = derivarConfronto([declarado('humano', 0, 1), ev({ tipo: 'combate_resolvido', jogador: 'humano', atacante: 0, alvo: 1, resultado })], cartas)
+    expect(r?.veredito).toBe(esperado)
   })
 
   it('atacante derrotado queima; carta virada para baixo usa a revelação do combate', () => {
@@ -163,5 +178,34 @@ describe('derivarConfronto (cena de ataque entre unidades)', () => {
     window.matchMedia = ((q: string) => ({ matches: q.includes('reduce') })) as unknown as typeof window.matchMedia
     rerender({ log: [declarado('humano', 0, 1), declarado('humano', 0, 1)] })
     expect(result.current).toBeNull()
+  })
+})
+
+describe('ConfrontoAtaque: veredito escrito grande', () => {
+  const lado = (l: 'humano' | 'oponente', cartaId: string, destruida = false) => ({ lado: l, zona: 0, cartaId, destruida })
+  const carta = (id: string) => CATALOGO.find((c) => c.id === id)
+  const montar = (veredito: 'atacante' | 'alvo' | 'empate' | null) =>
+    render(<ConfrontoAtaque confronto={{ id: 1, atacante: lado('humano', 'CC-043'), alvo: lado('oponente', 'CC-001', true), veredito }} carta={carta} />)
+
+  it('VITÓRIA aparece só sobre a carta vencedora', () => {
+    const { container } = montar('atacante')
+    const v = container.querySelectorAll('.confronto__veredito--vitoria')
+    expect(v).toHaveLength(1)
+    expect(v[0]!.textContent).toBe('VITÓRIA')
+    expect(v[0]!.closest('[data-confronto]')?.getAttribute('data-confronto')).toBe('atacante')
+    expect(container.querySelector('.confronto__veredito--empate')).toBeNull()
+  })
+
+  it('a vitória do alvo marca a carta atacada', () => {
+    const { container } = montar('alvo')
+    expect(container.querySelector('.confronto__veredito--vitoria')?.closest('[data-confronto]')?.getAttribute('data-confronto')).toBe('alvo')
+  })
+
+  it('EMPATE aparece no centro, sem VITÓRIA; sem veredito nada é escrito', () => {
+    const { container, unmount } = montar('empate')
+    expect(container.querySelector('.confronto__veredito--empate')?.textContent).toBe('EMPATE')
+    expect(container.querySelector('.confronto__veredito--vitoria')).toBeNull()
+    unmount()
+    expect(montar(null).container.querySelector('.confronto__veredito')).toBeNull()
   })
 })

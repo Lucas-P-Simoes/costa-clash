@@ -2739,3 +2739,40 @@ button.carta {
   opacity: 0.8;
   transition: filter 0.25s ease, opacity 0.25s ease;
 }
+
+/* veredito do confronto: VITÓRIA sobre a carta vencedora, EMPATE no centro; aparece no impacto e fica até o fim da cena */
+.confronto__veredito {
+  position: absolute;
+  z-index: 8;
+  left: 50%;
+  white-space: nowrap;
+  font-size: clamp(1.6rem, 5.2vw, 3.4rem);
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  -webkit-text-stroke: 0.1em #07101a;
+  paint-order: stroke fill;
+  text-shadow: 0 0.12em 0.4em rgba(0, 0, 0, 0.85);
+  opacity: 0;
+  animation: confronto-veredito 0.5s 1.7s cubic-bezier(0.2, 1.4, 0.4, 1) both;
+}
+.confronto__veredito--vitoria {
+  top: -0.6em;
+  color: #ffd84a;
+  transform: translateX(-50%);
+}
+.confronto__veredito--empate {
+  top: -1.4em;
+  color: #d6f6ff;
+  transform: translateX(-50%);
+}
+@keyframes confronto-veredito {
+  from {
+    opacity: 0;
+    transform: translateX(-50%) scale(0.4);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(-50%) scale(1);
+  }
+}

@@ -52,6 +52,7 @@ describe('QA derivarConfronto: casos extremos', () => {
     expect(r).toEqual({
       atacante: { lado: 'humano', zona: 1, cartaId: 'CC-003', destruida: false },
       alvo: { lado: 'oponente', zona: 2, cartaId: 'CC-001', destruida: false },
+      veredito: null,
     })
   })
 
