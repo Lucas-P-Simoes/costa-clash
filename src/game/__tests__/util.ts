@@ -24,7 +24,6 @@ export interface ConfigCenario {
   turno?: number
   fase?: Fase
   jogadaFeita?: boolean
-  terreno?: { id: string; dono: IdJogador }
 }
 
 const ENCHIMENTO = 'CC-013'
@@ -65,12 +64,6 @@ export function cenario(cfg: ConfigCenario = {}): EstadoDuelo {
   base.turno = cfg.turno ?? (base.ativo === 'humano' ? 3 : 4)
   base.fase = cfg.fase ?? 'PRINCIPAL'
   base.jogadaFeita = cfg.jogadaFeita ?? false
-  if (cfg.terreno) {
-    base.terreno = { ...nova(cfg.terreno.dono === 'humano' ? 'h' : 'o', cfg.terreno.id), dono: cfg.terreno.dono }
-    // a carta de terreno conta no total do dono: tira uma de enchimento do baralho (se ele foi preenchido automaticamente)
-    const cfgDono = cfg[cfg.terreno.dono]
-    if (cfgDono?.baralho === undefined) base.jogadores[cfg.terreno.dono].baralho.pop()
-  }
   return base
 }
 

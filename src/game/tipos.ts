@@ -1,6 +1,5 @@
 export type Grupo = 'ecossistema' | 'fauna' | 'atividade' | 'impacto'
-export type TipoCarta = 'unidade' | 'acao'
-export type SubtipoAcao = 'instantanea' | 'terreno'
+export type TipoCarta = 'unidade'
 
 export interface Efeito {
   gatilho?: string
@@ -14,7 +13,6 @@ export interface Carta {
   nome: string
   tipo: TipoCarta
   grupo?: Grupo
-  subtipo?: SubtipoAcao
   atk: number | null
   defesa: number | null
   efeito: Efeito | null

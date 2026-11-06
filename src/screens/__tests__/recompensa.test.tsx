@@ -91,7 +91,7 @@ describe('Partida + resultado com drop', () => {
     expect(d.textContent).toContain('Sorteando sua carta…')
     rerenderCom({ tipo: 'carta', cartaId: 'CC-057', quantidade: 2, cartasDistintas: 41 })
     const status = within(screen.getByRole('dialog')).getByText(/Nova carta:/)
-    expect(status.textContent).toMatch(/Nova carta: .+ \(2\/3 cópias\)\. Coleção: 41\/87 cartas\./)
+    expect(status.textContent).toMatch(/Nova carta: .+ \(2\/3 cópias\)\. Coleção: 41\/72 cartas\./)
   })
 
   it('textos de sem conta, sem carta e erro', () => {

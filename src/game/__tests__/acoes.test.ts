@@ -66,7 +66,7 @@ describe('jogar carta: regras de fase, turno e uma jogada por turno', () => {
   })
 
   it('campo cheio: unidade não pode ser jogada', () => {
-    const e = cenario({ humano: { mao: ['CC-001', 'CC-073'], campo: ['CC-002', 'CC-004', 'CC-005', 'CC-006', 'CC-009'] } })
+    const e = cenario({ humano: { mao: ['CC-001', 'CC-012'], campo: ['CC-002', 'CC-004', 'CC-005', 'CC-006', 'CC-009'] } })
     const r = jogar(e, 'humano', 'CC-001')
     expect(r.ok).toBe(false)
     if (!r.ok) expect(r.erro).toContain('zona de unidade livre')
@@ -111,22 +111,6 @@ describe('descarte forçado', () => {
     // depois do descarte forçado, não há mais jogadas; a lixeira continua aceitando descartes livres
     expect(jogadasLegais(e2)).toEqual([])
     expect(aplicarComando(e2, { tipo: 'descartar', jogador: 'humano', uid: e2.jogadores.humano.mao[0]!.uid }).ok).toBe(true)
-  })
-
-  it('ação sem alvo válido não é jogável; se só há essas cartas, o descarte é forçado', () => {
-    const e = cenario({ humano: { mao: ['CC-075', 'CC-073'] } }) // nenhuma unidade impacto inimiga
-    const r = jogar(e, 'humano', 'CC-075', { alvo: 0 })
-    expect(r.ok).toBe(false)
-    if (!r.ok) expect(r.erro).toContain('alvo válido')
-    expect(jogadasLegais(e).every((c) => c.tipo === 'descartar')).toBe(true)
-    const e2 = ok(aplicarComando(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-075') }))
-    expect(e2.jogadores.humano.descarte[0]?.cartaId).toBe('CC-075')
-  })
-
-  it('ação direcionada inimiga não usa grupo/identidade de unidade virada para baixo para validar alvo', () => {
-    const e = cenario({ humano: { mao: ['CC-075'] }, oponente: { campo: [{ id: 'CC-056', viradaParaBaixo: true }] } })
-    expect(jogar(e, 'humano', 'CC-075', { alvo: 0 }).ok).toBe(false)
-    expect(jogadasLegais(e)).toEqual([{ tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-075') }])
   })
 
   it('mão vazia (estado atípico) não trava: pode avançar e encerrar sem jogada', () => {
@@ -215,7 +199,7 @@ describe('validação no motor (não só na interface)', () => {
   })
 
   it('comandos válidos não mutam o estado de entrada (imutabilidade)', () => {
-    const e = cenario({ humano: { mao: ['CC-001', 'CC-077'], campo: ['CC-002'] }, oponente: { campo: ['CC-004'] } })
+    const e = cenario({ humano: { mao: ['CC-001', 'CC-014'], campo: ['CC-002'] }, oponente: { campo: ['CC-004'] } })
     const antes = JSON.stringify(e)
     const r = ok(jogar(e, 'humano', 'CC-001'))
     expect(JSON.stringify(e)).toBe(antes)
@@ -242,12 +226,11 @@ describe('validação no motor (não só na interface)', () => {
 })
 
 describe('listagens de jogadas legais', () => {
-  it('jogadasLegais lista unidades nas duas posições e duas faces, ações com cada alvo e terrenos', () => {
-    const e = cenario({ humano: { mao: ['CC-001', 'CC-077', 'CC-089'], campo: ['CC-002', 'CC-004'] } })
+  it('jogadasLegais lista unidades nas duas posições e duas faces', () => {
+    const e = cenario({ humano: { mao: ['CC-001', 'CC-003'], campo: ['CC-002', 'CC-004'] } })
     const legais = jogadasLegais(e)
     expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-001'))).toHaveLength(4)
-    expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-077'))).toHaveLength(2) // 2 alvos
-    expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-089'))).toHaveLength(1) // terreno, sem alvo
+    expect(legais.filter((c) => c.tipo === 'jogarCarta' && c.uid === uidDe(e, 'humano', 'CC-003'))).toHaveLength(4)
     for (const c of legais) expect(aplicarComando(e, c).ok).toBe(true)
   })
 

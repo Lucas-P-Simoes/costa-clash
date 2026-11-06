@@ -28,12 +28,10 @@ export const CARTAS_DA_REFERENCIA: readonly CartaDaReferencia[] = [
   { rotulo: 'Restinga', linha: 1, coluna: 5, id: 'CC-002', correspondencia: 'forte', nota: 'Duna com vegetação e flores brancas.', recortada: false },
   { rotulo: 'Ressaca marinha', linha: 1, coluna: 6, id: 'CC-057', correspondencia: 'forte', nota: 'Onda em forma de criatura.', recortada: false },
   { rotulo: 'Planejamento urbano', linha: 2, coluna: 1, id: 'CC-033', correspondencia: 'forte', nota: 'Orla com prédios, calçadão e praia.', recortada: false },
-  { rotulo: 'Saneamento', linha: 2, coluna: 2, id: 'CC-073', correspondencia: 'forte', nota: 'Estação de tratamento com tanques circulares.', recortada: true },
   { rotulo: 'Fauna costeira', linha: 2, coluna: 3, id: 'CC-021', correspondencia: 'forte', nota: 'Garça-branca no manguezal.', recortada: false },
   { rotulo: 'Comunidades tradicionais', linha: 2, coluna: 4, id: 'CC-031', correspondencia: 'forte', nota: 'Barco de pesca artesanal com rede ao pôr do sol.', recortada: true },
   { rotulo: 'Recife de coral', linha: 2, coluna: 5, id: 'CC-003', correspondencia: 'forte', nota: 'Corais ramificados coloridos.', recortada: false },
   { rotulo: 'Espécies exóticas', linha: 2, coluna: 6, id: 'CC-067', correspondencia: 'forte', nota: 'Peixe-leão.', recortada: false },
-  { rotulo: 'Restauração costeira', linha: 3, coluna: 1, id: 'CC-074', correspondencia: 'aproximacao', nota: 'Mudas de mangue na água ao pôr do sol; a carta é "Recuperação Ambiental" (genérica).', recortada: false },
   { rotulo: 'Mudanças climáticas', linha: 3, coluna: 2, id: 'CC-071', correspondencia: 'aproximacao', nota: 'Terra rachada e árvores secas ao pôr do sol; a carta é "Elevação do Nível do Mar" (outra cena). Melhor encaixe alternativo: CC-092 Terreno: Costa Pressionada.', recortada: false },
   { rotulo: 'Conservação', linha: 3, coluna: 3, id: 'CC-027', correspondencia: 'forte', nota: 'Golfinhos sob a superfície.', recortada: false },
   { rotulo: 'Pesquisa científica', linha: 3, coluna: 4, id: 'CC-034', correspondencia: 'forte', nota: 'Navio de pesquisa com pesquisadores.', recortada: false },
@@ -50,5 +48,4 @@ export const RECORTES_PROVISORIOS: Readonly<Record<string, { x: number; y: numbe
   'CC-001': { x: 369, y: 233, largura: 269, altura: 225 },
   'CC-047': { x: 1027, y: 233, largura: 269, altura: 225 },
   'CC-031': { x: 1027, y: 633, largura: 269, altura: 193 },
-  'CC-073': { x: 369, y: 633, largura: 269, altura: 195 },
 }

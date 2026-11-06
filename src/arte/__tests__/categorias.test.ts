@@ -40,7 +40,6 @@ describe('mapa categoria -> cor/selo', () => {
     expect(classificarCarta(carta('CC-001'))).toEqual({ categoria: 'verde', selo: 'folha' })
     expect(classificarCarta(carta('CC-047'))).toEqual({ categoria: 'impacto', selo: 'diabinho' })
     expect(classificarCarta(carta('CC-031'))).toEqual({ categoria: 'ondas', selo: 'onda' })
-    expect(classificarCarta(carta('CC-073'))).toEqual({ categoria: 'protegida', selo: 'engrenagem' })
     expect(classificarCarta(carta('CC-067'))).toEqual({ categoria: 'impacto', selo: 'caveira' })
     expect(classificarCarta(carta('CC-057')).categoria).toBe('ondas')
   })
@@ -49,7 +48,6 @@ describe('mapa categoria -> cor/selo', () => {
     expect(classificarCarta(carta('CC-019')).categoria).toBe('marinha') // fauna
     expect(classificarCarta(carta('CC-034')).categoria).toBe('planejamento') // atividade
     expect(classificarCarta(carta('CC-049')).categoria).toBe('impacto') // impacto
-    expect(classificarCarta(carta('CC-078')).categoria).toBe('planejamento') // ação
     expect(classificarCarta(carta('CC-004')).categoria).toBe('verde') // ecossistema
   })
 

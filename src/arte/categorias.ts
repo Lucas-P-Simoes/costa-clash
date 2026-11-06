@@ -66,17 +66,6 @@ const AJUSTES: Readonly<Record<string, Ajuste>> = {
   'CC-067': { categoria: 'impacto', selo: 'caveira' }, // Espécies exóticas
   'CC-070': { categoria: 'fenomeno', selo: 'termometro' }, // Branqueamento (clima)
   'CC-071': { categoria: 'fenomeno', selo: 'termometro' }, // Elevação do nível do mar
-  // Ações
-  'CC-073': { categoria: 'protegida', selo: 'engrenagem' }, // Tratamento de esgoto (saneamento)
-  'CC-074': { categoria: 'verde' }, // Recuperação ambiental
-  'CC-076': { categoria: 'ondas' }, // Limpeza de praia (mutirão)
-  'CC-077': { categoria: 'ondas' }, // Alerta de ressaca
-  'CC-080': { categoria: 'ondas' }, // Mutirão comunitário
-  // Terrenos
-  'CC-089': { categoria: 'verde' }, // Terreno: Manguezal
-  'CC-090': { categoria: 'planejamento' }, // Terreno: Zona Urbana
-  'CC-091': { categoria: 'marinha' }, // Terreno: Mar Aberto
-  'CC-092': { categoria: 'fenomeno', selo: 'termometro' }, // Terreno: Costa Pressionada
 }
 
 function padrao(c: Carta): Ajuste {
@@ -92,8 +81,7 @@ function padrao(c: Carta): Ajuste {
         return { categoria: 'verde' }
     }
   }
-  if (c.subtipo === 'terreno') return { categoria: 'verde' }
-  return { categoria: 'planejamento' } // ação instantânea
+  return { categoria: 'planejamento' }
 }
 
 /** Categoria (moldura) e selo de uma carta: ajuste por carta, senão padrão por tipo + grupo. */

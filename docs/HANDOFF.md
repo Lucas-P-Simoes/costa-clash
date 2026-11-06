@@ -1,5 +1,12 @@
 # Handoff — continuidade entre Codex e Claude Code
 
+## Remoção das cartas de ação (coordenador Claude Code; DEV sessão → QA subagente `qa` APROVADO COM RESSALVAS, fixtures corrigidas depois, 2026-11-05; sem commit/publicação)
+- **Pedido:** "remova as cartas de ação do baralho também" (após a remoção dos suportes, já publicada em `8dd1485` + Worker). Interpretado como as 15 cartas `acao` restantes, **incluindo terrenos** (a confirmar). Catálogo: **72 unidades**. Detalhes e decisões em `docs/REGRAS_DO_JOGO.md` §17.
+- **Código:** `efeitos.ts`, `FaixaTerreno`, terreno/buffs/cura/alvos e fluxos de ação em `Partida.tsx` removidos; dados, drops (regra 4/2/1, ranking ATK+DEF), histórias, arte (manifesto regenerado, piloto 4 cartas) e testes atualizados; 15 artes em `docs/arte/cartas-removidas/`.
+- **Balanceamento:** baralhos agora só de unidades (40); onde saturaram, entraram unidades novas do grupo majoritário (documentado no §17); baralho inicial = 40 unidades.
+- **Validação:** vitest 715 + 1 ignorado; oxlint, tsc, worker:typecheck, build ok; E2E 288/295 (as mesmas 7 falhas pré-existentes do Duelo Livre). QA adicionou `qa_somenteUnidades.test.ts`.
+- **Limites/pendências:** sem captura visual; D1 não migrado; código morto de "cura" na UI (`vidaFx.cura`, CSS) e `Efeito` em `tipos.ts` ainda existem; não publicado (Worker precisa de novo deploy porque catálogo/drops mudaram).
+
 ## Remoção das cartas de suporte (coordenador Claude Code; DEV sessão → QA subagente `qa` APROVADO COM RESSALVAS, 2026-11-05; sem commit/publicação)
 - **Pedido:** remover a faixa SUPORTES do campo e as cartas de suporte, mantendo as demais. Removidos: 5 zonas de suporte, equipamentos CC-085..088, armadilhas CC-093..100 e **CC-082** (`revelar`; decisão do coordenador, a confirmar com o dono). Catálogo: **87 cartas**, IDs não renumerados. Detalhes e decisões em `docs/REGRAS_DO_JOGO.md` §16.
 - **Código:** `armadilhas.ts` e `armadilhas.test.ts` apagados; motor, visão, IA, `Partida.tsx`, `PainelJogador`, `duelo.css`, arte (`sujeitos`, `categorias`, `prompts`, manifesto/índice regenerados), `TelaDuelo` (baralho salvo com ID fora do catálogo cai no inicial) e `DialogoColecao` (ignora IDs desconhecidos). As 13 artes foram movidas para `docs/arte/cartas-removidas/`.

@@ -74,21 +74,6 @@ export const HISTORIAS_CARTAS: Readonly<Record<string, string>> = {
   'CC-070': 'Quando a água esquenta demais, o coral perde a cor e fica pálido como osso. O Branqueamento é sinal de estresse térmico e nem sempre é reversível.',
   'CC-071': 'Devagar, o mar vai ocupando um pouco mais de chão a cada ano. A Elevação do Nível do Mar amplia riscos em certos trechos da costa e exige adaptação.',
   'CC-072': 'A Descarga de Nutrientes parece alimento, mas, em excesso, faz as algas explodirem na água. Quando elas morrem, falta oxigênio para quem vive no fundo.',
-  'CC-073': 'No centro da estação, a água suja entra de um lado e sai mais limpa do outro. O Tratamento de Esgoto reduz a carga poluidora antes de ela chegar ao rio e ao mar.',
-  'CC-074': 'Com mudas, ferramentas e paciência, a equipe devolve vida a uma área machucada. A Recuperação Ambiental funciona melhor quando respeita as condições e as espécies do lugar.',
-  'CC-075': 'A equipe de Fiscalização Ambiental chega cedo, confere documentos e explica as regras da costa. Sua ação apoia tanto a prevenção quanto a correção de problemas.',
-  'CC-076': 'No sábado de sol, vizinhos enchem sacos com o que o mar deixou na areia. A Limpeza de Praia ajuda muito, mas o melhor é não deixar o lixo chegar lá.',
-  'CC-077': 'A sirene toca e a bandeira sobe: o Alerta de Ressaca avisa quem está na orla. Com o aviso a tempo, as pessoas conseguem sair do caminho das ondas.',
-  'CC-078': 'Sobre a mesa, o Plano Diretor Costeiro desenha onde construir, onde preservar e onde esperar. Regras claras de uso do solo podem reduzir conflitos e riscos.',
-  'CC-079': 'Cartazes, rodas de conversa e músicas espalham uma ideia simples: cuidar da costa é de todos. A Campanha Educativa ajuda a mudar hábitos, um de cada vez.',
-  'CC-080': 'Quando o Mutirão Comunitário se junta, cada par de mãos faz uma parte do trabalho. Essas ações complementam as políticas públicas e fortalecem a vizinhança.',
-  'CC-081': 'Boias alaranjadas se esticam sobre a água para segurar uma mancha que insiste em fugir. A Barreira de Contenção ajuda em situações específicas de vazamento.',
-  'CC-083': 'Dia após dia, os aparelhos anotam os números da água, e o Monitoramento Contínuo mostra tendências. Quem repete a medida percebe mudanças que uma foto não conta.',
-  'CC-084': 'O Manejo da Bacia começa lá longe, nas cabeceiras, e termina no mar. Tudo o que se faz no caminho influencia as águas que chegam à costa.',
-  'CC-089': 'O terreno do Manguezal é feito de lama, raízes e maré que vai e volta. Em campo assim, quem vive de ecossistema se sente em casa.',
-  'CC-090': 'No terreno da Zona Urbana, a calçada divide espaço com a beira do mar. Cidades costeiras combinam infraestrutura e ecossistemas, e cada decisão pesa dos dois lados.',
-  'CC-091': 'No Mar Aberto, a água é funda, o horizonte não termina e o vento manda. As condições do mar influenciam organismos e atividades, de peixes a pescadores.',
-  'CC-092': 'Na Costa Pressionada, ocupação, resíduos e turismo se acumulam no mesmo trecho de praia. Quando várias pressões se somam, o equilíbrio fica mais difícil de manter.',
 }
 
 export function historiaDaCarta(id: string): string | undefined {

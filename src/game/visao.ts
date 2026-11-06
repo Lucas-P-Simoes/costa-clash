@@ -3,7 +3,7 @@
 //
 // Nunca inclui: mão do adversário (só o tamanho), ordem/conteúdo do baralho (só o tamanho, nem o próprio),
 // identidade/atributos de unidades viradas para baixo do adversário, o log de eventos e a lista de repetições.
-import type { CartaInstancia, EstadoDuelo, Fase, IdJogador, Posicao, Resultado, TerrenoAtivo, UnidadeEmCampo } from './estado'
+import type { CartaInstancia, EstadoDuelo, Fase, IdJogador, Posicao, Resultado, UnidadeEmCampo } from './estado'
 import { criarEstadoJogador, outro } from './estado'
 import type { Evento } from './estado'
 import { CATALOGO } from '../data/catalogo'
@@ -35,7 +35,6 @@ export interface VisaoDuelo {
   fase: Fase
   ativo: IdJogador
   jogadaFeita: boolean
-  terreno: TerrenoAtivo | null
   resultado: Resultado | null
   eu: VisaoPropria
   oponente: VisaoAdversario
@@ -55,7 +54,6 @@ export function visaoParaJogador(e: EstadoDuelo, perspectiva: IdJogador): VisaoD
     fase: e.fase,
     ativo: e.ativo,
     jogadaFeita: e.jogadaFeita,
-    terreno: e.terreno,
     resultado: e.resultado,
     eu: {
       id: eu.id,
@@ -118,7 +116,6 @@ export function estadoDeVisao(v: VisaoDuelo): EstadoDuelo {
   return {
     versao: 1,
     jogadores: { [v.perspectiva]: eu, [advId]: adv } as EstadoDuelo['jogadores'],
-    terreno: v.terreno,
     fase: v.fase,
     ativo: v.ativo,
     turno: v.turno,
@@ -148,19 +145,6 @@ export function eventosPublicos(eventos: readonly Evento[], perspectiva: IdJogad
     }
     if (ev.tipo === 'posicao_alterada' && ev.jogador !== perspectiva && ev.viradaParaBaixo) {
       return { ...ev, texto: `Uma unidade virada para baixo muda para ${ev.posicao === 'ATAQUE' ? 'ataque' : 'defesa'}.` }
-    }
-    if (ev.tipo === 'efeito_aplicado') {
-      const { alvoViradoParaBaixo: _interno, ...publico } = ev
-      if (ev.alvo?.jogador !== perspectiva && ev.alvoViradoParaBaixo) {
-        return {
-          ...publico,
-          cartaId: '?',
-          operacao: 'efeito_oculto',
-          valor: 0,
-          texto: 'Um efeito é aplicado a uma unidade virada para baixo.',
-        }
-      }
-      return publico
     }
     return ev
   })

@@ -22,7 +22,7 @@ export type {
   ComandoDesistir,
   ResultadoComando,
 } from './acoes'
-export { atkEfetivo, defEfetiva, bonusTerreno } from './combate'
+export { atkEfetivo, defEfetiva } from './combate'
 export { validarBaralhoDuelo } from './baralho'
 export type { ResultadoValidacaoBaralho } from './baralho'
 export { criarRng, embaralhar } from './rng'
@@ -36,7 +36,6 @@ export type {
   EstadoDuelo,
   EstadoJogador,
   UnidadeEmCampo,
-  TerrenoAtivo,
   CartaInstancia,
   IdJogador,
   Posicao,
@@ -46,6 +45,5 @@ export type {
   Evento,
   DadosEvento,
 } from './estado'
-export { analisarAcao } from './efeitos'
 export { validarAtaque } from './combate'
 export { listarJogadas } from './acoes'

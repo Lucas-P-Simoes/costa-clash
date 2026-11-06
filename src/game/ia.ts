@@ -1,15 +1,13 @@
 // IA determinística (§9). Recebe APENAS uma VisaoDuelo (sem mão/baralho do adversário nem ordem futura)
 // e devolve o próximo comando. Sem aleatoriedade: desempates por ID de carta crescente (depois uid/zona).
 import { CATALOGO } from '../data/catalogo'
-import { atkEfetivo, bonusTerreno, defEfetiva } from './combate'
-import { analisarAcao } from './efeitos'
+import { atkEfetivo, defEfetiva } from './combate'
 import { ataquesLegais, listarJogadas, simularAtaque } from './acoes'
 import type { Comando, ComandoAtacar, ComandoJogarCarta } from './acoes'
 import { mapaCatalogo, outro } from './estado'
 import type { Catalogo, EstadoDuelo, IdJogador, Posicao } from './estado'
 import { estadoDeVisao } from './visao'
 import type { VisaoDuelo } from './visao'
-import { VIDA_INICIAL } from './tipos'
 import type { Carta } from './tipos'
 
 interface Inimigo {
@@ -42,30 +40,9 @@ function temVantagem(atk: number, inim: Inimigo[]): boolean {
   return vence(atk, inim)
 }
 
-function contarGrupo(e: EstadoDuelo, dono: IdJogador, grupo: string, cat: Catalogo): number {
-  return e.jogadores[dono].campo.filter((u) => u && cat.get(u.cartaId)?.grupo === grupo).length
-}
-
-function saldoTerreno(e: EstadoDuelo, eu: IdJogador, carta: Carta | undefined, cat: Catalogo): number {
-  const ef = carta?.efeito
-  if (!ef || ef.operacao !== 'field_bonus' || !ef.alvo) return 0
-  const n = (dono: IdJogador) =>
-    ef.alvo === 'qualquer' ? e.jogadores[dono].campo.filter(Boolean).length : contarGrupo(e, dono, ef.alvo as string, cat)
-  return (n(eu) - n(outro(eu))) * Math.abs(ef.valor)
-}
-
-const PESO_ACAO: Readonly<Record<string, number>> = {
-  destruir_grupo: 6,
-  debuff_grupo: 5,
-  buff_unidade: 4,
-  buff_grupo: 4,
-  field_bonus: 3,
-  cura: 2,
-}
-
 interface Candidato {
   cmd: ComandoJogarCarta
-  /** 0 = unidade que vence combate; 1 = ação eficaz; 2 = unidade (maior DEF); 4 = demais (ação ineficaz). */
+  /** 0 = unidade que vence combate; 2 = unidade (maior DEF). */
   nivel: number
   /** Maior = melhor (comparação lexicográfica). */
   chave: number[]
@@ -80,7 +57,7 @@ function compararCandidatos(a: Candidato, b: Candidato): number {
   }
   if (a.cartaId !== b.cartaId) return a.cartaId < b.cartaId ? -1 : 1
   if (a.cmd.uid !== b.cmd.uid) return a.cmd.uid < b.cmd.uid ? -1 : 1
-  return (a.cmd.alvo ?? -1) - (b.cmd.alvo ?? -1)
+  return 0
 }
 
 function avaliar(e: EstadoDuelo, cat: Catalogo, eu: IdJogador, cmd: ComandoJogarCarta, inim: Inimigo[]): Candidato | null {
@@ -88,9 +65,8 @@ function avaliar(e: EstadoDuelo, cat: Catalogo, eu: IdJogador, cmd: ComandoJogar
   const carta = inst ? cat.get(inst.cartaId) : undefined
   if (!inst || !carta) return null
   if (carta.tipo === 'unidade') {
-    const bt = bonusTerreno(e, carta.grupo, cat)
-    const atk = Math.max(0, (carta.atk ?? 0) + bt)
-    const def = Math.max(0, (carta.defesa ?? 0) + bt)
+    const atk = Math.max(0, carta.atk ?? 0)
+    const def = Math.max(0, carta.defesa ?? 0)
     const desejada: Posicao = temVantagem(atk, inim) ? 'ATAQUE' : 'DEFESA'
     if (cmd.posicao !== desejada) return null
     const faceOculta = desejada === 'DEFESA'
@@ -99,26 +75,7 @@ function avaliar(e: EstadoDuelo, cat: Catalogo, eu: IdJogador, cmd: ComandoJogar
       ? { cmd, nivel: 0, chave: [atk, def], cartaId: carta.id }
       : { cmd, nivel: 2, chave: [def, atk], cartaId: carta.id }
   }
-  const ef = carta.efeito
-  const op = ef?.operacao ?? ''
-  const peso = PESO_ACAO[op] ?? 0
-  let eficaz = true
-  let qualidade = 0
-  if (cmd.alvo !== undefined) {
-    const a = analisarAcao(e, eu, carta, cat)
-    const dono = a.donoAlvo ?? eu
-    const u = e.jogadores[dono].campo[cmd.alvo]
-    qualidade = u ? atkEfetivo(e, dono, u, cat) : 0
-  } else if (op === 'cura') {
-    eficaz = e.jogadores[eu].lp <= VIDA_INICIAL - Math.abs(ef?.valor ?? 0)
-    qualidade = Math.abs(ef?.valor ?? 0)
-  } else if (op === 'field_bonus') {
-    const saldo = saldoTerreno(e, eu, carta, cat)
-    const atual = e.terreno ? saldoTerreno(e, eu, cat.get(e.terreno.cartaId), cat) : 0
-    eficaz = saldo > 0 && saldo > atual
-    qualidade = saldo
-  }
-  return eficaz ? { cmd, nivel: 1, chave: [peso, qualidade], cartaId: carta.id } : { cmd, nivel: 4, chave: [peso, qualidade], cartaId: carta.id }
+  return null
 }
 
 function escolherJogada(e: EstadoDuelo, cat: Catalogo, eu: IdJogador): Comando {

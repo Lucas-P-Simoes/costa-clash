@@ -30,7 +30,7 @@ O mesmo repositório é usado alternadamente por OpenAI Codex e Claude Code. Nen
 Nunca manter DEV e QA editando simultaneamente a mesma árvore de trabalho. Leituras paralelas só são aceitáveis quando o coordenador garantir que nenhum dos papéis esteja escrevendo arquivos que o outro analisa.
 
 ## Requisitos do jogo
-- MVP para navegador: React + TypeScript + Vite, 1 jogador vs computador, **5.000 pontos de vida** por lado, **5 zonas de unidade** por jogador (sem zonas de suporte desde 05/11/2026) e terreno global único, baralhos de **40 cartas** montados a partir do **catálogo de 87 cartas** (`cartas.json`, até 3 cópias por ID). Sem multiplayer ou fusões; backend apenas de contas, baralho e coleção (Cloudflare Worker + D1).
+- MVP para navegador: React + TypeScript + Vite, 1 jogador vs computador, **5.000 pontos de vida** por lado, **5 zonas de unidade** por jogador (sem zonas de suporte desde 05/11/2026) e terreno global único, baralhos de **40 cartas** montados a partir do **catálogo de 72 cartas (só unidades)** (`cartas.json`, até 3 cópias por ID). Sem multiplayer ou fusões; backend apenas de contas, baralho e coleção (Cloudflare Worker + D1).
 - Em caso de divergência entre este arquivo, o mockup (`Interface de Batalha Costa Clash.png`) e `docs/REGRAS_DO_JOGO.md`, vale `docs/REGRAS_DO_JOGO.md`. O mockup é referência visual, não de regras (ex.: ele mostra 4.000 de vida e 4 cartas na mão, valores superados).
 - `docs/REGRAS_DO_JOGO.md` é referência para regras aprovadas/propostas; não mudar balanceamento ou condições de vitória silenciosamente.
 - Toda explicação ambiental deve ser tecnicamente defensável; evitar afirmar que uma medida elimina totalmente determinado risco.

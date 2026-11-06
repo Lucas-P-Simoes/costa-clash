@@ -61,9 +61,6 @@ export function derivarEfeitos(novos: readonly Evento[], posicoes: Readonly<Reco
       case 'dano':
         r.dano[e.jogador] = (r.dano[e.jogador] ?? 0) + e.valor
         break
-      case 'cura':
-        r.cura[e.jogador] = (r.cura[e.jogador] ?? 0) + e.valor
-        break
       case 'unidade_destruida':
         r.destruidas.push({ lado: e.jogador, zona: e.zona, cartaId: e.carta.cartaId, posicao: posicoes[chaveZona(e.jogador, e.zona)] ?? 'ATAQUE' })
         break

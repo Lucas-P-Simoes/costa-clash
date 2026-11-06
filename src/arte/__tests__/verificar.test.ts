@@ -50,14 +50,14 @@ describe('leitura de PNG/WebP', () => {
 })
 
 describe('verificarArte', () => {
-  it('com 0 imagens passa e relata 87 pendentes (pasta inexistente também)', () => {
+  it('com 0 imagens passa e relata 72 pendentes (pasta inexistente também)', () => {
     for (const diretorio of [dir, join(dir, 'nao-existe')]) {
       const r = verificarArte({ diretorio, manifesto: manifestoVazio() })
       expect(r.ok).toBe(true)
       expect(r.erros).toEqual([])
-      expect(r.pendentes).toBe(87)
-      expect(r.total).toBe(87)
-      expect(formatarRelatorio(r)).toMatch(/87 pendente/)
+      expect(r.pendentes).toBe(72)
+      expect(r.total).toBe(72)
+      expect(formatarRelatorio(r)).toMatch(/72 pendente/)
     }
   })
 

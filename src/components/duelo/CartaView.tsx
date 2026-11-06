@@ -8,7 +8,7 @@ import { IconeEspadas } from '../ui/Icones'
 import { ArteCarta } from './ArteCarta'
 import { IconeEscudo } from './iconesDuelo'
 import { SeloCarta } from './SeloCarta'
-import { efeitoCurto, nomeCurto, rotuloTipo, tipoArte } from './textoCarta'
+import { nomeCurto, rotuloTipo, tipoArte } from './textoCarta'
 
 function ChipPosicao({ posicao }: { posicao?: 'ATAQUE' | 'DEFESA' }) {
   if (!posicao) return null
@@ -121,7 +121,6 @@ export function CartaView({ carta, atk, def, posicao, tamanho = 'mao', seleciona
       ) : (
         <span className="carta__efeito" aria-hidden="true">
           <strong>{rotuloTipo(carta)}</strong>
-          {tamanho === 'mao' ? <span>{efeitoCurto(carta)}</span> : null}
         </span>
       )}
       <ChipPosicao posicao={posicao} />

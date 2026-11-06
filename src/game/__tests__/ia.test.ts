@@ -55,11 +55,11 @@ describe('visão parcial: não vaza informação oculta', () => {
     const mk = (maoH: string[]) =>
       cenario({
         ativo: 'oponente',
-        oponente: { mao: ['CC-003', 'CC-001', 'CC-077', 'CC-075', 'CC-084'], campo: ['CC-007'] },
+        oponente: { mao: ['CC-003', 'CC-001', 'CC-014', 'CC-013', 'CC-021'], campo: ['CC-007'] },
         humano: { mao: maoH, campo: ['CC-047'] },
       })
     const a = mk(['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'])
-    const b = mk(['CC-079', 'CC-080', 'CC-083', 'CC-056', 'CC-071'])
+    const b = mk(['CC-015', 'CC-016', 'CC-022', 'CC-056', 'CC-071'])
     // embaralha também o baralho do humano em um deles
     b.jogadores.humano.baralho.reverse()
     b.jogadores.humano.baralho.forEach((c, i) => (c.cartaId = i % 2 ? 'CC-020' : 'CC-025'))
@@ -82,7 +82,7 @@ describe('visão parcial: não vaza informação oculta', () => {
 
 describe('escolha da jogada (§9)', () => {
   it('1º: unidade capaz de vencer combate (e a coloca em ATAQUE quando há vantagem)', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-047', 'CC-077', 'CC-084'] }, humano: { campo: ['CC-007'] } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-047', 'CC-014', 'CC-021'] }, humano: { campo: ['CC-007'] } })
     const c = decide(e)
     expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-047'), posicao: 'ATAQUE', viradaParaBaixo: false }) // 1800 > 1700
   })
@@ -95,45 +95,9 @@ describe('escolha da jogada (§9)', () => {
     expect(decide(dup)).toMatchObject({ uid: uids[0] })
   })
 
-  it('2º: ação eficaz antes de unidade que não vence', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-075'] }, humano: { campo: ['CC-056'] } }) // 2200/700: CC-001 não vence
-    expect(decide(e)).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-075'), alvo: 0 })
-  })
-
-  it('unidade que vence tem prioridade sobre ação eficaz', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-071', 'CC-075'] }, humano: { campo: ['CC-056'] } }) // CC-071 2400 > 2200
-    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-071') })
-  })
-
   it('3º: sem vitória possível nem ação eficaz, a unidade de maior DEFESA, em DEFESA', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-013', 'CC-004', 'CC-084'] }, humano: { campo: ['CC-056'] } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-013', 'CC-004'] }, humano: { campo: ['CC-056'] } })
     expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-004'), posicao: 'DEFESA', viradaParaBaixo: true })
-  })
-
-  it('4º: ação ineficaz só depois de unidades e ações eficazes; entre ineficazes, ID crescente', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-090', 'CC-089'] } })
-    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-089') })
-    const e2 = cenario({ ativo: 'oponente', oponente: { mao: ['CC-089', 'CC-013'] }, humano: { campo: ['CC-056'] } })
-    expect(decide(e2)).toMatchObject({ uid: uidDe(e2, 'oponente', 'CC-013') })
-  })
-
-  it('escolhe o alvo mais forte para debuff e destruição (desempate por zona)', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-075'] }, humano: { campo: ['CC-049', 'CC-056', 'CC-047'] } })
-    expect(decide(e)).toMatchObject({ alvo: 1 }) // 2200
-  })
-
-  it('cura só é "eficaz" quando recupera o valor inteiro; senão fica atrás das unidades', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-079', 'CC-013'], lp: 4900 }, humano: { campo: ['CC-056'] } })
-    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-013') })
-    const e2 = cenario({ ativo: 'oponente', oponente: { mao: ['CC-079', 'CC-013'], lp: 4000 }, humano: { campo: ['CC-056'] } })
-    expect(decide(e2)).toMatchObject({ uid: uidDe(e2, 'oponente', 'CC-079') })
-  })
-
-  it('terreno só quando favorece mais as próprias unidades do que as do adversário', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-089', 'CC-013'], campo: ['CC-001'] }, humano: { campo: ['CC-056'] } })
-    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-089') })
-    const ruim = cenario({ ativo: 'oponente', oponente: { mao: ['CC-089', 'CC-013'] }, humano: { campo: ['CC-001'] } })
-    expect(decide(ruim)).toMatchObject({ uid: uidDe(ruim, 'oponente', 'CC-013') })
   })
 
   it('sem jogada legal descarta (a carta de menor utilidade; empate por ID)', () => {

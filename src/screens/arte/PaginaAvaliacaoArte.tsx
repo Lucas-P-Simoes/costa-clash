@@ -68,13 +68,13 @@ function ItemPiloto({ id, categoria, criterios, arteDe }: { id: string; categori
   )
 }
 
-/** Página de desenvolvimento (?arte=1): avaliação do estilo das ilustrações, com as 5 cartas piloto. Não faz parte do jogo. */
+/** Página de desenvolvimento (?arte=1): avaliação do estilo das ilustrações, com as 4 cartas piloto. Não faz parte do jogo. */
 export function PaginaAvaliacaoArte({ arteDe = arteDaCarta }: { arteDe?: (id: string) => ArteDaCarta | null }) {
   return (
     <main className="avarte">
       <h1>Avaliação do estilo das ilustrações (desenvolvimento)</h1>
       <p className="avarte__aviso" role="note">
-        O catálogo tem 95 ilustrações geradas aguardando aprovação do dono. As 5 cartas piloto abaixo continuam usando recortes PROVISÓRIOS da referência de estilo
+        O catálogo tem 68 ilustrações geradas aguardando aprovação do dono. As 4 cartas piloto abaixo continuam usando recortes PROVISÓRIOS da referência de estilo
         (Estilos-de-cartas.webp), em baixa resolução e fora de 3:4, para comparar o estilo e a moldura antes de substituí-las.
       </p>
       <section aria-labelledby="avarte-legenda">

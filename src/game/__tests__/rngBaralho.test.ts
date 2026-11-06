@@ -57,7 +57,7 @@ describe('validação de baralho de duelo', () => {
     const r39 = validarBaralhoDuelo(BARALHO_INICIAL.slice(0, 39))
     expect(r39.ok).toBe(false)
     if (!r39.ok) expect(r39.erros.join(' ')).toContain('exatamente 40 cartas (tem 39)')
-    const r41 = validarBaralhoDuelo([...BARALHO_INICIAL, 'CC-092'])
+    const r41 = validarBaralhoDuelo([...BARALHO_INICIAL, 'CC-072'])
     expect(r41.ok).toBe(false)
     if (!r41.ok) expect(r41.erros.join(' ')).toContain('tem 41')
     expect(validarBaralhoDuelo([]).ok).toBe(false)

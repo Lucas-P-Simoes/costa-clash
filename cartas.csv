@@ -71,18 +71,3 @@ CC-069,Dragagem Sem Controle,unidade,impacto,2200,1100,,Dragagens podem ressuspe
 CC-070,Branqueamento de Corais,unidade,impacto,2000,1000,,Estresse térmico pode provocar branqueamento coralíneo.
 CC-071,Elevação do Nível do Mar,unidade,impacto,2400,1100,,A elevação do mar amplia riscos em certos trechos costeiros.
 CC-072,Descarga de Nutrientes,unidade,impacto,1800,1400,,Excesso de nutrientes pode favorecer eutrofização.
-CC-073,Tratamento de Esgoto,acao,instantanea,,,"{""operacao"": ""debuff_grupo"", ""alvo"": ""impacto"", ""valor"": -500}",Reduz carga poluidora de efluentes antes do lançamento.
-CC-074,Recuperação Ambiental,acao,instantanea,,,"{""operacao"": ""buff_grupo"", ""alvo"": ""ecossistema"", ""valor"": 500}",Recuperação precisa considerar condições e espécies locais.
-CC-075,Fiscalização Ambiental,acao,instantanea,,,"{""operacao"": ""destruir_grupo"", ""alvo"": ""impacto"", ""valor"": 0}",Fiscalização apoia medidas de prevenção e correção.
-CC-076,Limpeza de Praia,acao,instantanea,,,"{""operacao"": ""debuff_grupo"", ""alvo"": ""impacto"", ""valor"": -400}","Mutirões removem resíduos, mas não substituem prevenção."
-CC-077,Alerta de Ressaca,acao,instantanea,,,"{""operacao"": ""buff_unidade"", ""alvo"": ""qualquer"", ""valor"": 400}",Alertas ajudam a reduzir exposição a eventos extremos.
-CC-078,Plano Diretor Costeiro,acao,instantanea,,,"{""operacao"": ""buff_grupo"", ""alvo"": ""atividade"", ""valor"": 300}",Regras de uso do solo podem reduzir conflitos e riscos.
-CC-079,Campanha Educativa,acao,instantanea,,,"{""operacao"": ""cura"", ""alvo"": ""jogador"", ""valor"": 500}",Campanhas podem apoiar mudanças de comportamento.
-CC-080,Mutirão Comunitário,acao,instantanea,,,"{""operacao"": ""cura"", ""alvo"": ""jogador"", ""valor"": 700}",Ações comunitárias podem complementar políticas públicas.
-CC-081,Barreira de Contenção,acao,instantanea,,,"{""operacao"": ""debuff_grupo"", ""alvo"": ""impacto"", ""valor"": -600}",Barreiras ajudam em situações específicas de vazamento.
-CC-083,Monitoramento Contínuo,acao,instantanea,,,"{""operacao"": ""buff_unidade"", ""alvo"": ""qualquer"", ""valor"": 300}",Medições repetidas permitem observar tendências.
-CC-084,Manejo da Bacia,acao,instantanea,,,"{""operacao"": ""buff_grupo"", ""alvo"": ""ecossistema"", ""valor"": 400}",Ações na bacia influenciam as águas costeiras.
-CC-089,Terreno: Manguezal,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""ecossistema"", ""valor"": 300}",Manguezais são sistemas costeiros sujeitos às marés.
-CC-090,Terreno: Zona Urbana,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""atividade"", ""valor"": 300}",Cidades costeiras combinam infraestrutura e ecossistemas.
-CC-091,Terreno: Mar Aberto,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""fauna"", ""valor"": 300}",As condições do mar influenciam organismos e atividades.
-CC-092,Terreno: Costa Pressionada,acao,terreno,,,"{""operacao"": ""field_bonus"", ""alvo"": ""impacto"", ""valor"": 300}",Pressões antrópicas podem se acumular na zona costeira.

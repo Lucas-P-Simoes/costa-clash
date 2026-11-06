@@ -245,12 +245,4 @@ describe('atributos efetivos e clamping', () => {
     e.jogadores.humano.campo[0]!.buffAtk += 600
     expect(atkEfetivo(e, 'humano', e.jogadores.humano.campo[0]!, cat)).toBe(300)
   })
-
-  it('terreno afeta os atributos usados no combate dos DOIS lados', () => {
-    // Terreno: Manguezal (+300 ecossistema): CC-001 (1200) vira 1500; CC-005 (1500) vira 1800
-    const e = ok(atacar(cenarioCombate({ terreno: { id: 'CC-089', dono: 'oponente' }, humano: { campo: ['CC-001'] }, oponente: { campo: ['CC-005'] } }), 0, 0))
-    // 1500 x 1800: humano perde 300 e a unidade
-    expect(e.jogadores.humano.lp).toBe(4700)
-    expect(e.jogadores.humano.campo[0]).toBeNull()
-  })
 })

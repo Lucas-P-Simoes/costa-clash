@@ -4,7 +4,7 @@ import { arteDaCarta } from '../../arte/arteDisponivel'
 import { historiaDaCarta } from '../../data/historiasCartas'
 import type { Carta } from '../../game/tipos'
 import { ArteCarta } from '../duelo/ArteCarta'
-import { efeitoCurto, rotuloTipo, tipoArte } from '../duelo/textoCarta'
+import { rotuloTipo, tipoArte } from '../duelo/textoCarta'
 import { useFocoDialogo } from '../duelo/useFocoDialogo'
 import { IconeVoltar } from './Icones'
 
@@ -86,7 +86,6 @@ export function DialogoCarta({ carta, onFechar }: Props) {
                   <span>DEF {carta.defesa}</span>
                 </p>
               ) : null}
-              <p className="carta-dialogo__efeito">{efeitoCurto(carta)}</p>
               <p className="carta-dialogo__educacao">{carta.educacao}</p>
             </div>
           </div>

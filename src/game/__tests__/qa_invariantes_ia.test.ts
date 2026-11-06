@@ -111,7 +111,7 @@ describe('QA 6 - invariantes, determinismo, JSON, imutabilidade', () => {
 describe('QA 7 - vazamento de informação', () => {
   const montar = () => {
     // meio de partida: turno 4, mãos e baralhos ocultos dos dois lados
-    let e = cenario({ turno: 4, ativo: 'oponente', fase: 'PRINCIPAL', humano: { mao: ['CC-001', 'CC-003'], campo: ['CC-043'] }, oponente: { mao: ['CC-084', 'CC-019', 'CC-027'], baralho: 30 } })
+    let e = cenario({ turno: 4, ativo: 'oponente', fase: 'PRINCIPAL', humano: { mao: ['CC-001', 'CC-003'], campo: ['CC-043'] }, oponente: { mao: ['CC-021', 'CC-019', 'CC-027'], baralho: 30 } })
     e = { ...e }
     return e
   }
@@ -120,7 +120,7 @@ describe('QA 7 - vazamento de informação', () => {
     const json = JSON.stringify(visaoParaJogador(e, 'humano'))
     const o = e.jogadores.oponente
     for (const c of [...o.mao, ...o.baralho]) expect(json, `vazou ${c.uid}`).not.toContain(`"${c.uid}"`)
-    expect(json).not.toContain('CC-084')
+    expect(json).not.toContain('CC-021')
     const v = visaoParaJogador(e, 'humano')
     expect(v.oponente.maoTamanho).toBe(3)
     expect(Object.keys(v)).not.toContain('log')
@@ -178,7 +178,7 @@ describe('QA 8 - IA', () => {
   const ia = (e: EstadoDuelo, quem = e.ativo) => decidirComando(visaoParaJogador(e, quem))
 
   it('sem jogada legal: descarta (carta de menor utilidade) e depois encerra o turno sem travar', () => {
-    const e = cenario({ turno: 4, ativo: 'oponente', oponente: { mao: ['CC-073', 'CC-075', 'CC-001'], campo: ['CC-002', 'CC-002', 'CC-002', 'CC-002', 'CC-002'].map((id) => ({ id, atacou: true })) } })
+    const e = cenario({ turno: 4, ativo: 'oponente', oponente: { mao: ['CC-012', 'CC-013', 'CC-001'], campo: ['CC-002', 'CC-002', 'CC-002', 'CC-002', 'CC-002'].map((id) => ({ id, atacou: true })) } })
     expect(jogadasLegais(e).every((c) => c.tipo === 'descartar')).toBe(true)
     const r = executarTurnoIA(e)
     expect(r.ok && r.estado.turno === 5).toBe(true)
@@ -206,28 +206,15 @@ describe('QA 8 - IA', () => {
     expect(ia(t1).tipo).toBe('encerrarTurno')
   })
 
-  it('prioridade §9: unidade que vence > ação eficaz > unidade de maior DEF > ação ineficaz; desempate por ID', () => {
-    // unidade que vence (CC-071 2400) antes da ação eficaz
-    let e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-075', 'CC-071', 'CC-084'] } })
+  it('prioridade §9: unidade que vence > unidade de maior DEF; desempate por ID', () => {
+    // unidade que vence (CC-071 2400) antes de unidade fraca
+    let e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-001', 'CC-071'] } })
     let c = ia(e)
     expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-071') })
-    // sem unidade que vença: ação eficaz (destruir impacto)
-    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-075', 'CC-001', 'CC-084'] } })
-    c = ia(e)
-    expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-075'), alvo: 0 })
-    // sem ação eficaz: maior DEF
-    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-001', 'CC-007', 'CC-084'] } })
+    // sem unidade que vença: maior DEF, em DEFESA
+    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-001', 'CC-007'] } })
     c = ia(e)
     expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-007'), posicao: 'DEFESA' })
-    // só ação ineficaz (terreno sem saldo) e cura inútil
-    e = cenario({ turno: 4, ativo: 'oponente', humano: { campo: ['CC-053'] }, oponente: { mao: ['CC-079', 'CC-090'] } })
-    c = ia(e)
-    expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-090') })
-  })
-
-  it('usa efeitos úteis: cura quando LP baixo; evita desperdiçar cura com LP cheio (nunca legal)', () => {
-    const e = cenario({ turno: 4, ativo: 'oponente', oponente: { lp: 2000, mao: ['CC-079'] } })
-    expect(ia(e)).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-079') })
   })
 
   it('posição: ataque com vantagem, defesa sem; sempre termina o turno (6 cenários de 0 a 5 unidades)', () => {
@@ -278,10 +265,9 @@ describe('QA 9 - baralhos', () => {
     expect(Object.keys(BARALHOS_OPONENTES).sort()).toEqual(OPONENTES.map((o) => o.id).sort())
   })
 
-  it('baralho inicial tem 32 unidades e 8 ações (como documentado)', () => {
+  it('baralho inicial tem 40 unidades (como documentado)', () => {
     const tipos = BARALHO_INICIAL.map((i) => cat.get(i)!.tipo)
-    expect(tipos.filter((t) => t === 'unidade')).toHaveLength(32)
-    expect(tipos.filter((t) => t === 'acao')).toHaveLength(8)
+    expect(tipos.filter((t) => t === 'unidade')).toHaveLength(40)
   })
 
   it('composição temática: unidades do grupo do oponente são a maior fatia (ou ao menos >=30%) e a dificuldade cresce em ATK médio', () => {

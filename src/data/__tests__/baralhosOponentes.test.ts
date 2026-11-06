@@ -25,28 +25,25 @@ describe('baralhos dos oponentes (provisórios)', () => {
     expect(validarBaralhoDuelo(b as string[])).toEqual({ ok: true })
   })
 
-  it.each(OPONENTES.map((o) => [o.id] as const))('%s: tem ações jogáveis e unidades do próprio grupo', (id) => {
+  it.each(OPONENTES.map((o) => [o.id] as const))('%s: tem só unidades, em sua maioria do próprio grupo', (id) => {
     const o = OPONENTES.find((x) => x.id === id)!
     const cartas = (baralhoDoOponente(id) as string[]).map((c) => porId.get(c)!)
-    expect(cartas.filter((c) => c.tipo === 'acao').length).toBeGreaterThanOrEqual(4)
+    expect(cartas.every((c) => c.tipo === 'unidade')).toBe(true)
     const unidades = cartas.filter((c) => c.tipo === 'unidade')
     const doGrupo = unidades.filter((c) => c.grupo === o.grupo).length
     // unidades temáticas dominam o baralho (>= 50% das unidades)
     expect(doGrupo / unidades.length).toBeGreaterThanOrEqual(0.5)
   })
 
-  it('dificuldade só pela composição: mais cartas de apoio e unidades mais fortes nos níveis altos', () => {
+  it('dificuldade só pela composição: unidades mais fortes nos níveis altos', () => {
     const media = (nivel: number, f: (ids: readonly string[]) => number) => {
       const ops = OPONENTES.filter((o) => o.dificuldade === nivel)
       return ops.reduce((s, o) => s + f(baralhoDoOponente(o.id) as string[]), 0) / ops.length
     }
-    const apoio = (ids: readonly string[]) => ids.filter((i) => porId.get(i)!.tipo !== 'unidade').length
     const forca = (ids: readonly string[]) => {
       const u = ids.map((i) => porId.get(i)!).filter((c) => c.tipo === 'unidade')
       return u.reduce((s, c) => s + (c.atk ?? 0) + (c.defesa ?? 0), 0) / u.length
     }
-    expect(media(1, apoio)).toBeLessThan(media(2, apoio))
-    expect(media(2, apoio)).toBeLessThan(media(3, apoio))
     expect(media(3, forca)).toBeGreaterThan(media(1, forca))
   })
 })

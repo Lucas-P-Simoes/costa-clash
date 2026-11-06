@@ -313,42 +313,6 @@
   max-height: 100%;
 }
 
-/* ---------------------------------------------------------------- terreno */
-.duelo-terreno {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.75rem;
-  margin: 0;
-  padding: 0.1875rem 0.75rem;
-  font-size: 0.9rem;
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
-  color: #9fb4bc;
-  background: linear-gradient(90deg, transparent, rgba(5, 14, 22, 0.85) 18%, rgba(5, 14, 22, 0.85) 82%, transparent);
-  border-top: 1px solid #11566c;
-  border-bottom: 1px solid #11566c;
-}
-.duelo-terreno--ativo {
-  color: #d6c9a6;
-  border-color: #a87414;
-}
-.duelo-terreno strong {
-  color: #72e8a8;
-}
-.duelo-terreno__efeito {
-  font-size: max(var(--fs-min), 0.85em);
-  text-transform: none;
-  letter-spacing: 0.02em;
-  color: #a4c4d0;
-}
-.duelo-terreno__orn {
-  flex: none;
-  width: 2.125rem;
-  height: auto;
-  opacity: 0.8;
-}
-
 /* ---------------------------------------------------------------- cartas */
 .carta {
   --posicao-largura: max(2.5rem, 40px);
@@ -1823,9 +1787,6 @@ button.carta {
   .duelo-resultado .duelo-dialogo__botoes {
     flex-direction: column;
   }
-  .duelo-terreno__orn {
-    display: none;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2078,9 +2039,6 @@ button.carta {
   .duelo-mao {
     flex: 1 1 0;
     min-height: 0;
-  }
-  .duelo-terreno {
-    flex: none;
   }
   .duelo-lateral > * {
     flex: none;

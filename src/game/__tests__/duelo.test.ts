@@ -30,7 +30,6 @@ describe('criarDuelo', () => {
     expect(e.ativo).toBe('humano')
     expect(e.turno).toBe(1)
     expect(e.fase).toBe('PRINCIPAL')
-    expect(e.terreno).toBeNull()
     expect(e.resultado).toBeNull()
     expect(invariantes(e)).toEqual([])
   })

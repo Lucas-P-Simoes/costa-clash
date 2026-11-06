@@ -56,16 +56,6 @@ describe('mão em leque e inspeção ampliada', () => {
     expect(inspecao()).toBeNull()
   })
 
-  it('para cartas não-unidade inclui tipo, categoria, efeito e educação', () => {
-    const catalogo = CATALOGO.find((c) => c.tipo !== 'unidade')!
-    montar({ humano: { mao: [catalogo.id] } })
-    fireEvent.pointerEnter(cartaMao(), { pointerType: 'mouse' })
-    const painel = inspecao()!
-    expect(painel.querySelector('.duelo-inspecao__tipo')?.textContent).toContain('·')
-    expect(painel.querySelector('.duelo-inspecao__efeito')?.textContent?.trim()).toBeTruthy()
-    expect(painel.querySelector('.duelo-inspecao__educacao')?.textContent).toBe(catalogo.educacao)
-  })
-
   it('mantém a inspeção enquanto a carta tem foco e Escape fecha só essa camada', () => {
     montar({ humano: { mao: ['CC-001'] } })
     const carta = cartaMao()
@@ -231,22 +221,6 @@ describe('mão em leque e inspeção ampliada', () => {
     expect(inspecao()).toBeTruthy()
     expect(inspecao()!.querySelector('.carta__atk')!.textContent).not.toBe(atkAntes)
     expect(inspecao()!.querySelector('.carta__def')!.textContent).not.toBe(defAntes)
-  })
-
-  it('rederiva bônus de terreno pela visão atual sem consultar o estado bruto', () => {
-    const chave = 'unidade:oponente:0'
-    const resolver = (estado: ReturnType<typeof cenario>) => {
-      const visao = visaoParaJogador(estado, 'humano')
-      return resolverConteudoInspecao(chave, visao, estadoDeVisao(visao))
-    }
-    const base = resolver(cenario({ oponente: { campo: ['CC-001'] } }))
-    const comTerreno = resolver(cenario({ terreno: { id: 'CC-089', dono: 'humano' }, oponente: { campo: ['CC-001'] } }))
-
-    expect(base?.oculta).toBe(false)
-    expect(comTerreno?.oculta).toBe(false)
-    if (!base || base.oculta || !comTerreno || comTerreno.oculta) throw new Error('esperava unidade pública')
-    expect(comTerreno.atk).toBe(base.atk! + 300)
-    expect(comTerreno.def).toBe(base.def! + 300)
   })
 })
 

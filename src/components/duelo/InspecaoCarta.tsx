@@ -4,7 +4,7 @@ import { CATEGORIAS, classificarCarta } from '../../arte/categorias'
 import type { Carta } from '../../game/tipos'
 import type { Posicao } from '../../game'
 import { CartaVerso, CartaView } from './CartaView'
-import { efeitoCurto, rotuloTipo } from './textoCarta'
+import { rotuloTipo } from './textoCarta'
 import { calcularDimensoesInspecao, calcularPosicaoInspecao } from './geometriaCartas'
 
 export type ConteudoInspecao =
@@ -157,7 +157,6 @@ export function InspecaoCarta({ fonte, toque, valida = true, onInvalidar }: Prop
           <p className="duelo-inspecao__tipo">
             {rotuloTipo(conteudo.carta)} · {CATEGORIAS[classificacao!.categoria].rotulo}
           </p>
-          {conteudo.carta.tipo === 'unidade' ? null : <p className="duelo-inspecao__efeito">{efeitoCurto(conteudo.carta)}</p>}
           <p className="duelo-inspecao__educacao">{conteudo.carta.educacao}</p>
         </div>
       )}

@@ -1,4 +1,4 @@
-// Lote piloto (5 cartas representativas) e critérios de aprovação visual. Só dados.
+// Lote piloto (4 cartas representativas) e critérios de aprovação visual. Só dados.
 
 export interface ItemPiloto {
   id: string
@@ -28,11 +28,6 @@ export const PILOTO: readonly ItemPiloto[] = [
     id: 'CC-031',
     categoria: 'Comunidade tradicional / atividade (pesca artesanal)',
     criterios: ['Barco de madeira artesanal e rede de pesca bem visíveis', 'Retrato digno e respeitoso, sem estereótipos ou caricatura', 'Pôr do sol com contraste laranja e azul coerente com a referência'],
-  },
-  {
-    id: 'CC-073',
-    categoria: 'Ação / solução (tratamento de esgoto)',
-    criterios: ['Tanques circulares de tratamento reconhecíveis com água azul purificada', 'Instalação organizada e plausível (sem sugerir que elimina totalmente a poluição)', 'Céu azul claro e vegetação, estilo consistente com as demais'],
   },
 ]
 

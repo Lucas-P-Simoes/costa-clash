@@ -4,7 +4,6 @@ import { afterEach, describe, expect, it, vi } from 'vitest'
 import App from '../../App'
 import type { ServicoAuth, UsuarioAutenticado } from '../../auth/servicoAuth'
 import { CartaVerso, CartaView } from '../../components/duelo/CartaView'
-import { efeitoCurto } from '../../components/duelo/textoCarta'
 import { BARALHO_INICIAL } from '../../data/baralhoInicial'
 import { BARALHOS_OPONENTES } from '../../data/baralhosOponentes'
 import { CATALOGO } from '../../data/catalogo'
@@ -42,22 +41,19 @@ describe('CartaView', () => {
     expect(img.textContent).toContain('2000')
   })
 
-  it('ação mostra tipo e efeito curto (sem ATK/DEF); clique chama onClick, e inativa ignora', () => {
+  it('clique chama onClick, e carta inativa ignora', () => {
     const onClick = vi.fn()
-    const { rerender } = render(<CartaView carta={carta('CC-073')} rotulo="Carta" onClick={onClick} selecionada={false} />)
+    const { rerender } = render(<CartaView carta={carta('CC-001')} rotulo="Carta" onClick={onClick} selecionada={false} />)
     const b = screen.getByRole('button', { name: 'Carta' })
-    expect(b.textContent).toContain('Ação')
-    expect(b.textContent).toContain('Reduz ATK e DEF de 1 unidade inimiga Impacto em 500')
-    expect(b.textContent).not.toContain('ATK1')
     fireEvent.click(b)
     expect(onClick).toHaveBeenCalledTimes(1)
-    rerender(<CartaView carta={carta('CC-073')} rotulo="Carta" onClick={onClick} inativa />)
+    rerender(<CartaView carta={carta('CC-001')} rotulo="Carta" onClick={onClick} inativa />)
     fireEvent.click(screen.getByRole('button', { name: 'Carta' }))
     expect(onClick).toHaveBeenCalledTimes(1)
     expect(screen.getByRole('button', { name: 'Carta' }).getAttribute('aria-disabled')).toBe('true')
   })
 
-  it('verso não revela nada; todo efeito do catálogo tem texto curto', () => {
+  it('verso não revela nada', () => {
     render(<CartaVerso rotulo="Carta virada" />)
     const verso = screen.getByRole('img', { name: 'Carta virada' })
     expect(verso.textContent).toBe('')
@@ -67,13 +63,12 @@ describe('CartaView', () => {
     expect(arte.getAttribute('alt')).toBe('')
     expect(arte.getAttribute('aria-hidden')).toBe('true')
     expect(arte.draggable).toBe(false)
-    for (const c of CATALOGO.filter((x) => x.tipo !== 'unidade')) expect(efeitoCurto(c).length).toBeGreaterThan(10)
   })
 })
 
 describe('Partida: leitura do tabuleiro e jogadas', () => {
   it('mostra vida 5000, 5 zonas de unidade por lado (sem faixa de suportes), mão e contadores', () => {
-    montarCenario({ humano: { mao: ['CC-001', 'CC-003', 'CC-077', 'CC-084', 'CC-089'], baralho: 35 }, oponente: { mao: ['CC-001'], baralho: 35 } })
+    montarCenario({ humano: { mao: ['CC-001', 'CC-003', 'CC-004', 'CC-006', 'CC-009'], baralho: 35 }, oponente: { mao: ['CC-001'], baralho: 35 } })
     expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Ressaca' })).toBeTruthy()
     expect(screen.getByLabelText('Sua vida: 5000')).toBeTruthy()
     expect(screen.getByLabelText('Vida do oponente: 5000')).toBeTruthy()
@@ -85,11 +80,11 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     expect(screen.getByLabelText('Cartas restantes no baralho: 35')).toBeTruthy()
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(5)
     expect(screen.getByText('Seu turno')).toBeTruthy()
-    expect(document.querySelector('.duelo-terreno')!.textContent).toContain('nenhum')
+    expect(document.querySelector('.duelo-terreno')).toBeNull()
   })
 
   it('selecionar unidade, USAR CARTA, escolher zona livre e trocar a posição em campo', () => {
-    montarCenario({ humano: { mao: ['CC-003', 'CC-077'] } })
+    montarCenario({ humano: { mao: ['CC-003', 'CC-004'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
     expect(aviso()).toContain('zona livre')
@@ -151,28 +146,6 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
     expect(screen.getByRole('button', { name: /Zona 1 sua: vazia/ })).toBeTruthy()
     expect(document.activeElement).toBe(zona)
-  })
-
-  it('ação com alvo: destaca alvos válidos, rejeita inválidos e aplica o efeito pelo motor', () => {
-    montarCenario({ humano: { mao: ['CC-077'], campo: ['CC-001', 'CC-003'] } })
-    fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
-    expect(screen.getByRole('button', { name: /Zona 1 sua: Manguezal Protegido.*alvo válido/ })).toBeTruthy()
-    expect(screen.getByRole('button', { name: /Zona 2 sua: Recife de Coral.*alvo válido/ })).toBeTruthy()
-    fireEvent.click(screen.getByRole('button', { name: /Zona 2 sua: Recife de Coral/ }))
-    expect(screen.getByRole('button', { name: /Zona 2 sua: Recife de Coral, ATK 2000, DEF 1900/ })).toBeTruthy() // +400
-  })
-
-  it('ação sem alvo válido fica desabilitada com o motivo; descarte forçado quando nada é jogável', () => {
-    montarCenario({ humano: { mao: ['CC-075', 'CC-073'] } })
-    fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    const usar = botao(/Usar carta/)
-    expect(usar.getAttribute('aria-disabled')).toBe('true')
-    expect(document.getElementById('b-usar-motivo')!.textContent).toBeTruthy()
-    // sem jogada legal: botão DESCARTAR CARTA aparece e funciona
-    fireEvent.click(botao(/Descartar carta/))
-    expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
-    expect(screen.getByText(/descarta Fiscalização Ambiental/)).toBeTruthy()
   })
 
   it('ataque: escolhe atacante e alvo, aplica dano e mostra vida atualizada', () => {
@@ -244,11 +217,11 @@ describe('Partida: informação oculta', () => {
   it('mão do oponente não aparece no DOM (nomes, IDs, atributos)', () => {
     const { container } = montarCenario({
       humano: { mao: ['CC-001'] },
-      oponente: { mao: ['CC-071', 'CC-068', 'CC-073'], baralho: 20 },
+      oponente: { mao: ['CC-071', 'CC-068', 'CC-012'], baralho: 20 },
     })
     const html = container.innerHTML
     for (const nome of secretas) expect(html).not.toContain(nome)
-    for (const id of ['CC-071', 'CC-068', 'CC-073']) expect(html).not.toContain(id)
+    for (const id of ['CC-071', 'CC-068', 'CC-012']) expect(html).not.toContain(id)
     expect(html).not.toMatch(/data-uid|data-carta|"uid"/)
     expect(screen.getByRole('group', { name: 'Mão do oponente: 3 cartas' })).toBeTruthy()
   })

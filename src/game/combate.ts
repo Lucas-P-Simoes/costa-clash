@@ -2,28 +2,19 @@
 import { causarDano, destruirUnidade, emitir, nomeCarta, outro, verificarResultado, zonaValida } from './estado'
 import type { Catalogo, Ctx, EstadoDuelo, IdJogador, UnidadeEmCampo } from './estado'
 import { ZONAS_UNIDADE } from './tipos'
-import type { Grupo } from './tipos'
 
-/** Bônus do terreno global para um grupo (vale para os dois lados). */
-export function bonusTerreno(e: EstadoDuelo, grupo: Grupo | undefined, cat: Catalogo): number {
-  if (!e.terreno || !grupo) return 0
-  const ef = cat.get(e.terreno.cartaId)?.efeito
-  if (!ef || ef.operacao !== 'field_bonus') return 0
-  return ef.alvo === 'qualquer' || ef.alvo === grupo ? ef.valor : 0
-}
-
-/** ATK_EFETIVO = max(0, ATK_BASE + buffs + terreno). */
-export function atkEfetivo(e: EstadoDuelo, _dono: IdJogador, u: UnidadeEmCampo, cat: Catalogo): number {
+/** ATK_EFETIVO = max(0, ATK_BASE + buffs (hoje sempre 0)). */
+export function atkEfetivo(_e: EstadoDuelo, _dono: IdJogador, u: UnidadeEmCampo, cat: Catalogo): number {
   const c = cat.get(u.cartaId)
   const base = c?.atk ?? 0
-  return Math.max(0, base + u.buffAtk + bonusTerreno(e, c?.grupo, cat))
+  return Math.max(0, base + u.buffAtk)
 }
 
-/** DEF_EFETIVA = max(0, DEF_BASE + buffs + terreno). */
-export function defEfetiva(e: EstadoDuelo, _dono: IdJogador, u: UnidadeEmCampo, cat: Catalogo): number {
+/** DEF_EFETIVA = max(0, DEF_BASE + buffs (hoje sempre 0)). */
+export function defEfetiva(_e: EstadoDuelo, _dono: IdJogador, u: UnidadeEmCampo, cat: Catalogo): number {
   const c = cat.get(u.cartaId)
   const base = c?.defesa ?? 0
-  return Math.max(0, base + u.buffDef + bonusTerreno(e, c?.grupo, cat))
+  return Math.max(0, base + u.buffDef)
 }
 
 /** Motivo pelo qual o ataque é ilegal (null = legal). Não altera nada. */

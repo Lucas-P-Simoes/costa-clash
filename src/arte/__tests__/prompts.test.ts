@@ -6,10 +6,10 @@ import { SUJEITOS } from '../sujeitos'
 
 const idiomas = ['pt', 'en'] as const
 
-describe('sujeitos das 87 cartas', () => {
+describe('sujeitos das 72 cartas', () => {
   it('há um sujeito por ID do catálogo, nem a mais nem a menos', () => {
     expect(Object.keys(SUJEITOS).sort()).toEqual(CATALOGO.map((c) => c.id).sort())
-    expect(CATALOGO).toHaveLength(87)
+    expect(CATALOGO).toHaveLength(72)
   })
 
   it('nenhum sujeito vazio, com forma e paleta válidas', () => {
@@ -25,7 +25,7 @@ describe('sujeitos das 87 cartas', () => {
   it('nenhum sujeito duplicado (em português nem em inglês)', () => {
     for (const idioma of idiomas) {
       const textos = CATALOGO.map((c) => SUJEITOS[c.id][idioma].trim().toLowerCase())
-      expect(new Set(textos).size, idioma).toBe(87)
+      expect(new Set(textos).size, idioma).toBe(72)
     }
   })
 
@@ -40,8 +40,6 @@ describe('sujeitos das 87 cartas', () => {
     expect(t('CC-018')).toContain('tartaruga')
     expect(t('CC-018')).toContain('coral')
     expect(t('CC-033')).toMatch(/orla|urban/)
-    expect(t('CC-073')).toContain('tratamento de esgoto')
-    expect(t('CC-073')).toContain('purificada')
   })
 
   it('não declara que algo elimina totalmente um risco', () => {
@@ -50,7 +48,6 @@ describe('sujeitos das 87 cartas', () => {
 
   it('impactos são criaturas ou fenômenos (sem apologia), ações e soluções são cenas/objetos', () => {
     for (const c of CATALOGO.filter((x) => x.grupo === 'impacto')) expect(['criatura', 'cena', 'paisagem'], c.id).toContain(SUJEITOS[c.id].forma)
-    for (const c of CATALOGO.filter((x) => x.subtipo === 'terreno')) expect(SUJEITOS[c.id].forma, c.id).toBe('paisagem')
   })
 })
 
@@ -85,7 +82,7 @@ describe('gerador de prompts', () => {
 
   it('prompts diferentes para cartas diferentes; contêm assunto, paleta e composição', () => {
     const todos = promptsDoCatalogo(CATALOGO)
-    expect(new Set(todos.map((p) => p.prompt)).size).toBe(87)
+    expect(new Set(todos.map((p) => p.prompt)).size).toBe(72)
     const t = promptDaCarta(CATALOGO[0])
     expect(t.prompt).toContain(SUJEITOS['CC-001'].pt)
     expect(t.prompt).toContain(PALETAS.ecossistema.pt)
@@ -113,7 +110,7 @@ describe('gerador de prompts', () => {
     expect(seedsSugeridas('CC-018')).not.toEqual(seedsSugeridas('CC-019'))
   })
 
-  it('lote piloto tem as 5 cartas pedidas', () => {
-    expect(IDS_PILOTO).toEqual(['CC-001', 'CC-018', 'CC-047', 'CC-031', 'CC-073'])
+  it('lote piloto tem as 4 cartas pedidas', () => {
+    expect(IDS_PILOTO).toEqual(['CC-001', 'CC-018', 'CC-047', 'CC-031'])
   })
 })

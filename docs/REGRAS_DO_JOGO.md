@@ -9,8 +9,8 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 ## 2. Configuração
 - Um humano × oponente computadorizado; duelo local em site responsivo, sem conta obrigatória nem multiplayer.
 - **5.000 LP** por lado (alterado de 8.000 a pedido do dono do projeto); baralhos de **40 cartas** (montagem/perfil), dos quais só **30 entram em cada duelo** (embaralha e usa as 30 primeiras; alterado a pedido do dono); **até 3 cópias do mesmo ID**; embaralhar baralhos com RNG injetável nos testes.
-- **Catálogo de 87 cartas distintas** (72 unidades, 11 ações instantâneas e 4 terrenos), mas cada baralho de duelo tem 40, selecionadas dentre as 87 (duplicatas permitidas até 3). O catálogo não é um baralho de 87 cartas. As cartas de suporte (equipamentos e armadilhas) e `CC-082` foram **removidas** em 05/11/2026 (ver §16); os IDs restantes não foram renumerados.
-- Campo: **5 zonas de unidades** por jogador (não há zonas de suporte). Terreno global separado (máximo 1); ações instantâneas não ocupam zona após resolver. Sem fusão, invocação-tributo, estrelas guardiãs, rituais nem multiplayer no MVP.
+- **Catálogo de 72 cartas distintas** (todas unidades), mas cada baralho de duelo tem 40, selecionadas dentre as 72 (duplicatas permitidas até 3). O catálogo não é um baralho de 72 cartas. Cartas de ação (instantâneas e terrenos), suporte e `CC-082` foram removidas (§16 e §17). As cartas de suporte (equipamentos e armadilhas) e `CC-082` foram **removidas** em 05/11/2026 (ver §16); os IDs restantes não foram renumerados.
+- Campo: **5 zonas de unidades** por jogador (sem zonas de suporte e, desde §17, sem terreno global). Sem fusão, invocação-tributo, estrelas guardiãs, rituais nem multiplayer no MVP.
 - **Mão inicial de cinco**: ambos compram 5 antes do primeiro turno. Primeiro a agir: humano (fixo no MVP). Sem mulligan.
 - Nenhum custo de mana, energia, nível ou tributo. Uma jogada da mão por turno. Não pode baixar mais de uma carta por turno.
 
@@ -43,6 +43,7 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 - LP ≤ 0 determina derrota imediata. Se um efeito simultâneo levar ambos a ≤ 0, declarar empate (regra adaptada para casos não presentes no catálogo).
 
 ## 6. Tipos e efeitos (MVP determinístico)
+> **Histórico:** desde 05/11/2026 (§17) só existem cartas `unidade`; os itens abaixo sobre ações, terrenos, buffs e cura descrevem o desenho anterior e não estão mais implementados.
 - `unidade`: apenas ATK/DEF; **não possui habilidade ativada automática** na v1.0. `grupo` é um de `ecossistema`, `fauna`, `atividade`, `impacto` e determina alvos e bônus.
 - `acao/instantanea`: jogada no turno, resolve, vai para descarte. Se não houver alvo válido para efeito direcionado, não pode jogar essa ação; curas podem ser jogadas se LP abaixo de 5.000. Não permitir cura acima de 5.000.
 - `acao/terreno`: substitui imediatamente o terreno global, descartando o anterior. Bônus se aplicam **a ambos os jogadores** às unidades do grupo indicado, tanto ATK quanto DEF, enquanto o terreno existir.
@@ -74,14 +75,14 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 - A IA recebe unidades adversárias viradas para baixo apenas como marcadores de zona/posição, sem identidade nem atributos. Política determinística mínima: prefere primeiro qualquer combate favorável conhecido; se não existir, pode atacar um alvo oculto com seu atacante disponível de maior ATK, usando a menor zona como desempate. Essa escolha assume risco e nunca consulta o conteúdo oculto.
 
 ## 10. Catálogo, progressão e baralhos
-- Os **87 modelos de cartas** estão listados no item 11 e no arquivo `cartas.json`, que é a **fonte de dados estruturada**. Todos são originais.
+- Os **72 modelos de cartas** estão listados no item 11 e no arquivo `cartas.json`, que é a **fonte de dados estruturada**. Todos são originais.
 - `CC-001…CC-072`: unidades sem efeitos próprios; `CC-073…CC-092`: ações (menos os IDs removidos `CC-082`, `CC-085…CC-088`); os IDs `CC-093…CC-100` (armadilhas) não existem mais e **não foram reaproveitados**.
-- O editor de baralho seleciona exatamente 40 instâncias, com máximo 3 cópias de cada ID. Inicialmente liberar todas as 87 no modo protótipo; desbloqueio por vitória pode ser implementado depois sem bloquear QA.
-- **Coleção e drop de cartas (implementado, percentuais PROVISÓRIOS):** a conta começa com a coleção inicial (= baralho inicial) e cresce por vitórias no Duelo Livre. Cada vitória com conta rende **uma carta** sorteada no servidor da tabela do adversário vencido (`src/data/dropsOponentes.ts`). Cada adversário dropa as cartas distintas do próprio baralho, cada uma com um percentual fixo; a tabela de cada adversário soma 100% e, juntas, as 17 tabelas cobrem as 87 cartas. Percentuais por faixa (recalculados em 05/11/2026 sem as cartas removidas): unidades mais fortes (ATK+DEF) são raras, ações e unidades intermediárias incomuns, demais comuns. A coleção guarda no máximo **3 cópias por carta** (o máximo do baralho); cartas no teto saem do sorteio e as chances restantes se renormalizam; se todas as cartas do adversário estiverem no teto, a vitória não rende carta. Derrota, empate e jogo sem conta não rendem carta. O sorteio é do servidor; o duelo continua rodando no navegador (ver `docs/CONTAS_E_NUVEM.md` sobre os limites dessa verificação).
-- Não confundir **87 cartas únicas disponíveis** com baralho de 87 unidades. Oferecer baralhos iniciais prontos com 40 cartas válidas.
+- O editor de baralho seleciona exatamente 40 instâncias, com máximo 3 cópias de cada ID. Inicialmente liberar todas as 72 no modo protótipo; desbloqueio por vitória pode ser implementado depois sem bloquear QA.
+- **Coleção e drop de cartas (implementado, percentuais PROVISÓRIOS):** a conta começa com a coleção inicial (= baralho inicial) e cresce por vitórias no Duelo Livre. Cada vitória com conta rende **uma carta** sorteada no servidor da tabela do adversário vencido (`src/data/dropsOponentes.ts`). Cada adversário dropa as cartas distintas do próprio baralho, cada uma com um percentual fixo; a tabela de cada adversário soma 100% e, juntas, as 17 tabelas cobrem as 72 cartas. Percentuais por faixa (recalculados em 05/11/2026 sem as cartas removidas): unidades mais fortes (ATK+DEF) são raras, ações e unidades intermediárias incomuns, demais comuns. A coleção guarda no máximo **3 cópias por carta** (o máximo do baralho); cartas no teto saem do sorteio e as chances restantes se renormalizam; se todas as cartas do adversário estiverem no teto, a vitória não rende carta. Derrota, empate e jogo sem conta não rendem carta. O sorteio é do servidor; o duelo continua rodando no navegador (ver `docs/CONTAS_E_NUVEM.md` sobre os limites dessa verificação).
+- Não confundir **72 cartas únicas disponíveis** com baralho de 72 unidades. Oferecer baralhos iniciais prontos com 40 cartas válidas.
 - Balanceamento é provisório, sujeito a simulação de partidas e feedback humano. Cartas de alto ATK não têm custos especiais no estilo adotado; IA precisa garantir diversão, não igualdade de poder matematicamente garantida.
 
-## 11. Catálogo completo (87 cartas)
+## 11. Catálogo completo (72 cartas)
 As habilidades codificadas das ações são detalhadas em `cartas.json`. Nas linhas de ações, `—` significa **atributo não aplicável**.
 
 | ID | Nome | Categoria | ATK | DEF | Efeito / Aprendizado |
@@ -158,21 +159,9 @@ As habilidades codificadas das ações são detalhadas em `cartas.json`. Nas lin
 | CC-070 | Branqueamento de Corais | unidade/impacto | 2000 | 1000 | Sem efeito;  Estresse térmico pode provocar branqueamento coralíneo. |
 | CC-071 | Elevação do Nível do Mar | unidade/impacto | 2400 | 1100 | Sem efeito;  A elevação do mar amplia riscos em certos trechos costeiros. |
 | CC-072 | Descarga de Nutrientes | unidade/impacto | 1800 | 1400 | Sem efeito;  Excesso de nutrientes pode favorecer eutrofização. |
-| CC-073 | Tratamento de Esgoto | acao/instantanea | — | — | debuff_grupo (-500) Reduz carga poluidora de efluentes antes do lançamento. |
-| CC-074 | Recuperação Ambiental | acao/instantanea | — | — | buff_grupo (+500) Recuperação precisa considerar condições e espécies locais. |
-| CC-075 | Fiscalização Ambiental | acao/instantanea | — | — | destruir_grupo (+0) Fiscalização apoia medidas de prevenção e correção. |
-| CC-076 | Limpeza de Praia | acao/instantanea | — | — | debuff_grupo (-400) Mutirões removem resíduos, mas não substituem prevenção. |
-| CC-077 | Alerta de Ressaca | acao/instantanea | — | — | buff_unidade (+400) Alertas ajudam a reduzir exposição a eventos extremos. |
-| CC-078 | Plano Diretor Costeiro | acao/instantanea | — | — | buff_grupo (+300) Regras de uso do solo podem reduzir conflitos e riscos. |
-| CC-079 | Campanha Educativa | acao/instantanea | — | — | cura (+500) Campanhas podem apoiar mudanças de comportamento. |
-| CC-080 | Mutirão Comunitário | acao/instantanea | — | — | cura (+700) Ações comunitárias podem complementar políticas públicas. |
-| CC-081 | Barreira de Contenção | acao/instantanea | — | — | debuff_grupo (-600) Barreiras ajudam em situações específicas de vazamento. |
-| CC-083 | Monitoramento Contínuo | acao/instantanea | — | — | buff_unidade (+300) Medições repetidas permitem observar tendências. |
-| CC-084 | Manejo da Bacia | acao/instantanea | — | — | buff_grupo (+400) Ações na bacia influenciam as águas costeiras. |
-| CC-089 | Terreno: Manguezal | acao/terreno | — | — | field_bonus (+300) Manguezais são sistemas costeiros sujeitos às marés. |
 
 ## 12. Critérios de aceite DEV e QA
-- `cartas.json` possui **exatamente 87 IDs únicos**, 72 unidades, 15 ações (11 instantâneas e 4 terrenos), nenhuma armadilha/equipamento; nomes únicos; stats inteiros não negativos somente para unidades.
+- `cartas.json` possui **exatamente 72 IDs únicos**, todos unidades (nenhuma ação, armadilha ou equipamento); nomes únicos; stats inteiros não negativos somente para unidades.
 - Baralho inválido (≠ 40 cartas, >3 de mesmo ID ou IDs desconhecidos) é rejeitado antes do duelo.
 - Testes de reposição da mão, perda por compra incompleta, primeiro turno sem ataque, ataque pós-invocação, escolha de posições, cálculo de dano, empate, terreno afetando ambos e buffs persistentes.
 - Testes de mão/campo cheios, descarte forçado como jogada legal, evitar vazamento do estado oculto da IA, determinismo do RNG, clamping de LP/atributos e efeitos sem alvos.
@@ -227,3 +216,10 @@ O jogo de referência inclui fusões, estrelas guardiãs, posições especiais e
 - **Baralhos (balanceamento — mudança documentada):** cada cópia removida foi reposta por uma cópia extra de uma unidade já presente no **mesmo** baralho, em rodadas pela ordem de listagem das unidades, até o teto de 3 por ID (sem cartas novas). Os 17 adversários continuam com 40 cartas, mas agora têm de 4 a 8 ações. O baralho inicial (e a coleção inicial de contas novas) passou de 26 unidades + 10 ações + 4 armadilhas para 32 unidades + 8 ações (+1 cópia em CC-001, 002, 003, 004, 005 e 017).
 - **Drops:** tabelas recalculadas pela mesma regra de pesos (4/2/1, maior resto) sem as cartas removidas.
 - **Contas existentes:** baralhos/coleções salvos que contenham IDs removidos deixam de ser válidos. A interface ignora esses IDs na coleção/editor e o Duelo usa o baralho inicial se o salvo tiver ID desconhecido; o servidor (D1) **não foi migrado** (ver `docs/HANDOFF.md`).
+
+## 17. Remoção das cartas de ação (05/11/2026, a pedido do dono)
+- **Pedido:** "remova as cartas de ação do baralho também". Removidas as 15 cartas `acao` restantes — instantâneas `CC-073…081`, `CC-083`, `CC-084` e terrenos `CC-089…092` (**interpretação:** "ação" = `tipo: acao` do catálogo, o que inclui terrenos; a confirmar com o dono). Catálogo final: **72 cartas, todas unidades** (`CC-001…CC-072`).
+- **Motor/UI:** `efeitos.ts` e `efeitos.test.ts`/`qa_efeitos.test.ts` removidos; sem terreno global (`FaixaTerreno`, `bonusTerreno`, `estado.terreno`), sem buffs/debuffs por cartas, sem cura, sem alvos de ação nem arrasto de ação. A mão só tem unidades; permanecem unidade virada para baixo, ataque por seta, lixeira (descarte), IA e a cena de confronto. Os campos `buffAtk`/`buffDef` das unidades continuam no estado (sempre 0) para não alterar o formato.
+- **Baralhos (balanceamento — mudança documentada):** cópias removidas repostas por cópias extras de unidades do próprio baralho (ordem de listagem, teto 3); quando o baralho saturou (todas as unidades dele já a 3 cópias), entrou a próxima unidade (ID crescente) do grupo majoritário do baralho que ainda não estava nele (1 cópia por rodada). Todos os 17 baralhos e o inicial têm 40 unidades. O baralho inicial é só unidades (coleção inicial = ele). Drops recalculados pela mesma regra 4/2/1 (raridade pelo ranking ATK+DEF das unidades, que reproduz os rótulos anteriores); como entraram unidades novas em alguns baralhos, as tabelas desses adversários ganharam essas cartas.
+- **Arte:** 15 artes arquivadas em `docs/arte/cartas-removidas/`; lote piloto passou de 5 para 4 cartas (saiu `CC-073`).
+- **Contas existentes:** igual ao §16 — IDs removidos na coleção/baralho salvos são ignorados pela UI e o duelo usa o baralho inicial; o D1 não foi migrado.

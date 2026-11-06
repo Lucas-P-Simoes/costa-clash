@@ -40,14 +40,13 @@ function arrastar(card: Element, sobre: Element | null, soltar = true) {
 }
 
 const zonaDoJogador = (i: number) => qa('.duelo-lado--voce .duelo-zonas > .zona')[i]
-const zonaDoOponente = (i: number) => qa('.duelo-lado--oponente .duelo-zonas > .zona')[i]
 const aviso = () => q('.duelo-aviso').textContent
-const tabuleiro = () => qa('.duelo-zonas .carta').map((c) => c.getAttribute('aria-label')).join('|') + '#' + q('.duelo-terreno').textContent + '#' + qa('.duelo-log li').map((l) => l.textContent).join('|')
+const tabuleiro = () => qa('.duelo-zonas .carta').map((c) => c.getAttribute('aria-label')).join('|') + '#' + qa('.duelo-log li').map((l) => l.textContent).join('|')
 const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Virada para cima' }))
 
 describe('Arrastar: unidade para zona livre', () => {
   it('entra na zona solta, com a animação de entrada, e o resultado é igual ao do fluxo por botão', async () => {
-    montar({ humano: { mao: ['CC-003', 'CC-077'] } })
+    montar({ humano: { mao: ['CC-003', 'CC-004'] } })
     arrastar(mao(1), zonaDoJogador(2))
     await tick()
     confirmarFaceParaCima()
@@ -58,7 +57,7 @@ describe('Arrastar: unidade para zona livre', () => {
     cleanup()
     await tick()
 
-    montar({ humano: { mao: ['CC-003', 'CC-077'] } })
+    montar({ humano: { mao: ['CC-003', 'CC-004'] } })
     fireEvent.click(mao(1))
     fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 3 sua: vazia/ }))
@@ -123,48 +122,6 @@ describe('Arrastar: unidade para zona livre', () => {
     expect(aviso()).toBe('Solte a unidade em uma zona livre do seu campo.')
     expect(tabuleiro()).toBe(antes)
     expect(mao(1).className).not.toContain('carta--arrastando')
-  })
-})
-
-describe('Arrastar: outros tipos de carta', () => {
-  it('ação com alvo: soltar sobre a unidade-alvo válida aplica o efeito; igual ao fluxo por botão', async () => {
-    const cfg: ConfigCenario = { humano: { mao: ['CC-073'] }, oponente: { campo: ['CC-056'], mao: ['CC-001'] } }
-    montar(cfg)
-    expect(qa('.zona--drop')).toHaveLength(0)
-    arrastar(mao(1), zonaDoOponente(0))
-    const viaArrasto = tabuleiro()
-    expect(q('.duelo-lado--oponente .zona .carta').getAttribute('aria-label')).toMatch(/Derramamento de Óleo, ATK 1700/)
-    cleanup()
-    await tick()
-    montar(cfg)
-    fireEvent.click(mao(1))
-    fireEvent.click(botao(/Usar carta/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 do oponente: Derramamento de Óleo.*alvo válido/ }))
-    expect(tabuleiro()).toBe(viaArrasto)
-  })
-
-  it('ação com alvo solta sobre unidade que não é alvo: motivo e nada muda', () => {
-    montar({ humano: { mao: ['CC-073'], campo: ['CC-001'] }, oponente: { campo: ['CC-056'], mao: ['CC-001'] } })
-    arrastar(mao(1), zonaDoJogador(0))
-    expect(aviso()).toBe('Solte sobre uma unidade alvo válida (destacada).')
-    expect(q('.duelo-lado--oponente .zona .carta').getAttribute('aria-label')).toContain('ATK 2200')
-  })
-
-  it('terreno: soltar sobre a faixa de terreno (e destacada durante o arrasto)', () => {
-    montar({ humano: { mao: ['CC-089'] } })
-    document.elementFromPoint = () => q('.duelo-terreno')
-    fireEvent.pointerDown(mao(1), { ...P, clientX: 100, clientY: 500 })
-    fireEvent.pointerMove(window, { ...P, clientX: 160, clientY: 400 })
-    expect(q('.duelo-terreno').className).toContain('zona--drop')
-    expect(q('.duelo-lado--voce').className).toContain('duelo-lado--drop')
-    fireEvent.pointerUp(window, { ...P, clientX: 160, clientY: 400 })
-    expect(q('.duelo-terreno').textContent).toContain('Terreno: Manguezal')
-  })
-
-  it('ação sem alvo (cura): soltar sobre o próprio campo', () => {
-    montar({ humano: { mao: ['CC-079'], lp: 3000 } })
-    arrastar(mao(1), q('.duelo-lado--voce'))
-    expect(screen.getByLabelText(/^Sua vida: [0-9]+$/).getAttribute('aria-label')).not.toBe('Sua vida: 3000')
   })
 })
 

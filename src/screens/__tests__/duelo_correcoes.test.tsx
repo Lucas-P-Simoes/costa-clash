@@ -112,11 +112,11 @@ describe('D3: foco depois das ações', () => {
     expect(document.activeElement).toBe(botao(/Encerrar turno/))
   })
 
-  it('modo de alvo leva o foco ao primeiro alvo válido', () => {
-    montar({ humano: { mao: ['CC-077'], campo: ['CC-001', 'CC-003'] } })
+  it('modo de zona leva o foco à primeira zona livre', () => {
+    montar({ humano: { mao: ['CC-003'], campo: ['CC-001'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(botao(/Usar carta/))
-    expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 1 sua: Manguezal Protegido.*alvo válido/ }))
+    expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 2 sua: vazia/ }))
   })
 
   it('gesto de ataque usa o atacante e alvo apontados sem depender de um modo por botão', () => {
@@ -149,13 +149,6 @@ describe('D6/D7: seleção mantida e modo zerado no fim', () => {
 })
 
 describe('D8 a D11: textos', () => {
-  it('terreno sem prefixo duplicado', () => {
-    montar({ terreno: { id: 'CC-089', dono: 'humano' } })
-    const t = document.querySelector('.duelo-terreno')!.textContent!
-    expect(t).toContain('Terreno: Manguezal')
-    expect(t).not.toContain('Terreno: Terreno')
-  })
-
   it('o painel não tem ATACAR e a rodada continua compreensível', () => {
     montar({ jogadaFeita: true, humano: { campo: ['CC-003'] } })
     expect(document.getElementById('b-atacar')).toBeNull()

@@ -75,20 +75,20 @@ describe('CartaView com e sem ilustração', () => {
 })
 
 describe('página de avaliação (?arte=1)', () => {
-  it('mostra as 5 cartas piloto com selo PROVISÓRIA, prompt e critérios', () => {
+  it('mostra as 4 cartas piloto com selo PROVISÓRIA, prompt e critérios', () => {
     render(<PaginaAvaliacaoArte />)
-    expect(screen.getAllByRole('article')).toHaveLength(5)
-    expect(screen.getAllByText('PROVISÓRIA — recorte da referência, baixa resolução')).toHaveLength(5)
-    expect(document.querySelectorAll('img.carta__imagem')).toHaveLength(5)
-    expect(screen.getAllByText('Copiar prompt')).toHaveLength(5)
-    expect(screen.getAllByText(/768x1024/).length).toBeGreaterThan(5)
+    expect(screen.getAllByRole('article')).toHaveLength(4)
+    expect(screen.getAllByText('PROVISÓRIA — recorte da referência, baixa resolução')).toHaveLength(4)
+    expect(document.querySelectorAll('img.carta__imagem')).toHaveLength(4)
+    expect(screen.getAllByText('Copiar prompt')).toHaveLength(4)
+    expect(screen.getAllByText(/768x1024/).length).toBeGreaterThan(4)
     expect((screen.getByLabelText('Prompt da carta Tartaruga Marinha') as HTMLTextAreaElement).value).toBe(montarPrompt(carta('CC-018')))
-    expect(screen.getByText(/95 ilustrações geradas/)).toBeTruthy()
+    expect(screen.getByText(/68 ilustrações geradas/)).toBeTruthy()
   })
 
   it('sem arte mostra o fallback com o selo PENDENTE — sem arte gerada, sem inventar imagem', () => {
     render(<PaginaAvaliacaoArte arteDe={() => null} />)
-    expect(screen.getAllByText('PENDENTE — sem arte gerada')).toHaveLength(5)
+    expect(screen.getAllByText('PENDENTE — sem arte gerada')).toHaveLength(4)
     expect(document.querySelectorAll('img')).toHaveLength(0)
   })
 

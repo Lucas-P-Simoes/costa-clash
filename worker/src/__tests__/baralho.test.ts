@@ -21,13 +21,12 @@ describe('baralho inicial', () => {
     expect(validarBaralho([...BARALHO_INICIAL], colecao).ok).toBe(true)
   })
 
-  it('mistura os 4 grupos de unidades e as ações', () => {
+  it('mistura os 4 grupos de unidades', () => {
     const n = (de: number, ate: number) => BARALHO_INICIAL.filter((id) => Number(id.slice(3)) >= de && Number(id.slice(3)) <= ate).length
     expect(n(1, 16)).toBeGreaterThan(0)
     expect(n(17, 30)).toBeGreaterThan(0)
     expect(n(31, 46)).toBeGreaterThan(0)
     expect(n(47, 72)).toBeGreaterThan(0)
-    expect(n(73, 92)).toBeGreaterThan(0)
   })
 })
 
@@ -57,7 +56,7 @@ describe('validarBaralho', () => {
   })
 
   it('rejeita quantidade acima da coleção', () => {
-    const sobra = base.filter((i) => i !== 'CC-018').concat('CC-092')
+    const sobra = base.filter((i) => i !== 'CC-034').concat('CC-072')
     expect(validarBaralho(sobra, colecao)).toMatchObject({ ok: false, mensagem: expect.stringContaining('coleção') })
   })
 

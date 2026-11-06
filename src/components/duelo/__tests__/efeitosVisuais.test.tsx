@@ -28,7 +28,7 @@ describe('derivarEfeitos (função pura)', () => {
       ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'a', cartaId: 'CC-001' }, destino: 'campo', zona: 2 }),
       ev({ tipo: 'carta_jogada', jogador: 'oponente', carta: { uid: 'b', cartaId: 'CC-001' }, destino: 'campo', zona: 0 }),
       ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'c', cartaId: 'CC-070' }, destino: 'descarte' }),
-      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'd', cartaId: 'CC-089' }, destino: 'terreno' }),
+      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'd', cartaId: 'CC-012' }, destino: 'descarte' }),
     ])
     expect(r.entrando).toEqual([chaveZona('humano', 2), chaveZona('oponente', 0)])
   })
@@ -42,16 +42,14 @@ describe('derivarEfeitos (função pura)', () => {
     expect(r.impacto).toEqual(['oponente:3'])
   })
 
-  it('dano e cura somam por lado; destruição guarda lado, zona e carta; turno iniciado marca a troca', () => {
+  it('dano soma por lado; destruição guarda lado, zona e carta; turno iniciado marca a troca', () => {
     const r = derivarEfeitos([
       ev({ tipo: 'dano', jogador: 'oponente', valor: 300, lp: 4700 }),
       ev({ tipo: 'dano', jogador: 'oponente', valor: 200, lp: 4500 }),
-      ev({ tipo: 'cura', jogador: 'humano', valor: 500, lp: 5000 }),
       ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 4, carta: { uid: 'u', cartaId: 'CC-003' } }),
       ev({ tipo: 'turno_iniciado', jogador: 'humano' }),
     ])
     expect(r.dano).toEqual({ oponente: 500 })
-    expect(r.cura).toEqual({ humano: 500 })
     expect(r.destruidas).toEqual([{ lado: 'oponente', zona: 4, cartaId: 'CC-003', posicao: 'ATAQUE' }])
     expect(r.turnoMudou).toBe(true)
     expect(semEfeitos(r)).toBe(false)

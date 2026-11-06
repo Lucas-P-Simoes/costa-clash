@@ -1,4 +1,4 @@
-// Sujeitos visuais das 87 cartas, escritos à mão (um por ID), em português e inglês.
+// Sujeitos visuais das 72 cartas, escritos à mão (um por ID), em português e inglês.
 // Regras: o sujeito descreve o que aparece NA IMAGEM; nunca contém o nome da carta como letreiro,
 // ATK/DEF ou texto a ser desenhado. Impactos são criaturas sombrias que representam o fenômeno
 // (sem apologia e sem demonizar pessoas); soluções nunca "eliminam" um risco, apenas o reduzem.
@@ -463,99 +463,7 @@ export const SUJEITOS: Readonly<Record<string, Sujeito>> = {
     'a creature of neon-green blooming algae over murky greenish water, dense foam, faded fish in the background, ember-red eyes',
   ),
 
-  // ---------- Ações instantâneas (CC-073 a CC-084, exceto a removida CC-082) ----------
-  'CC-073': s(
-    'cena',
-    'solucao',
-    'estação de tratamento de esgoto costeira em dia ensolarado, grandes tanques circulares de água azul purificada com braços raspadores, prédios administrativos, vegetação e montanhas com baía ao fundo, céu azul com nuvens',
-    'a coastal sewage treatment plant on a sunny day, large circular tanks of purified blue water with scraper arms, administrative buildings, vegetation and mountains with a bay behind, blue sky with clouds',
-  ),
-  'CC-074': s(
-    'cena',
-    'ecossistema',
-    'mudas jovens de mangue plantadas em fileira em água rasa ao pôr do sol dourado, reflexos alaranjados na água, brotos verdes viçosos e algumas árvores secas ao fundo mostrando a área em recuperação',
-    'young mangrove seedlings planted in a row in shallow water at golden sunset, orange reflections on the water, lush green sprouts and a few dead trees behind showing the area being recovered',
-  ),
-  'CC-075': s(
-    'cena',
-    'solucao',
-    'drone de fiscalização sobrevoando a costa com feixe turquesa, fiscais numa lancha observando, mancha suspeita na água sendo identificada, céu azul de fim de tarde',
-    'an inspection drone flying over the coast with a turquoise beam, inspectors on a boat watching, a suspicious patch in the water being identified, blue late-afternoon sky',
-  ),
-  'CC-076': s(
-    'cena',
-    'comunidade',
-    'mutirão de pessoas recolhendo resíduos numa praia ao amanhecer, sacos de lixo cheios organizados, luvas, pegadas na areia, mar limpo ao fundo',
-    'a group of people collecting litter on a beach at dawn, full organized trash bags, gloves, footprints in the sand, clean sea behind',
-  ),
-  'CC-077': s(
-    'cena',
-    'fenomeno',
-    'torre de salva-vidas com luz de alerta âmbar e bandeira de aviso enquanto grandes ondas se formam no horizonte, areia vazia, nuvens escuras e relâmpagos distantes',
-    'a lifeguard tower with an amber warning light and a warning flag while big waves build on the horizon, empty sand, dark clouds and distant lightning',
-  ),
-  'CC-078': s(
-    'objeto',
-    'solucao',
-    'maquete tridimensional da costa sobre mesa com zonas coloridas de uso do solo, compasso e régua de bronze, luz dourada de lamparina, mapa ao fundo sem escrita',
-    'a three-dimensional model of the coast on a table with colored land-use zones, brass compass and ruler, golden lamp light, a map behind with no writing',
-  ),
-  'CC-079': s(
-    'simbolo',
-    'solucao',
-    'megafone dourado emitindo pictogramas luminosos, uma onda, uma tartaruga e uma árvore, sobre fundo azul com pessoas em silhueta ouvindo, sem letras',
-    'a golden megaphone emitting glowing pictograms, a wave, a turtle and a tree, on a blue background with silhouetted people listening, no letters',
-  ),
-  'CC-080': s(
-    'cena',
-    'comunidade',
-    'pessoas de várias idades plantando mudas juntas numa praia ao amanhecer, mãos unidas segurando uma muda, cestos de mudas, luz dourada, retrato caloroso',
-    'people of various ages planting seedlings together on a beach at dawn, joined hands holding a seedling, baskets of seedlings, golden light, a warm portrayal',
-  ),
-  'CC-081': s(
-    'objeto',
-    'solucao',
-    'barreira flutuante laranja em arco cercando uma mancha escura na água, barcos de apoio nas pontas, boias reluzentes, mar calmo',
-    'an orange floating barrier arcing around a dark patch on the water, support boats at the ends, shining buoys, calm sea',
-  ),
-  'CC-083': s(
-    'objeto',
-    'solucao',
-    'boia de monitoramento no mar com painel solar e antena, linhas luminosas de dados saindo em ondas turquesa, ondas, gráfico luminoso sem números',
-    'a monitoring buoy at sea with a solar panel and antenna, luminous data lines streaming out in turquoise waves, waves, a glowing graph with no numbers',
-  ),
-  'CC-084': s(
-    'paisagem',
-    'ecossistema',
-    'vista aérea de uma bacia hidrográfica, serra coberta de mata, rio serpenteando com mata ciliar, pequenos reservatórios, desembocando no mar ao fundo, luz clara de dia',
-    'an aerial view of a river basin, forested mountains, a winding river with riparian forest, small reservoirs, flowing into the sea in the background, clear daylight',
-  ),
 
 
-  // ---------- Terrenos (CC-089 a CC-092) ----------
-  'CC-089': s(
-    'paisagem',
-    'ecossistema',
-    'panorama amplo de manguezal, raízes escora em primeiro plano, canais de maré e copa densa, aves em voo, água azul com brilho turquesa',
-    'a wide panorama of a mangrove, stilt roots in the foreground, tidal channels and dense canopy, birds in flight, blue water with turquoise glow',
-  ),
-  'CC-090': s(
-    'paisagem',
-    'urbano',
-    'orla urbana em dia ensolarado com prédios, calçadão, canais de drenagem, árvores e um trecho de praia, reflexos na água, céu azul com nuvens',
-    'an urban waterfront on a sunny day with buildings, promenade, drainage channels, trees and a stretch of beach, reflections on the water, blue sky with clouds',
-  ),
-  'CC-091': s(
-    'paisagem',
-    'fenomeno',
-    'mar aberto com ondas largas e horizonte distante, cardume sob a superfície em brilho turquesa, pequeno barco ao longe, nuvens iluminadas',
-    'open sea with broad waves and a distant horizon, a school of fish under the surface glowing turquoise, a small boat far away, lit clouds',
-  ),
-  'CC-092': s(
-    'paisagem',
-    'fenomeno',
-    'costa ressecada sob pressão, solo rachado, árvores secas sem folhas, rochas escuras, sol vermelho enorme se pondo sobre o mar, céu laranja e vermelho dramático',
-    'a parched pressured coast, cracked soil, dry leafless trees, dark rocks, a huge red sun setting over the sea, dramatic orange and red sky',
-  ),
 
 }

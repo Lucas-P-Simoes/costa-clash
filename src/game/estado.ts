@@ -36,10 +36,6 @@ export interface EstadoJogador {
   descarte: CartaInstancia[]
 }
 
-export interface TerrenoAtivo extends CartaInstancia {
-  dono: IdJogador
-}
-
 export interface Resultado {
   /** null = empate. */
   vencedor: IdJogador | null
@@ -49,7 +45,6 @@ export interface Resultado {
 export interface EstadoDuelo {
   versao: 1
   jogadores: Record<IdJogador, EstadoJogador>
-  terreno: TerrenoAtivo | null
   fase: Fase
   ativo: IdJogador
   /** Turno absoluto, começa em 1 (humano); o oponente joga os turnos pares. */
@@ -71,7 +66,7 @@ export type DadosEvento =
       tipo: 'carta_jogada'
       jogador: IdJogador
       carta: CartaInstancia
-      destino: 'campo' | 'descarte' | 'terreno'
+      destino: 'campo' | 'descarte'
       zona?: number
       posicao?: Posicao
       viradaParaBaixo?: boolean
@@ -82,20 +77,8 @@ export type DadosEvento =
   | { tipo: 'descarte_livre'; jogador: IdJogador; carta: CartaInstancia }
   | { tipo: 'posicao_alterada'; jogador: IdJogador; zona: number; posicao: Posicao; viradaParaBaixo?: boolean }
   | { tipo: 'unidade_revelada'; jogador: IdJogador; zona: number; carta: CartaInstancia }
-  | {
-      tipo: 'efeito_aplicado'
-      jogador: IdJogador
-      cartaId: string
-      operacao: string
-      valor: number
-      alvo?: { jogador: IdJogador; zona: number }
-      /** Metadado interno para a projeção pública não publicar detalhes do alvo oculto. */
-      alvoViradoParaBaixo?: boolean
-    }
-  | { tipo: 'cura'; jogador: IdJogador; valor: number; lp: number }
   | { tipo: 'dano'; jogador: IdJogador; valor: number; lp: number }
   | { tipo: 'unidade_destruida'; jogador: IdJogador; zona: number; carta: CartaInstancia }
-  | { tipo: 'terreno_alterado'; cartaId: string; dono: IdJogador; anterior?: string }
   | { tipo: 'ataque_declarado'; jogador: IdJogador; atacante: number; alvo: number | 'direto' }
   | {
       tipo: 'combate_resolvido'
@@ -191,7 +174,6 @@ export function criarEstadoInicial(baralhoHumano: CartaInstancia[], baralhoOpone
       humano: criarEstadoJogador('humano', baralhoHumano),
       oponente: criarEstadoJogador('oponente', baralhoOponente),
     },
-    terreno: null,
     fase: 'INICIO',
     ativo: 'humano',
     turno: 1,
@@ -234,15 +216,6 @@ export function causarDano(ctx: Ctx, jogador: IdJogador, valor: number): void {
   emitir(ctx, { tipo: 'dano', jogador, valor: perdido, lp: j.lp }, `${nomeJogador(jogador)} perde ${perdido} LP (restam ${j.lp}).`)
 }
 
-/** Cura limitada a VIDA_INICIAL; devolve quanto foi realmente curado. */
-export function curar(ctx: Ctx, jogador: IdJogador, valor: number): number {
-  const j = ctx.e.jogadores[jogador]
-  const ganho = Math.max(0, Math.min(VIDA_INICIAL - j.lp, valor))
-  j.lp += ganho
-  emitir(ctx, { tipo: 'cura', jogador, valor: ganho, lp: j.lp }, `${nomeJogador(jogador)} recupera ${ganho} LP (total ${j.lp}).`)
-  return ganho
-}
-
 /** Remove a unidade do campo e a manda para o descarte. */
 export function destruirUnidade(ctx: Ctx, jogador: IdJogador, zona: number): void {
   const j = ctx.e.jogadores[jogador]
@@ -270,18 +243,17 @@ export function assinatura(e: EstadoDuelo): string {
       j.campo.map((u) => (u ? `${u.cartaId}/${u.posicao}/${u.viradaParaBaixo ? 'B' : 'C'}/${u.buffAtk}/${u.buffDef}` : '_')).join(','),
       j.descarte.length,
     ].join('|')
-  return [e.ativo, e.terreno?.cartaId ?? '-', jog(e.jogadores.humano), jog(e.jogadores.oponente)].join('#')
+  return [e.ativo, jog(e.jogadores.humano), jog(e.jogadores.oponente)].join('#')
 }
 
-/** Cartas totais de um jogador (baralho+mão+campo+descarte+terreno próprio): deve ser constante (30 no duelo). */
+/** Cartas totais de um jogador (baralho+mão+campo+descarte): deve ser constante (30 no duelo). */
 export function totalCartas(e: EstadoDuelo, jogador: IdJogador): number {
   const j = e.jogadores[jogador]
   return (
     j.baralho.length +
     j.mao.length +
     j.campo.filter(Boolean).length +
-    j.descarte.length +
-    (e.terreno?.dono === jogador ? 1 : 0)
+    j.descarte.length
   )
 }
 
@@ -303,7 +275,6 @@ export function invariantes(e: EstadoDuelo, totalEsperado = CARTAS_NO_DUELO): st
       ...j.mao,
       ...j.campo.filter((x): x is UnidadeEmCampo => !!x),
       ...j.descarte,
-      ...(e.terreno?.dono === id ? [e.terreno] : []),
     ]
     for (const c of todas) {
       if (uids.has(c.uid)) erros.push(`uid duplicado: ${c.uid}`)

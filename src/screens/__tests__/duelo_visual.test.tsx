@@ -2,9 +2,7 @@
 // Redesenho visual do tabuleiro: moldura reutilizável, painéis, botões com ícones, posição, terreno, animações e resultado.
 import { act, cleanup, fireEvent, render, screen, within } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
-import { efeitoTerreno } from '../../components/duelo/textoCarta'
 import { MolduraOrnamentada } from '../../components/ui/MolduraOrnamentada'
-import { CATALOGO } from '../../data/catalogo'
 import { buscarOponente } from '../../data/oponentes'
 import { cenario } from '../../game/__tests__/util'
 import type { ConfigCenario } from '../../game/__tests__/util'
@@ -216,26 +214,6 @@ describe('Posição ataque/defesa representada visualmente', () => {
     const op = q('.duelo-lado--oponente .zona .carta')
     expect(op.className).toContain('carta--defesa')
     expect(op.getAttribute('aria-label')).toContain('em defesa')
-  })
-})
-
-describe('Faixa de terreno central', () => {
-  it('mostra nome e efeito aplicável aos dois lados; sem terreno diz "nenhum"', () => {
-    montar()
-    expect(q('.duelo-terreno').textContent).toContain('Terreno: nenhum')
-    cleanup()
-    montar({ terreno: { id: 'CC-089', dono: 'humano' } })
-    const t = q('.duelo-terreno')
-    expect(t.getAttribute('role')).toBe('group')
-    expect(t.getAttribute('aria-label')).toBe('Terreno global')
-    expect(t.textContent).toContain('Terreno: Manguezal')
-    expect(t.textContent).toContain('+300 ATK e DEF para ecossistema, nos dois lados')
-  })
-
-  it('efeitoTerreno: alvo qualquer vira "todas as unidades"; carta sem efeito de terreno devolve null', () => {
-    const base = CATALOGO.find((c) => c.id === 'CC-089')!
-    expect(efeitoTerreno({ ...base, efeito: { ...base.efeito!, alvo: 'qualquer' } })).toBe('+300 ATK e DEF para todas as unidades, nos dois lados')
-    expect(efeitoTerreno(CATALOGO.find((c) => c.id === 'CC-001')!)).toBeNull()
   })
 })
 

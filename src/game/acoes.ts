@@ -1,7 +1,6 @@
 // Comandos do duelo. Funções puras: (estado, comando) => { ok: true, estado, eventos } | { ok: false, erro, estado }.
 // Jogada ilegal NÃO altera o estado (o mesmo objeto é devolvido). Todas as transições são validadas aqui.
 import { resolverAtaque, validarAtaque } from './combate'
-import { analisarAcao, resolverAcao, validarAcao } from './efeitos'
 import {
   ErroRegra,
   assinatura,
@@ -34,8 +33,6 @@ export interface ComandoJogarCarta {
   posicao?: Posicao
   /** Só para unidades (padrão: false/virada para cima). */
   viradaParaBaixo?: boolean
-  /** Zona da unidade-alvo (lado definido pela carta: aliada para buff, inimiga para debuff/destruir). */
-  alvo?: number
 }
 export interface ComandoMudarPosicao {
   tipo: 'mudarPosicao'
@@ -161,27 +158,19 @@ export function validarJogarCarta(e: EstadoDuelo, cat: Catalogo, cmd: ComandoJog
     } else if (primeiraZonaLivre(j.campo) < 0) return 'Não há zona de unidade livre.'
     return null
   }
-  return validarAcao(e, cmd.jogador, carta, cat, cmd.alvo)
+  return 'Só unidades podem ser jogadas da mão.'
 }
 
 /** Parâmetros legais mínimos para uma carta da mão (um por combinação de alvo/posição). */
 function opcoesDeCarta(e: EstadoDuelo, cat: Catalogo, jogador: IdJogador, inst: CartaInstancia): ComandoJogarCarta[] {
   const carta = cat.get(inst.cartaId)
   if (!carta) return []
-  let base: ComandoJogarCarta[]
-  if (carta.tipo === 'unidade') {
-    base = [
-      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'ATAQUE', viradaParaBaixo: false },
-      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'ATAQUE', viradaParaBaixo: true },
-      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'DEFESA', viradaParaBaixo: false },
-      { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'DEFESA', viradaParaBaixo: true },
-    ]
-  } else {
-    const a = analisarAcao(e, jogador, carta, cat)
-    base = a.exigeAlvo
-      ? a.alvos.map((alvo) => ({ tipo: 'jogarCarta', jogador, uid: inst.uid, alvo }) as ComandoJogarCarta)
-      : [{ tipo: 'jogarCarta', jogador, uid: inst.uid }]
-  }
+  const base: ComandoJogarCarta[] = [
+    { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'ATAQUE', viradaParaBaixo: false },
+    { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'ATAQUE', viradaParaBaixo: true },
+    { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'DEFESA', viradaParaBaixo: false },
+    { tipo: 'jogarCarta', jogador, uid: inst.uid, posicao: 'DEFESA', viradaParaBaixo: true },
+  ]
   return base.filter((c) => validarJogarCarta(e, cat, c) === null)
 }
 
@@ -276,21 +265,6 @@ function executarJogarCarta(ctx: Ctx, cmd: ComandoJogarCarta): void {
         ? `${nomeJogador(cmd.jogador)} coloca ${nome} virada para baixo em ${posicao === 'ATAQUE' ? 'ataque' : 'defesa'}.`
         : `${nomeJogador(cmd.jogador)} invoca ${nome} em ${posicao === 'ATAQUE' ? 'ataque' : 'defesa'}.`,
     )
-  } else {
-    const a = analisarAcao(e, cmd.jogador, carta, ctx.cat)
-    const destino = a.destino as 'descarte' | 'terreno'
-    emitir(
-      ctx,
-      {
-        tipo: 'carta_jogada',
-        jogador: cmd.jogador,
-        carta: inst,
-        destino,
-        ...(a.exigeAlvo && a.donoAlvo && cmd.alvo !== undefined ? { alvo: { jogador: a.donoAlvo, zona: cmd.alvo } } : {}),
-      },
-      `${nomeJogador(cmd.jogador)} usa ${nome}.`,
-    )
-    resolverAcao(ctx, cmd.jogador, carta, inst, a.exigeAlvo ? cmd.alvo : undefined)
   }
   verificarResultado(ctx)
 }

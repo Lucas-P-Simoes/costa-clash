@@ -176,8 +176,8 @@ describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
     recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-001'), zona: -1 })
     recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-001'), zona: 1.5 })
     expect(ok(jogar(e, 'humano', 'CC-001')).jogadores.humano.campo[1]?.cartaId).toBe('CC-001')
-    const cheio = cenario({ turno: 3, humano: { mao: ['CC-001', 'CC-073'], campo: ['CC-002', 'CC-002', 'CC-002', 'CC-002', 'CC-002'] } })
-    // CC-073 (debuff impacto) sem alvo + unidade sem zona: nenhuma jogada de carta; só descartes
+    const cheio = cenario({ turno: 3, humano: { mao: ['CC-001', 'CC-012'], campo: ['CC-002', 'CC-002', 'CC-002', 'CC-002', 'CC-002'] } })
+    // CC-012 (unidade) sem zona livre: nenhuma jogada de carta; só descartes
     expect(jogadasLegais(cheio).every((c) => c.tipo === 'descartar')).toBe(true)
     const d = ok(cmd(cheio, jogadasLegais(cheio)[0]!))
     expect(d.jogadaFeita).toBe(true)
@@ -185,11 +185,11 @@ describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
   })
 
   it('descarte livre (lixeira) sempre vale; só o descarte sem jogada legal conta como a jogada da mão', () => {
-    const e = cenario({ turno: 3, humano: { mao: ['CC-001', 'CC-073'] } })
-    const livre = ok(cmd(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-073') }))
+    const e = cenario({ turno: 3, humano: { mao: ['CC-001', 'CC-012'] } })
+    const livre = ok(cmd(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-012') }))
     expect(livre.jogadaFeita).toBe(false)
     expect(livre.jogadores.humano.descarte).toHaveLength(1)
-    const sem = cenario({ turno: 3, humano: { mao: ['CC-073', 'CC-075', 'CC-079'] } }) // debuff/destruir sem alvo; cura com LP cheio
+    const sem = cenario({ turno: 3, humano: { mao: ['CC-012', 'CC-013', 'CC-015'], campo: ['CC-002', 'CC-002', 'CC-002', 'CC-002', 'CC-002'] } }) // campo cheio: nenhuma jogada de carta
     const j = jogadasLegais(sem)
     expect(j).toHaveLength(3)
     expect(j.every((c) => c.tipo === 'descartar')).toBe(true)
@@ -263,17 +263,16 @@ describe('QA 3 - combate (§5)', () => {
     expect(e.jogadores.oponente.lp).toBe(1)
   })
 
-  it('atributos efetivos: buffs + terreno, com clamp >= 0 só no resultado', () => {
+  it('atributos efetivos: buffs, com clamp >= 0 só no resultado', () => {
     const e = cenario({
-      terreno: { id: 'CC-092', dono: 'oponente' }, // +300 impacto, vale para os dois
       humano: { campo: [{ id: 'CC-056', buffAtk: -2300, buffDef: -1000 }, 'CC-043'] }, // 2200/700 impacto; 2000/1700 atividade
       oponente: { campo: [{ id: 'CC-056' }] },
     })
     const h = e.jogadores.humano.campo
-    expect(atkEfetivo(e, 'humano', h[0]!, cat)).toBe(200) // 2200-2300+300
-    expect(defEfetiva(e, 'humano', h[0]!, cat)).toBe(0) // 700-1000+300 = 0
-    expect(atkEfetivo(e, 'humano', h[1]!, cat)).toBe(2000) // atividade: o terreno de impacto não afeta
-    expect(atkEfetivo(e, 'oponente', e.jogadores.oponente.campo[0]!, cat)).toBe(2500) // terreno afeta o dono do terreno e o outro
+    expect(atkEfetivo(e, 'humano', h[0]!, cat)).toBe(0) // 2200-2300, limitado a 0
+    expect(defEfetiva(e, 'humano', h[0]!, cat)).toBe(0) // 700-1000, limitado a 0
+    expect(atkEfetivo(e, 'humano', h[1]!, cat)).toBe(2000)
+    expect(atkEfetivo(e, 'oponente', e.jogadores.oponente.campo[0]!, cat)).toBe(2200)
     const neg = cenario({ humano: { campo: [{ id: 'CC-056', buffAtk: -9000, buffDef: -9000 }] } })
     expect(atkEfetivo(neg, 'humano', neg.jogadores.humano.campo[0]!, cat)).toBe(0)
     expect(defEfetiva(neg, 'humano', neg.jogadores.humano.campo[0]!, cat)).toBe(0)

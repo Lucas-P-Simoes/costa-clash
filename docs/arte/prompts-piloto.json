@@ -120,36 +120,6 @@
         "Retrato digno e respeitoso, sem estereótipos ou caricatura",
         "Pôr do sol com contraste laranja e azul coerente com a referência"
       ]
-    },
-    {
-      "id": "CC-073",
-      "nome": "Tratamento de Esgoto",
-      "categoria": "Ação / solução (tratamento de esgoto)",
-      "paleta": {
-        "id": "solucao",
-        "rotulo": "Planejamento e soluções: dourados, verdes e tecnológicos"
-      },
-      "forma": "cena",
-      "arquivoEsperado": "073.webp",
-      "tamanhoFinal": "768x1024",
-      "prompt": "Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: estação de tratamento de esgoto costeira em dia ensolarado, grandes tanques circulares de água azul purificada com braços raspadores, prédios administrativos, vegetação e montanhas com baía ao fundo, céu azul com nuvens. Paleta e luz: dourado (#e6b648, #f2cf6e), verdes vivos (#37b05f), turquesa tecnológico (#3fdcf0) e azul-céu limpo (#4aa8e8) com nuvens brancas, luz clara e organizada. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
-      "promptEn": "Collectible card illustration in retro pixel art (PlayStation 1 / modern 16-bit style), a complete scene filling the whole frame with a large, centered main subject, thin dark defined outlines, vibrant saturated harmonized colors (warm orange against turquoise blue), dramatic lighting with deep shadows, visible pixel textures with subtle dithering, high detail density, polished collectible card art finish, vertical 3:4 aspect ratio. Subject: a coastal sewage treatment plant on a sunny day, large circular tanks of purified blue water with scraper arms, administrative buildings, vegetation and mountains with a bay behind, blue sky with clouds. Palette and light: gold (#e6b648, #f2cf6e), lively greens (#37b05f), technological turquoise (#3fdcf0) and clean sky blue (#4aa8e8) with white clouds, clear orderly light. Composition: medium-shot scene with the main element large at the center, clearly defined foreground, midground and background; main element within the central band (20% to 80% of the height) with a 10% safety margin at the edges. Avoid: photography, realism, simplified childish style, generic library icons, emojis, mixed styles. No text, no frame, no ATK/DEF, no logo.",
-      "fraseFinalObrigatoria": "Sem texto, sem moldura, sem ATK/DEF, sem logotipo.",
-      "seedsSugeridas": [
-        73674,
-        146260,
-        219146
-      ],
-      "variacoes": [
-        "Variação A: igual ao prompt base (referência).",
-        "Variação B: enquadramento um pouco mais fechado no elemento principal.",
-        "Variação C: mesma cena com outra hora do dia (pôr do sol dourado ou luz de meio-dia), mantendo a paleta."
-      ],
-      "criteriosEspecificos": [
-        "Tanques circulares de tratamento reconhecíveis com água azul purificada",
-        "Instalação organizada e plausível (sem sugerir que elimina totalmente a poluição)",
-        "Céu azul claro e vegetação, estilo consistente com as demais"
-      ]
     }
   ]
 }

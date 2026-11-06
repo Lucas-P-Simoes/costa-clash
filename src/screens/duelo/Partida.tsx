@@ -4,7 +4,6 @@ import { BannerTurno } from '../../components/duelo/BannerTurno'
 import { BotaoAcao } from '../../components/duelo/BotaoAcao'
 import { CabecalhoDuelo } from '../../components/duelo/CabecalhoDuelo'
 import { CartaVerso, CartaView } from '../../components/duelo/CartaView'
-import { FaixaTerreno } from '../../components/duelo/FaixaTerreno'
 import { IconeEscudo, IconeRelogioPixel } from '../../components/duelo/iconesDuelo'
 import { InspecaoCarta } from '../../components/duelo/InspecaoCarta'
 import type { FonteInspecao } from '../../components/duelo/InspecaoCarta'
@@ -22,7 +21,6 @@ import { MolduraOrnamentada } from '../../components/ui/MolduraOrnamentada'
 import { CATALOGO } from '../../data/catalogo'
 import type { Oponente } from '../../data/oponentes'
 import {
-  analisarAcao,
   aplicarComando,
   atkEfetivo,
   ataquesLegais,
@@ -43,7 +41,7 @@ import './duelo.css'
 
 const cat = mapaCatalogo(CATALOGO)
 
-type Modo = null | { tipo: 'zona' } | { tipo: 'alvo'; alvos: number[]; dono: IdJogador }
+type Modo = null | { tipo: 'zona' }
 interface Ponto {
   x: number
   y: number
@@ -449,10 +447,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     if (!carta || !uid) return 'Selecione uma carta da mão.'
     if (legais.some((c) => c.tipo === 'jogarCarta' && c.uid === uid)) return null
     if (soDescarte) return 'Nenhuma carta pode ser jogada agora: use DESCARTAR CARTA.'
-    if (carta.tipo === 'acao') {
-      const a = analisarAcao(estado, 'humano', carta, cat)
-      if (a.bloqueio) return a.bloqueio
-    }
     return validarJogarCarta(estado, cat, { tipo: 'jogarCarta', jogador: 'humano', uid }) ?? 'Esta carta não pode ser jogada agora.'
   }
   const motivoUsar = () => motivoUsarDe(sel.mao)
@@ -485,12 +479,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       dizer('Escolha uma zona livre do seu campo.')
       return
     }
-    const a = analisarAcao(estado, 'humano', c, cat)
-    if (a.exigeAlvo && a.donoAlvo) {
-      setModo({ tipo: 'alvo', alvos: a.alvos, dono: a.donoAlvo })
-      pedidoFoco.current = '[data-foco="alvo"]'
-      dizer('Escolha a unidade alvo (destacada).')
-    } else enviar({ tipo: 'jogarCarta', jogador: 'humano', uid: sel.mao as string })
   }
 
   function defender() {
@@ -536,11 +524,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const u = (lado === 'humano' ? v.eu.campo : v.oponente.campo)[z]
     if (modo?.tipo === 'zona' && lado === 'humano' && cartaSel?.tipo === 'unidade' && !u) {
       enviarOuEscolherFace({ tipo: 'jogarCarta', jogador: 'humano', uid: sel.mao as string, zona: z, posicao: posPend })
-      return
-    }
-    if (modo?.tipo === 'alvo') {
-      if (lado === modo.dono && modo.alvos.includes(z)) enviar({ tipo: 'jogarCarta', jogador: 'humano', uid: sel.mao as string, alvo: z })
-      else dizer('Esta unidade não é um alvo válido para a carta.', true)
       return
     }
     if (u && !('oculta' in u && u.oculta)) {
@@ -668,7 +651,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     return motivoUsarDe(uid)
   }
 
-  /** Destino -> executar (ou motivo). Chaves: zona:humano:z (unidade livre), unidade:lado:z, terreno, campo. */
+  /** Destino -> executar (ou motivo). Chaves: zona:humano:z (unidade livre), unidade:lado:z. */
   function avaliarDestino(uid: string, key: string | null): { valido: boolean; motivo: string; cmd?: Comando } {
     const c = cartaDoUid(uid)
     if (!c) return { valido: false, motivo: 'Carta indisponível.' }
@@ -687,13 +670,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       if (proprio && (tipo === 'zona' || tipo === 'unidade')) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid, zona: z, posicao: posPend }, '')
       return { valido: false, motivo: 'Solte a unidade em uma zona livre do seu campo.' }
     }
-    const a = analisarAcao(estado, 'humano', c, cat)
-    if (a.exigeAlvo && a.donoAlvo) {
-      if (tipo === 'unidade' && lado === a.donoAlvo && a.alvos.includes(z)) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid, alvo: z }, '')
-      return { valido: false, motivo: 'Solte sobre uma unidade alvo válida (destacada).' }
-    }
-    if (key === 'terreno' || key === 'campo' || (proprio && (tipo === 'zona' || tipo === 'unidade'))) return tentar({ tipo: 'jogarCarta', jogador: 'humano', uid }, '')
-    return { valido: false, motivo: 'Solte a carta sobre o seu campo ou sobre o terreno.' }
+    return { valido: false, motivo: 'Solte a carta sobre uma zona livre do seu campo.' }
   }
 
   function destinosValidos(uid: string): Set<string> {
@@ -702,11 +679,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     if (!c) return s
     const cand: string[] = ['lixeira']
     if (c.tipo === 'unidade') [0, 1, 2, 3, 4].forEach((z) => !v.eu.campo[z] && cand.push('zona:humano:' + z))
-    else {
-      const a = analisarAcao(estado, 'humano', c, cat)
-      if (a.exigeAlvo && a.donoAlvo) a.alvos.forEach((z) => cand.push('unidade:' + a.donoAlvo + ':' + z))
-      else cand.push('terreno', 'campo')
-    }
     cand.forEach((k) => avaliarDestino(uid, k).valido && s.add(k))
     return s
   }
@@ -898,7 +870,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const alvosAtaque = atacanteAtual === undefined ? [] : ataques.filter((a) => a.atacante === atacanteAtual)
   const podeDireto = alvosAtaque.some((a) => a.alvo === 'direto')
   const setaAtiva = setaHumana ?? setaIA
-  const terrenoCarta = v.terreno ? cat.get(v.terreno.cartaId) : undefined
   const conceitos = useMemo(() => {
     const vistos = new Map<string, { nome: string; texto: string }>()
     for (const e of log) {
@@ -938,7 +909,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const dropAttr = drop ? ({ 'aria-dropeffect': 'move' } as const) : {}
     const alvoAtaqueHumano = !!setaHumana && lado === 'oponente' && alvosAtaque.some((a) => a.alvo === z)
     const alvoAtaqueIA = !!setaIA && lado === 'humano' && setaIA.alvo === z
-    const alvoValido = (modo?.tipo === 'alvo' && modo.dono === lado && modo.alvos.includes(z)) || alvoAtaqueHumano || alvoAtaqueIA
+    const alvoValido = alvoAtaqueHumano || alvoAtaqueIA
     const livreEscolha = modo?.tipo === 'zona' && lado === 'humano' && cartaSel?.tipo === 'unidade' && !u
     const atacantePossivel = lado === 'humano' && ataques.some((a) => a.atacante === z)
     const atacanteIA = !!setaIA && lado === 'oponente' && setaIA.atacante === z
@@ -1095,8 +1066,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
                 </div>
               }
             />
-
-            <FaixaTerreno terreno={terrenoCarta} drop={validos.has('terreno') ? (arr?.sobre === 'terreno' ? 'sobre' : 'valido') : null} />
 
             <PainelJogador
               lado="voce"
