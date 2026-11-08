@@ -73,6 +73,24 @@ describe('jogar carta: regras de fase, turno e uma jogada por turno', () => {
   })
 })
 
+describe('campo cheio: substituição de unidade', () => {
+  const cheio = ['CC-002', 'CC-004', 'CC-005', 'CC-006', 'CC-009']
+  it('com o campo cheio, a zona ocupada escolhida é substituída: a antiga vai ao descarte e o total de cartas se conserva', () => {
+    const e0 = cenario({ humano: { mao: ['CC-001'], campo: cheio } })
+    const e = ok(aplicarComando(e0, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e0, 'humano', 'CC-001'), zona: 2 }))
+    expect(e.jogadores.humano.campo[2]?.cartaId).toBe('CC-001')
+    expect(e.jogadores.humano.descarte.map((c) => c.cartaId)).toEqual(['CC-005'])
+    expect(e.log.some((x) => x.tipo === 'unidade_substituida' && x.zona === 2)).toBe(true)
+    expect(invariantes(e)).toEqual([])
+  })
+
+  it('com zona livre, escolher uma zona ocupada continua recusado', () => {
+    const e0 = cenario({ humano: { mao: ['CC-001'], campo: ['CC-002'] } })
+    const r = aplicarComando(e0, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e0, 'humano', 'CC-001'), zona: 0 })
+    expect(r.ok).toBe(false)
+  })
+})
+
 describe('descarte forçado', () => {
   it('com jogada legal disponível o descarte é livre (lixeira): não gasta a jogada da mão e a mão é reposta no próximo turno', () => {
     const e = cenario({ humano: { mao: ['CC-001', 'CC-002'] }, oponente: { mao: [] } })

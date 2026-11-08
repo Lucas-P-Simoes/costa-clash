@@ -11,6 +11,7 @@ import type { Rng } from './rng'
 import { CARTAS_NO_DUELO } from './tipos'
 import type { Carta } from './tipos'
 import { visaoParaJogador } from './visao'
+import type { VisaoDuelo } from './visao'
 
 export interface OpcoesDuelo {
   /** 40 IDs de carta do jogador humano (perfil do usuário ou baralho inicial padrão). */
@@ -21,6 +22,10 @@ export interface OpcoesDuelo {
   seed: number
   /** Opcional: RNG já pronto (sobrepõe `seed`). */
   rng?: Rng
+  /** Tutorial: não embaralha; os baralhos já vêm na ordem de compra (as 5 primeiras são a mão). Só 30 por lado entram. */
+  ordemFixa?: boolean
+  /** Tutorial: vida inicial do oponente (padrão: a vida normal). */
+  lpOponente?: number
   catalogo?: readonly Carta[]
 }
 
@@ -47,9 +52,11 @@ export function criarDuelo(op: OpcoesDuelo): ResultadoCriarDuelo {
   const rng = op.rng ?? criarRng(op.seed)
   const instancias = (prefixo: string, ids: readonly string[]): CartaInstancia[] => ids.map((cartaId, i) => ({ uid: `${prefixo}${i + 1}`, cartaId }))
   // Baralhos de 40 são embaralhados e só as 30 primeiras entram no duelo (as demais ficam de fora).
-  const h = embaralhar(instancias('h', op.baralhoJogador), rng).slice(0, CARTAS_NO_DUELO)
-  const o = embaralhar(instancias('o', op.baralhoOponente), rng).slice(0, CARTAS_NO_DUELO)
+  const ordenar = (cartas: CartaInstancia[]) => (op.ordemFixa ? cartas : embaralhar(cartas, rng))
+  const h = ordenar(instancias('h', op.baralhoJogador)).slice(0, CARTAS_NO_DUELO)
+  const o = ordenar(instancias('o', op.baralhoOponente)).slice(0, CARTAS_NO_DUELO)
   const e = criarEstadoInicial(h, o)
+  if (op.lpOponente !== undefined && Number.isInteger(op.lpOponente) && op.lpOponente > 0) e.jogadores.oponente.lp = op.lpOponente
   const ctx: Ctx = { e, ev: [], cat: mapaCatalogo(catalogo) }
   emitir(ctx, { tipo: 'compra', jogador: 'humano', cartas: e.jogadores.humano.mao.map((c) => ({ ...c })) }, 'Você compra a mão inicial de 5 cartas.')
   emitir(ctx, { tipo: 'compra', jogador: 'oponente', cartas: e.jogadores.oponente.mao.map((c) => ({ ...c })) }, 'O oponente compra a mão inicial de 5 cartas.')
@@ -59,6 +66,9 @@ export function criarDuelo(op: OpcoesDuelo): ResultadoCriarDuelo {
 }
 
 const LIMITE_COMANDOS_IA = 60
+
+/** Quem escolhe o próximo comando da IA (padrão: `decidirComando`; o tutorial usa uma IA que nunca ataca). */
+export type DecisorIA = (visao: VisaoDuelo, catalogo?: readonly Carta[]) => Comando
 
 /** Um comando da IA já aplicado: o estado resultante e os eventos que ele gerou (para reprodução passo a passo). */
 export interface PassoIA {
@@ -75,7 +85,7 @@ export type ResultadoTurnoIA = { ok: true; estado: EstadoDuelo; eventos: Evento[
  * A IA só enxerga `visaoParaJogador`. Totalmente determinística: `_seed` é reservado e hoje não influencia nada.
  * Se algum comando da IA fosse rejeitado, recorre a uma jogada legal e registra `ia_fallback` (nunca trava).
  */
-export function executarTurnoIAComPassos(estado: EstadoDuelo, _seed?: number, catalogo: readonly Carta[] = CATALOGO): ResultadoTurnoIA {
+export function executarTurnoIAComPassos(estado: EstadoDuelo, _seed?: number, catalogo: readonly Carta[] = CATALOGO, decisor: DecisorIA = decidirComando): ResultadoTurnoIA {
   if (estado.resultado) return { ok: false, erro: 'A partida já terminou.', estado }
   const cat = mapaCatalogo(catalogo)
   const jogador = estado.ativo
@@ -92,7 +102,7 @@ export function executarTurnoIAComPassos(estado: EstadoDuelo, _seed?: number, ca
     return true
   }
   for (let i = 0; i < LIMITE_COMANDOS_IA && !atual.resultado && atual.turno === turnoInicial; i++) {
-    const cmd = decidirComando(visaoParaJogador(atual, jogador), catalogo)
+    const cmd = decisor(visaoParaJogador(atual, jogador), catalogo)
     if (aplicar(cmd)) continue
     // recuperação: primeira jogada legal, senão encerrar o turno
     const motivo = `comando rejeitado: ${cmd.tipo}`

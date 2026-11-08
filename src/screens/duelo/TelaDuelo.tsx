@@ -6,6 +6,7 @@ import { IconeVoltar } from '../../components/ui/Icones'
 import { BARALHO_INICIAL } from '../../data/baralhoInicial'
 import { BARALHOS_OPONENTES } from '../../data/baralhosOponentes'
 import { CATALOGO } from '../../data/catalogo'
+import { BARALHO_GUARDIAO_TUTORIAL, BARALHO_JOGADOR_TUTORIAL, ID_OPONENTE_TUTORIAL, LP_GUARDIAO_TUTORIAL } from '../../data/tutorialGuardiao'
 import { buscarOponente } from '../../data/oponentes'
 import { criarDuelo, mapaCatalogo } from '../../game'
 import { Partida } from './Partida'
@@ -41,6 +42,9 @@ function atrasoPadrao(): number {
 export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizada, onVitoriaOponente, onVoltar, seedInicial, atrasoIA }: Props) {
   // A seed fica no estado da tela (depuração); JOGAR NOVAMENTE gera outra e remonta a partida (key).
   const [seed, setSeed] = useState<number>(() => seedInicial ?? novaSeed())
+  // Tutorial do Guardião do Mangue: abre sempre no duelo 1; "Pular tutorial" vira um duelo normal (baralho embaralhado).
+  const [tutorialPulado, setTutorialPulado] = useState(false)
+  const tutorialAtivo = oponenteId === ID_OPONENTE_TUTORIAL && !tutorialPulado
   const oponente = buscarOponente(oponenteId)
   const baralhoOponente = BARALHOS_OPONENTES[oponenteId]
   // Baralho salvo vazio, ou com cartas que saíram do catálogo (ex.: suportes removidos), cai no baralho inicial.
@@ -51,8 +55,11 @@ export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizad
 
   const criado = useMemo(() => {
     if (!oponente || !baralhoOponente) return { ok: false as const, erros: ['Adversário não encontrado.'] }
+    if (tutorialAtivo) {
+      return criarDuelo({ baralhoJogador: BARALHO_JOGADOR_TUTORIAL, baralhoOponente: BARALHO_GUARDIAO_TUTORIAL, seed, ordemFixa: true, lpOponente: LP_GUARDIAO_TUTORIAL })
+    }
     return criarDuelo({ baralhoJogador, baralhoOponente, seed })
-  }, [oponente, baralhoOponente, baralhoJogador, seed])
+  }, [oponente, baralhoOponente, baralhoJogador, seed, tutorialAtivo])
 
   if (!oponente || !criado.ok) {
     const erros = criado.ok ? [] : criado.erros
@@ -70,7 +77,7 @@ export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizad
   }
   return (
     <Partida
-      key={seed}
+      key={`${seed}:${tutorialAtivo ? 't' : 'n'}`}
       estadoInicial={criado.estado}
       oponente={oponente}
       atrasoIA={atraso}
@@ -79,6 +86,7 @@ export function TelaDuelo({ oponenteId, usuario, servicoAuth, onColecaoAtualizad
         aoVencer()
         onVitoriaOponente?.(oponenteId)
       }}
+      tutorial={tutorialAtivo ? { onPular: () => setTutorialPulado(true) } : undefined}
       onVoltar={onVoltar}
       onNovamente={() => setSeed((s) => { const n = novaSeed(); return n === s ? s + 1 : n })}
     />

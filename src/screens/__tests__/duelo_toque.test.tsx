@@ -171,14 +171,14 @@ describe('Mouse/caneta: limiar de 10 px', () => {
 describe('Dica e tela baixa', () => {
   it('dica por tipo de ponteiro: toque (pointer: coarse) pede "Segure e arraste"; mouse, "Arraste"', () => {
     montar()
-    expect(document.querySelector('.duelo-mao__dica')!.textContent).toBe('Arraste a carta até o campo ou use USAR CARTA')
+    expect(document.querySelector('.duelo-mao__dica')!.textContent).toBe('Arraste a carta até o campo ou clique nela e escolha uma zona')
     cleanup()
     stubMedia(/pointer: coarse/)
     montar()
-    expect(document.querySelector('.duelo-mao__dica')!.textContent).toBe('Segure e arraste a carta até o campo, ou use USAR CARTA')
+    expect(document.querySelector('.duelo-mao__dica')!.textContent).toBe('Segure e arraste a carta até o campo, ou toque nela e escolha uma zona')
   })
 
-  it('celular em paisagem (altura baixa): sem dica de arrasto e o arrasto mostra o motivo; seleção + USAR CARTA seguem', async () => {
+  it('celular em paisagem (altura baixa): sem dica de arrasto e o arrasto mostra o motivo; clicar na carta e escolher a zona segue', async () => {
     stubMedia(/max-height: 520px/)
     montar()
     expect(document.querySelector('.duelo-mao__dica')).toBeNull()
@@ -186,10 +186,9 @@ describe('Dica e tela baixa', () => {
     fireEvent.pointerDown(mao(1), { ...M, clientX: 100, clientY: 500 })
     fireEvent.pointerMove(window, { ...M, clientX: 100, clientY: 400 })
     expect(fantasma()).toBeNull()
-    expect(document.querySelector('.duelo-aviso')!.textContent).toContain('USAR CARTA')
+    expect(document.querySelector('.duelo-aviso')!.textContent).toContain('escolha uma zona livre')
     await tick() // o clique engolido após o arrasto bloqueado expira no ciclo seguinte
     fireEvent.click(mao(1))
-    fireEvent.click(screen.getByRole('button', { name: /Usar carta/ }))
     fireEvent.click(document.querySelector<HTMLElement>('.duelo-lado--voce .duelo-zonas button.zona--vazia')!)
     fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
     expect(campoV()).toContain('Recife de Coral')

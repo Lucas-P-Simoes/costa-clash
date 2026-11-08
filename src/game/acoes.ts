@@ -154,7 +154,8 @@ export function validarJogarCarta(e: EstadoDuelo, cat: Catalogo, cmd: ComandoJog
     if (cmd.viradaParaBaixo !== undefined && typeof cmd.viradaParaBaixo !== 'boolean') return 'Face da unidade inválida.'
     if (cmd.zona !== undefined) {
       if (!zonaValida(cmd.zona, ZONAS_UNIDADE)) return 'Zona de unidade inválida.'
-      if (j.campo[cmd.zona]) return 'A zona de unidade escolhida está ocupada.'
+      // Campo cheio: a zona escolhida pode estar ocupada; a unidade que estava nela é descartada (substituição).
+      if (j.campo[cmd.zona] && primeiraZonaLivre(j.campo) >= 0) return 'A zona de unidade escolhida está ocupada.'
     } else if (primeiraZonaLivre(j.campo) < 0) return 'Não há zona de unidade livre.'
     return null
   }
@@ -245,6 +246,12 @@ function executarJogarCarta(ctx: Ctx, cmd: ComandoJogarCarta): void {
 
   if (carta.tipo === 'unidade') {
     const zona = cmd.zona ?? primeiraZonaLivre(j.campo)
+    const substituida = j.campo[zona]
+    if (substituida) {
+      const antiga: CartaInstancia = { uid: substituida.uid, cartaId: substituida.cartaId }
+      j.descarte.push(antiga)
+      emitir(ctx, { tipo: 'unidade_substituida', jogador: cmd.jogador, zona, carta: antiga }, `${nomeJogador(cmd.jogador)} descarta ${nomeCarta(ctx.cat, antiga.cartaId)} para colocar ${nome}.`)
+    }
     const posicao: Posicao = cmd.posicao ?? 'ATAQUE'
     const viradaParaBaixo = cmd.viradaParaBaixo ?? false
     const u: UnidadeEmCampo = {

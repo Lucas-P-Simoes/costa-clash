@@ -72,7 +72,6 @@ describe('mão em leque e inspeção ampliada', () => {
       oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 },
     })
     fireEvent.click(cartaMao())
-    fireEvent.click(screen.getByRole('button', { name: /Usar carta/ }))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
     fireEvent.click(screen.getByRole('button', { name: /Encerrar turno/ }))

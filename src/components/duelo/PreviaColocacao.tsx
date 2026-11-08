@@ -21,7 +21,7 @@ export function PreviaColocacao({
   onCancelar: () => void
 }) {
   const ref = useRef<HTMLDivElement>(null)
-  useFocoDialogo(ref, 'b-usar')
+  useFocoDialogo(ref, 'b-encerrar')
   const [baixo, setBaixo] = useState(false)
   return (
     <div className="duelo-overlay">

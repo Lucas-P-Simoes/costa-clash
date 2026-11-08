@@ -79,6 +79,8 @@ export type DadosEvento =
   | { tipo: 'unidade_revelada'; jogador: IdJogador; zona: number; carta: CartaInstancia }
   | { tipo: 'dano'; jogador: IdJogador; valor: number; lp: number }
   | { tipo: 'unidade_destruida'; jogador: IdJogador; zona: number; carta: CartaInstancia }
+  /** Campo cheio: a unidade que ocupava a zona foi descartada para dar lugar à nova. */
+  | { tipo: 'unidade_substituida'; jogador: IdJogador; zona: number; carta: CartaInstancia }
   | { tipo: 'ataque_declarado'; jogador: IdJogador; atacante: number; alvo: number | 'direto' }
   | {
       tipo: 'combate_resolvido'

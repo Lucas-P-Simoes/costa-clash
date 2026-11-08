@@ -66,34 +66,34 @@ describe('Tela Duelo Livre: seleção', () => {
     teclar(radio('Ressaca'), 'ArrowRight')
     expect(selecionado()[0].textContent).toBe('Urbanização')
     expect(document.activeElement).toBe(radio('Urbanização'))
-    teclar(radio('Urbanização'), 'ArrowRight') // fim da linha: segue para o próximo índice (Restinga)
-    expect(selecionado()[0].textContent).toBe('Restinga')
-    teclar(radio('Restinga'), 'ArrowDown')
-    expect(selecionado()[0].textContent).toBe('Comunidade Caiçara')
-    teclar(radio('Comunidade Caiçara'), 'ArrowDown')
-    expect(selecionado()[0].textContent).toBe('Oceano Limpo')
-    teclar(radio('Oceano Limpo'), 'ArrowDown') // último adversário: permanece; Baralho é ignorado
-    expect(selecionado()[0].textContent).toBe('Oceano Limpo')
-    teclar(radio('Oceano Limpo'), 'ArrowUp')
-    expect(selecionado()[0].textContent).toBe('Comunidade Caiçara')
-    teclar(radio('Comunidade Caiçara'), 'ArrowUp')
-    expect(selecionado()[0].textContent).toBe('Restinga')
-    teclar(radio('Restinga'), 'ArrowLeft')
+    teclar(radio('Urbanização'), 'ArrowRight')
+    expect(selecionado()[0].textContent).toBe('Porto')
+    teclar(radio('Porto'), 'ArrowDown')
+    expect(selecionado()[0].textContent).toBe('Espécies Invasoras')
+    teclar(radio('Espécies Invasoras'), 'ArrowDown')
+    expect(selecionado()[0].textContent).toBe('Bitucas na Areia')
+    teclar(radio('Bitucas na Areia'), 'ArrowDown') // sem linha abaixo desta coluna: permanece; Baralho é ignorado
+    expect(selecionado()[0].textContent).toBe('Bitucas na Areia')
+    teclar(radio('Bitucas na Areia'), 'ArrowUp')
+    expect(selecionado()[0].textContent).toBe('Espécies Invasoras')
+    teclar(radio('Espécies Invasoras'), 'ArrowUp')
+    expect(selecionado()[0].textContent).toBe('Porto')
+    teclar(radio('Porto'), 'ArrowLeft')
     expect(selecionado()[0].textContent).toBe('Urbanização')
   })
 
   it('Home/End vão ao primeiro/último; limites não ultrapassam a grade', () => {
     render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     teclar(radio('Ressaca'), 'End')
-    expect(selecionado()[0].textContent).toBe('Oceano Limpo')
-    teclar(radio('Oceano Limpo'), 'ArrowRight')
-    expect(selecionado()[0].textContent).toBe('Oceano Limpo')
-    teclar(radio('Oceano Limpo'), 'Home')
-    expect(selecionado()[0].textContent).toBe('Guardião do Manguezal')
-    teclar(radio('Guardião do Manguezal'), 'ArrowLeft')
-    teclar(radio('Guardião do Manguezal'), 'ArrowUp')
-    expect(selecionado()[0].textContent).toBe('Guardião do Manguezal')
-    expect(document.activeElement).toBe(radio('Guardião do Manguezal'))
+    expect(selecionado()[0].textContent).toBe('Ser Humano')
+    teclar(radio('Ser Humano'), 'ArrowRight')
+    expect(selecionado()[0].textContent).toBe('Ser Humano')
+    teclar(radio('Ser Humano'), 'Home')
+    expect(selecionado()[0].textContent).toBe('Guardião do Mangue')
+    teclar(radio('Guardião do Mangue'), 'ArrowLeft')
+    teclar(radio('Guardião do Mangue'), 'ArrowUp')
+    expect(selecionado()[0].textContent).toBe('Guardião do Mangue')
+    expect(document.activeElement).toBe(radio('Guardião do Mangue'))
   })
 
   it('proximoIndice respeita colunas variáveis (2 no celular) e ignora outras teclas', () => {
@@ -106,10 +106,10 @@ describe('Tela Duelo Livre: seleção', () => {
 
   it('Enter/Espaço (clique nativo do botão) confirmam a seleção do cartão focado', () => {
     render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
-    const c = radio('Coral')
+    const c = radio('Maré Vermelha')
     c.focus()
     fireEvent.click(c) // o navegador converte Enter/Espaço em click no botão; o handler é o mesmo
-    expect(selecionado()[0].textContent).toBe('Coral')
+    expect(selecionado()[0].textContent).toBe('Maré Vermelha')
   })
 
   it('"Ler mais" expande/recolhe a descrição (aria-expanded) e reinicia ao trocar de adversário', () => {
@@ -133,9 +133,9 @@ describe('Tela Duelo Livre: seleção', () => {
     fireEvent.click(botao('Iniciar duelo'))
     expect(onDuelo).toHaveBeenLastCalledWith('porto')
     expect(within(painel()).getByRole('status').textContent).toBe('')
-    fireEvent.click(radio('Oceano Limpo'))
+    fireEvent.click(radio('Ser Humano'))
     fireEvent.click(botao('Iniciar duelo'))
-    expect(onDuelo).toHaveBeenLastCalledWith('oceano-limpo')
+    expect(onDuelo).toHaveBeenLastCalledWith('ser-humano')
   })
 
   it('VOLTAR e Esc chamam onVoltar', () => {
@@ -229,8 +229,9 @@ describe('Clique em bloqueado e engrenagem', () => {
     fireEvent.click(screen.getByRole('button', { name: 'Configurações' }))
     const grupo = screen.getByRole('group', { name: 'Desbloquear adversários' })
     expect(within(grupo).getAllByRole('checkbox')).toHaveLength(OPONENTES.length)
-    expect((within(grupo).getByRole('checkbox', { name: new RegExp(OPONENTES[0].nome) }) as HTMLInputElement).disabled).toBe(true)
-    fireEvent.click(within(grupo).getByRole('checkbox', { name: new RegExp(OPONENTES[3].nome) }))
+    const caixas = within(grupo).getAllByRole('checkbox') as HTMLInputElement[] // mesma ordem de OPONENTES
+    expect(caixas[0].disabled).toBe(true)
+    fireEvent.click(caixas[3])
     fireEvent.click(within(grupo).getByRole('button', { name: 'Salvar' }))
     expect(onSalvar).toHaveBeenCalledWith([OPONENTES[3].id])
   })

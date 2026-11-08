@@ -27,7 +27,7 @@ function turnoHumanoAleatorio(e: EstadoDuelo, rng: () => number): EstadoDuelo {
 }
 
 describe('QA fase B: vazamento em partidas completas', () => {
-  for (const op of ['ressaca', 'coral', 'poluicao-mar']) {
+  for (const op of ['ressaca', 'mare-vermelha', 'poluicao-plastica']) {
     it(`sem uid/nome oculto no log/visão (${op})`, () => {
       const base = BARALHOS_OPONENTES[op] as string[]
       expect(base).toBeTruthy()

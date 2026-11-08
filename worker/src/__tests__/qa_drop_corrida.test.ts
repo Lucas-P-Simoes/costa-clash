@@ -27,14 +27,14 @@ async function chamar(caminho: string, corpo: unknown, token?: string) {
 async function conta(email: string): Promise<string> {
   return (await chamar('/api/cadastro', { email, senha: 'senha-forte-1' })).json!.token as string
 }
-const iniciar = (t: string, o = 'coral') => chamar('/api/duelo/iniciar', { oponenteId: o }, t)
+const iniciar = (t: string, o = 'ressaca') => chamar('/api/duelo/iniciar', { oponenteId: o }, t)
 const vitoria = (t: string, d: unknown) => chamar('/api/duelo/vitoria', { dueloId: d }, t)
 
 describe('QA drop: corridas e isolamento', () => {
   it('dois duelos diferentes resgatados em paralelo com 1 vaga restante: coleção não passa do teto', async () => {
     const token = await conta('a@exemplo.com')
     const usuario = (d1.sqlite.prepare('SELECT id FROM usuarios').get() as { id: string }).id
-    const tabela = TABELAS_DROP.coral!
+    const tabela = TABELAS_DROP.ressaca!
     // Todas no teto menos a última, que fica a 1 cópia do teto.
     tabela.forEach(([id], i) => {
       d1.sqlite

@@ -13,7 +13,7 @@ interface Props {
   icone?: ReactNode
 }
 
-/** Botão de ação do duelo (ATACAR, DEFENDER, USAR CARTA, ENCERRAR TURNO, DESISTIR). Nunca decorativo: sempre chama `onClick`. */
+/** Botão de ação do duelo (DESCARTAR, ENCERRAR TURNO). Nunca decorativo: sempre chama `onClick`. */
 export function BotaoAcao({ id, variante, titulo, sub, motivo, onClick, icone }: Props) {
   return (
     <div className={`duelo-btn-wrap${motivo ? ' duelo-btn-wrap--bloqueado' : ''}`}>

@@ -67,6 +67,9 @@ export async function abrirCena(page: Page, cena: Cena): Promise<void> {
     if (cena === 'duelo') {
       await page.getByRole('button', { name: 'Iniciar duelo', exact: true }).click()
       await page.locator('.tela-partida').waitFor()
+      // O Guardião (selecionado por padrão) abre o tutorial guiado; esta cena confere o layout do duelo normal.
+      await page.getByRole('button', { name: 'Pular tutorial' }).click()
+      await page.locator('.tutorial-guia').waitFor({ state: 'detached' })
     }
   } else {
     await page.goto(BASE)

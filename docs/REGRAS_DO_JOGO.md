@@ -12,6 +12,7 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 - **Catálogo de 72 cartas distintas** (todas unidades), mas cada baralho de duelo tem 40, selecionadas dentre as 72 (duplicatas permitidas até 3). O catálogo não é um baralho de 72 cartas. Cartas de ação (instantâneas e terrenos), suporte e `CC-082` foram removidas (§16 e §17). As cartas de suporte (equipamentos e armadilhas) e `CC-082` foram **removidas** em 05/11/2026 (ver §16); os IDs restantes não foram renumerados.
 - Campo: **5 zonas de unidades** por jogador (sem zonas de suporte e, desde §17, sem terreno global). Sem fusão, invocação-tributo, estrelas guardiãs, rituais nem multiplayer no MVP.
 - **Mão inicial de cinco**: ambos compram 5 antes do primeiro turno. Primeiro a agir: humano (fixo no MVP). Sem mulligan.
+- **Exceção do tutorial (08/11/2026, a confirmar com o dono):** só no duelo 1 (Guardião do Mangue, guiado) os baralhos entram em ordem fixa (sem embaralhar), o Guardião começa com **2.000 LP** em vez de 5.000 e a IA dele nunca ataca. "Pular tutorial" volta às regras normais. Ver `src/data/tutorialGuardiao.ts`.
 - Nenhum custo de mana, energia, nível ou tributo. Uma jogada da mão por turno. Não pode baixar mais de uma carta por turno.
 
 ## 3. Compra e fim por deck

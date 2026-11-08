@@ -128,8 +128,6 @@ describe('Coluna lateral', () => {
     expect(banner.querySelector('svg')).toBeTruthy() // setas douradas
     expect(document.getElementById('b-atacar')).toBeNull()
     for (const [id, sub] of [
-      ['b-defender', 'Alterna a posição da unidade'],
-      ['b-usar', 'Baixa uma carta da sua mão'],
       ['b-encerrar', 'Passa a vez ao oponente'],
     ] as const) {
       const b = document.getElementById(id)!
@@ -146,20 +144,19 @@ describe('Coluna lateral', () => {
 
   it('botão bloqueado: motivo visível ligado por aria-describedby, sem perder o foco nem a ação', () => {
     montar({ humano: { mao: ['CC-001'] } })
-    const usar = botao(/Usar carta/)
+    const usar = botao(/Encerrar turno/)
     expect(usar.getAttribute('aria-disabled')).toBe('true')
     const motivo = document.getElementById(usar.getAttribute('aria-describedby')!)!
-    expect(motivo.textContent).toBe('Selecione uma carta da mão.')
+    expect(motivo.textContent).toBe('Faça a jogada da mão antes de encerrar o turno.')
     expect(usar.closest('.duelo-btn-wrap')!.className).toContain('duelo-btn-wrap--bloqueado')
     fireEvent.click(usar)
-    expect(q('.duelo-aviso').textContent).toBe('Selecione uma carta da mão.')
+    expect(q('.duelo-aviso').textContent).toBe('Faça a jogada da mão antes de encerrar o turno.')
   })
 
   it('banner muda para "Turno do oponente" durante a IA (estilo frio) e volta ao jogador', () => {
     vi.useFakeTimers()
     montar({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } }, 100)
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
@@ -230,7 +227,6 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
     vi.useFakeTimers()
     montar({ humano: { mao: ['CC-003'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 2 sua: vazia/ }))
     confirmarFaceParaCima()
     const carta = q('.duelo-lado--voce .zona:nth-child(2) .carta')
@@ -288,7 +284,6 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
     vi.useFakeTimers()
     montar({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/)) // IA sem atraso: volta direto ao jogador
@@ -426,7 +421,6 @@ describe('Correções pós-QA (D1, D2, D5)', () => {
     vi.useFakeTimers()
     montar({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } }, 100)
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
@@ -441,12 +435,12 @@ describe('Correções pós-QA (D1, D2, D5)', () => {
 
   it('D5: botão bloqueado acionado pelo teclado (Enter/clique) mostra o motivo no aviso com aria-live', () => {
     montar({ humano: { mao: ['CC-001'] } })
-    const usar = botao(/Usar carta/)
+    const usar = botao(/Encerrar turno/)
     usar.focus()
     expect(document.activeElement).toBe(usar) // aria-disabled mantém o foco
     fireEvent.click(usar)
     const aviso = q('.duelo-aviso')
     expect(aviso.getAttribute('aria-live')).toBe('polite')
-    expect(aviso.textContent).toBe('Selecione uma carta da mão.')
+    expect(aviso.textContent).toBe('Faça a jogada da mão antes de encerrar o turno.')
   })
 })

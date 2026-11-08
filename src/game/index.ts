@@ -1,6 +1,7 @@
 // API pública do motor de duelo (consumida pela UI na fase B). Puro: sem React/DOM/localStorage/Math.random.
 export { criarDuelo, executarTurnoIA, executarTurnoIAComPassos } from './duelo'
-export type { OpcoesDuelo, ResultadoCriarDuelo, PassoIA, ResultadoTurnoIA } from './duelo'
+export type { OpcoesDuelo, ResultadoCriarDuelo, PassoIA, ResultadoTurnoIA, DecisorIA } from './duelo'
+export { decidirComandoTutorial } from './iaTutorial'
 export {
   aplicarComando,
   jogadasLegais,

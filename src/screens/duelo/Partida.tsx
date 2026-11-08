@@ -5,12 +5,14 @@ import { BotaoAcao } from '../../components/duelo/BotaoAcao'
 import { CabecalhoDuelo } from '../../components/duelo/CabecalhoDuelo'
 import { CartaQueimando, DURACAO_QUEIMA_LIXEIRA_MS } from '../../components/duelo/CartaQueimando'
 import { CartaVerso, CartaView } from '../../components/duelo/CartaView'
-import { IconeEscudo, IconeRelogioPixel } from '../../components/duelo/iconesDuelo'
+import { DURACAO_SUBSTITUICAO_MS, SubstituicaoCarta } from '../../components/duelo/SubstituicaoCarta'
+import { IconeRelogioPixel } from '../../components/duelo/iconesDuelo'
 import { InspecaoCarta } from '../../components/duelo/InspecaoCarta'
 import type { FonteInspecao } from '../../components/duelo/InspecaoCarta'
 import { Lixeira } from '../../components/duelo/Lixeira'
 import { PreviaColocacao } from '../../components/duelo/PreviaColocacao'
 import { PainelJogador } from '../../components/duelo/PainelJogador'
+import { TutorialGuia } from '../../components/duelo/TutorialGuia'
 import { SetaAtaque } from '../../components/duelo/SetaAtaque'
 import { chaveZona, DURACAO_CONFRONTO_MS, movimentoReduzido, useConfronto, useEfeitosVisuais } from '../../components/duelo/efeitosVisuais'
 import { ConfrontoAtaque } from '../../components/duelo/ConfrontoAtaque'
@@ -26,6 +28,7 @@ import {
   aplicarComando,
   atkEfetivo,
   ataquesLegais,
+  decidirComandoTutorial,
   defEfetiva,
   executarTurnoIAComPassos,
   jogadasLegais,
@@ -37,8 +40,10 @@ import {
 } from '../../game'
 import type { Comando, ComandoAtacar, ComandoJogarCarta, EstadoDuelo, Evento, IdJogador, PassoIA, Posicao, UnidadeEmCampo, VisaoDuelo } from '../../game'
 import { estadoDeVisao } from '../../game/visao'
+import { CenaCorrupcao } from './CenaCorrupcao'
 import { ResultadoDuelo } from './ResultadoDuelo'
 import type { EstadoRecompensa } from './recompensa'
+import { PASSOS, passoAtual } from './tutorial/roteiro'
 import './duelo.css'
 
 const cat = mapaCatalogo(CATALOGO)
@@ -99,6 +104,8 @@ interface Props {
   recompensa?: EstadoRecompensa
   /** Chamado uma única vez quando o humano vence. */
   onVitoria?: () => void
+  /** Tutorial do Guardião do Mangue: balões guiados, IA que não ataca e cena de corrupção ao vencer. */
+  tutorial?: { onPular: () => void }
 }
 
 function DialogoDesistir({ onConfirmar, onCancelar }: { onConfirmar: () => void; onCancelar: () => void }) {
@@ -125,12 +132,14 @@ function DialogoDesistir({ onConfirmar, onCancelar }: { onConfirmar: () => void;
 }
 
 /** Tela do duelo. Toda regra vem do motor (`src/game`); aqui só há seleção, modos guiados e apresentação. */
-export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atrasoIA, recompensa, onVitoria }: Props) {
+export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atrasoIA, recompensa, onVitoria, tutorial }: Props) {
   const [estado, setEstado] = useState(estadoInicial)
+  const [passosConfirmados, setPassosConfirmados] = useState<ReadonlySet<string>>(() => new Set())
+  const [corrupcaoVista, setCorrupcaoVista] = useState(false)
   const [reproduzindo, setReproduzindo] = useState(false)
   const [sel, setSel] = useState<{ mao?: string; unidade?: number }>({})
   const [modoRaw, setModo] = useState<Modo>(null)
-  const [posPend, setPosPend] = useState<Posicao>('ATAQUE')
+  const posPend: Posicao = 'ATAQUE' // a unidade entra em ataque; a seta sobre ela alterna para defesa
   const [avisoBruto, setAviso] = useState<Aviso | null>(null)
   const [confirma, setConfirma] = useState(false)
   const [colocacaoPendente, setColocacaoPendente] = useState<ComandoJogarCarta | null>(null)
@@ -245,9 +254,11 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     pararOuvintesAtaque()
     ataquePointerRef.current = null
     setSetaHumana(null)
-    if (!a.moveu) return
+    // Campo adversário vazio: o único alvo possível são os LP; clicar na unidade (ou soltar a seta em qualquer lugar) ataca direto.
+    const soDireto = a.opcoes.length > 0 && a.opcoes.every((cmd) => cmd.alvo === 'direto')
+    if (!a.moveu && !soDireto) return
     if (a.revisao !== revisaoEstadoRef.current) return
-    const alvo = alvoAtaqueSob(e.clientX, e.clientY, a.opcoes)
+    const alvo = alvoAtaqueSob(e.clientX, e.clientY, a.opcoes) ?? (soDireto ? 'direto' : null)
     if (alvo === null) {
       setAviso({ texto: 'Ataque cancelado: solte a seta sobre um alvo válido.', erro: true, turno: a.base.turno })
       return
@@ -379,7 +390,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     pedidoFoco.current = cmd.tipo === 'atacar' || cmd.tipo === 'avancarFase' ? null : '#b-encerrar'
     if (!r.estado.resultado && r.estado.ativo === 'oponente') {
       pedidoFoco.current = null
-      const ia = executarTurnoIAComPassos(r.estado)
+      const ia = executarTurnoIAComPassos(r.estado, undefined, undefined, tutorial ? decidirComandoTutorial : undefined)
       if (ia.ok) reproduzir(ia.passos)
       else dizer(ia.erro, true)
     }
@@ -415,18 +426,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     if (soDescarte) return 'Nenhuma carta pode ser jogada agora: use DESCARTAR CARTA.'
     return validarJogarCarta(estado, cat, { tipo: 'jogarCarta', jogador: 'humano', uid }) ?? 'Esta carta não pode ser jogada agora.'
   }
-  const motivoUsar = () => motivoUsarDe(sel.mao)
-
-  function motivoDefender(): string | null {
-    if (!minhaVez) return 'Aguarde a sua vez.'
-    if (cartaSel?.tipo === 'unidade') return null
-    if (sel.unidade !== undefined) {
-      const u = v.eu.campo[sel.unidade]
-      if (u?.atacou) return 'Uma unidade que já atacou não muda de posição neste turno.'
-      return null
-    }
-    return 'Selecione uma unidade da mão ou do seu campo.'
-  }
 
   function motivoEncerrar(): string | null {
     if (!minhaVez) return 'Aguarde a sua vez.'
@@ -435,36 +434,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   }
 
   // ---------------------------------------------------------------- ações dos botões
-  function usarCarta() {
-    const m = motivoUsar()
-    if (m) return dizer(m, true)
-    const c = cartaSel!
-    if (c.tipo === 'unidade') {
-      setModo({ tipo: 'zona' })
-      pedidoFoco.current = '[data-foco="alvo"]'
-      dizer('Escolha uma zona livre do seu campo.')
-      return
-    }
-  }
-
-  function defender() {
-    const m = motivoDefender()
-    if (m) return dizer(m, true)
-    if (cartaSel?.tipo === 'unidade') {
-      const nova: Posicao = posPend === 'ATAQUE' ? 'DEFESA' : 'ATAQUE'
-      setPosPend(nova)
-      dizer(`A unidade entrará em ${nova === 'ATAQUE' ? 'ataque' : 'defesa'}.`)
-      return
-    }
-    const u = v.eu.campo[sel.unidade as number] as UnidadeEmCampo
-    const zona = sel.unidade as number
-    if (enviar({ tipo: 'mudarPosicao', jogador: 'humano', zona, posicao: u.posicao === 'ATAQUE' ? 'DEFESA' : 'ATAQUE' })) {
-      setSel({ unidade: zona }) // mantém a seleção para poder alternar de volta
-      pedidoFoco.current = '#b-defender'
-    }
-  }
-
-  /** Seta sobre a unidade do campo: alterna ataque/defesa pelo mesmo comando do botão DEFENDER. */
+  /** Seta sobre a unidade do campo: alterna ataque/defesa. */
   function girarUnidade(zona: number) {
     const u = v.eu.campo[zona]
     if (!u) return
@@ -493,11 +463,19 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     setAviso(null)
     setSel(sel.mao === uid ? {} : { mao: uid })
     setFoco(null)
+    // Escolher uma unidade jogável já destaca as zonas livres (clique/teclado); arrastar continua valendo.
+    const campoCheio = v.eu.campo.every(Boolean)
+    const podeSubstituir = campoCheio && minhaVez && estado.fase === 'PRINCIPAL' && !estado.jogadaFeita
+    if (sel.mao !== uid && cartaDoUid(uid)?.tipo === 'unidade' && (motivoUsarDe(uid) === null || podeSubstituir)) {
+      setModo({ tipo: 'zona' })
+      pedidoFoco.current = campoCheio ? null : '[data-foco="alvo"]'
+      dizer(campoCheio ? 'Campo cheio: escolha a unidade do seu campo que será descartada.' : 'Escolha uma zona livre do seu campo.')
+    }
   }
 
   function cliqueUnidade(lado: IdJogador, z: number) {
     const u = (lado === 'humano' ? v.eu.campo : v.oponente.campo)[z]
-    if (modo?.tipo === 'zona' && lado === 'humano' && cartaSel?.tipo === 'unidade' && !u) {
+    if (modo?.tipo === 'zona' && lado === 'humano' && cartaSel?.tipo === 'unidade' && (!u || v.eu.campo.every(Boolean))) {
       enviarOuEscolherFace({ tipo: 'jogarCarta', jogador: 'humano', uid: sel.mao as string, zona: z, posicao: posPend })
       return
     }
@@ -508,7 +486,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   }
 
   // ---------------------------------------------------------------- arrastar a carta da mão até o campo (Pointer Events)
-  // Alternativa ao clique: usa os MESMOS caminhos do botão USAR CARTA (`enviar` -> `aplicarComando`, validações do motor).
+  // Alternativa ao clique: usa os MESMOS caminhos do fluxo de clique (`enviar` -> `aplicarComando`, validações do motor).
   // Clique simples continua selecionando (limiar de arrasto de 6 px).
   // mouse/caneta: arrasto imediato após 10 px. TOQUE: só após pressão longa (~240 ms parado, tolerância 8 px) para a página continuar rolando.
   interface EstadoArrasto {
@@ -613,6 +591,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     window.setTimeout(() => engolirRef.current === engolir && pararDeEngolirClique(), 0)
   }
   const contadorQueima = useRef(0)
+  const [substituicao, setSubstituicao] = useState<{ id: number; antiga: string; nova: string } | null>(null)
   const [queimando, setQueimando] = useState<{ id: number; cartaId: string; x: number; y: number } | null>(null)
   const [arr, setArr] = useState<{ uid: string; x: number; y: number; sobre: string | null } | null>(null)
 
@@ -621,7 +600,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   }
 
   function bloqueioArrasto(uid: string): string | null {
-    if (baixaPaisagem()) return 'Arrastar não está disponível nesta tela baixa: selecione a carta e use USAR CARTA.'
+    if (baixaPaisagem()) return 'Arrastar não está disponível nesta tela baixa: clique na carta e escolha uma zona livre.'
     if (!minhaVez) return 'Aguarde a sua vez.'
     // Mesmo sem jogada possível a carta pode ser arrastada: a lixeira sempre aceita descartes na fase principal.
     if (motivoDescartarLivre(uid) === null) return null
@@ -655,7 +634,11 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     const c = cartaDoUid(uid)
     if (!c) return s
     const cand: string[] = ['lixeira']
-    if (c.tipo === 'unidade') [0, 1, 2, 3, 4].forEach((z) => !v.eu.campo[z] && cand.push('zona:humano:' + z))
+    if (c.tipo === 'unidade') {
+      [0, 1, 2, 3, 4].forEach((z) => !v.eu.campo[z] && cand.push('zona:humano:' + z))
+      // campo cheio: qualquer unidade própria pode ser substituída (a antiga é descartada)
+      if (v.eu.campo.every(Boolean)) [0, 1, 2, 3, 4].forEach((z) => cand.push('unidade:humano:' + z))
+    }
     cand.forEach((k) => avaliarDestino(uid, k).valido && s.add(k))
     return s
   }
@@ -792,6 +775,13 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     else dizer(r.motivo, true)
   }
 
+  // A cena de substituição (campo cheio) é só visual: some sozinha.
+  useEffect(() => {
+    if (!substituicao) return
+    const t = window.setTimeout(() => setSubstituicao(null), DURACAO_SUBSTITUICAO_MS)
+    return () => window.clearTimeout(t)
+  }, [substituicao])
+
   // A queima da carta solta na lixeira é só visual: some sozinha.
   useEffect(() => {
     if (!queimando) return
@@ -837,7 +827,11 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
         setAviso({ texto: 'Ataque cancelado.', erro: false, turno: estado.turno })
       } else if (temInspecao) setGatilhosInspecao(SEM_GATILHOS_INSPECAO)
       else if (arrRef.current) cancelarArrasto() // arrasto em curso: Esc só cancela o arrasto
-      else if (estado.resultado && !reproduzindo) onVoltar()
+      else if (estado.resultado && !reproduzindo) {
+        // Cena de corrupção aberta: Esc equivale a Continuar (não pula o resultado nem a recompensa).
+        if (tutorial && estado.resultado.vencedor === 'humano' && !corrupcaoVista) setCorrupcaoVista(true)
+        else onVoltar()
+      }
       else if (colocacaoPendente) setColocacaoPendente(null)
       else if (confirma) setConfirma(false)
       else if (modo) {
@@ -847,7 +841,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     }
     window.addEventListener('keydown', aoTeclar)
     return () => window.removeEventListener('keydown', aoTeclar)
-  }, [estado.resultado, estado.turno, reproduzindo, colocacaoPendente, confirma, modo, onVoltar, temInspecao])
+  }, [estado.resultado, estado.turno, reproduzindo, colocacaoPendente, confirma, modo, onVoltar, temInspecao, tutorial, corrupcaoVista])
 
   // ---------------------------------------------------------------- derivados de apresentação
   const efet = (dono: IdJogador, u: UnidadeEmCampo) => ({ atk: atkEfetivo(plano, dono, u, cat), def: defEfetiva(plano, dono, u, cat) })
@@ -1029,6 +1023,9 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   // O resultado espera a cena de confronto do golpe final terminar (para a queima ficar visível).
   const resultadoVisivel = !!estado.resultado && !reproduzindo && (!confronto || estado.resultado.motivo === 'desistencia')
   const dialogoAberto = !!colocacaoPendente || desistirVisivel || resultadoVisivel
+  // Tutorial vencido: antes do resultado, a cena em que o Guardião começa a ser corrompido.
+  const corrupcaoVisivel = !!tutorial && resultadoVisivel && estado.resultado?.vencedor === 'humano' && !corrupcaoVista
+  const passoTutorial = tutorial && !dialogoAberto && !reproduzindo ? passoAtual(estado, passosConfirmados) : null
 
   const posAtual = cartaSel?.tipo === 'unidade' ? posPend : undefined
 
@@ -1092,7 +1089,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
                 </span>
                 Sua mão <small>({mao.length} cartas)</small>
               </h2>
-              {telaBaixa ? null : <p className="duelo-mao__dica">{telaToque ? 'Segure e arraste a carta até o campo, ou use USAR CARTA' : 'Arraste a carta até o campo ou use USAR CARTA'}</p>}
+              {telaBaixa ? null : <p className="duelo-mao__dica">{telaToque ? 'Segure e arraste a carta até o campo, ou toque nela e escolha uma zona' : 'Arraste a carta até o campo ou clique nela e escolha uma zona'}</p>}
               <div className={`duelo-mao__cartas${minhaVez && estado.jogadaFeita ? ' duelo-mao__cartas--sem-jogada' : ''}`} data-sem-jogada={minhaVez && estado.jogadaFeita ? 'true' : undefined}>
                 {mao.map((m, i) => {
                   const c = cat.get(m.cartaId)!
@@ -1134,16 +1131,6 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
               <BannerTurno rodada={Math.ceil(estado.turno / 2)} texto={bannerTexto} fase={faseTxt} meuTurno={bannerTexto === 'Seu turno'} mudou={fx.turnoMudou} />
 
               <div className="duelo-acoes">
-                <BotaoAcao
-                  id="b-defender"
-                  variante="defender"
-                  titulo="Defender"
-                  sub={cartaSel?.tipo === 'unidade' ? `Entra em ${posPend === 'ATAQUE' ? 'ataque (toque: defesa)' : 'defesa (toque: ataque)'}` : 'Alterna a posição da unidade'}
-                  motivo={motivoDefender()}
-                  onClick={defender}
-                  icone={<IconeEscudo />}
-                />
-                <BotaoAcao id="b-usar" variante="usar" titulo="Usar carta" sub="Baixa uma carta da sua mão" motivo={motivoUsar()} onClick={usarCarta} icone={<IconeCartas />} />
                 {minhaVez && estado.fase === 'PRINCIPAL' && !estado.jogadaFeita && soDescarte ? (
                   <BotaoAcao id="b-descartar" variante="neutro" titulo="Descartar carta" sub="Sem jogada legal: descarte uma carta" motivo={sel.mao ? null : 'Selecione a carta a descartar.'} onClick={descartar} />
                 ) : null}
@@ -1199,6 +1186,16 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
         </main>
       </div>
 
+      {passoTutorial && tutorial ? (
+        <TutorialGuia
+          passo={passoTutorial}
+          numero={PASSOS.indexOf(passoTutorial) + 1}
+          total={PASSOS.length}
+          onContinuar={() => setPassosConfirmados((atuais) => new Set(atuais).add(passoTutorial.id))}
+          onPular={tutorial.onPular}
+        />
+      ) : null}
+
       {setaAtiva ? <SetaAtaque origem={setaAtiva.origem} destino={setaAtiva.destino} lado={setaAtiva.lado} /> : null}
 
       {confronto ? <ConfrontoAtaque confronto={confronto} carta={(id) => cat.get(id)} /> : null}
@@ -1211,6 +1208,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
           onInvalidar={() => invalidarInspecao(fonteInspecaoAtual.chave)}
         />
       ) : null}
+
+      {substituicao && cat.get(substituicao.antiga) && cat.get(substituicao.nova) ? <SubstituicaoCarta key={substituicao.id} antiga={cat.get(substituicao.antiga)!} nova={cat.get(substituicao.nova)!} /> : null}
 
       {queimando && cat.get(queimando.cartaId) ? <CartaQueimando key={queimando.id} carta={cat.get(queimando.cartaId)!} x={queimando.x} y={queimando.y} /> : null}
 
@@ -1237,13 +1236,16 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
           onColocar={(viradaParaBaixo) => {
             const cmd = colocacaoPendente
             setColocacaoPendente(null)
-            enviar({ ...cmd, viradaParaBaixo })
+            const antiga = cmd.zona !== undefined ? v.eu.campo[cmd.zona] : null
+            if (enviar({ ...cmd, viradaParaBaixo }) && antiga) setSubstituicao({ id: ++contadorQueima.current, antiga: antiga.cartaId, nova: cartaDoUid(cmd.uid)!.id })
           }}
           onCancelar={() => setColocacaoPendente(null)}
         />
       ) : null}
 
-      {estado.resultado && resultadoVisivel ? (
+      {corrupcaoVisivel ? <CenaCorrupcao onContinuar={() => setCorrupcaoVista(true)} /> : null}
+
+      {estado.resultado && resultadoVisivel && !corrupcaoVisivel ? (
         <ResultadoDuelo
           resultado={estado.resultado}
           nomeOponente={oponente.nome}

@@ -110,12 +110,12 @@ describe('POST /api/duelo/vitoria', () => {
   it('com todas as cartas do adversário no teto não há drop, e o duelo é consumido', async () => {
     const token = await conta()
     const usuario = (d1.sqlite.prepare('SELECT id FROM usuarios').get() as { id: string }).id
-    for (const [id] of TABELAS_DROP.coral!) {
+    for (const [id] of TABELAS_DROP.ressaca!) {
       d1.sqlite
         .prepare('INSERT INTO colecao (usuario_id, carta_id, quantidade) VALUES (?, ?, ?) ON CONFLICT DO UPDATE SET quantidade = excluded.quantidade')
         .run(usuario, id, MAX_COPIAS_COLECAO)
     }
-    const { json: ini } = await iniciar(token, 'coral')
+    const { json: ini } = await iniciar(token, 'ressaca')
     agora += DURACAO_MINIMA_DUELO_MS
     const antes = totalColecao()
     const { r, json } = await vitoria(token, ini.dueloId)
@@ -128,7 +128,7 @@ describe('POST /api/duelo/vitoria', () => {
   it('muitas vitórias acumulam na coleção sem passar do teto de cópias', async () => {
     const token = await conta()
     for (let i = 0; i < 50; i++) {
-      const { json: ini } = await iniciar(token, 'restinga')
+      const { json: ini } = await iniciar(token, 'ressaca')
       agora += DURACAO_MINIMA_DUELO_MS
       expect((await vitoria(token, ini.dueloId)).r.status).toBe(200)
     }

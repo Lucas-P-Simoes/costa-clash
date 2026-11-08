@@ -53,6 +53,31 @@ describe('ataque por seta', () => {
     expect(screen.getByLabelText('Vida do oponente: 4600')).toBeTruthy()
   })
 
+  it('campo adversário vazio: um clique simples na unidade ataca direto e tira vida do adversário', () => {
+    montar({ turno: 3, jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: [] } })
+    const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })
+    iniciar(atacante)
+    soltar() // sem mover: clique simples
+    expect(screen.getByLabelText('Vida do oponente: 3400')).toBeTruthy() // 5000 - 1600
+  })
+
+  it('campo adversário vazio: soltar a seta em qualquer lugar também ataca direto', () => {
+    montar({ turno: 3, jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: [] } })
+    apontarPara(document.body)
+    iniciar(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }))
+    mover()
+    soltar()
+    expect(screen.getByLabelText('Vida do oponente: 3400')).toBeTruthy()
+  })
+
+  it('com unidade inimiga em campo, um clique simples NÃO ataca', () => {
+    montar({ turno: 3, jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'] } })
+    iniciar(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }))
+    soltar()
+    expect(screen.getByLabelText('Vida do oponente: 5000')).toBeTruthy()
+    expect(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ })).toBeTruthy()
+  })
+
   it('soltar fora de alvo cancela sem alterar vida/campo; Escape também cancela', () => {
     montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'] } })
     const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })

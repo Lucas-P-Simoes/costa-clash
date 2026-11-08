@@ -18,7 +18,6 @@ function iniciarTurnoDaIA() {
   const e = cenario({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } })
   render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={100} onVoltar={() => {}} onNovamente={() => {}} />)
   fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-  fireEvent.click(botao(/Usar carta/))
   fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
   fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
   fireEvent.click(botao(/Encerrar turno/))

@@ -25,7 +25,6 @@ function iaEmAndamento() {
   vi.useFakeTimers()
   const r = montar({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } }, 100)
   fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-  fireEvent.click(botao(/Usar carta/))
   fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
   confirmarFaceParaCima()
   fireEvent.click(botao(/Encerrar turno/))
@@ -104,7 +103,6 @@ describe('D3: foco depois das ações', () => {
   it('modo de zona leva o foco à primeira zona livre; concluir leva a ENCERRAR TURNO', () => {
     montar({ humano: { mao: ['CC-003'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     fireEvent.click(document.activeElement as HTMLElement)
     expect(document.activeElement).toBe(screen.getByRole('button', { name: 'Colocar carta' }))
@@ -115,7 +113,6 @@ describe('D3: foco depois das ações', () => {
   it('modo de zona leva o foco à primeira zona livre', () => {
     montar({ humano: { mao: ['CC-003'], campo: ['CC-001'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 2 sua: vazia/ }))
   })
 
@@ -130,12 +127,11 @@ describe('D3: foco depois das ações', () => {
 })
 
 describe('D6/D7: seleção mantida e modo zerado no fim', () => {
-  it('DEFENDER em campo mantém a unidade selecionada e permite alternar de volta', () => {
+  it('a seta de posição em campo mantém a unidade selecionada e permite alternar de volta', () => {
     montar({ humano: { campo: ['CC-003'] }, jogadaFeita: true })
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }))
-    fireEvent.click(botao(/Defender/))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1: mudar Recife de Coral para defesa/ }))
     expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*em defesa/ }).getAttribute('aria-pressed')).toBe('true')
-    fireEvent.click(botao(/Defender/))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1: mudar Recife de Coral para ataque/ }))
     expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*em ataque/ })).toBeTruthy()
   })
 

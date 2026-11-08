@@ -83,23 +83,20 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     expect(document.querySelector('.duelo-terreno')).toBeNull()
   })
 
-  it('selecionar unidade, USAR CARTA, escolher zona livre e trocar a posição em campo', () => {
+  it('selecionar a unidade da mão, escolher zona livre e trocar a posição em campo pela seta', () => {
     montarCenario({ humano: { mao: ['CC-003', 'CC-004'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     expect(aviso()).toContain('zona livre')
     fireEvent.click(screen.getByRole('button', { name: /Zona 2 sua: vazia/ }))
     confirmarFaceParaCima()
     const z = screen.getByRole('button', { name: /^Zona 2 sua: Recife de Coral, ATK 1600, DEF 1500, em ataque/ })
     expect(z).toBeTruthy()
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
-    // já jogou: USAR fica desabilitado com motivo
+    // já jogou: escolher outra carta não oferece zonas
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
-    expect(aviso()).toContain('Você já fez a jogada')
-    // DEFENDER na unidade selecionada em campo
-    fireEvent.click(z)
-    fireEvent.click(botao(/Defender/))
+    expect(document.querySelector('.zona--valida')).toBeNull()
+    // seta sobre a unidade em campo
+    fireEvent.click(screen.getByRole('button', { name: /Zona 2: mudar Recife de Coral para defesa/ }))
     expect(screen.getByRole('button', { name: /Zona 2 sua: Recife de Coral, ATK 1600, DEF 1500, em defesa/ })).toBeTruthy()
   })
 
@@ -120,26 +117,14 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     const maoCartas = () => document.querySelector('.duelo-mao__cartas')!
     expect(maoCartas().classList.contains('duelo-mao__cartas--sem-jogada')).toBe(false)
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
     expect(maoCartas().classList.contains('duelo-mao__cartas--sem-jogada')).toBe(true)
   })
 
-  it('DEFENDER com unidade da mão escolhe a posição de entrada', () => {
-    montarCenario({ humano: { mao: ['CC-003'] } })
-    fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Defender/))
-    fireEvent.click(botao(/Usar carta/))
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
-    confirmarFaceParaCima()
-    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*em defesa/ })).toBeTruthy()
-  })
-
   it('após escolher a zona, oferece por teclado as duas faces e permite baixar virada para baixo', () => {
     montarCenario({ humano: { mao: ['CC-003'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     const dialogo = screen.getByRole('dialog', { name: /^Colocar / })
     expect(dialogo.textContent).toContain('Posição de ataque')
@@ -154,7 +139,6 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
   it('a prévia mostra a carta grande com a seta à direita; a seta vira a carta para baixo e de volta para cima', () => {
     montarCenario({ humano: { mao: ['CC-003'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     const previa = screen.getByRole('dialog', { name: /^Colocar / })
     expect(previa.querySelector('.previa-colocacao__carta')?.getAttribute('data-face')).toBe('cima')
@@ -172,7 +156,6 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
   it('prende o foco no diálogo de face e Esc cancela sem jogar a carta', () => {
     montarCenario({ humano: { mao: ['CC-003'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     const zona = screen.getByRole('button', { name: /Zona 1 sua: vazia/ })
     fireEvent.click(zona)
     const dialogo = screen.getByRole('dialog', { name: /^Colocar / })
@@ -220,7 +203,6 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     fireEvent.click(botao(/Encerrar turno/))
     expect(aviso()).toContain('jogada da mão')
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
@@ -235,7 +217,6 @@ describe('Partida: leitura do tabuleiro e jogadas', () => {
     vi.useFakeTimers()
     montarCenario({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } }, 100)
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
@@ -288,7 +269,6 @@ describe('Partida: informação oculta', () => {
       { humano: { mao: ['CC-003'], campo: [null, 'CC-071'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-001', 'CC-001', 'CC-001', 'CC-001'], baralho: 30 } },
     )
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
     fireEvent.click(botao(/Encerrar turno/))
@@ -335,7 +315,6 @@ describe('Partida: desistência, resultado e jogar novamente', () => {
     const onVoltar = vi.fn()
     montarCenario({ jogadaFeita: false, humano: { mao: ['CC-001', 'CC-003'], campo: ['CC-056'], baralho: 20 }, oponente: { lp: 1000, mao: ['CC-001'] } }, 0, { onVoltar })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
-    fireEvent.click(botao(/Usar carta/))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia|Zona 2 sua: vazia/ }))
     confirmarFaceParaCima()
     arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Derramamento de Óleo.*pode atacar/ }), screen.getByLabelText('Vida do oponente: 1000'))
@@ -421,10 +400,10 @@ describe('Integração com o Duelo Livre', () => {
     expect(onVoltar).toHaveBeenCalled()
   })
 
-  it('Oceano Limpo possui baralho válido e inicia uma partida real', () => {
-    render(<TelaDuelo oponenteId="oceano-limpo" seedInicial={27} atrasoIA={0} onVoltar={() => {}} />)
+  it('Ser Humano possui baralho válido e inicia uma partida real', () => {
+    render(<TelaDuelo oponenteId="ser-humano" seedInicial={27} atrasoIA={0} onVoltar={() => {}} />)
     expect(screen.queryByRole('alert')).toBeNull()
-    expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Oceano Limpo' })).toBeTruthy()
+    expect(screen.getByRole('heading', { level: 1, name: 'Duelo contra Ser Humano' })).toBeTruthy()
     expect(screen.getByLabelText('Sua vida: 5000')).toBeTruthy()
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(5)
   })

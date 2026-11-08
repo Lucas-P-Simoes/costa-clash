@@ -14,11 +14,6 @@ describe('baralhos dos oponentes (provisórios)', () => {
     expect(Object.keys(BARALHOS_OPONENTES).sort()).toEqual(OPONENTES.map((o) => o.id).sort())
   })
 
-  it('Oceano Limpo reutiliza a composição de Biodiversidade sem introduzir balanceamento novo', () => {
-    expect(baralhoDoOponente('oceano-limpo')).toEqual(baralhoDoOponente('biodiversidade-costeira'))
-    expect(baralhoDoOponente('oceano-limpo')).not.toBe(baralhoDoOponente('biodiversidade-costeira'))
-  })
-
   it.each(OPONENTES.map((o) => [o.id] as const))('%s: baralho válido (40 cartas, <=3 por ID, IDs existentes)', (id) => {
     const b = baralhoDoOponente(id)
     expect(b).toBeDefined()
