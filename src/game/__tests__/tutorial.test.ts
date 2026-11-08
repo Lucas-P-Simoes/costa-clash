@@ -83,6 +83,52 @@ describe('IA do tutorial', () => {
   })
 })
 
+describe('demonstração de arrasto e alvos em vermelho', () => {
+  const passo = (id: string) => PASSOS.find((p) => p.id === id)!
+
+  it('"baixar": o dedo leva a 1ª carta da mão até a 1ª zona livre; as duas pontas pulsam', () => {
+    const e = novoTutorial()
+    expect(passo('baixar').arrasto!(e)).toEqual({ de: '.duelo-mao__item:first-child .carta', para: '[data-destino="zona:humano:0"]', carta: true })
+    const alvo = passo('baixar').alvo as (e: EstadoDuelo) => string
+    expect(alvo(e)).toBe('.duelo-mao__item:first-child .carta, [data-destino="zona:humano:0"]')
+  })
+
+  it('"atacar": antes de baixar a carta do turno demonstra a jogada da mão; depois, a unidade até a carta do Guardião', () => {
+    let e = novoTutorial()
+    e = aplicar(e, jogadasLegais(e)[0]!)
+    e = aplicar(e, { tipo: 'encerrarTurno', jogador: 'humano' })
+    const ia = executarTurnoIAComPassos(e, undefined, undefined, decidirComandoTutorial)
+    if (!ia.ok) throw new Error(ia.erro)
+    e = ia.estado
+    const demo = passo('atacar').arrasto!
+    expect(demo(e)).toMatchObject({ carta: true, de: '.duelo-mao__item:first-child .carta' })
+    e = aplicar(e, jogadasLegais(e)[0]!)
+    const z = e.jogadores.oponente.campo.findIndex(Boolean)
+    expect(demo(e)).toMatchObject({ carta: false, para: `[data-zona-unidade="oponente:${z}"] .carta` })
+    expect(demo(e)!.de).toMatch(/^\[data-zona-unidade="humano:\d"\] \.carta$/)
+  })
+
+  it('"atacar": sem unidade do Guardião em campo o alvo é a vida dele', () => {
+    const e = cenario({ turno: 3, fase: 'COMBATE', jogadaFeita: true, humano: { campo: ['CC-043'] }, oponente: { campo: [] } })
+    expect(passo('atacar').arrasto!(e)).toMatchObject({ para: '[aria-label^="Vida do oponente"]' })
+  })
+
+  it('os balões do arrasto apontam para as duas pontas, numerados 1 e 2; "atacar" muda o texto conforme a fase da demonstração', () => {
+    const baixar = passo('baixar').balaos!(novoTutorial())
+    expect(baixar.map((b) => [b.numero, b.texto])).toEqual([[1, 'Pegue esta carta'], [2, 'Solte aqui']])
+    expect(baixar.map((b) => b.alvo)).toEqual([passo('baixar').arrasto!(novoTutorial())!.de, passo('baixar').arrasto!(novoTutorial())!.para])
+    const direto = cenario({ turno: 3, fase: 'COMBATE', jogadaFeita: true, humano: { campo: ['CC-043'] }, oponente: { campo: [] } })
+    expect(passo('atacar').balaos!(direto).map((b) => b.texto)).toEqual(['Arraste sua unidade', 'até a vida do Guardião'])
+  })
+
+  it('passos só de "Continuar" não têm alvo no tabuleiro (o próprio Continuar pulsa)', () => {
+    for (const id of ['boas-vindas', 'defesa-e-direto', 'finalizar']) {
+      expect(passo(id).alvo).toBeUndefined()
+      expect(passo(id).arrasto).toBeUndefined()
+    }
+  })
+})
+
 describe('roteiro do tutorial', () => {
   const nenhum = new Set<string>()
 

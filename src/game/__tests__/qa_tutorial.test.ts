@@ -201,7 +201,7 @@ describe('QA tutorial: roteiro nunca trava nem aponta para algo impossível', ()
       for (let i = 0; i < 40 && !e.resultado; i++) {
         const p = passoAtual(e, nenhum)
         expect(p === null || PASSOS.includes(p)).toBe(true)
-        if (p?.alvo) expect(typeof p.alvo).toBe('string')
+        if (p?.alvo) expect(['string', 'function']).toContain(typeof p.alvo)
         e = turnoHumano(e, rnd, 'aleatorio')
         if (e.resultado) break
         const ia = executarTurnoIAComPassos(e, undefined, undefined, decidirComandoTutorial)

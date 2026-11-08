@@ -30,12 +30,39 @@ describe('Tutorial do Guardião do Mangue na tela do duelo', () => {
     render(<TelaDuelo oponenteId="guardiao-manguezal" seedInicial={1} atrasoIA={0} onVoltar={() => {}} />)
     fireEvent.click(botao('Continuar'))
     expect(screen.getByText('Baixe uma carta')).toBeTruthy()
-    expect(document.querySelector('.duelo-mao__cartas')!.hasAttribute('data-tutorial-alvo')).toBe(true)
+    expect(document.querySelector('.duelo-mao__item:first-child .carta')!.hasAttribute('data-tutorial-alvo')).toBe(true)
     expect(screen.queryByRole('button', { name: 'Continuar' })).toBeNull() // passo automático
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     fireEvent.click(botao('Colocar carta'))
     expect(screen.getByText('Ataque ou defesa')).toBeTruthy()
+  })
+
+  it('o que deve ser clicado pulsa em vermelho: o Continuar nas boas-vindas e, ao arrastar, as pontas e o dedo animado', () => {
+    render(<TelaDuelo oponenteId="guardiao-manguezal" seedInicial={1} atrasoIA={0} onVoltar={() => {}} />)
+    expect(botao('Continuar').hasAttribute('data-tutorial-alvo')).toBe(true)
+    expect(document.querySelector('.tutorial-dedo')).toBeNull()
+    fireEvent.click(botao('Continuar'))
+    expect(document.querySelector('.tutorial-dedo')).toBeTruthy() // demonstração do arrasto da carta até a zona
+    expect(document.querySelector('[data-destino="zona:humano:0"]')!.hasAttribute('data-tutorial-alvo')).toBe(true)
+    fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    fireEvent.click(botao('Colocar carta'))
+    expect(document.querySelector('.tutorial-dedo')).toBeNull() // passo "Ataque ou defesa": só a setinha pulsa
+    expect(document.querySelector('.zona__girar')!.hasAttribute('data-tutorial-alvo')).toBe(true)
+  })
+
+  it('balões de fala apontados: "Pegue esta carta" e "Solte aqui" no arrasto; setinha de posição no passo seguinte', () => {
+    render(<TelaDuelo oponenteId="guardiao-manguezal" seedInicial={1} atrasoIA={0} onVoltar={() => {}} />)
+    const baloes = () => [...document.querySelectorAll('.tutorial-balao')].map((b) => b.textContent)
+    expect(baloes().join('|')).toMatch(/Sua vida: 5.000 LP.*Minha vida: 2.000 LP|Minha vida: 2.000 LP.*Sua vida: 5.000 LP/)
+    fireEvent.click(botao('Continuar'))
+    expect(baloes()).toEqual(['1Pegue esta carta', '2Solte aqui'])
+    for (const b of document.querySelectorAll('.tutorial-balao')) expect(b.getAttribute('aria-hidden')).toBe('true')
+    fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
+    fireEvent.click(botao('Colocar carta'))
+    expect(baloes()).toEqual(['Clique aqui para virar entre ataque e defesa'])
   })
 
   it('Pular tutorial vira um duelo normal (sem balão, vida cheia, mão embaralhada)', () => {

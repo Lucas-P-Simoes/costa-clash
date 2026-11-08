@@ -1189,6 +1189,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
       {passoTutorial && tutorial ? (
         <TutorialGuia
           passo={passoTutorial}
+          estado={estado}
           numero={PASSOS.indexOf(passoTutorial) + 1}
           total={PASSOS.length}
           onContinuar={() => setPassosConfirmados((atuais) => new Set(atuais).add(passoTutorial.id))}

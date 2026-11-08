@@ -159,12 +159,12 @@ describe('QA tutorial UI: desistir, pular, derrota e destaque', () => {
   it('o destaque data-tutorial-alvo some ao trocar de passo e ao desmontar', () => {
     const { unmount } = render(<TelaDuelo oponenteId="guardiao-manguezal" seedInicial={1} atrasoIA={0} onVoltar={() => {}} />)
     fireEvent.click(botao('Continuar'))
-    expect(alvos().length).toBe(1)
+    expect(alvos().length).toBe(2) // as duas pontas do arrasto: a carta da mão e a zona livre
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(q('.zona--vazia[data-destino^="zona:humano"]'))
     fireEvent.click(botao('Colocar carta'))
     // passo "Ataque ou defesa": destaca a setinha de posição (e não mais a mão)
-    expect(q('.duelo-mao__cartas').hasAttribute('data-tutorial-alvo')).toBe(false)
+    expect(q('.duelo-mao__item:first-child .carta').hasAttribute('data-tutorial-alvo')).toBe(false)
     expect(q('.zona__girar').hasAttribute('data-tutorial-alvo')).toBe(true)
     unmount()
     expect(alvos().length).toBe(0)
