@@ -110,7 +110,7 @@ describe('QA tutorial: motor e IA dos demais duelos intactos', () => {
   })
 
   it('executarTurnoIAComPassos com decisor padrão = decidirComando explícito = executarTurnoIA (mesmo estado final)', () => {
-    const e = cenario({ ativo: 'oponente', fase: 'PRINCIPAL', turno: 4, mao: undefined, oponente: { mao: ['CC-056', 'CC-043', 'CC-001'], campo: ['CC-056'] }, humano: { campo: ['CC-001', 'CC-002'] } } as never)
+    const e = cenario({ ativo: 'oponente', fase: 'PRINCIPAL', turno: 4, mao: undefined, oponente: { mao: ['CC-156', 'CC-143', 'CC-101'], campo: ['CC-156'] }, humano: { campo: ['CC-101', 'CC-102'] } } as never)
     const a = executarTurnoIAComPassos(e)
     const b = executarTurnoIAComPassos(e, undefined, undefined, decidirComando)
     const c = executarTurnoIA(e)
@@ -122,10 +122,10 @@ describe('QA tutorial: motor e IA dos demais duelos intactos', () => {
 
   it('decidirComandoTutorial só difere de decidirComando quando este atacaria (e então encerra o turno)', () => {
     const casos: EstadoDuelo[] = [
-      cenario({ ativo: 'oponente', fase: 'COMBATE', turno: 4, oponente: { campo: ['CC-043'] }, humano: { campo: ['CC-002'] } }),
-      cenario({ ativo: 'oponente', fase: 'COMBATE', turno: 4, oponente: { campo: ['CC-043'] }, humano: { campo: [] } }),
-      cenario({ ativo: 'oponente', fase: 'PRINCIPAL', turno: 4, oponente: { mao: ['CC-043', 'CC-001'], campo: [] }, humano: { campo: ['CC-002'] } }),
-      cenario({ ativo: 'oponente', fase: 'PRINCIPAL', turno: 4, oponente: { mao: ['CC-043'], campo: ['CC-001'] }, humano: { campo: ['CC-002'] }, jogadaFeita: true }),
+      cenario({ ativo: 'oponente', fase: 'COMBATE', turno: 4, oponente: { campo: ['CC-143'] }, humano: { campo: ['CC-102'] } }),
+      cenario({ ativo: 'oponente', fase: 'COMBATE', turno: 4, oponente: { campo: ['CC-143'] }, humano: { campo: [] } }),
+      cenario({ ativo: 'oponente', fase: 'PRINCIPAL', turno: 4, oponente: { mao: ['CC-143', 'CC-101'], campo: [] }, humano: { campo: ['CC-102'] } }),
+      cenario({ ativo: 'oponente', fase: 'PRINCIPAL', turno: 4, oponente: { mao: ['CC-143'], campo: ['CC-101'] }, humano: { campo: ['CC-102'] }, jogadaFeita: true }),
     ]
     let atacou = 0
     for (const e of casos) {

@@ -13,9 +13,9 @@ import { arrastarAtaque } from './ajudanteAtaque'
 afterEach(cleanup)
 
 const usuario: UsuarioAutenticado = { id: 'u1', email: 'a@b.c' }
-const colecaoNova = [{ cartaId: 'CC-057', quantidade: 2 }, { cartaId: 'CC-001', quantidade: 1 }]
+const colecaoNova = [{ cartaId: 'CC-157', quantidade: 2 }, { cartaId: 'CC-101', quantidade: 1 }]
 
-function servico(drop: ResultadoDrop = { ok: true, carta: 'CC-057', quantidade: 2, colecao: colecaoNova }) {
+function servico(drop: ResultadoDrop = { ok: true, carta: 'CC-157', quantidade: 2, colecao: colecaoNova }) {
   return {
     entrar: vi.fn(),
     iniciarDuelo: vi.fn(async () => ({ ok: true as const, dueloId: 'd-1' })),
@@ -33,7 +33,7 @@ describe('useRecompensaDuelo', () => {
     act(() => result.current.aoVencer())
     expect(result.current.recompensa).toEqual({ tipo: 'sorteando' })
     await waitFor(() => expect(result.current.recompensa?.tipo).toBe('carta'))
-    expect(result.current.recompensa).toEqual({ tipo: 'carta', cartaId: 'CC-057', quantidade: 2, cartasDistintas: 2 })
+    expect(result.current.recompensa).toEqual({ tipo: 'carta', cartaId: 'CC-157', quantidade: 2, cartasDistintas: 2 })
     expect(s.resgatarVitoria).toHaveBeenCalledWith('d-1')
     expect(aoAtualizar).toHaveBeenCalledWith(colecaoNova)
   })
@@ -69,10 +69,10 @@ describe('useRecompensaDuelo', () => {
 })
 
 function vencer(recompensa?: EstadoRecompensa, onVitoria = vi.fn()) {
-  const e = cenario({ jogadaFeita: true, humano: { campo: ['CC-056'], baralho: 20 }, oponente: { lp: 1000, mao: ['CC-001'], baralho: 20 } })
+  const e = cenario({ jogadaFeita: true, humano: { campo: ['CC-156'], baralho: 20 }, oponente: { lp: 1000, mao: ['CC-101'], baralho: 20 } })
   const props = { estadoInicial: e, oponente: buscarOponente('ressaca')!, atrasoIA: 0, onVoltar: () => {}, onNovamente: () => {}, onVitoria }
   const r = render(<Partida {...props} recompensa={recompensa} />)
-  arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Derramamento de Óleo.*pode atacar/ }), screen.getByLabelText('Vida do oponente: 1000'))
+  arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: GORGÔNIA-ESCARLATE.*pode atacar/ }), screen.getByLabelText('Vida do oponente: 1000'))
   return { ...r, onVitoria, rerenderCom: (x?: EstadoRecompensa) => r.rerender(<Partida {...props} recompensa={x} />) }
 }
 
@@ -89,9 +89,9 @@ describe('Partida + resultado com drop', () => {
     const { rerenderCom } = vencer({ tipo: 'sorteando' })
     const d = screen.getByRole('dialog')
     expect(d.textContent).toContain('Sorteando sua carta…')
-    rerenderCom({ tipo: 'carta', cartaId: 'CC-057', quantidade: 2, cartasDistintas: 41 })
+    rerenderCom({ tipo: 'carta', cartaId: 'CC-157', quantidade: 2, cartasDistintas: 41 })
     const status = within(screen.getByRole('dialog')).getByText(/Nova carta:/)
-    expect(status.textContent).toMatch(/Nova carta: .+ \(2\/3 cópias\)\. Coleção: 41\/72 cartas\./)
+    expect(status.textContent).toMatch(/Nova carta: .+ \(2\/3 cópias\)\. Coleção: 41\/70 cartas\./)
   })
 
   it('textos de sem conta, sem carta e erro', () => {

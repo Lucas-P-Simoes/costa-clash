@@ -94,7 +94,7 @@ describe('turnos, reposição da mão e derrota por compra incompleta', () => {
   })
 
   it('a compra aumenta a mão de 4 para 5 e reduz o baralho em 1', () => {
-    let e = cenario({ humano: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-006'], baralho: 10 }, oponente: { mao: ['CC-001'], baralho: 10 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
+    let e = cenario({ humano: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-106'], baralho: 10 }, oponente: { mao: ['CC-101'], baralho: 10 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
     e = ok(aplicarComando(e, { tipo: 'encerrarTurno', jogador: 'oponente' }))
     expect(e.ativo).toBe('humano')
     expect(e.jogadores.humano.mao).toHaveLength(5)
@@ -104,7 +104,7 @@ describe('turnos, reposição da mão e derrota por compra incompleta', () => {
   })
 
   it('perde imediatamente se o baralho não tem cartas suficientes para repor (sem compra parcial)', () => {
-    const e0 = cenario({ humano: { mao: ['CC-001', 'CC-002', 'CC-004'], baralho: 1 }, oponente: { mao: ['CC-001'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
+    const e0 = cenario({ humano: { mao: ['CC-101', 'CC-102', 'CC-104'], baralho: 1 }, oponente: { mao: ['CC-101'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
     const e = ok(aplicarComando(e0, { tipo: 'encerrarTurno', jogador: 'oponente' }))
     expect(e.resultado).toEqual({ vencedor: 'oponente', motivo: 'compra' })
     expect(e.jogadores.humano.mao).toHaveLength(3) // nada foi comprado
@@ -112,20 +112,20 @@ describe('turnos, reposição da mão e derrota por compra incompleta', () => {
   })
 
   it('perde com baralho vazio e mão incompleta', () => {
-    const e0 = cenario({ humano: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005'], baralho: 0 }, oponente: { mao: ['CC-001'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
+    const e0 = cenario({ humano: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105'], baralho: 0 }, oponente: { mao: ['CC-101'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
     const e = ok(aplicarComando(e0, { tipo: 'encerrarTurno', jogador: 'oponente' }))
     expect(e.resultado).toEqual({ vencedor: 'oponente', motivo: 'compra' })
   })
 
   it('NÃO perde com baralho vazio se a mão já tem 5 (nenhuma compra exigida)', () => {
-    const e0 = cenario({ humano: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 0 }, oponente: { mao: ['CC-001'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
+    const e0 = cenario({ humano: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105', 'CC-106'], baralho: 0 }, oponente: { mao: ['CC-101'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
     const e = ok(aplicarComando(e0, { tipo: 'encerrarTurno', jogador: 'oponente' }))
     expect(e.resultado).toBeNull()
     expect(e.ativo).toBe('humano')
   })
 
   it('compra exatamente o necessário quando há cartas de sobra (baralho == falta)', () => {
-    const e0 = cenario({ humano: { mao: ['CC-001', 'CC-002', 'CC-004'], baralho: 2 }, oponente: { mao: ['CC-001'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
+    const e0 = cenario({ humano: { mao: ['CC-101', 'CC-102', 'CC-104'], baralho: 2 }, oponente: { mao: ['CC-101'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
     const e = ok(aplicarComando(e0, { tipo: 'encerrarTurno', jogador: 'oponente' }))
     expect(e.resultado).toBeNull()
     expect(e.jogadores.humano.mao).toHaveLength(5)
@@ -133,7 +133,7 @@ describe('turnos, reposição da mão e derrota por compra incompleta', () => {
   })
 
   it('cartas do baralho são compradas pelo topo, em ordem', () => {
-    const e0 = cenario({ humano: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005'], baralho: 3 }, oponente: { mao: ['CC-001'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
+    const e0 = cenario({ humano: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105'], baralho: 3 }, oponente: { mao: ['CC-101'], baralho: 5 }, ativo: 'oponente', turno: 2, jogadaFeita: true })
     const topo = e0.jogadores.humano.baralho[0]!.uid
     const e = ok(aplicarComando(e0, { tipo: 'encerrarTurno', jogador: 'oponente' }))
     expect(e.jogadores.humano.mao.at(-1)!.uid).toBe(topo)
@@ -142,23 +142,23 @@ describe('turnos, reposição da mão e derrota por compra incompleta', () => {
 
 describe('primeiro turno absoluto', () => {
   it('ninguém ataca no turno 1, mesmo com unidade em campo', () => {
-    const e = cenarioCombate({ turno: 1, humano: { campo: ['CC-001'] }, oponente: { campo: ['CC-004'] } })
+    const e = cenarioCombate({ turno: 1, humano: { campo: ['CC-101'] }, oponente: { campo: ['CC-104'] } })
     const r = atacar(e, 0, 0)
     expect(r.ok).toBe(false)
     if (!r.ok) expect(r.erro).toContain('primeiro turno')
-    expect(atacar(cenarioCombate({ turno: 1, humano: { campo: ['CC-001'] } }), 0, 'direto').ok).toBe(false)
+    expect(atacar(cenarioCombate({ turno: 1, humano: { campo: ['CC-101'] } }), 0, 'direto').ok).toBe(false)
   })
 
   it('o oponente pode atacar no turno 2 e o humano a partir do turno 3', () => {
-    const e2 = cenarioCombate({ turno: 2, ativo: 'oponente', oponente: { campo: ['CC-003'] }, humano: { campo: ['CC-004'] } })
+    const e2 = cenarioCombate({ turno: 2, ativo: 'oponente', oponente: { campo: ['CC-103'] }, humano: { campo: ['CC-104'] } })
     expect(atacar(e2, 0, 0).ok).toBe(true)
-    const e3 = cenarioCombate({ turno: 3, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-004'] } })
+    const e3 = cenarioCombate({ turno: 3, humano: { campo: ['CC-103'] }, oponente: { campo: ['CC-104'] } })
     expect(atacar(e3, 0, 0).ok).toBe(true)
   })
 
   it('jogando de verdade: unidade invocada no turno 1 não ataca, e o fluxo avança para o turno 2', () => {
-    let e = cenario({ turno: 1, humano: { mao: ['CC-003'], baralho: 34 }, oponente: { mao: ['CC-001'], baralho: 34 } })
-    e = ok(jogar(e, 'humano', 'CC-003'))
+    let e = cenario({ turno: 1, humano: { mao: ['CC-103'], baralho: 34 }, oponente: { mao: ['CC-101'], baralho: 34 } })
+    e = ok(jogar(e, 'humano', 'CC-103'))
     e = ok(aplicarComando(e, { tipo: 'avancarFase', jogador: 'humano' }))
     expect(atacar(e, 0, 'direto').ok).toBe(false)
     e = ok(aplicarComando(e, { tipo: 'encerrarTurno', jogador: 'humano' }))
@@ -169,7 +169,7 @@ describe('primeiro turno absoluto', () => {
 
 describe('fim de partida', () => {
   it('jogo encerrado não aceita nenhum comando e devolve o mesmo estado', () => {
-    const e0 = cenario({ humano: { mao: ['CC-001'] }, oponente: { mao: ['CC-001'] } })
+    const e0 = cenario({ humano: { mao: ['CC-101'] }, oponente: { mao: ['CC-101'] } })
     const e = ok(aplicarComando(e0, { tipo: 'desistir', jogador: 'humano' }))
     expect(e.resultado).toEqual({ vencedor: 'oponente', motivo: 'desistencia' })
     for (const c of [
@@ -203,7 +203,7 @@ describe('fim de partida', () => {
   })
 
   it('salvaguarda: a mesma assinatura 3 vezes encerra como empate técnico', () => {
-    let e = cenario({ humano: { mao: ['CC-001'] }, oponente: { mao: ['CC-001'] } })
+    let e = cenario({ humano: { mao: ['CC-101'] }, oponente: { mao: ['CC-101'] } })
     let r = registrarRepeticao(e)
     expect(r.estado.resultado).toBeNull()
     e = r.estado

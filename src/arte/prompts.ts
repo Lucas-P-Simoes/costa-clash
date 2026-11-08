@@ -4,7 +4,7 @@
 // ESTE MÓDULO SÓ GERA TEXTO. Nenhuma ilustração é gerada aqui (ver docs/ARTE_DAS_CARTAS.md).
 import type { Carta } from '../game/tipos.ts'
 import { SUJEITOS } from './sujeitos.ts'
-import type { Forma, PaletaId } from './sujeitos.ts'
+import type { Forma, PaletaId, Sujeito } from './sujeitos.ts'
 
 export type Idioma = 'pt' | 'en'
 
@@ -111,9 +111,39 @@ export class SujeitoAusenteError extends Error {
   }
 }
 
+type CartaParaPrompt = Pick<Carta, 'id'> & Partial<Pick<Carta, 'nome' | 'informacao'>>
+type CartaComNome = Pick<Carta, 'id' | 'nome'> & Partial<Pick<Carta, 'informacao'>>
+
+/**
+ * As cartas atuais trazem descrição estruturada suficiente para um prompt estável.
+ */
+function sujeitoDaCarta(carta: CartaParaPrompt): Sujeito | undefined {
+  const existente = SUJEITOS[carta.id]
+  if (existente) return existente
+  if (carta.id === 'CC-153') {
+    return {
+      forma: 'criatura',
+      paleta: 'vidaMarinha',
+      pt: 'uma colônia de cracas, cirrípedes sésseis da ordem Sessilia, com corpos calcários baixos em forma de pequenos vulcões e bases largas cimentadas diretamente à rocha do costão; placas operculares visíveis no topo, sem pedúnculos, hastes, caules ou pescoços',
+      en: 'a colony of acorn barnacles, sessile cirripedes of the order Sessilia, with low volcano-shaped calcareous bodies and broad bases cemented directly to intertidal rock; visible opercular plates on top, with no peduncles, stalks, stems, or necks',
+    }
+  }
+  const info = carta.informacao
+  if (!info) return undefined
+  const temCaracteristica = !!info.caracteristica && info.caracteristica.trim().toUpperCase() !== 'NAO TEM'
+  const destaquePt = temCaracteristica ? `, com destaque visual para a característica informada: ${info.caracteristica}` : ''
+  const destaqueEn = temCaracteristica ? `, visually emphasizing the provided characteristic: ${info.caracteristica}` : ''
+  return {
+    forma: 'criatura',
+    paleta: 'vidaMarinha',
+    pt: `${carta.nome ?? carta.id}, animal com anatomia reconhecível coerente com a classificação informada (${info.classificacao}), em cena natural no ambiente informado: ${info.ambiente}${destaquePt}`,
+    en: `the animal identified in Portuguese as ${carta.nome ?? carta.id}, with recognizable anatomy consistent with the provided classification (${info.classificacao}), in a natural scene set in the provided environment: ${info.ambiente}${destaqueEn}`,
+  }
+}
+
 /** Monta o prompt completo de uma carta (determinístico: mesma carta, mesmo texto). */
-export function montarPrompt(carta: Pick<Carta, 'id'>, idioma: Idioma = 'pt'): string {
-  const sujeito = SUJEITOS[carta.id]
+export function montarPrompt(carta: CartaParaPrompt, idioma: Idioma = 'pt'): string {
+  const sujeito = sujeitoDaCarta(carta)
   if (!sujeito) throw new SujeitoAusenteError(carta.id)
   const r = ROTULOS[idioma]
   return [
@@ -135,8 +165,8 @@ export interface PromptDaCarta {
   promptEn: string
 }
 
-export function promptDaCarta(carta: Pick<Carta, 'id' | 'nome'>): PromptDaCarta {
-  const s = SUJEITOS[carta.id]
+export function promptDaCarta(carta: CartaComNome): PromptDaCarta {
+  const s = sujeitoDaCarta(carta)
   if (!s) throw new SujeitoAusenteError(carta.id)
   return {
     id: carta.id,
@@ -149,18 +179,18 @@ export function promptDaCarta(carta: Pick<Carta, 'id' | 'nome'>): PromptDaCarta 
   }
 }
 
-export function promptsDoCatalogo(cartas: readonly Pick<Carta, 'id' | 'nome'>[]): PromptDaCarta[] {
+export function promptsDoCatalogo(cartas: readonly CartaComNome[]): PromptDaCarta[] {
   return cartas.map(promptDaCarta)
 }
 
-/** Número do ID ("CC-018" -> 18). */
+/** Número do ID ("CC-118" -> 18). */
 export function numeroDoId(id: string): number {
   const m = /^CC-(\d{3})$/.exec(id)
   if (!m) throw new Error(`ID de carta inválido: ${id}`)
   return Number(m[1])
 }
 
-/** Nome de arquivo estável baseado no número do ID: "CC-018" -> "018". */
+/** Nome de arquivo estável baseado no número do ID: "CC-118" -> "018". */
 export function baseDoArquivo(id: string): string {
   return String(numeroDoId(id)).padStart(3, '0')
 }

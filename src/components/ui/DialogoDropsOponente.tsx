@@ -1,13 +1,15 @@
-import { useEffect, useMemo, useRef } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import { arteDaCarta } from '../../arte/arteDisponivel'
 import type { ItemColecao } from '../../auth/servicoAuth'
 import { CATALOGO } from '../../data/catalogo'
 import { chancesDrop, MAX_COPIAS_COLECAO, tabelaDropDoOponente } from '../../data/dropsOponentes'
 import type { Oponente } from '../../data/oponentes'
+import type { Carta } from '../../game/tipos'
 import { ArteCarta } from '../duelo/ArteCarta'
 import { rotuloTipo, tipoArte } from '../duelo/textoCarta'
 import { useFocoDialogo } from '../duelo/useFocoDialogo'
 import { IconeVoltar } from './Icones'
+import { DialogoCarta } from './DialogoCarta'
 
 interface Props {
   oponente: Oponente
@@ -22,10 +24,15 @@ const FORMATO_CHANCE = new Intl.NumberFormat('pt-BR', { maximumFractionDigits: 1
 export function DialogoDropsOponente({ oponente, colecao, onFechar }: Props) {
   const ref = useRef<HTMLDivElement>(null)
   useFocoDialogo(ref)
+  const [cartaAberta, setCartaAberta] = useState<Carta | null>(null)
+  const cartaAbertaRef = useRef(false)
+  useEffect(() => {
+    cartaAbertaRef.current = cartaAberta !== null
+  }, [cartaAberta])
   // Esc fecha só o pop-up, mesmo com o foco no body (clique em texto): captura no document antes do atalho "voltar" da tela.
   useEffect(() => {
     const aoTeclar = (e: KeyboardEvent) => {
-      if (e.key !== 'Escape') return
+      if (e.key !== 'Escape' || cartaAbertaRef.current) return
       e.stopPropagation()
       e.preventDefault()
       onFechar()
@@ -44,13 +51,15 @@ export function DialogoDropsOponente({ oponente, colecao, onFechar }: Props) {
   const temCompletas = !!colecao && linhas.some((l) => l.copias >= MAX_COPIAS_COLECAO)
 
   return (
-    <div
-      className="drops-overlay"
-      onClick={(e) => {
-        if (e.target === e.currentTarget) onFechar()
-      }}
-    >
-      <div ref={ref} className="drops-dialogo" role="dialog" aria-modal="true" aria-labelledby="drops-titulo" aria-describedby="drops-regra">
+    <>
+      <div
+        className="drops-overlay"
+        inert={cartaAberta !== null}
+        onClick={(e) => {
+          if (e.target === e.currentTarget) onFechar()
+        }}
+      >
+        <div ref={ref} className="drops-dialogo" role="dialog" aria-modal="true" aria-labelledby="drops-titulo" aria-describedby="drops-regra">
         <h2 id="drops-titulo" className="drops-dialogo__titulo">
           Cartas de {oponente.nome}
         </h2>
@@ -75,6 +84,13 @@ export function DialogoDropsOponente({ oponente, colecao, onFechar }: Props) {
                     {colecao ? ` · você tem ${copias}/${MAX_COPIAS_COLECAO}` : ''}
                   </span>
                 </span>
+                <button type="button" className="drops-item__info" aria-label={`Informações sobre ${carta.nome}`} onClick={() => setCartaAberta(carta)}>
+                  <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+                    <circle cx="12" cy="12" r="9" />
+                    <circle className="drops-item__info-ponto" cx="12" cy="8" r="1.25" />
+                    <path d="M12 11v6" />
+                  </svg>
+                </button>
                 <span className="drops-item__chance">{completa ? 'Completa' : `${FORMATO_CHANCE.format(chance)}%`}</span>
               </li>
             )
@@ -86,7 +102,9 @@ export function DialogoDropsOponente({ oponente, colecao, onFechar }: Props) {
           </span>
           <span>Fechar</span>
         </button>
+        </div>
       </div>
-    </div>
+      {cartaAberta ? <DialogoCarta carta={cartaAberta} onFechar={() => setCartaAberta(null)} /> : null}
+    </>
   )
 }

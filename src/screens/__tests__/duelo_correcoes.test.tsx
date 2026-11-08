@@ -17,13 +17,13 @@ const botao = (n: string | RegExp) => screen.getByRole('button', { name: n })
 const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
 
 function montar(cfg: ConfigCenario = {}, atrasoIA = 0) {
-  const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
+  const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-101'] }, ...cfg })
   return render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={atrasoIA} onVoltar={() => {}} onNovamente={() => {}} />)
 }
 
 function iaEmAndamento() {
   vi.useFakeTimers()
-  const r = montar({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } }, 100)
+  const r = montar({ humano: { mao: ['CC-103'], baralho: 30 }, oponente: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105', 'CC-106'], baralho: 30 } }, 100)
   fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
   fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
   confirmarFaceParaCima()
@@ -65,7 +65,7 @@ describe('D1: desistir durante a reprodução do turno da IA', () => {
 
 describe('D2: diálogos prendem e devolvem o foco', () => {
   it('desistir: foco inicial em "Continuar jogando", fundo inert, Tab preso e foco volta ao botão Desistir', () => {
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     const desistir = botao('Desistir')
     desistir.focus()
     fireEvent.click(desistir)
@@ -83,7 +83,7 @@ describe('D2: diálogos prendem e devolvem o foco', () => {
   })
 
   it('aberto por Esc, o foco volta ao botão Desistir ao cancelar', () => {
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     fireEvent.keyDown(window, { key: 'Escape' })
     expect(screen.getByRole('alertdialog')).toBeTruthy()
     fireEvent.keyDown(window, { key: 'Escape' })
@@ -91,7 +91,7 @@ describe('D2: diálogos prendem e devolvem o foco', () => {
   })
 
   it('resultado: foco no botão JOGAR NOVAMENTE e fundo inert', () => {
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     fireEvent.click(botao('Desistir'))
     fireEvent.click(botao('Confirmar'))
     expect(document.activeElement).toBe(botao('Jogar novamente'))
@@ -101,7 +101,7 @@ describe('D2: diálogos prendem e devolvem o foco', () => {
 
 describe('D3: foco depois das ações', () => {
   it('modo de zona leva o foco à primeira zona livre; concluir leva a ENCERRAR TURNO', () => {
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     fireEvent.click(document.activeElement as HTMLElement)
@@ -111,16 +111,16 @@ describe('D3: foco depois das ações', () => {
   })
 
   it('modo de zona leva o foco à primeira zona livre', () => {
-    montar({ humano: { mao: ['CC-003'], campo: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-103'], campo: ['CC-101'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     expect(document.activeElement).toBe(screen.getByRole('button', { name: /Zona 2 sua: vazia/ }))
   })
 
   it('gesto de ataque usa o atacante e alvo apontados sem depender de um modo por botão', () => {
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'], mao: ['CC-001'] } })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: ['CC-101'], mao: ['CC-101'] } })
     arrastarAtaque(
-      screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }),
-      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+      screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: CHAMA-MARÉ/ }),
     )
     expect(screen.getByLabelText('Vida do oponente: 4600')).toBeTruthy()
   })
@@ -128,15 +128,15 @@ describe('D3: foco depois das ações', () => {
 
 describe('D6/D7: seleção mantida e modo zerado no fim', () => {
   it('a seta de posição em campo mantém a unidade selecionada e permite alternar de volta', () => {
-    montar({ humano: { campo: ['CC-003'] }, jogadaFeita: true })
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1: mudar Recife de Coral para defesa/ }))
-    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*em defesa/ }).getAttribute('aria-pressed')).toBe('true')
-    fireEvent.click(screen.getByRole('button', { name: /Zona 1: mudar Recife de Coral para ataque/ }))
-    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*em ataque/ })).toBeTruthy()
+    montar({ humano: { campo: ['CC-103'] }, jogadaFeita: true })
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1: mudar CARANGUEJO-AZUL para defesa/ }))
+    expect(screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*em defesa/ }).getAttribute('aria-pressed')).toBe('true')
+    fireEvent.click(screen.getByRole('button', { name: /Zona 1: mudar CARANGUEJO-AZUL para ataque/ }))
+    expect(screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*em ataque/ })).toBeTruthy()
   })
 
   it('o botão ATACAR não existe antes nem depois do resultado', () => {
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] } })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] } })
     expect(document.getElementById('b-atacar')).toBeNull()
     fireEvent.click(botao('Desistir'))
     fireEvent.click(botao('Confirmar'))
@@ -146,9 +146,9 @@ describe('D6/D7: seleção mantida e modo zerado no fim', () => {
 
 describe('D8 a D11: textos', () => {
   it('o painel não tem ATACAR e a rodada continua compreensível', () => {
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] } })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] } })
     expect(document.getElementById('b-atacar')).toBeNull()
-    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })).toBeTruthy()
+    expect(screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ })).toBeTruthy()
     expect(document.querySelector('.duelo-turno__rotulo')!.textContent).toBe('Rodada 2') // turno absoluto 3
   })
 })

@@ -9,7 +9,7 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 ## 2. Configuração
 - Um humano × oponente computadorizado; duelo local em site responsivo, sem conta obrigatória nem multiplayer.
 - **5.000 LP** por lado (alterado de 8.000 a pedido do dono do projeto); baralhos de **40 cartas** (montagem/perfil), dos quais só **30 entram em cada duelo** (embaralha e usa as 30 primeiras; alterado a pedido do dono); **até 3 cópias do mesmo ID**; embaralhar baralhos com RNG injetável nos testes.
-- **Catálogo de 72 cartas distintas** (todas unidades), mas cada baralho de duelo tem 40, selecionadas dentre as 72 (duplicatas permitidas até 3). O catálogo não é um baralho de 72 cartas. Cartas de ação (instantâneas e terrenos), suporte e `CC-082` foram removidas (§16 e §17). As cartas de suporte (equipamentos e armadilhas) e `CC-082` foram **removidas** em 05/11/2026 (ver §16); os IDs restantes não foram renumerados.
+- **Catálogo de 70 cartas distintas** (`CC-101…CC-170`, todas unidades), mas cada baralho de duelo tem 40, selecionadas dentre as 70 (duplicatas permitidas até 3). O catálogo não é um baralho de 70 cartas. As 72 cartas anteriores `CC-001…CC-072` foram removidas em 08/11/2026 a pedido do responsável; cartas de ação e suporte já haviam sido removidas (§16 e §17).
 - Campo: **5 zonas de unidades** por jogador (sem zonas de suporte e, desde §17, sem terreno global). Sem fusão, invocação-tributo, estrelas guardiãs, rituais nem multiplayer no MVP.
 - **Mão inicial de cinco**: ambos compram 5 antes do primeiro turno. Primeiro a agir: humano (fixo no MVP). Sem mulligan.
 - **Exceção do tutorial (08/11/2026, a confirmar com o dono):** só no duelo 1 (Guardião do Mangue, guiado) os baralhos entram em ordem fixa (sem embaralhar), o Guardião começa com **2.000 LP** em vez de 5.000 e a IA dele nunca ataca. "Pular tutorial" volta às regras normais. Ver `src/data/tutorialGuardiao.ts`.
@@ -76,93 +76,18 @@ Duelo educativo sobre interação costa-mar: ocupação, ecossistemas, fauna, at
 - A IA recebe unidades adversárias viradas para baixo apenas como marcadores de zona/posição, sem identidade nem atributos. Política determinística mínima: prefere primeiro qualquer combate favorável conhecido; se não existir, pode atacar um alvo oculto com seu atacante disponível de maior ATK, usando a menor zona como desempate. Essa escolha assume risco e nunca consulta o conteúdo oculto.
 
 ## 10. Catálogo, progressão e baralhos
-- Os **72 modelos de cartas** estão listados no item 11 e no arquivo `cartas.json`, que é a **fonte de dados estruturada**. Todos são originais.
-- `CC-001…CC-072`: unidades sem efeitos próprios; `CC-073…CC-092`: ações (menos os IDs removidos `CC-082`, `CC-085…CC-088`); os IDs `CC-093…CC-100` (armadilhas) não existem mais e **não foram reaproveitados**.
-- O editor de baralho seleciona exatamente 40 instâncias, com máximo 3 cópias de cada ID. Inicialmente liberar todas as 72 no modo protótipo; desbloqueio por vitória pode ser implementado depois sem bloquear QA.
-- **Coleção e drop de cartas (implementado, percentuais PROVISÓRIOS):** a conta começa com a coleção inicial (= baralho inicial) e cresce por vitórias no Duelo Livre. Cada vitória com conta rende **uma carta** sorteada no servidor da tabela do adversário vencido (`src/data/dropsOponentes.ts`). Cada adversário dropa as cartas distintas do próprio baralho, cada uma com um percentual fixo; a tabela de cada adversário soma 100% e, juntas, as 17 tabelas cobrem as 72 cartas. Percentuais por faixa (recalculados em 05/11/2026 sem as cartas removidas): unidades mais fortes (ATK+DEF) são raras, ações e unidades intermediárias incomuns, demais comuns. A coleção guarda no máximo **3 cópias por carta** (o máximo do baralho); cartas no teto saem do sorteio e as chances restantes se renormalizam; se todas as cartas do adversário estiverem no teto, a vitória não rende carta. Derrota, empate e jogo sem conta não rendem carta. O sorteio é do servidor; o duelo continua rodando no navegador (ver `docs/CONTAS_E_NUVEM.md` sobre os limites dessa verificação).
-- Não confundir **72 cartas únicas disponíveis** com baralho de 72 unidades. Oferecer baralhos iniciais prontos com 40 cartas válidas.
+- Os **70 modelos de cartas** estão no arquivo `cartas.json`, que é a **fonte de dados estruturada**. Todos são originais.
+- O catálogo ativo contém somente `CC-101…CC-170`: 70 unidades de fauna importadas da planilha do responsável, com classificação, ambiente e característica informativos. Os IDs `CC-001…CC-100` não fazem parte do jogo atual.
+- O editor de baralho seleciona exatamente 40 instâncias, com máximo 3 cópias de cada ID. Inicialmente liberar todas as 70 no modo protótipo; desbloqueio por vitória pode ser implementado depois sem bloquear QA.
+- **Coleção e drop de cartas (implementado, percentuais PROVISÓRIOS):** a conta começa com a coleção inicial (= baralho inicial) e cresce por vitórias no Duelo Livre. Cada vitória com conta rende **uma carta** sorteada no servidor da tabela do adversário vencido (`src/data/dropsOponentes.ts`). Os 17 baralhos têm exatamente 40 cartas e no máximo 3 cópias por ID. As 70 cartas são distribuídas por afinidade entre o ambiente informado e os oponentes, com rodízio que garante ao menos uma aparição de cada ID; a dificuldade prioriza faixas de força diferentes. Cada adversário dropa exatamente os IDs distintos do próprio baralho; cada tabela soma 100% e, juntas, cobrem as 70 cartas. O peso provisório é 4 quando ATK+DEF < 3000, 2 entre 3000 e 4499 e 1 a partir de 4500; cada ID recebe ao menos 1%, e o restante é normalizado por maior resto para fechar 100%. A coleção guarda no máximo **3 cópias por carta**; cartas no teto saem do sorteio e as chances restantes se renormalizam. Derrota, empate e jogo sem conta não rendem carta.
+- Não confundir **70 cartas únicas disponíveis** com baralho de 40 unidades. Oferecer baralhos iniciais prontos com 40 cartas válidas.
 - Balanceamento é provisório, sujeito a simulação de partidas e feedback humano. Cartas de alto ATK não têm custos especiais no estilo adotado; IA precisa garantir diversão, não igualdade de poder matematicamente garantida.
 
-## 11. Catálogo completo (72 cartas)
-As habilidades codificadas das ações são detalhadas em `cartas.json`. Nas linhas de ações, `—` significa **atributo não aplicável**.
-
-| ID | Nome | Categoria | ATK | DEF | Efeito / Aprendizado |
-|---|---|---|---:|---:|---|
-| CC-001 | Manguezal Protegido | unidade/ecossistema | 1200 | 2000 | Sem efeito;  Manguezais abrigam espécies e retêm sedimentos. |
-| CC-002 | Restinga Preservada | unidade/ecossistema | 1000 | 1800 | Sem efeito;  Vegetação de restinga ajuda a estabilizar dunas. |
-| CC-003 | Recife de Coral | unidade/ecossistema | 1600 | 1500 | Sem efeito;  Recifes oferecem abrigo e diversidade de habitats. |
-| CC-004 | Duna Costeira | unidade/ecossistema | 900 | 2000 | Sem efeito;  Dunas armazenam sedimentos e podem amortecer eventos costeiros. |
-| CC-005 | Estuário Vivo | unidade/ecossistema | 1500 | 1900 | Sem efeito;  Estuários integram águas continentais e marinhas. |
-| CC-006 | Praia Natural | unidade/ecossistema | 1100 | 1600 | Sem efeito;  Praias são sistemas dinâmicos de troca de sedimentos. |
-| CC-007 | Costão Rochoso | unidade/ecossistema | 1700 | 2000 | Sem efeito;  Costões abrigam organismos adaptados às marés. |
-| CC-008 | Pradaria Marinha | unidade/ecossistema | 1300 | 1900 | Sem efeito;  Pradarias marinhas oferecem habitat e retêm carbono. |
-| CC-009 | Lagoa Costeira | unidade/ecossistema | 1200 | 1700 | Sem efeito;  Lagoas costeiras respondem às trocas de água e nutrientes. |
-| CC-010 | Mata Atlântica Litorânea | unidade/ecossistema | 1400 | 2100 | Sem efeito;  A vegetação litorânea contribui para a biodiversidade. |
-| CC-011 | Manguezal de Franja | unidade/ecossistema | 1100 | 2100 | Sem efeito;  Manguezais podem reduzir energia da água localmente. |
-| CC-012 | Marisma Costeira | unidade/ecossistema | 1000 | 2000 | Sem efeito;  Marismas podem reter sedimentos e nutrientes. |
-| CC-013 | Banco de Areia | unidade/ecossistema | 700 | 1800 | Sem efeito;  Bancos de areia migram conforme ondas e correntes. |
-| CC-014 | Ilha Costeira | unidade/ecossistema | 1300 | 2100 | Sem efeito;  Ilhas costeiras concentram habitats diversos. |
-| CC-015 | Rio de Maré | unidade/ecossistema | 1200 | 1600 | Sem efeito;  Rios de maré sofrem influência da oscilação marinha. |
-| CC-016 | Falésia Vegetada | unidade/ecossistema | 1000 | 2300 | Sem efeito;  A vegetação pode influenciar a estabilidade superficial. |
-| CC-017 | Berçário de Peixes | unidade/fauna | 1500 | 1600 | Sem efeito;  Áreas de berçário sustentam fases juvenis de peixes. |
-| CC-018 | Tartaruga Marinha | unidade/fauna | 1700 | 1500 | Sem efeito;  Tartarugas podem sofrer com captura acidental e lixo. |
-| CC-019 | Boto-Cinza | unidade/fauna | 1900 | 1400 | Sem efeito;  Mamíferos costeiros são sensíveis a perturbações humanas. |
-| CC-020 | Caranguejo-Uçá | unidade/fauna | 1300 | 1800 | Sem efeito;  Caranguejos participam da dinâmica dos manguezais. |
-| CC-021 | Garça-Branca | unidade/fauna | 1500 | 1300 | Sem efeito;  Aves utilizam ambientes úmidos para alimentação. |
-| CC-022 | Cavalo-Marinho | unidade/fauna | 1100 | 1700 | Sem efeito;  Cavalos-marinhos dependem de habitats estruturados. |
-| CC-023 | Peixe-Robalo | unidade/fauna | 1800 | 1200 | Sem efeito;  Alguns robalos utilizam ambientes estuarinos. |
-| CC-024 | Raia Costeira | unidade/fauna | 1700 | 1400 | Sem efeito;  Raias integram redes alimentares marinhas. |
-| CC-025 | Ostra de Mangue | unidade/fauna | 800 | 2000 | Sem efeito;  Ostras filtram partículas suspensas na água. |
-| CC-026 | Coral-Cérebro | unidade/fauna | 1200 | 2200 | Sem efeito;  Corais construtores dependem de condições ambientais adequadas. |
-| CC-027 | Golfinho Costeiro | unidade/fauna | 2000 | 1300 | Sem efeito;  Golfinhos podem ser afetados por ruídos e embarcações. |
-| CC-028 | Ave Migratória | unidade/fauna | 1400 | 1400 | Sem efeito;  Áreas costeiras oferecem descanso a aves migratórias. |
-| CC-029 | Sardinha Costeira | unidade/fauna | 1300 | 1100 | Sem efeito;  Peixes pequenos conectam vários níveis alimentares. |
-| CC-030 | Estrela-do-Mar | unidade/fauna | 900 | 1700 | Sem efeito;  Equinodermos compõem comunidades bentônicas. |
-| CC-031 | Pesca Artesanal | unidade/atividade | 1400 | 1200 | Sem efeito;  A pesca artesanal se relaciona com saberes locais. |
-| CC-032 | Turismo Responsável | unidade/atividade | 1500 | 1600 | Sem efeito;  O turismo pode ser planejado com menor pressão ambiental. |
-| CC-033 | Urbanização Planejada | unidade/atividade | 1800 | 1600 | Sem efeito;  Planejamento pode reduzir exposição a riscos costeiros. |
-| CC-034 | Pesquisa Oceanográfica | unidade/atividade | 1600 | 1800 | Sem efeito;  O monitoramento apoia decisões ambientais. |
-| CC-035 | Coleta Seletiva | unidade/atividade | 1200 | 1500 | Sem efeito;  Separar resíduos facilita destinações apropriadas. |
-| CC-036 | Educação Ambiental | unidade/atividade | 1300 | 1700 | Sem efeito;  Educação pode ampliar participação comunitária. |
-| CC-037 | Monitoramento da Água | unidade/atividade | 1700 | 1800 | Sem efeito;  O monitoramento permite acompanhar indicadores de qualidade. |
-| CC-038 | Fiscalização Costeira | unidade/atividade | 1900 | 1600 | Sem efeito;  Fiscalização apoia o cumprimento de normas ambientais. |
-| CC-039 | Comunidade Caiçara | unidade/atividade | 1500 | 2000 | Sem efeito;  Conhecimentos tradicionais ajudam a entender o território. |
-| CC-040 | Restauração de Dunas | unidade/atividade | 1600 | 1900 | Sem efeito;  Restauração exige diagnóstico e manejo adequados. |
-| CC-041 | Viveiro de Mudas Nativas | unidade/atividade | 1100 | 1800 | Sem efeito;  Mudas nativas podem apoiar ações de restauração. |
-| CC-042 | Gestão Participativa | unidade/atividade | 1500 | 1800 | Sem efeito;  A participação social fortalece decisões territoriais. |
-| CC-043 | Saneamento Integrado | unidade/atividade | 2000 | 1700 | Sem efeito;  Água, esgoto e drenagem demandam planejamento conjunto. |
-| CC-044 | Proteção de Nascentes | unidade/atividade | 1200 | 2100 | Sem efeito;  Nascentes integram processos da bacia hidrográfica. |
-| CC-045 | Recuperação de Mata Ciliar | unidade/atividade | 1400 | 2100 | Sem efeito;  Matas ciliares podem reduzir erosão nas margens. |
-| CC-046 | Observatório Costeiro | unidade/atividade | 1600 | 1700 | Sem efeito;  Séries históricas ajudam a identificar mudanças na costa. |
-| CC-047 | Poluição do Mar | unidade/impacto | 1800 | 900 | Sem efeito;  Poluentes podem comprometer águas e organismos marinhos. |
-| CC-048 | Erosão Costeira | unidade/impacto | 2000 | 800 | Sem efeito;  Erosão é o recuo de sedimentos ou da linha de costa. |
-| CC-049 | Desmatamento | unidade/impacto | 1700 | 1000 | Sem efeito;  Remover vegetação altera habitats e processos locais. |
-| CC-050 | Chuva Intensa | unidade/impacto | 1600 | 1300 | Sem efeito;  Chuvas fortes podem intensificar o escoamento superficial. |
-| CC-051 | Esgoto Sem Tratamento | unidade/impacto | 1900 | 1000 | Sem efeito;  Esgoto pode elevar carga orgânica e microbiana. |
-| CC-052 | Lixo Plástico | unidade/impacto | 1700 | 1200 | Sem efeito;  Plásticos podem causar ingestão e emalhamento de fauna. |
-| CC-053 | Ocupação Irregular | unidade/impacto | 2100 | 900 | Sem efeito;  Ocupação em áreas frágeis pode ampliar riscos. |
-| CC-054 | Pesca Predatória | unidade/impacto | 2000 | 1100 | Sem efeito;  Capturas excessivas ameaçam populações exploradas. |
-| CC-055 | Assoreamento | unidade/impacto | 1600 | 1900 | Sem efeito;  Acúmulo de sedimentos pode alterar a profundidade de canais. |
-| CC-056 | Derramamento de Óleo | unidade/impacto | 2200 | 700 | Sem efeito;  Óleo pode causar impactos químicos e físicos na costa. |
-| CC-057 | Ressaca Marinha | unidade/impacto | 2300 | 1000 | Sem efeito;  Ondas intensas podem causar danos e erosão. |
-| CC-058 | Expansão Portuária | unidade/impacto | 2100 | 1300 | Sem efeito;  Obras portuárias exigem avaliação de impactos. |
-| CC-059 | Microplásticos | unidade/impacto | 1500 | 1300 | Sem efeito;  Microplásticos são encontrados em vários ambientes aquáticos. |
-| CC-060 | Ilha de Calor Urbana | unidade/impacto | 1800 | 1200 | Sem efeito;  A urbanização pode alterar temperaturas locais. |
-| CC-061 | Drenagem Inadequada | unidade/impacto | 1900 | 1200 | Sem efeito;  Sistemas deficientes podem agravar alagamentos. |
-| CC-062 | Supressão de Restinga | unidade/impacto | 1800 | 1100 | Sem efeito;  Perda de restinga reduz habitats e proteção vegetal. |
-| CC-063 | Turismo Predatório | unidade/impacto | 1900 | 1200 | Sem efeito;  Uso intenso sem gestão pode pressionar ecossistemas. |
-| CC-064 | Sobrepesca | unidade/impacto | 2100 | 900 | Sem efeito;  Remoção excessiva altera estoques e relações tróficas. |
-| CC-065 | Obra Sobre a Duna | unidade/impacto | 2200 | 900 | Sem efeito;  Construir sobre dunas pode afetar a dinâmica sedimentar. |
-| CC-066 | Canalização de Rio | unidade/impacto | 2000 | 1400 | Sem efeito;  Canalizações podem modificar fluxos e habitats. |
-| CC-067 | Invasão de Espécies | unidade/impacto | 2100 | 1300 | Sem efeito;  Espécies exóticas podem desestabilizar comunidades. |
-| CC-068 | Contaminação Industrial | unidade/impacto | 2300 | 800 | Sem efeito;  Efluentes industriais exigem controle e monitoramento. |
-| CC-069 | Dragagem Sem Controle | unidade/impacto | 2200 | 1100 | Sem efeito;  Dragagens podem ressuspender sedimentos e alterar fundos. |
-| CC-070 | Branqueamento de Corais | unidade/impacto | 2000 | 1000 | Sem efeito;  Estresse térmico pode provocar branqueamento coralíneo. |
-| CC-071 | Elevação do Nível do Mar | unidade/impacto | 2400 | 1100 | Sem efeito;  A elevação do mar amplia riscos em certos trechos costeiros. |
-| CC-072 | Descarga de Nutrientes | unidade/impacto | 1800 | 1400 | Sem efeito;  Excesso de nutrientes pode favorecer eutrofização. |
+## 11. Catálogo completo (70 cartas)
+As cartas ativas são exclusivamente CC-101…CC-170. Seus nomes, atributos e metadados informativos ficam em cartas.json e src/data/cartas.json, fontes estruturadas canônicas. Todas são unidades de fauna; CC-153 (CRISTA-DE-GALO) tem ATK 500 e DEF 500.
 
 ## 12. Critérios de aceite DEV e QA
-- `cartas.json` possui **exatamente 72 IDs únicos**, todos unidades (nenhuma ação, armadilha ou equipamento); nomes únicos; stats inteiros não negativos somente para unidades.
+- `cartas.json` possui **exatamente 70 IDs únicos (`CC-101…CC-170`)**, todos unidades; nomes únicos; stats inteiros não negativos; todas possuem classificação, ambiente e característica informativos.
 - Baralho inválido (≠ 40 cartas, >3 de mesmo ID ou IDs desconhecidos) é rejeitado antes do duelo.
 - Testes de reposição da mão, perda por compra incompleta, primeiro turno sem ataque, ataque pós-invocação, escolha de posições, cálculo de dano, empate, terreno afetando ambos e buffs persistentes.
 - Testes de mão/campo cheios, descarte forçado como jogada legal, evitar vazamento do estado oculto da IA, determinismo do RNG, clamping de LP/atributos e efeitos sem alvos.

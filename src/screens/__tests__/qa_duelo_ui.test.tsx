@@ -15,7 +15,7 @@ const botao = (n: string | RegExp) => screen.getByRole('button', { name: n })
 
 function iniciarTurnoDaIA() {
   vi.useFakeTimers()
-  const e = cenario({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } })
+  const e = cenario({ humano: { mao: ['CC-103'], baralho: 30 }, oponente: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105', 'CC-106'], baralho: 30 } })
   render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={100} onVoltar={() => {}} onNovamente={() => {}} />)
   fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
   fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))

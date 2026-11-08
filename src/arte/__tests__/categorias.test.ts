@@ -27,7 +27,7 @@ describe('mapa categoria -> cor/selo', () => {
     expect(CATEGORIAS.ondas.selo).toBe('onda')
   })
 
-  it('classifica as 87 cartas com categoria e selo existentes', () => {
+  it('classifica as 70 cartas com categoria e selo existentes', () => {
     for (const c of CATALOGO) {
       const v = classificarCarta(c)
       expect(CATEGORIAS[v.categoria], c.id).toBeTruthy()
@@ -35,20 +35,12 @@ describe('mapa categoria -> cor/selo', () => {
     }
   })
 
-  it('cartas piloto e exemplos da referência', () => {
-    expect(classificarCarta(carta('CC-018'))).toEqual({ categoria: 'marinha', selo: 'gota' })
-    expect(classificarCarta(carta('CC-001'))).toEqual({ categoria: 'verde', selo: 'folha' })
-    expect(classificarCarta(carta('CC-047'))).toEqual({ categoria: 'impacto', selo: 'diabinho' })
-    expect(classificarCarta(carta('CC-031'))).toEqual({ categoria: 'ondas', selo: 'onda' })
-    expect(classificarCarta(carta('CC-067'))).toEqual({ categoria: 'impacto', selo: 'caveira' })
-    expect(classificarCarta(carta('CC-057')).categoria).toBe('ondas')
+  it('todas as cartas atuais usam a categoria padrão de fauna', () => {
+    for (const c of CATALOGO) expect(classificarCarta(c)).toEqual({ categoria: 'marinha', selo: 'gota' })
   })
 
   it('padrão por tipo + grupo quando não há ajuste', () => {
-    expect(classificarCarta(carta('CC-019')).categoria).toBe('marinha') // fauna
-    expect(classificarCarta(carta('CC-034')).categoria).toBe('planejamento') // atividade
-    expect(classificarCarta(carta('CC-049')).categoria).toBe('impacto') // impacto
-    expect(classificarCarta(carta('CC-004')).categoria).toBe('verde') // ecossistema
+    expect(classificarCarta(carta('CC-101')).categoria).toBe('marinha')
   })
 
   it('ajustes por carta só citam IDs do catálogo', () => {

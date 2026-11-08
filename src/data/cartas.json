@@ -3,724 +3,1054 @@
   "jogo": "Costa Clash",
   "cartas": [
     {
-      "id": "CC-001",
-      "nome": "Manguezal Protegido",
+      "id": "CC-101",
+      "nome": "CHAMA-MARÉ",
       "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1200,
+      "grupo": "fauna",
+      "atk": 2500,
       "defesa": 2000,
       "efeito": null,
-      "educacao": "Manguezais abrigam espécies e retêm sedimentos."
+      "educacao": "Classificação informada: Animal - Crustáceo - Decapoda. Ambiente informado: Manguezal. Característica informada: Grande Garra.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Decapoda",
+        "ambiente": "Manguezal",
+        "caracteristica": "Grande Garra"
+      }
     },
     {
-      "id": "CC-002",
-      "nome": "Restinga Preservada",
+      "id": "CC-102",
+      "nome": "MARINHA-FARINHA",
       "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1000,
-      "defesa": 1800,
-      "efeito": null,
-      "educacao": "Vegetação de restinga ajuda a estabilizar dunas."
-    },
-    {
-      "id": "CC-003",
-      "nome": "Recife de Coral",
-      "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1600,
+      "grupo": "fauna",
+      "atk": 2000,
       "defesa": 1500,
       "efeito": null,
-      "educacao": "Recifes oferecem abrigo e diversidade de habitats."
+      "educacao": "Classificação informada: Animal - Crustáceo - Decapoda. Ambiente informado: Praia Arenosa. Característica informada: Corre muito.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Decapoda",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "Corre muito"
+      }
     },
     {
-      "id": "CC-004",
-      "nome": "Duna Costeira",
+      "id": "CC-103",
+      "nome": "CARANGUEJO-AZUL",
       "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 900,
+      "grupo": "fauna",
+      "atk": 2000,
       "defesa": 2000,
       "efeito": null,
-      "educacao": "Dunas armazenam sedimentos e podem amortecer eventos costeiros."
+      "educacao": "Classificação informada: Animal - Crustáceo - Decapoda. Ambiente informado: Praia Arenosa. Característica informada: Azul.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Decapoda",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "Azul"
+      }
     },
     {
-      "id": "CC-005",
-      "nome": "Estuário Vivo",
+      "id": "CC-104",
+      "nome": "MEXILHÃO",
       "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1500,
-      "defesa": 1900,
-      "efeito": null,
-      "educacao": "Estuários integram águas continentais e marinhas."
-    },
-    {
-      "id": "CC-006",
-      "nome": "Praia Natural",
-      "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1100,
-      "defesa": 1600,
-      "efeito": null,
-      "educacao": "Praias são sistemas dinâmicos de troca de sedimentos."
-    },
-    {
-      "id": "CC-007",
-      "nome": "Costão Rochoso",
-      "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1700,
-      "defesa": 2000,
-      "efeito": null,
-      "educacao": "Costões abrigam organismos adaptados às marés."
-    },
-    {
-      "id": "CC-008",
-      "nome": "Pradaria Marinha",
-      "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1300,
-      "defesa": 1900,
-      "efeito": null,
-      "educacao": "Pradarias marinhas oferecem habitat e retêm carbono."
-    },
-    {
-      "id": "CC-009",
-      "nome": "Lagoa Costeira",
-      "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1200,
-      "defesa": 1700,
-      "efeito": null,
-      "educacao": "Lagoas costeiras respondem às trocas de água e nutrientes."
-    },
-    {
-      "id": "CC-010",
-      "nome": "Mata Atlântica Litorânea",
-      "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1400,
-      "defesa": 2100,
-      "efeito": null,
-      "educacao": "A vegetação litorânea contribui para a biodiversidade."
-    },
-    {
-      "id": "CC-011",
-      "nome": "Manguezal de Franja",
-      "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1100,
-      "defesa": 2100,
-      "efeito": null,
-      "educacao": "Manguezais podem reduzir energia da água localmente."
-    },
-    {
-      "id": "CC-012",
-      "nome": "Marisma Costeira",
-      "tipo": "unidade",
-      "grupo": "ecossistema",
+      "grupo": "fauna",
       "atk": 1000,
       "defesa": 2000,
       "efeito": null,
-      "educacao": "Marismas podem reter sedimentos e nutrientes."
+      "educacao": "Classificação informada: Animal - Molusco - Bivalve. Ambiente informado: Costão Rochoso. Característica informada: Fixação.",
+      "informacao": {
+        "classificacao": "Animal - Molusco - Bivalve",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "Fixação"
+      }
     },
     {
-      "id": "CC-013",
-      "nome": "Banco de Areia",
+      "id": "CC-105",
+      "nome": "MEXILHÃO-VERDE",
       "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 700,
-      "defesa": 1800,
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 2500,
       "efeito": null,
-      "educacao": "Bancos de areia migram conforme ondas e correntes."
+      "educacao": "Classificação informada: Animal - Molusco - Bivalve. Ambiente informado: Costão Rochoso. Característica informada: Fixação Verde.",
+      "informacao": {
+        "classificacao": "Animal - Molusco - Bivalve",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "Fixação Verde"
+      }
     },
     {
-      "id": "CC-014",
-      "nome": "Ilha Costeira",
+      "id": "CC-106",
+      "nome": "CRACA",
       "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1300,
-      "defesa": 2100,
+      "grupo": "fauna",
+      "atk": 500,
+      "defesa": 2000,
       "efeito": null,
-      "educacao": "Ilhas costeiras concentram habitats diversos."
+      "educacao": "Classificação informada: Animal - Crustáceo - Tecostráceo. Ambiente informado: Costão Rochoso. Característica informada: Carapaça de Calcário.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Tecostráceo",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "Carapaça de Calcário"
+      }
     },
     {
-      "id": "CC-015",
-      "nome": "Rio de Maré",
+      "id": "CC-107",
+      "nome": "MARISCO-BRANCO",
       "tipo": "unidade",
-      "grupo": "ecossistema",
-      "atk": 1200,
-      "defesa": 1600,
+      "grupo": "fauna",
+      "atk": 0,
+      "defesa": 1500,
       "efeito": null,
-      "educacao": "Rios de maré sofrem influência da oscilação marinha."
+      "educacao": "Classificação informada: Animal - Molusco - Bivalve. Ambiente informado: Praia Arenosa. Característica informada: Filtração.",
+      "informacao": {
+        "classificacao": "Animal - Molusco - Bivalve",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "Filtração"
+      }
     },
     {
-      "id": "CC-016",
-      "nome": "Falésia Vegetada",
+      "id": "CC-108",
+      "nome": "GAROUPA",
       "tipo": "unidade",
-      "grupo": "ecossistema",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Cordado - Actinopterígeos. Ambiente informado: Infralitoral. Característica informada: Solitário.",
+      "informacao": {
+        "classificacao": "Animal - Cordado - Actinopterígeos",
+        "ambiente": "Infralitoral",
+        "caracteristica": "Solitário"
+      }
+    },
+    {
+      "id": "CC-109",
+      "nome": "POLVO-RECIFE-BRASILEIRO",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Mollusco - Cefalópode. Ambiente informado: Infralitoral. Característica informada: Camuflage.",
+      "informacao": {
+        "classificacao": "Animal - Mollusco - Cefalópode",
+        "ambiente": "Infralitoral",
+        "caracteristica": "Camuflage"
+      }
+    },
+    {
+      "id": "CC-110",
+      "nome": "GUARÁ",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 3500,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave - Pelecaniforme. Ambiente informado: Manguezal. Característica informada: Penas Vermelhas.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Pelecaniforme",
+        "ambiente": "Manguezal",
+        "caracteristica": "Penas Vermelhas"
+      }
+    },
+    {
+      "id": "CC-111",
+      "nome": "GARÇA-BRANCA-GRANDE",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave - Pelecaniforme. Ambiente informado: Praia Arenosa. Característica informada: Tamanho Comprido.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Pelecaniforme",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "Tamanho Comprido"
+      }
+    },
+    {
+      "id": "CC-112",
+      "nome": "FRAGRATA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave - Suliforme. Ambiente informado: Costão Rochoso. Característica informada: Cores e Bolsão.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Suliforme",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "Cores e Bolsão"
+      }
+    },
+    {
+      "id": "CC-113",
+      "nome": "TRINTA-RÉIS",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave - Larídeo. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Larídeo",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-114",
+      "nome": "CARANGUEJO-ERMITÃO",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Crustáceo - Decapoda. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Decapoda",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-115",
+      "nome": "BOTO-COR-DE-ROSA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 3000,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Mamífero - Cetáceo. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Cetáceo",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-116",
+      "nome": "TARTARUGA-VERDE",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Réptil - Queloniídeos. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Réptil - Queloniídeos",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-117",
+      "nome": "TARTARUGA-DE-PENTE",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Réptil - Queloniídeos. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Réptil - Queloniídeos",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-118",
+      "nome": "TARTARUGA-DE-COURO",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 3500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Réptil - Queloniídeos. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Réptil - Queloniídeos",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-119",
+      "nome": "POLVO-AMERICANO",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Molusco - Cefalópode. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Molusco - Cefalópode",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-120",
+      "nome": "LULA-DE-RECIFES-DO-CARIBE",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Molusco - Cefalópode. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Molusco - Cefalópode",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-121",
+      "nome": "LINGUADO",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Actinopterygii- Pleuronectiformes. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Actinopterygii- Pleuronectiformes",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-122",
+      "nome": "BIGUÁ",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave - Suliforme. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Suliforme",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-123",
+      "nome": "SURURU",
+      "tipo": "unidade",
+      "grupo": "fauna",
       "atk": 1000,
-      "defesa": 2300,
-      "efeito": null,
-      "educacao": "A vegetação pode influenciar a estabilidade superficial."
-    },
-    {
-      "id": "CC-017",
-      "nome": "Berçário de Peixes",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 1500,
-      "defesa": 1600,
-      "efeito": null,
-      "educacao": "Áreas de berçário sustentam fases juvenis de peixes."
-    },
-    {
-      "id": "CC-018",
-      "nome": "Tartaruga Marinha",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 1700,
-      "defesa": 1500,
-      "efeito": null,
-      "educacao": "Tartarugas podem sofrer com captura acidental e lixo."
-    },
-    {
-      "id": "CC-019",
-      "nome": "Boto-Cinza",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 1900,
-      "defesa": 1400,
-      "efeito": null,
-      "educacao": "Mamíferos costeiros são sensíveis a perturbações humanas."
-    },
-    {
-      "id": "CC-020",
-      "nome": "Caranguejo-Uçá",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 1300,
-      "defesa": 1800,
-      "efeito": null,
-      "educacao": "Caranguejos participam da dinâmica dos manguezais."
-    },
-    {
-      "id": "CC-021",
-      "nome": "Garça-Branca",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 1500,
-      "defesa": 1300,
-      "efeito": null,
-      "educacao": "Aves utilizam ambientes úmidos para alimentação."
-    },
-    {
-      "id": "CC-022",
-      "nome": "Cavalo-Marinho",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 1100,
-      "defesa": 1700,
-      "efeito": null,
-      "educacao": "Cavalos-marinhos dependem de habitats estruturados."
-    },
-    {
-      "id": "CC-023",
-      "nome": "Peixe-Robalo",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 1800,
-      "defesa": 1200,
-      "efeito": null,
-      "educacao": "Alguns robalos utilizam ambientes estuarinos."
-    },
-    {
-      "id": "CC-024",
-      "nome": "Raia Costeira",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 1700,
-      "defesa": 1400,
-      "efeito": null,
-      "educacao": "Raias integram redes alimentares marinhas."
-    },
-    {
-      "id": "CC-025",
-      "nome": "Ostra de Mangue",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 800,
       "defesa": 2000,
       "efeito": null,
-      "educacao": "Ostras filtram partículas suspensas na água."
+      "educacao": "Classificação informada: Animal - Molusco - Bivalve. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Molusco - Bivalve",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-026",
-      "nome": "Coral-Cérebro",
+      "id": "CC-124",
+      "nome": "TURU",
       "tipo": "unidade",
       "grupo": "fauna",
-      "atk": 1200,
-      "defesa": 2200,
+      "atk": 1000,
+      "defesa": 1000,
       "efeito": null,
-      "educacao": "Corais construtores dependem de condições ambientais adequadas."
+      "educacao": "Classificação informada: Animal - Molusco - Bivalve. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Molusco - Bivalve",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-027",
-      "nome": "Golfinho Costeiro",
+      "id": "CC-125",
+      "nome": "ARATU VERMELHO",
       "tipo": "unidade",
       "grupo": "fauna",
       "atk": 2000,
-      "defesa": 1300,
+      "defesa": 2500,
       "efeito": null,
-      "educacao": "Golfinhos podem ser afetados por ruídos e embarcações."
+      "educacao": "Classificação informada: Animal - Crustáceo - Decapoda. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Decapoda",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-028",
-      "nome": "Ave Migratória",
+      "id": "CC-126",
+      "nome": "JACARÉ-DO-PAPO-AMARELO",
       "tipo": "unidade",
       "grupo": "fauna",
-      "atk": 1400,
-      "defesa": 1400,
+      "atk": 3000,
+      "defesa": 2000,
       "efeito": null,
-      "educacao": "Áreas costeiras oferecem descanso a aves migratórias."
+      "educacao": "Classificação informada: Animal - Réptil - Crocodiliano. Ambiente informado: Manguezal. Característica informada: Jacaré.",
+      "informacao": {
+        "classificacao": "Animal - Réptil - Crocodiliano",
+        "ambiente": "Manguezal",
+        "caracteristica": "Jacaré"
+      }
     },
     {
-      "id": "CC-029",
-      "nome": "Sardinha Costeira",
+      "id": "CC-127",
+      "nome": "QUÍTON",
       "tipo": "unidade",
       "grupo": "fauna",
-      "atk": 1300,
-      "defesa": 1100,
-      "efeito": null,
-      "educacao": "Peixes pequenos conectam vários níveis alimentares."
-    },
-    {
-      "id": "CC-030",
-      "nome": "Estrela-do-Mar",
-      "tipo": "unidade",
-      "grupo": "fauna",
-      "atk": 900,
-      "defesa": 1700,
-      "efeito": null,
-      "educacao": "Equinodermos compõem comunidades bentônicas."
-    },
-    {
-      "id": "CC-031",
-      "nome": "Pesca Artesanal",
-      "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1400,
-      "defesa": 1200,
-      "efeito": null,
-      "educacao": "A pesca artesanal se relaciona com saberes locais."
-    },
-    {
-      "id": "CC-032",
-      "nome": "Turismo Responsável",
-      "tipo": "unidade",
-      "grupo": "atividade",
       "atk": 1500,
-      "defesa": 1600,
+      "defesa": 2500,
       "efeito": null,
-      "educacao": "O turismo pode ser planejado com menor pressão ambiental."
+      "educacao": "Classificação informada: Animal - Molusco - Poliplacóforo. Ambiente informado: Costão Rochoso. Característica informada: Cores do casco.",
+      "informacao": {
+        "classificacao": "Animal - Molusco - Poliplacóforo",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "Cores do casco"
+      }
     },
     {
-      "id": "CC-033",
-      "nome": "Urbanização Planejada",
+      "id": "CC-128",
+      "nome": "CHAPEUZINHO-CHINÊS / LAPA",
       "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1800,
-      "defesa": 1600,
+      "grupo": "fauna",
+      "atk": 500,
+      "defesa": 2000,
       "efeito": null,
-      "educacao": "Planejamento pode reduzir exposição a riscos costeiros."
+      "educacao": "Classificação informada: Animal - Molusco - Gastrópode. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Molusco - Gastrópode",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-034",
-      "nome": "Pesquisa Oceanográfica",
+      "id": "CC-129",
+      "nome": "CORRUPTO",
       "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1600,
-      "defesa": 1800,
+      "grupo": "fauna",
+      "atk": 1000,
+      "defesa": 2000,
       "efeito": null,
-      "educacao": "O monitoramento apoia decisões ambientais."
+      "educacao": "Classificação informada: Animal - Crustáceo - Decapoda. Ambiente informado: Praia Arenosa. Característica informada: Tocas na praia.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Decapoda",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "Tocas na praia"
+      }
     },
     {
-      "id": "CC-035",
-      "nome": "Coleta Seletiva",
+      "id": "CC-130",
+      "nome": "ESTRELA-VERMELHA-BRASILEIRA",
       "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1200,
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Equinodermata - Asteroidea. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Equinodermata - Asteroidea",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-131",
+      "nome": "BOLACHA-DO-MAR-DE-CINCO-FUROS",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 0,
+      "defesa": 0,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Equinodermata - Echinoidea. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Equinodermata - Echinoidea",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-132",
+      "nome": "ESTRELA-DE-NOVE-BRAÇOS",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 2500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Equinodermata - Asteroidea. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Equinodermata - Asteroidea",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-133",
+      "nome": "OURIÇO-DO-MAR-VERDE",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Equinodermata - Echinoidea. Ambiente informado: Infralitoral.",
+      "informacao": {
+        "classificacao": "Animal - Equinodermata - Echinoidea",
+        "ambiente": "Infralitoral",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-134",
+      "nome": "TONINHA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2500,
       "defesa": 1500,
       "efeito": null,
-      "educacao": "Separar resíduos facilita destinações apropriadas."
+      "educacao": "Classificação informada: Animal - Mamífero - Cetáceo. Ambiente informado: Infralitoral. Característica informada: Menor cetáceo do mundo/ muito furtiva.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Cetáceo",
+        "ambiente": "Infralitoral",
+        "caracteristica": "Menor cetáceo do mundo/ muito furtiva"
+      }
     },
     {
-      "id": "CC-036",
-      "nome": "Educação Ambiental",
+      "id": "CC-135",
+      "nome": "CAVALO MARINHO DE FOCINHO LONGO*",
       "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1300,
-      "defesa": 1700,
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 1000,
       "efeito": null,
-      "educacao": "Educação pode ampliar participação comunitária."
+      "educacao": "Classificação informada: Animal - Actinopterygii - Syngnathiformes. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Actinopterygii - Syngnathiformes",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-037",
-      "nome": "Monitoramento da Água",
+      "id": "CC-136",
+      "nome": "MÃO PELADA",
       "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1700,
-      "defesa": 1800,
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 1500,
       "efeito": null,
-      "educacao": "O monitoramento permite acompanhar indicadores de qualidade."
+      "educacao": "Classificação informada: Animal - Mamífero - Carnivora. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Carnivora",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-038",
-      "nome": "Fiscalização Costeira",
+      "id": "CC-137",
+      "nome": "TAINHA-OLHO-DE-FOGO",
       "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1900,
-      "defesa": 1600,
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1500,
       "efeito": null,
-      "educacao": "Fiscalização apoia o cumprimento de normas ambientais."
+      "educacao": "Classificação informada: Animal - Actinopterygii- Mugilforme. Ambiente informado: Infralitoral. Característica informada: Vive  a juventude em estuários.",
+      "informacao": {
+        "classificacao": "Animal - Actinopterygii- Mugilforme",
+        "ambiente": "Infralitoral",
+        "caracteristica": "Vive  a juventude em estuários"
+      }
     },
     {
-      "id": "CC-039",
-      "nome": "Comunidade Caiçara",
+      "id": "CC-138",
+      "nome": "BAIACU",
       "tipo": "unidade",
-      "grupo": "atividade",
+      "grupo": "fauna",
+      "atk": 3500,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Actinopterygii- Tetraodontiformes. Ambiente informado: Infralitoral. Característica informada: É venenoso.",
+      "informacao": {
+        "classificacao": "Animal - Actinopterygii- Tetraodontiformes",
+        "ambiente": "Infralitoral",
+        "caracteristica": "É venenoso"
+      }
+    },
+    {
+      "id": "CC-139",
+      "nome": "GUAIAMUM",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Crustáceo - Decapoda. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Decapoda",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-140",
+      "nome": "MAÇARICO-DE-COLEIRA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave -  Charadriiformes. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal - Ave -  Charadriiformes",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-141",
+      "nome": "GAIVOTA-VONGOLEIRA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave -  Charadriiformes. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal - Ave -  Charadriiformes",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-142",
+      "nome": "LONTRA-NEOTROPICAL",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Mamífero - Carnivora. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Carnivora",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-143",
+      "nome": "GARÇA AZUL",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave - Pelecaniformes. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Pelecaniformes",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-144",
+      "nome": "SAVACU DE COROA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave - Pelecaniformes. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Pelecaniformes",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-145",
+      "nome": "MUTUCA-DO-MANGUE",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Inseto - Dípteros. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Inseto - Dípteros",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-146",
+      "nome": "JATAÍ",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Inseto - Himenópteros. Ambiente informado: Manguezal.",
+      "informacao": {
+        "classificacao": "Animal - Inseto - Himenópteros",
+        "ambiente": "Manguezal",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-147",
+      "nome": "BARATINHA-DA-PRAIA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 500,
+      "defesa": 2500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal- Crustáceo - Isopoda. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal- Crustáceo - Isopoda",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-148",
+      "nome": "LAGARTINHO-DA-RESTINGA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal- Reptilia- Squamata. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal- Reptilia- Squamata",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-149",
+      "nome": "PIRUPIRU",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave - Charadriiformes. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Charadriiformes",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-150",
+      "nome": "QUERO-QUERO",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 3500,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Ave - Charadriiformes. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Charadriiformes",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-151",
+      "nome": "CARANGUEIJO-CAVA-TERRA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal- Crustáceo - Decapoda. Ambiente informado: Praia Arenosa.",
+      "informacao": {
+        "classificacao": "Animal- Crustáceo - Decapoda",
+        "ambiente": "Praia Arenosa",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-152",
+      "nome": "ANEMONA-CAIÇARA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1000,
+      "defesa": 1000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Antozoários - Actiniaria. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Antozoários - Actiniaria",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-153",
+      "nome": "CRISTA-DE-GALO",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 500,
+      "defesa": 500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Thecostraca- Sessilia. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Thecostraca- Sessilia",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-154",
+      "nome": "CORAL-CÉREBRO",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 1500,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Antozoários- Scleractinia. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Antozoários- Scleractinia",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-155",
+      "nome": "CORAL-FOGO",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Hidrozoários- Anthoathecata. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Hidrozoários- Anthoathecata",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-156",
+      "nome": "GORGÔNIA-ESCARLATE",
+      "tipo": "unidade",
+      "grupo": "fauna",
       "atk": 1500,
       "defesa": 2000,
       "efeito": null,
-      "educacao": "Conhecimentos tradicionais ajudam a entender o território."
+      "educacao": "Classificação informada: Animal - Antozoários- Alcyonacea. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Antozoários- Alcyonacea",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-040",
-      "nome": "Restauração de Dunas",
+      "id": "CC-157",
+      "nome": "OURIÇO-SATÉLITE",
       "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1600,
-      "defesa": 1900,
-      "efeito": null,
-      "educacao": "Restauração exige diagnóstico e manejo adequados."
-    },
-    {
-      "id": "CC-041",
-      "nome": "Viveiro de Mudas Nativas",
-      "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1100,
-      "defesa": 1800,
-      "efeito": null,
-      "educacao": "Mudas nativas podem apoiar ações de restauração."
-    },
-    {
-      "id": "CC-042",
-      "nome": "Gestão Participativa",
-      "tipo": "unidade",
-      "grupo": "atividade",
+      "grupo": "fauna",
       "atk": 1500,
-      "defesa": 1800,
+      "defesa": 1500,
       "efeito": null,
-      "educacao": "A participação social fortalece decisões territoriais."
+      "educacao": "Classificação informada: Animal - Equinóides - Cidaroida. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Equinóides - Cidaroida",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-043",
-      "nome": "Saneamento Integrado",
+      "id": "CC-158",
+      "nome": "CARANGUEJO-ARANHA",
       "tipo": "unidade",
-      "grupo": "atividade",
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 2000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Crustáceo - Decapoda. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Decapoda",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-159",
+      "nome": "TUBARÃO LIXA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 1500,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Chondrichthyes - Orectolobiformes. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Chondrichthyes - Orectolobiformes",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-160",
+      "nome": "LAGOSTA-PINTADA",
+      "tipo": "unidade",
+      "grupo": "fauna",
       "atk": 2000,
-      "defesa": 1700,
-      "efeito": null,
-      "educacao": "Água, esgoto e drenagem demandam planejamento conjunto."
-    },
-    {
-      "id": "CC-044",
-      "nome": "Proteção de Nascentes",
-      "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1200,
-      "defesa": 2100,
-      "efeito": null,
-      "educacao": "Nascentes integram processos da bacia hidrográfica."
-    },
-    {
-      "id": "CC-045",
-      "nome": "Recuperação de Mata Ciliar",
-      "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1400,
-      "defesa": 2100,
-      "efeito": null,
-      "educacao": "Matas ciliares podem reduzir erosão nas margens."
-    },
-    {
-      "id": "CC-046",
-      "nome": "Observatório Costeiro",
-      "tipo": "unidade",
-      "grupo": "atividade",
-      "atk": 1600,
-      "defesa": 1700,
-      "efeito": null,
-      "educacao": "Séries históricas ajudam a identificar mudanças na costa."
-    },
-    {
-      "id": "CC-047",
-      "nome": "Poluição do Mar",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1800,
-      "defesa": 900,
-      "efeito": null,
-      "educacao": "Poluentes podem comprometer águas e organismos marinhos."
-    },
-    {
-      "id": "CC-048",
-      "nome": "Erosão Costeira",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2000,
-      "defesa": 800,
-      "efeito": null,
-      "educacao": "Erosão é o recuo de sedimentos ou da linha de costa."
-    },
-    {
-      "id": "CC-049",
-      "nome": "Desmatamento",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1700,
       "defesa": 1000,
       "efeito": null,
-      "educacao": "Remover vegetação altera habitats e processos locais."
+      "educacao": "Classificação informada: Animal - Crustáceo - Decapoda. Ambiente informado: Costão Rochoso.",
+      "informacao": {
+        "classificacao": "Animal - Crustáceo - Decapoda",
+        "ambiente": "Costão Rochoso",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-050",
-      "nome": "Chuva Intensa",
+      "id": "CC-161",
+      "nome": "PENGUIM-DE-MAGALHÃES",
       "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1600,
-      "defesa": 1300,
-      "efeito": null,
-      "educacao": "Chuvas fortes podem intensificar o escoamento superficial."
-    },
-    {
-      "id": "CC-051",
-      "nome": "Esgoto Sem Tratamento",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1900,
-      "defesa": 1000,
-      "efeito": null,
-      "educacao": "Esgoto pode elevar carga orgânica e microbiana."
-    },
-    {
-      "id": "CC-052",
-      "nome": "Lixo Plástico",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1700,
-      "defesa": 1200,
-      "efeito": null,
-      "educacao": "Plásticos podem causar ingestão e emalhamento de fauna."
-    },
-    {
-      "id": "CC-053",
-      "nome": "Ocupação Irregular",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2100,
-      "defesa": 900,
-      "efeito": null,
-      "educacao": "Ocupação em áreas frágeis pode ampliar riscos."
-    },
-    {
-      "id": "CC-054",
-      "nome": "Pesca Predatória",
-      "tipo": "unidade",
-      "grupo": "impacto",
+      "grupo": "fauna",
       "atk": 2000,
-      "defesa": 1100,
+      "defesa": 1500,
       "efeito": null,
-      "educacao": "Capturas excessivas ameaçam populações exploradas."
+      "educacao": "Classificação informada: Animal - Ave -. Ambiente informado: Antártica.",
+      "informacao": {
+        "classificacao": "Animal - Ave -",
+        "ambiente": "Antártica",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-055",
-      "nome": "Assoreamento",
+      "id": "CC-162",
+      "nome": "ELEFANTE-MARINHO-DO-SUL",
       "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1600,
-      "defesa": 1900,
+      "grupo": "fauna",
+      "atk": 2000,
+      "defesa": 2500,
       "efeito": null,
-      "educacao": "Acúmulo de sedimentos pode alterar a profundidade de canais."
+      "educacao": "Classificação informada: Animal - Mamífero - Pinípede. Ambiente informado: Antártica.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Pinípede",
+        "ambiente": "Antártica",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-056",
-      "nome": "Derramamento de Óleo",
+      "id": "CC-163",
+      "nome": "ALBATROZ-DE-SOBRANCELHA",
       "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2200,
-      "defesa": 700,
-      "efeito": null,
-      "educacao": "Óleo pode causar impactos químicos e físicos na costa."
-    },
-    {
-      "id": "CC-057",
-      "nome": "Ressaca Marinha",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2300,
-      "defesa": 1000,
-      "efeito": null,
-      "educacao": "Ondas intensas podem causar danos e erosão."
-    },
-    {
-      "id": "CC-058",
-      "nome": "Expansão Portuária",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2100,
-      "defesa": 1300,
-      "efeito": null,
-      "educacao": "Obras portuárias exigem avaliação de impactos."
-    },
-    {
-      "id": "CC-059",
-      "nome": "Microplásticos",
-      "tipo": "unidade",
-      "grupo": "impacto",
+      "grupo": "fauna",
       "atk": 1500,
-      "defesa": 1300,
+      "defesa": 1500,
       "efeito": null,
-      "educacao": "Microplásticos são encontrados em vários ambientes aquáticos."
+      "educacao": "Classificação informada: Animal - Ave - Procellariiformes. Ambiente informado: Ilhas Oceânicas.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Procellariiformes",
+        "ambiente": "Ilhas Oceânicas",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-060",
-      "nome": "Ilha de Calor Urbana",
+      "id": "CC-164",
+      "nome": "CACHALOTE",
       "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1800,
-      "defesa": 1200,
+      "grupo": "fauna",
+      "atk": 3000,
+      "defesa": 3000,
       "efeito": null,
-      "educacao": "A urbanização pode alterar temperaturas locais."
+      "educacao": "Classificação informada: Animal - Mamífero - Cetáceo. Ambiente informado: Águas Profundas.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Cetáceo",
+        "ambiente": "Águas Profundas",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-061",
-      "nome": "Drenagem Inadequada",
+      "id": "CC-165",
+      "nome": "LOBO-MARINHO-DO-SUL",
       "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1900,
-      "defesa": 1200,
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 1500,
       "efeito": null,
-      "educacao": "Sistemas deficientes podem agravar alagamentos."
+      "educacao": "Classificação informada: Animal - Mamífero - Pinípede. Ambiente informado: Antártica.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Pinípede",
+        "ambiente": "Antártica",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-062",
-      "nome": "Supressão de Restinga",
+      "id": "CC-166",
+      "nome": "GAIVOTA-DAS-PRADARIAS",
       "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1800,
-      "defesa": 1100,
-      "efeito": null,
-      "educacao": "Perda de restinga reduz habitats e proteção vegetal."
-    },
-    {
-      "id": "CC-063",
-      "nome": "Turismo Predatório",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1900,
-      "defesa": 1200,
-      "efeito": null,
-      "educacao": "Uso intenso sem gestão pode pressionar ecossistemas."
-    },
-    {
-      "id": "CC-064",
-      "nome": "Sobrepesca",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2100,
-      "defesa": 900,
-      "efeito": null,
-      "educacao": "Remoção excessiva altera estoques e relações tróficas."
-    },
-    {
-      "id": "CC-065",
-      "nome": "Obra Sobre a Duna",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2200,
-      "defesa": 900,
-      "efeito": null,
-      "educacao": "Construir sobre dunas pode afetar a dinâmica sedimentar."
-    },
-    {
-      "id": "CC-066",
-      "nome": "Canalização de Rio",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2000,
-      "defesa": 1400,
-      "efeito": null,
-      "educacao": "Canalizações podem modificar fluxos e habitats."
-    },
-    {
-      "id": "CC-067",
-      "nome": "Invasão de Espécies",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2100,
-      "defesa": 1300,
-      "efeito": null,
-      "educacao": "Espécies exóticas podem desestabilizar comunidades."
-    },
-    {
-      "id": "CC-068",
-      "nome": "Contaminação Industrial",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2300,
-      "defesa": 800,
-      "efeito": null,
-      "educacao": "Efluentes industriais exigem controle e monitoramento."
-    },
-    {
-      "id": "CC-069",
-      "nome": "Dragagem Sem Controle",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2200,
-      "defesa": 1100,
-      "efeito": null,
-      "educacao": "Dragagens podem ressuspender sedimentos e alterar fundos."
-    },
-    {
-      "id": "CC-070",
-      "nome": "Branqueamento de Corais",
-      "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2000,
+      "grupo": "fauna",
+      "atk": 1500,
       "defesa": 1000,
       "efeito": null,
-      "educacao": "Estresse térmico pode provocar branqueamento coralíneo."
+      "educacao": "Classificação informada: Animal - Ave - Charadriiformes. Ambiente informado: Costa do Pacífico.",
+      "informacao": {
+        "classificacao": "Animal - Ave - Charadriiformes",
+        "ambiente": "Costa do Pacífico",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-071",
-      "nome": "Elevação do Nível do Mar",
+      "id": "CC-167",
+      "nome": "JUBARTE",
       "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 2400,
-      "defesa": 1100,
+      "grupo": "fauna",
+      "atk": 3000,
+      "defesa": 3000,
       "efeito": null,
-      "educacao": "A elevação do mar amplia riscos em certos trechos costeiros."
+      "educacao": "Classificação informada: Animal - Mamífero - Cetáceo. Ambiente informado: Antártica.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Cetáceo",
+        "ambiente": "Antártica",
+        "caracteristica": "NAO TEM"
+      }
     },
     {
-      "id": "CC-072",
-      "nome": "Descarga de Nutrientes",
+      "id": "CC-168",
+      "nome": "BALEIA-FRANCA-AUSTRAL",
       "tipo": "unidade",
-      "grupo": "impacto",
-      "atk": 1800,
-      "defesa": 1400,
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 2500,
       "efeito": null,
-      "educacao": "Excesso de nutrientes pode favorecer eutrofização."
+      "educacao": "Classificação informada: Animal - Mamífero - Cetáceo. Ambiente informado: Antártica.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Cetáceo",
+        "ambiente": "Antártica",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-169",
+      "nome": "BALEIA-MINKE-ANTÁRTICA",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 2500,
+      "defesa": 3000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Mamífero - Cetáceo. Ambiente informado: Antártica.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Cetáceo",
+        "ambiente": "Antártica",
+        "caracteristica": "NAO TEM"
+      }
+    },
+    {
+      "id": "CC-170",
+      "nome": "BALEIA DE BRYDE",
+      "tipo": "unidade",
+      "grupo": "fauna",
+      "atk": 3000,
+      "defesa": 3000,
+      "efeito": null,
+      "educacao": "Classificação informada: Animal - Mamífero - Cetáceo. Ambiente informado: Costa Brasileira.",
+      "informacao": {
+        "classificacao": "Animal - Mamífero - Cetáceo",
+        "ambiente": "Costa Brasileira",
+        "caracteristica": "NAO TEM"
+      }
     }
   ]
 }

@@ -313,6 +313,62 @@
   max-height: 100%;
 }
 
+/* Atalho de informação fica fora do botão da carta: não cria controles aninhados
+   e não participa do gesto de seleção/arrasto. */
+.carta-info {
+  position: absolute;
+  left: -0.45rem;
+  bottom: -0.45rem;
+  z-index: 9;
+  display: grid;
+  place-items: center;
+  width: 1.55rem;
+  height: 1.55rem;
+  padding: 0;
+  border: 0.125rem solid #7deaff;
+  border-radius: 50%;
+  background: rgba(4, 19, 31, 0.96);
+  box-shadow: 0 0 0.45rem rgba(63, 220, 240, 0.58);
+  color: #fff2b8;
+  font: 800 1rem/1 Georgia, serif;
+  cursor: pointer;
+}
+.carta-info:hover,
+.carta-info:focus-visible {
+  background: #0e3c54;
+  outline: 0.15rem solid #fff;
+  outline-offset: 0.1rem;
+}
+.carta-info--mao {
+  left: -0.6rem;
+  bottom: -0.6rem;
+}
+
+@media (pointer: coarse) {
+  .carta-info {
+    width: 44px;
+    height: 44px;
+    border-width: 0;
+    background: transparent;
+    box-shadow: none;
+    color: transparent;
+    font-size: 0;
+  }
+  .carta-info::before {
+    display: grid;
+    place-items: center;
+    width: 1.7rem;
+    height: 1.7rem;
+    border: 0.125rem solid #7deaff;
+    border-radius: 50%;
+    background: rgba(4, 19, 31, 0.96);
+    box-shadow: 0 0 0.45rem rgba(63, 220, 240, 0.58);
+    color: #fff2b8;
+    font: 800 1rem/1 Georgia, serif;
+    content: 'i';
+  }
+}
+
 /* ---------------------------------------------------------------- cartas */
 .carta {
   --posicao-largura: max(2.5rem, 40px);

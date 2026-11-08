@@ -21,12 +21,9 @@ describe('baralho inicial', () => {
     expect(validarBaralho([...BARALHO_INICIAL], colecao).ok).toBe(true)
   })
 
-  it('mistura os 4 grupos de unidades', () => {
-    const n = (de: number, ate: number) => BARALHO_INICIAL.filter((id) => Number(id.slice(3)) >= de && Number(id.slice(3)) <= ate).length
-    expect(n(1, 16)).toBeGreaterThan(0)
-    expect(n(17, 30)).toBeGreaterThan(0)
-    expect(n(31, 46)).toBeGreaterThan(0)
-    expect(n(47, 72)).toBeGreaterThan(0)
+  it('usa somente o catálogo atual e ao menos 14 modelos distintos', () => {
+    expect(new Set(BARALHO_INICIAL).size).toBeGreaterThanOrEqual(14)
+    expect(BARALHO_INICIAL.every((id) => Number(id.slice(3)) >= 101 && Number(id.slice(3)) <= 170)).toBe(true)
   })
 })
 
@@ -51,12 +48,12 @@ describe('validarBaralho', () => {
   })
 
   it('rejeita mais de 3 cópias mesmo que a coleção permitisse', () => {
-    const r = validarBaralho([...Array(4).fill('CC-001'), ...base.filter((i) => i !== 'CC-001').slice(0, 36)], TODAS)
+    const r = validarBaralho([...Array(4).fill('CC-101'), ...base.filter((i) => i !== 'CC-101').slice(0, 36)], TODAS)
     expect(r).toMatchObject({ ok: false, mensagem: expect.stringContaining('no máximo 3') })
   })
 
   it('rejeita quantidade acima da coleção', () => {
-    const sobra = base.filter((i) => i !== 'CC-034').concat('CC-072')
+    const sobra = base.slice(1).concat('CC-170')
     expect(validarBaralho(sobra, colecao)).toMatchObject({ ok: false, mensagem: expect.stringContaining('coleção') })
   })
 

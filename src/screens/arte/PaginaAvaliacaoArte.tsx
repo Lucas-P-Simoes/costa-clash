@@ -6,8 +6,7 @@ import { arteDaCarta, ROTULO_ESTADO_ARTE } from '../../arte/arteDisponivel'
 import type { ArteDaCarta } from '../../arte/arteDisponivel'
 import { CATEGORIAS, ORDEM_CATEGORIAS, classificarCarta } from '../../arte/categorias'
 import { CRITERIOS_GERAIS, PILOTO } from '../../arte/piloto'
-import { PALETAS, montarPrompt } from '../../arte/prompts'
-import { SUJEITOS } from '../../arte/sujeitos'
+import { PALETAS, montarPrompt, promptDaCarta } from '../../arte/prompts'
 import { CATALOGO } from '../../data/catalogo'
 import '../duelo/duelo.css'
 import './avaliacaoArte.css'
@@ -34,7 +33,7 @@ function ItemPiloto({ id, categoria, criterios, arteDe }: { id: string; categori
   const arte = arteDe(id)
   const prompt = montarPrompt(carta, 'pt')
   const [copia, setCopia] = useState<EstadoCopia>(null)
-  const paleta = PALETAS[SUJEITOS[id].paleta]
+  const paleta = PALETAS[promptDaCarta(carta).paleta]
   return (
     <article className="avarte__item" aria-labelledby={`avarte-${id}`}>
       <h2 id={`avarte-${id}`}>
@@ -74,8 +73,7 @@ export function PaginaAvaliacaoArte({ arteDe = arteDaCarta }: { arteDe?: (id: st
     <main className="avarte">
       <h1>Avaliação do estilo das ilustrações (desenvolvimento)</h1>
       <p className="avarte__aviso" role="note">
-        O catálogo tem 68 ilustrações geradas aguardando aprovação do dono. As 4 cartas piloto abaixo continuam usando recortes PROVISÓRIOS da referência de estilo
-        (Estilos-de-cartas.webp), em baixa resolução e fora de 3:4, para comparar o estilo e a moldura antes de substituí-las.
+        O catálogo atual tem 70 ilustrações geradas aguardando aprovação do dono. As quatro cartas abaixo são uma amostra técnica para comparar estilo, moldura e legibilidade.
       </p>
       <section aria-labelledby="avarte-legenda">
         <h2 id="avarte-legenda">Molduras e selos por categoria</h2>

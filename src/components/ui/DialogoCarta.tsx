@@ -7,6 +7,7 @@ import { ArteCarta } from '../duelo/ArteCarta'
 import { rotuloTipo, tipoArte } from '../duelo/textoCarta'
 import { useFocoDialogo } from '../duelo/useFocoDialogo'
 import { IconeVoltar } from './Icones'
+import './DialogoCarta.css'
 
 type Aba = 'carta' | 'historia'
 const ABAS: ReadonlyArray<{ id: Aba; rotulo: string }> = [
@@ -85,6 +86,22 @@ export function DialogoCarta({ carta, onFechar }: Props) {
                   <span>ATK {carta.atk}</span>
                   <span>DEF {carta.defesa}</span>
                 </p>
+              ) : null}
+              {carta.informacao ? (
+                <dl className="carta-dialogo__informacao">
+                  <div>
+                    <dt>Classificação</dt>
+                    <dd>{carta.informacao.classificacao}</dd>
+                  </div>
+                  <div>
+                    <dt>Ambiente</dt>
+                    <dd>{carta.informacao.ambiente}</dd>
+                  </div>
+                  <div>
+                    <dt>Característica</dt>
+                    <dd>{carta.informacao.caracteristica?.trim().toUpperCase() === 'NAO TEM' ? 'Não informada' : (carta.informacao.caracteristica ?? 'Não informada')}</dd>
+                  </div>
+                </dl>
               ) : null}
               <p className="carta-dialogo__educacao">{carta.educacao}</p>
             </div>

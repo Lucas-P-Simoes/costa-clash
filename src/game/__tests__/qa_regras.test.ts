@@ -63,7 +63,7 @@ describe('QA 1 - compra e mão (§2, §3)', () => {
   })
 
   it('falta carta: derrota ANTES de comprar, sem compra parcial', () => {
-    const e = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { mao: ['CC-001', 'CC-002', 'CC-003'], baralho: 1 } })
+    const e = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { mao: ['CC-101', 'CC-102', 'CC-103'], baralho: 1 } })
     const r = ok(cmd(e, { tipo: 'encerrarTurno', jogador: 'oponente' }))
     expect(r.resultado).toEqual({ vencedor: 'oponente', motivo: 'compra' })
     expect(r.jogadores.humano.mao).toHaveLength(3) // nada comprado
@@ -71,14 +71,14 @@ describe('QA 1 - compra e mão (§2, §3)', () => {
   })
 
   it('exatamente a carta que falta: compra e continua; mão cheia com baralho vazio não perde', () => {
-    const e1 = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { mao: ['CC-001', 'CC-002', 'CC-003', 'CC-004'], baralho: 1 } })
+    const e1 = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { mao: ['CC-101', 'CC-102', 'CC-103', 'CC-104'], baralho: 1 } })
     const r1 = ok(cmd(e1, { tipo: 'encerrarTurno', jogador: 'oponente' }))
     expect(r1.resultado).toBeNull()
     expect(r1.jogadores.humano.mao).toHaveLength(5)
     expect(r1.jogadores.humano.baralho).toHaveLength(0)
-    const e2 = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { mao: ['CC-001', 'CC-002', 'CC-003', 'CC-004', 'CC-005'], baralho: 0 } })
+    const e2 = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { mao: ['CC-101', 'CC-102', 'CC-103', 'CC-104', 'CC-105'], baralho: 0 } })
     expect(ok(cmd(e2, { tipo: 'encerrarTurno', jogador: 'oponente' })).resultado).toBeNull()
-    const e3 = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { mao: ['CC-001', 'CC-002', 'CC-003', 'CC-004'], baralho: 0 } })
+    const e3 = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { mao: ['CC-101', 'CC-102', 'CC-103', 'CC-104'], baralho: 0 } })
     expect(ok(cmd(e3, { tipo: 'encerrarTurno', jogador: 'oponente' })).resultado).toEqual({ vencedor: 'oponente', motivo: 'compra' })
     // mão vazia e baralho com 4: falta 5 -> perde sem comprar
     const e4 = cenarioCombate({ ativo: 'oponente', turno: 4, humano: { mao: [], baralho: 4 } })
@@ -88,7 +88,7 @@ describe('QA 1 - compra e mão (§2, §3)', () => {
   })
 
   it('o jogador ativo que fica sem cartas perde também quando é o humano que passa a vez ao oponente', () => {
-    const e = cenarioCombate({ ativo: 'humano', turno: 3, oponente: { mao: ['CC-001'], baralho: 2 } })
+    const e = cenarioCombate({ ativo: 'humano', turno: 3, oponente: { mao: ['CC-101'], baralho: 2 } })
     const r = ok(cmd(e, { tipo: 'encerrarTurno', jogador: 'humano' }))
     expect(r.resultado).toEqual({ vencedor: 'humano', motivo: 'compra' })
   })
@@ -96,7 +96,7 @@ describe('QA 1 - compra e mão (§2, §3)', () => {
 
 describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
   it('turno 1: humano não ataca (mesmo com unidade e campo inimigo vazio); pode avançar e encerrar', () => {
-    const e = cenario({ turno: 1, ativo: 'humano', fase: 'COMBATE', jogadaFeita: true, humano: { campo: ['CC-043'] } })
+    const e = cenario({ turno: 1, ativo: 'humano', fase: 'COMBATE', jogadaFeita: true, humano: { campo: ['CC-143'] } })
     recusa(e, { tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 'direto' })
     expect(ataquesLegais(e)).toEqual([])
     const e2 = cenario({ turno: 1, ativo: 'humano', fase: 'PRINCIPAL', jogadaFeita: true })
@@ -104,28 +104,28 @@ describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
   })
 
   it('turno 2: oponente ataca (inclusive unidade invocada no mesmo turno)', () => {
-    let e = cenario({ turno: 2, ativo: 'oponente', fase: 'PRINCIPAL', oponente: { mao: ['CC-027'] } })
-    e = ok(jogar(e, 'oponente', 'CC-027', { posicao: 'ATAQUE' }))
+    let e = cenario({ turno: 2, ativo: 'oponente', fase: 'PRINCIPAL', oponente: { mao: ['CC-127'] } })
+    e = ok(jogar(e, 'oponente', 'CC-127', { posicao: 'ATAQUE' }))
     e = irParaCombate(e)
     const r = ok(atacar(e, 0, 'direto'))
-    expect(r.jogadores.humano.lp).toBe(3000)
+    expect(r.jogadores.humano.lp).toBe(3500)
   })
 
   it('uma jogada da mão por turno; avançar/encerrar exigem jogada; jogar fora da fase principal é recusado', () => {
-    const e = cenario({ turno: 3, humano: { mao: ['CC-001', 'CC-002'] } })
+    const e = cenario({ turno: 3, humano: { mao: ['CC-101', 'CC-102'] } })
     recusa(e, { tipo: 'avancarFase', jogador: 'humano' })
     recusa(e, { tipo: 'encerrarTurno', jogador: 'humano' })
-    const e1 = ok(jogar(e, 'humano', 'CC-001'))
-    const r = recusa(e1, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e1, 'humano', 'CC-002') })
+    const e1 = ok(jogar(e, 'humano', 'CC-101'))
+    const r = recusa(e1, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e1, 'humano', 'CC-102') })
     expect(r.ok).toBe(false)
     const ec = irParaCombate(e1)
-    recusa(ec, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(ec, 'humano', 'CC-002') })
-    recusa(ec, { tipo: 'descartar', jogador: 'humano', uid: uidDe(ec, 'humano', 'CC-002') })
+    recusa(ec, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(ec, 'humano', 'CC-102') })
+    recusa(ec, { tipo: 'descartar', jogador: 'humano', uid: uidDe(ec, 'humano', 'CC-102') })
   })
 
   it('fora de turno / fase errada / jogo encerrado', () => {
-    const e = cenario({ turno: 3, humano: { mao: ['CC-001'], campo: ['CC-043'] }, oponente: { mao: ['CC-002'] } })
-    recusa(e, { tipo: 'jogarCarta', jogador: 'oponente', uid: uidDe(e, 'oponente', 'CC-002') })
+    const e = cenario({ turno: 3, humano: { mao: ['CC-101'], campo: ['CC-143'] }, oponente: { mao: ['CC-102'] } })
+    recusa(e, { tipo: 'jogarCarta', jogador: 'oponente', uid: uidDe(e, 'oponente', 'CC-102') })
     recusa(e, { tipo: 'encerrarTurno', jogador: 'oponente' })
     recusa(e, { tipo: 'avancarFase', jogador: 'oponente' })
     recusa(e, { tipo: 'mudarPosicao', jogador: 'oponente', zona: 0, posicao: 'DEFESA' })
@@ -145,21 +145,21 @@ describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
   })
 
   it('ataque uma vez por unidade; unidade em defesa não ataca; atacou não muda posição; mudança livre antes', () => {
-    let e = cenarioCombate({ turno: 3, humano: { campo: ['CC-043', { id: 'CC-033', pos: 'DEFESA' }] }, oponente: { campo: [{ id: 'CC-013', pos: 'DEFESA' }, { id: 'CC-001', pos: 'DEFESA' }] } })
+    let e = cenarioCombate({ turno: 3, humano: { campo: ['CC-143', { id: 'CC-143', pos: 'DEFESA' }] }, oponente: { campo: [{ id: 'CC-113', pos: 'DEFESA' }, { id: 'CC-125', pos: 'DEFESA' }] } })
     recusa(e, { tipo: 'atacar', jogador: 'humano', atacante: 1, alvo: 0 }) // em defesa
     e = ok(atacar(e, 0, 0)) // 2000 vs DEF 1800
     expect(e.jogadores.oponente.campo[0]).toBeNull()
     recusa(e, { tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 1 }) // já atacou
     recusa(e, { tipo: 'mudarPosicao', jogador: 'humano', zona: 0, posicao: 'DEFESA' }) // atacou: não muda
     e = ok(cmd(e, { tipo: 'mudarPosicao', jogador: 'humano', zona: 1, posicao: 'ATAQUE' })) // ainda pode
-    e = ok(atacar(e, 1, 1)) // CC-033 1800 vs DEF 2000: repelido
-    expect(e.jogadores.humano.lp).toBe(4800)
+    e = ok(atacar(e, 1, 1)) // CC-143 2000 vs DEF 2500: repelido
+    expect(e.jogadores.humano.lp).toBe(4500)
     expect(e.jogadores.oponente.campo[1]).not.toBeNull()
     recusa(e, { tipo: 'mudarPosicao', jogador: 'humano', zona: 1, posicao: 'DEFESA' })
   })
 
   it('flags de ataque são zeradas no início do turno seguinte do dono', () => {
-    let e = cenarioCombate({ turno: 3, humano: { campo: ['CC-043'] }, oponente: { campo: [] } })
+    let e = cenarioCombate({ turno: 3, humano: { campo: ['CC-143'] }, oponente: { campo: [] } })
     e = ok(atacar(e, 0, 'direto'))
     expect(e.jogadores.humano.campo[0]?.atacou).toBe(true)
     e = ok(cmd(e, { tipo: 'encerrarTurno', jogador: 'humano' }))
@@ -170,14 +170,14 @@ describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
   })
 
   it('zona de unidade: ocupada/fora de faixa recusada; omitida usa a primeira livre; campo cheio sem jogada de unidade', () => {
-    const e = cenario({ turno: 3, humano: { mao: ['CC-001'], campo: ['CC-002', null, 'CC-004'] } })
-    recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-001'), zona: 0 })
-    recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-001'), zona: 5 })
-    recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-001'), zona: -1 })
-    recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-001'), zona: 1.5 })
-    expect(ok(jogar(e, 'humano', 'CC-001')).jogadores.humano.campo[1]?.cartaId).toBe('CC-001')
-    const cheio = cenario({ turno: 3, humano: { mao: ['CC-001', 'CC-012'], campo: ['CC-002', 'CC-002', 'CC-002', 'CC-002', 'CC-002'] } })
-    // CC-012 (unidade) sem zona livre: nenhuma jogada de carta; só descartes
+    const e = cenario({ turno: 3, humano: { mao: ['CC-101'], campo: ['CC-102', null, 'CC-104'] } })
+    recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-101'), zona: 0 })
+    recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-101'), zona: 5 })
+    recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-101'), zona: -1 })
+    recusa(e, { tipo: 'jogarCarta', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-101'), zona: 1.5 })
+    expect(ok(jogar(e, 'humano', 'CC-101')).jogadores.humano.campo[1]?.cartaId).toBe('CC-101')
+    const cheio = cenario({ turno: 3, humano: { mao: ['CC-101', 'CC-112'], campo: ['CC-102', 'CC-102', 'CC-102', 'CC-102', 'CC-102'] } })
+    // CC-112 (unidade) sem zona livre: nenhuma jogada de carta; só descartes
     expect(jogadasLegais(cheio).every((c) => c.tipo === 'descartar')).toBe(true)
     const d = ok(cmd(cheio, jogadasLegais(cheio)[0]!))
     expect(d.jogadaFeita).toBe(true)
@@ -185,11 +185,11 @@ describe('QA 2 - turnos, fases e comandos fora de hora (§4)', () => {
   })
 
   it('descarte livre (lixeira) sempre vale; só o descarte sem jogada legal conta como a jogada da mão', () => {
-    const e = cenario({ turno: 3, humano: { mao: ['CC-001', 'CC-012'] } })
-    const livre = ok(cmd(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-012') }))
+    const e = cenario({ turno: 3, humano: { mao: ['CC-101', 'CC-112'] } })
+    const livre = ok(cmd(e, { tipo: 'descartar', jogador: 'humano', uid: uidDe(e, 'humano', 'CC-112') }))
     expect(livre.jogadaFeita).toBe(false)
     expect(livre.jogadores.humano.descarte).toHaveLength(1)
-    const sem = cenario({ turno: 3, humano: { mao: ['CC-012', 'CC-013', 'CC-015'], campo: ['CC-002', 'CC-002', 'CC-002', 'CC-002', 'CC-002'] } }) // campo cheio: nenhuma jogada de carta
+    const sem = cenario({ turno: 3, humano: { mao: ['CC-112', 'CC-113', 'CC-115'], campo: ['CC-102', 'CC-102', 'CC-102', 'CC-102', 'CC-102'] } }) // campo cheio: nenhuma jogada de carta
     const j = jogadasLegais(sem)
     expect(j).toHaveLength(3)
     expect(j.every((c) => c.tipo === 'descartar')).toBe(true)
@@ -205,15 +205,15 @@ describe('QA 3 - combate (§5)', () => {
     atacar(cenarioCombate({ turno: 3, humano: { campo: [atk] }, oponente: { campo: [{ id: alvo, pos }] }, ...extra }), 0, 0)
 
   it('ATK x ATK: maior destrói a menor e o perdedor perde a diferença; empate destrói ambas sem dano', () => {
-    let e = ok(duelo('CC-043', 'ATAQUE', 'CC-033')) // 2000 x 1800
-    expect(e.jogadores.oponente.lp).toBe(4800)
+    let e = ok(duelo('CC-133', 'ATAQUE', 'CC-143')) // 2500 x 2000
+    expect(e.jogadores.oponente.lp).toBe(4500)
     expect(e.jogadores.oponente.campo[0]).toBeNull()
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
-    e = ok(duelo('CC-033', 'ATAQUE', 'CC-043')) // 1800 x 2000
-    expect(e.jogadores.humano.lp).toBe(4800)
+    e = ok(duelo('CC-143', 'ATAQUE', 'CC-133')) // 2000 x 2500
+    expect(e.jogadores.humano.lp).toBe(4500)
     expect(e.jogadores.humano.campo[0]).toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
-    e = ok(duelo('CC-043', 'ATAQUE', 'CC-027')) // 2000 x 2000
+    e = ok(duelo('CC-143', 'ATAQUE', 'CC-143')) // 2000 x 2000
     expect([e.jogadores.humano.lp, e.jogadores.oponente.lp]).toEqual([5000, 5000])
     expect(e.jogadores.humano.campo[0]).toBeNull()
     expect(e.jogadores.oponente.campo[0]).toBeNull()
@@ -222,58 +222,58 @@ describe('QA 3 - combate (§5)', () => {
   })
 
   it('ATK x DEF: maior destrói sem dano; menor causa dano ao atacante sem destruir; empate nada', () => {
-    let e = ok(duelo('CC-043', 'DEFESA', 'CC-033')) // 2000 > DEF 1600
+    let e = ok(duelo('CC-110', 'DEFESA', 'CC-169')) // 3500 > DEF 3000
     expect(e.jogadores.oponente.campo[0]).toBeNull()
     expect([e.jogadores.humano.lp, e.jogadores.oponente.lp]).toEqual([5000, 5000])
-    e = ok(duelo('CC-033', 'DEFESA', 'CC-001')) // 1800 < DEF 2000
-    expect(e.jogadores.humano.lp).toBe(4800)
+    e = ok(duelo('CC-143', 'DEFESA', 'CC-125')) // 2000 < DEF 2500
+    expect(e.jogadores.humano.lp).toBe(4500)
     expect(e.jogadores.oponente.lp).toBe(5000)
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
-    e = ok(duelo('CC-033', 'DEFESA', 'CC-013')) // 1800 == DEF 1800
+    e = ok(duelo('CC-143', 'DEFESA', 'CC-101')) // 2000 == DEF 2000
     expect([e.jogadores.humano.lp, e.jogadores.oponente.lp]).toEqual([5000, 5000])
     expect(e.jogadores.humano.campo[0]).not.toBeNull()
     expect(e.jogadores.oponente.campo[0]).not.toBeNull()
   })
 
   it('ataque direto só sem unidade inimiga; alvo vazio/inválido recusado', () => {
-    const com = cenarioCombate({ turno: 3, humano: { campo: ['CC-043'] }, oponente: { campo: [null, 'CC-001'] } })
+    const com = cenarioCombate({ turno: 3, humano: { campo: ['CC-143'] }, oponente: { campo: [null, 'CC-101'] } })
     recusa(com, { tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 'direto' })
     recusa(com, { tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 0 }) // zona vazia
     recusa(com, { tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 7 })
     recusa(com, { tipo: 'atacar', jogador: 'humano', atacante: 3, alvo: 1 }) // sem atacante
-    const sem = cenarioCombate({ turno: 3, humano: { campo: ['CC-043'] } })
+    const sem = cenarioCombate({ turno: 3, humano: { campo: ['CC-143'] } })
     expect(ok(atacar(sem, 0, 'direto')).jogadores.oponente.lp).toBe(3000)
     recusa(sem, { tipo: 'atacar', jogador: 'humano', atacante: 0, alvo: 0 })
   })
 
   it('LP exatamente 0 e abaixo de 0 (clamp): derrota imediata, LP nunca negativo', () => {
-    let e = ok(atacar(cenarioCombate({ turno: 3, humano: { campo: ['CC-043'] }, oponente: { lp: 2000 } }), 0, 'direto'))
+    let e = ok(atacar(cenarioCombate({ turno: 3, humano: { campo: ['CC-143'] }, oponente: { lp: 2000 } }), 0, 'direto'))
     expect(e.jogadores.oponente.lp).toBe(0)
     expect(e.resultado).toEqual({ vencedor: 'humano', motivo: 'lp' })
-    e = ok(atacar(cenarioCombate({ turno: 3, humano: { campo: ['CC-043'] }, oponente: { lp: 1 } }), 0, 'direto'))
+    e = ok(atacar(cenarioCombate({ turno: 3, humano: { campo: ['CC-143'] }, oponente: { lp: 1 } }), 0, 'direto'))
     expect(e.jogadores.oponente.lp).toBe(0)
     // atacante morre no refluxo
-    e = ok(duelo('CC-033', 'DEFESA', 'CC-001', { humano: { lp: 200, campo: ['CC-033'] } }))
+    e = ok(duelo('CC-143', 'DEFESA', 'CC-125', { humano: { lp: 200, campo: ['CC-143'] } }))
     expect(e.jogadores.humano.lp).toBe(0)
     expect(e.resultado).toEqual({ vencedor: 'oponente', motivo: 'lp' })
     // LP 1 a mais que o dano: segue vivo
-    e = ok(atacar(cenarioCombate({ turno: 3, humano: { campo: ['CC-043'] }, oponente: { lp: 2001 } }), 0, 'direto'))
+    e = ok(atacar(cenarioCombate({ turno: 3, humano: { campo: ['CC-143'] }, oponente: { lp: 2001 } }), 0, 'direto'))
     expect(e.resultado).toBeNull()
     expect(e.jogadores.oponente.lp).toBe(1)
   })
 
   it('atributos efetivos: buffs, com clamp >= 0 só no resultado', () => {
     const e = cenario({
-      humano: { campo: [{ id: 'CC-056', buffAtk: -2300, buffDef: -1000 }, 'CC-043'] }, // 2200/700 impacto; 2000/1700 atividade
-      oponente: { campo: [{ id: 'CC-056' }] },
+      humano: { campo: [{ id: 'CC-156', buffAtk: -2300, buffDef: -1000 }, 'CC-143'] }, // 2200/700 impacto; 2000/1700 atividade
+      oponente: { campo: [{ id: 'CC-156' }] },
     })
     const h = e.jogadores.humano.campo
     expect(atkEfetivo(e, 'humano', h[0]!, cat)).toBe(0) // 2200-2300, limitado a 0
     expect(defEfetiva(e, 'humano', h[0]!, cat)).toBe(0) // 700-1000, limitado a 0
     expect(atkEfetivo(e, 'humano', h[1]!, cat)).toBe(2000)
     expect(atkEfetivo(e, 'oponente', e.jogadores.oponente.campo[0]!, cat)).toBe(2200)
-    const neg = cenario({ humano: { campo: [{ id: 'CC-056', buffAtk: -9000, buffDef: -9000 }] } })
+    const neg = cenario({ humano: { campo: [{ id: 'CC-156', buffAtk: -9000, buffDef: -9000 }] } })
     expect(atkEfetivo(neg, 'humano', neg.jogadores.humano.campo[0]!, cat)).toBe(0)
     expect(defEfetiva(neg, 'humano', neg.jogadores.humano.campo[0]!, cat)).toBe(0)
   })

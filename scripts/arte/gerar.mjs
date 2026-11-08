@@ -23,7 +23,7 @@ export function lerArgumentos(argv) {
     else throw new Error(`Argumento desconhecido: ${a}`)
   }
   const escolhas = [o.lote, o.ids, o.proximos].filter((x) => x !== null && x !== undefined).length
-  if (escolhas !== 1) throw new Error('Informe exatamente um entre --lote piloto, --ids CC-001,CC-018 ou --proximos N.')
+  if (escolhas !== 1) throw new Error('Informe exatamente um entre --lote piloto, --ids CC-101,CC-118 ou --proximos N.')
   if (o.lote !== null && o.lote !== 'piloto') throw new Error(`Lote desconhecido: ${o.lote} (disponível: piloto).`)
   if (o.proximos !== null && (!Number.isInteger(o.proximos) || o.proximos < 1)) throw new Error('--proximos exige um inteiro >= 1.')
   return o

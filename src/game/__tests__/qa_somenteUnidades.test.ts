@@ -9,20 +9,20 @@ import { BARALHOS_SIMULACAO, simularIAxIA } from './simular'
 import { cenario } from './util'
 
 describe('QA somente unidades', () => {
-  it('catálogo: 72 unidades', () => {
-    expect(CATALOGO).toHaveLength(72)
+  it('catálogo: 70 unidades', () => {
+    expect(CATALOGO).toHaveLength(70)
     expect(CATALOGO.every((c) => c.tipo === 'unidade')).toBe(true)
   })
 
   it('campo cheio + mão só de unidades válidas: as únicas jogadas são descartes', () => {
-    const e = cenario({ turno: 3, humano: { mao: ['CC-001', 'CC-003', 'CC-005'], campo: ['CC-002', 'CC-004', 'CC-006', 'CC-009', 'CC-010'] } })
+    const e = cenario({ turno: 3, humano: { mao: ['CC-101', 'CC-103', 'CC-105'], campo: ['CC-102', 'CC-104', 'CC-106', 'CC-109', 'CC-110'] } })
     const j = jogadasLegais(e)
     expect(j).toHaveLength(3)
     expect(j.every((c) => c.tipo === 'descartar')).toBe(true)
   })
 
   it('campo com zona livre: a unidade é jogável (sem oferecer descarte forçado)', () => {
-    const e = cenario({ turno: 3, humano: { mao: ['CC-001'], campo: ['CC-002'] } })
+    const e = cenario({ turno: 3, humano: { mao: ['CC-101'], campo: ['CC-102'] } })
     const j = jogadasLegais(e)
     expect(j.length).toBeGreaterThan(0)
     expect(j.every((c) => c.tipo === 'jogarCarta')).toBe(true)

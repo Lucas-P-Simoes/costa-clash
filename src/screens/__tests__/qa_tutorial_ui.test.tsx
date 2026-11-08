@@ -187,8 +187,8 @@ describe('QA tutorial UI: resultados e cena de corrupção', () => {
 
   it('vitória: cena de corrupção com fundo inert, foco no Continuar, onVitoria uma única vez, resultado depois', () => {
     const onVitoria = vi.fn()
-    montar({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, campo: ['CC-043'] }, oponente: { baralho: 20, lp: 500, campo: [] } }, onVitoria)
-    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Saneamento Integrado/ }), screen.getByLabelText('Vida do oponente: 500'))
+    montar({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, campo: ['CC-143'] }, oponente: { baralho: 20, lp: 500, campo: [] } }, onVitoria)
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: GARÇA AZUL/ }), screen.getByLabelText('Vida do oponente: 500'))
     const dlg = screen.getByRole('dialog', { name: 'Algo está errado...' })
     expect(dlg.getAttribute('aria-modal')).toBe('true')
     expect(q('.duelo-fundo').hasAttribute('inert')).toBe(true)
@@ -203,27 +203,27 @@ describe('QA tutorial UI: resultados e cena de corrupção', () => {
   // DEFEITO (baixo/médio): Esc na cena de corrupção chama onVoltar e sai do duelo sem ver o resultado/recompensa.
   it('Esc na cena de corrupção deveria apenas continuar (não sair para o menu)', () => {
     const onVoltar = vi.fn()
-    render(<Partida estadoInicial={cenario({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, campo: ['CC-043'] }, oponente: { baralho: 20, lp: 500, campo: [] } })} oponente={buscarOponente('guardiao-manguezal')!} atrasoIA={0} tutorial={{ onPular: () => {} }} onVoltar={onVoltar} onNovamente={() => {}} />)
-    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Saneamento Integrado/ }), screen.getByLabelText('Vida do oponente: 500'))
+    render(<Partida estadoInicial={cenario({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, campo: ['CC-143'] }, oponente: { baralho: 20, lp: 500, campo: [] } })} oponente={buscarOponente('guardiao-manguezal')!} atrasoIA={0} tutorial={{ onPular: () => {} }} onVoltar={onVoltar} onNovamente={() => {}} />)
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: GARÇA AZUL/ }), screen.getByLabelText('Vida do oponente: 500'))
     fireEvent.keyDown(window, { key: 'Escape' })
     expect(onVoltar).not.toHaveBeenCalled()
   })
 
   it('derrota por LP/compra no tutorial não mostra a cena de corrupção', () => {
-    montar({ turno: 3, fase: 'PRINCIPAL', ativo: 'oponente', humano: { baralho: 0, mao: [], campo: [] }, oponente: { baralho: 10, campo: ['CC-043'] } })
+    montar({ turno: 3, fase: 'PRINCIPAL', ativo: 'oponente', humano: { baralho: 0, mao: [], campo: [] }, oponente: { baralho: 10, campo: ['CC-143'] } })
     // humano sem cartas para repor a mão na vez dele: o motor encerra por compra
     expect(screen.queryByRole('dialog', { name: 'Algo está errado...' })).toBeNull()
   })
 
   it('empate (ambos a zero) no tutorial não mostra a cena de corrupção', () => {
-    const e = cenario({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, lp: 500, campo: ['CC-043'] }, oponente: { baralho: 20, lp: 500, campo: ['CC-043'] } })
+    const e = cenario({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, lp: 500, campo: ['CC-143'] }, oponente: { baralho: 20, lp: 500, campo: ['CC-143'] } })
     render(<Partida estadoInicial={{ ...e, resultado: { vencedor: null, motivo: 'empate_lp' } }} oponente={buscarOponente('guardiao-manguezal')!} atrasoIA={0} tutorial={{ onPular: () => {} }} onVoltar={() => {}} onNovamente={() => {}} />)
     expect(screen.queryByRole('dialog', { name: 'Algo está errado...' })).toBeNull()
     expect(screen.getByRole('button', { name: /Jogar novamente/ })).toBeTruthy()
   })
 
   it('derrota no tutorial não mostra a cena de corrupção', () => {
-    const e = cenario({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, campo: ['CC-043'] }, oponente: { baralho: 20, campo: ['CC-043'] } })
+    const e = cenario({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, campo: ['CC-143'] }, oponente: { baralho: 20, campo: ['CC-143'] } })
     render(<Partida estadoInicial={{ ...e, resultado: { vencedor: 'oponente', motivo: 'lp' } }} oponente={buscarOponente('guardiao-manguezal')!} atrasoIA={0} tutorial={{ onPular: () => {} }} onVoltar={() => {}} onNovamente={() => {}} />)
     expect(screen.queryByRole('dialog', { name: 'Algo está errado...' })).toBeNull()
     expect(screen.getByRole('button', { name: /Jogar novamente/ })).toBeTruthy()

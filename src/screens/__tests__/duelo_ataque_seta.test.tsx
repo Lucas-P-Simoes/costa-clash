@@ -15,7 +15,7 @@ afterEach(() => {
 })
 
 function montar(cfg: ConfigCenario = {}, atrasoIA = 0) {
-  const estado = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
+  const estado = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-101'] }, ...cfg })
   return render(<Partida estadoInicial={estado} oponente={buscarOponente('ressaca')!} atrasoIA={atrasoIA} onVoltar={() => {}} onNovamente={() => {}} />)
 }
 
@@ -37,10 +37,10 @@ function soltar(pointerType = 'mouse') {
 
 describe('ataque por seta', () => {
   it('remove o botão ATACAR, pulsa atacantes disponíveis e resolve ao soltar num alvo válido', () => {
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'] } })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: ['CC-101'] } })
     expect(document.getElementById('b-atacar')).toBeNull()
-    const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })
-    const alvo = screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ })
+    const atacante = screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ })
+    const alvo = screen.getByRole('button', { name: /Zona 1 do oponente: CHAMA-MARÉ/ })
     expect(atacante.className).toContain('carta--valida')
     iniciar(atacante)
     expect(document.querySelector('.duelo-seta-ataque--humano')).toBeTruthy()
@@ -54,33 +54,33 @@ describe('ataque por seta', () => {
   })
 
   it('campo adversário vazio: um clique simples na unidade ataca direto e tira vida do adversário', () => {
-    montar({ turno: 3, jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: [] } })
-    const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })
+    montar({ turno: 3, jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: [] } })
+    const atacante = screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ })
     iniciar(atacante)
     soltar() // sem mover: clique simples
     expect(screen.getByLabelText('Vida do oponente: 3400')).toBeTruthy() // 5000 - 1600
   })
 
   it('campo adversário vazio: soltar a seta em qualquer lugar também ataca direto', () => {
-    montar({ turno: 3, jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: [] } })
+    montar({ turno: 3, jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: [] } })
     apontarPara(document.body)
-    iniciar(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }))
+    iniciar(screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ }))
     mover()
     soltar()
     expect(screen.getByLabelText('Vida do oponente: 3400')).toBeTruthy()
   })
 
   it('com unidade inimiga em campo, um clique simples NÃO ataca', () => {
-    montar({ turno: 3, jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'] } })
-    iniciar(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }))
+    montar({ turno: 3, jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: ['CC-101'] } })
+    iniciar(screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ }))
     soltar()
     expect(screen.getByLabelText('Vida do oponente: 5000')).toBeTruthy()
-    expect(screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ })).toBeTruthy()
+    expect(screen.getByRole('button', { name: /Zona 1 do oponente: CHAMA-MARÉ/ })).toBeTruthy()
   })
 
   it('soltar fora de alvo cancela sem alterar vida/campo; Escape também cancela', () => {
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'] } })
-    const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: ['CC-101'] } })
+    const atacante = screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ })
     apontarPara(document.body)
     iniciar(atacante)
     mover()
@@ -96,8 +96,8 @@ describe('ataque por seta', () => {
   })
 
   it('funciona por toque e permite direcionar aos pontos de vida quando o ataque direto é legal', () => {
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] } })
-    const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] } })
+    const atacante = screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ })
     const vida = screen.getByLabelText('Vida do oponente: 5000')
     apontarPara(vida)
     iniciar(atacante, 'touch')
@@ -108,19 +108,19 @@ describe('ataque por seta', () => {
   })
 
   it('unidade que já atacou neste turno fica cinza claro (classe zona--ja-atacou); a que não atacou não', () => {
-    montar({ fase: 'COMBATE', jogadaFeita: true, humano: { campo: [{ id: 'CC-003', atacou: true }, { id: 'CC-001' }] } })
+    montar({ fase: 'COMBATE', jogadaFeita: true, humano: { campo: [{ id: 'CC-103', atacou: true }, { id: 'CC-101' }] } })
     const zonas = document.querySelectorAll('.duelo-lado--voce .zona')
     expect(zonas[0]!.classList.contains('zona--ja-atacou')).toBe(true)
     expect(zonas[1]!.classList.contains('zona--ja-atacou')).toBe(false)
   })
 
   it('não inicia fora do turno, em defesa ou com unidade que já atacou', () => {
-    montar({ ativo: 'oponente', jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'] } })
-    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }).className).not.toContain('carta--arrastavel')
+    montar({ ativo: 'oponente', jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: ['CC-101'] } })
+    expect(screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL/ }).className).not.toContain('carta--arrastavel')
     cleanup()
-    montar({ fase: 'COMBATE', jogadaFeita: true, humano: { campo: [{ id: 'CC-003', pos: 'DEFESA' }, { id: 'CC-001', atacou: true }] } })
-    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ }).className).not.toContain('carta--arrastavel')
-    expect(screen.getByRole('button', { name: /Zona 2 sua: Manguezal Protegido/ }).className).not.toContain('carta--arrastavel')
+    montar({ fase: 'COMBATE', jogadaFeita: true, humano: { campo: [{ id: 'CC-103', pos: 'DEFESA' }, { id: 'CC-101', atacou: true }] } })
+    expect(screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL/ }).className).not.toContain('carta--arrastavel')
+    expect(screen.getByRole('button', { name: /Zona 2 sua: CHAMA-MARÉ/ }).className).not.toContain('carta--arrastavel')
   })
 
   it('mostra a seta automática e os destaques antes de executar o ataque da IA', () => {
@@ -128,8 +128,8 @@ describe('ataque por seta', () => {
     montar(
       {
         jogadaFeita: true,
-        humano: { campo: ['CC-001'], baralho: 20 },
-        oponente: { campo: ['CC-071'], mao: [], baralho: 20 },
+        humano: { campo: ['CC-101'], baralho: 20 },
+        oponente: { campo: ['CC-169'], mao: [], baralho: 20 },
       },
       100,
     )
@@ -147,9 +147,9 @@ describe('ataque por seta', () => {
   })
 
   it('QA: não pode aplicar o gesto antigo depois que outro comando avançou o turno', () => {
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'] } })
-    const atacante = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ })
-    const alvoAntigo = screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: ['CC-101'] } })
+    const atacante = screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ })
+    const alvoAntigo = screen.getByRole('button', { name: /Zona 1 do oponente: CHAMA-MARÉ/ })
 
     iniciar(atacante)
     fireEvent.click(screen.getByRole('button', { name: /Encerrar turno/ }))

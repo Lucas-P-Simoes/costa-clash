@@ -7,7 +7,7 @@ import { baseDoArquivo } from '../../src/arte/prompts.ts'
 import { CAMINHOS, lerCatalogo, serializar } from './manifesto.mjs'
 
 const AVISO =
-  'AVISO: nenhuma ilustração final foi gerada. Este arquivo contém apenas prompts para o dono (ou um serviço autorizado) gerar as imagens. Tamanho final desejado: 768x1024 (3:4), PNG ou WebP, sem texto, moldura, selo nem ATK/DEF.'
+  'AVISO: este arquivo contém apenas prompts e sua exportação não gera imagens. Tamanho final desejado: 768x1024 (3:4), PNG ou WebP, sem texto, moldura, selo nem ATK/DEF.'
 
 export function dadosPiloto(cartas) {
   return PILOTO.map((p) => {
@@ -33,7 +33,7 @@ export function dadosPiloto(cartas) {
 
 export function markdownPiloto(cartas) {
   const L = [
-    '# Lote piloto de ilustrações (5 cartas)',
+    `# Lote piloto de ilustrações (${PILOTO.length} cartas)`,
     '',
     `> ${AVISO}`,
     '',
@@ -64,7 +64,7 @@ export function dadosCatalogo(cartas) {
 }
 
 export function markdownCatalogo(cartas) {
-  const L = ['# Prompts das 100 cartas', '', `> ${AVISO}`, '', 'Gerado por `npm run arte:prompts` (não editar à mão).', '']
+  const L = [`# Prompts das ${cartas.length} cartas`, '', `> ${AVISO}`, '', 'Gerado por `npm run arte:prompts` (não editar à mão).', '']
   for (const d of dadosCatalogo(cartas)) L.push(`## ${d.id} — ${d.nome}`, '', `Arquivo: \`${d.arquivoEsperado}\` | Paleta: ${d.paleta} | Forma: ${d.forma}`, '', '```text', d.prompt, '```', '')
   return L.join('\n')
 }

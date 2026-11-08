@@ -27,10 +27,10 @@ describe('derivarEfeitos (função pura)', () => {
 
   it('carta jogada no campo vira entrada na zona certa; em descarte/terreno, não', () => {
     const r = derivarEfeitos([
-      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'a', cartaId: 'CC-001' }, destino: 'campo', zona: 2 }),
-      ev({ tipo: 'carta_jogada', jogador: 'oponente', carta: { uid: 'b', cartaId: 'CC-001' }, destino: 'campo', zona: 0 }),
-      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'c', cartaId: 'CC-070' }, destino: 'descarte' }),
-      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'd', cartaId: 'CC-012' }, destino: 'descarte' }),
+      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'a', cartaId: 'CC-101' }, destino: 'campo', zona: 2 }),
+      ev({ tipo: 'carta_jogada', jogador: 'oponente', carta: { uid: 'b', cartaId: 'CC-101' }, destino: 'campo', zona: 0 }),
+      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'c', cartaId: 'CC-170' }, destino: 'descarte' }),
+      ev({ tipo: 'carta_jogada', jogador: 'humano', carta: { uid: 'd', cartaId: 'CC-112' }, destino: 'descarte' }),
     ])
     expect(r.entrando).toEqual([chaveZona('humano', 2), chaveZona('oponente', 0)])
   })
@@ -48,18 +48,18 @@ describe('derivarEfeitos (função pura)', () => {
     const r = derivarEfeitos([
       ev({ tipo: 'dano', jogador: 'oponente', valor: 300, lp: 4700 }),
       ev({ tipo: 'dano', jogador: 'oponente', valor: 200, lp: 4500 }),
-      ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 4, carta: { uid: 'u', cartaId: 'CC-003' } }),
+      ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 4, carta: { uid: 'u', cartaId: 'CC-103' } }),
       ev({ tipo: 'turno_iniciado', jogador: 'humano' }),
     ])
     expect(r.dano).toEqual({ oponente: 500 })
-    expect(r.destruidas).toEqual([{ lado: 'oponente', zona: 4, cartaId: 'CC-003', posicao: 'ATAQUE' }])
+    expect(r.destruidas).toEqual([{ lado: 'oponente', zona: 4, cartaId: 'CC-103', posicao: 'ATAQUE' }])
     expect(r.turnoMudou).toBe(true)
     expect(semEfeitos(r)).toBe(false)
   })
 })
 
 describe('fantasma herda a posição', () => {
-  const destruida = ev({ tipo: 'unidade_destruida', jogador: 'humano', zona: 1, carta: { uid: 'u', cartaId: 'CC-003' } })
+  const destruida = ev({ tipo: 'unidade_destruida', jogador: 'humano', zona: 1, carta: { uid: 'u', cartaId: 'CC-103' } })
   it('usa a posição conhecida da zona (defesa = deitada); sem informação, ataque', () => {
     expect(derivarEfeitos([destruida], { 'humano:1': 'DEFESA' }).destruidas[0].posicao).toBe('DEFESA')
     expect(derivarEfeitos([destruida], { 'oponente:1': 'DEFESA' }).destruidas[0].posicao).toBe('ATAQUE')
@@ -120,7 +120,7 @@ describe('useEfeitosVisuais', () => {
 
 describe('derivarConfronto (cena de ataque entre unidades)', () => {
   const declarado = (jogador: string, atacante: number, alvo: number | 'direto') => ev({ tipo: 'ataque_declarado', jogador, atacante, alvo })
-  const cartas = { [chaveZona('humano', 0)]: 'CC-003', [chaveZona('oponente', 1)]: 'CC-001' }
+  const cartas = { [chaveZona('humano', 0)]: 'CC-103', [chaveZona('oponente', 1)]: 'CC-101' }
 
   it('ataque direto ou sem ataque: sem cena', () => {
     expect(derivarConfronto([declarado('humano', 0, 'direto')], cartas)).toBeNull()
@@ -132,13 +132,13 @@ describe('derivarConfronto (cena de ataque entre unidades)', () => {
       [
         declarado('humano', 0, 1),
         ev({ tipo: 'dano', jogador: 'oponente', valor: 400, lp: 4600 }),
-        ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 1, carta: { uid: 'x', cartaId: 'CC-001' } }),
+        ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 1, carta: { uid: 'x', cartaId: 'CC-101' } }),
       ],
       cartas,
     )
     expect(r).toEqual({
-      atacante: { lado: 'humano', zona: 0, cartaId: 'CC-003', destruida: false },
-      alvo: { lado: 'oponente', zona: 1, cartaId: 'CC-001', destruida: true },
+      atacante: { lado: 'humano', zona: 0, cartaId: 'CC-103', destruida: false },
+      alvo: { lado: 'oponente', zona: 1, cartaId: 'CC-101', destruida: true },
       veredito: null,
     })
   })
@@ -158,17 +158,17 @@ describe('derivarConfronto (cena de ataque entre unidades)', () => {
   it('atacante derrotado queima; carta virada para baixo usa a revelação do combate', () => {
     const r = derivarConfronto([
       declarado('oponente', 2, 0),
-      ev({ tipo: 'unidade_revelada', jogador: 'humano', zona: 0, carta: { uid: 'r', cartaId: 'CC-071' } }),
-      ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 2, carta: { uid: 'o', cartaId: 'CC-002' } }),
+      ev({ tipo: 'unidade_revelada', jogador: 'humano', zona: 0, carta: { uid: 'r', cartaId: 'CC-169' } }),
+      ev({ tipo: 'unidade_destruida', jogador: 'oponente', zona: 2, carta: { uid: 'o', cartaId: 'CC-102' } }),
     ])
-    expect(r?.atacante).toEqual({ lado: 'oponente', zona: 2, cartaId: 'CC-002', destruida: true })
-    expect(r?.alvo).toEqual({ lado: 'humano', zona: 0, cartaId: 'CC-071', destruida: false })
+    expect(r?.atacante).toEqual({ lado: 'oponente', zona: 2, cartaId: 'CC-102', destruida: true })
+    expect(r?.alvo).toEqual({ lado: 'humano', zona: 0, cartaId: 'CC-169', destruida: false })
   })
 
   it('hook: cena aparece com o ataque e expira sozinha; nada com movimento reduzido', () => {
     const { result, rerender } = renderHook(({ log }) => useConfronto(log, cartas), { initialProps: { log: [] as Evento[] } })
     rerender({ log: [declarado('humano', 0, 1)] })
-    expect(result.current?.alvo.cartaId).toBe('CC-001')
+    expect(result.current?.alvo.cartaId).toBe('CC-101')
     act(() => {
       vi.advanceTimersByTime(DURACAO_CONFRONTO_MS)
     })
@@ -185,7 +185,7 @@ describe('ConfrontoAtaque: veredito escrito grande', () => {
   const lado = (l: 'humano' | 'oponente', cartaId: string, destruida = false) => ({ lado: l, zona: 0, cartaId, destruida })
   const carta = (id: string) => CATALOGO.find((c) => c.id === id)
   const montar = (veredito: 'atacante' | 'alvo' | 'empate' | null) =>
-    render(<ConfrontoAtaque confronto={{ id: 1, atacante: lado('humano', 'CC-043'), alvo: lado('oponente', 'CC-001', true), veredito }} carta={carta} />)
+    render(<ConfrontoAtaque confronto={{ id: 1, atacante: lado('humano', 'CC-143'), alvo: lado('oponente', 'CC-101', true), veredito }} carta={carta} />)
 
   it('VITÓRIA aparece só sobre a carta vencedora', () => {
     const { container } = montar('atacante')

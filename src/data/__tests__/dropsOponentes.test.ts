@@ -19,12 +19,15 @@ describe('tabelas de drop', () => {
         expect(Number.isInteger(p) && p > 0, `${op} ${id}`).toBe(true)
         expect(BARALHOS_OPONENTES[op], op).toContain(id)
       }
+      expect(new Set(tabela.map(([id]) => id)), `${op}: drops devem ser exatamente as cartas distintas do baralho`).toEqual(
+        new Set(BARALHOS_OPONENTES[op]),
+      )
     }
   })
 
-  it('juntas, as tabelas cobrem as 72 cartas do catálogo (coleção completável)', () => {
+  it('juntas, as tabelas cobrem as 70 cartas do catálogo (coleção completável)', () => {
     const cobertas = new Set(Object.values(TABELAS_DROP).flatMap((t) => t.map(([id]) => id)))
-    expect(CATALOGO).toHaveLength(72)
+    expect(CATALOGO).toHaveLength(70)
     for (const c of CATALOGO) expect(cobertas.has(c.id), c.id).toBe(true)
   })
 })

@@ -10,7 +10,7 @@ import { TelaDueloLivre } from '../dueloLivre/TelaDueloLivre'
 afterEach(cleanup)
 
 const nome = (id: string) => CATALOGO.find((c) => c.id === id)!.nome
-const abrir = (n = 14) => {
+const abrir = (n = TABELAS_DROP.ressaca!.length) => {
   const b = screen.getByRole('button', { name: `Ver ${n} cartas e chances` })
   b.focus() // num navegador real o clique foca o botão
   fireEvent.click(b)
@@ -19,6 +19,22 @@ const dialogo = () => screen.getByRole('dialog', { name: /^Cartas de / })
 const itens = () => within(dialogo()).getAllByRole('listitem')
 
 describe('Pop-up de drops do adversário', () => {
+  it('abre as informações de cada carta sem fechar a lista de drops', () => {
+    render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
+    abrir()
+    const cartaId = TABELAS_DROP.ressaca![0]![0]
+    const botaoInformacoes = screen.getByRole('button', { name: `Informações sobre ${nome(cartaId)}` })
+    expect(botaoInformacoes.textContent?.trim()).toBe('')
+    expect(botaoInformacoes.querySelector('svg')?.getAttribute('aria-hidden')).toBe('true')
+    fireEvent.click(botaoInformacoes)
+    expect(screen.getByRole('dialog', { name: nome(cartaId) })).toBeTruthy()
+    const lista = screen.getByRole('dialog', { name: 'Cartas de Ressaca', hidden: true })
+    expect(lista.closest('.drops-overlay')!.hasAttribute('inert')).toBe(true)
+    fireEvent.click(within(screen.getByRole('dialog', { name: nome(cartaId) })).getByRole('button', { name: 'Fechar' }))
+    expect(screen.queryByRole('dialog', { name: nome(cartaId) })).toBeNull()
+    expect(screen.getByRole('dialog', { name: 'Cartas de Ressaca' })).toBeTruthy()
+  })
+
   it('lista todas as cartas da tabela, da maior para a menor chance, com o percentual', () => {
     render(<TelaDueloLivre onDuelo={() => {}} onVoltar={() => {}} />)
     abrir()
@@ -51,7 +67,7 @@ describe('Pop-up de drops do adversário', () => {
     abrir()
     fireEvent.click(within(dialogo()).getByRole('button', { name: 'Fechar' }))
     expect(screen.queryByRole('dialog')).toBeNull()
-    expect(document.activeElement!.textContent).toBe('Ver 14 cartas e chances')
+    expect(document.activeElement!.textContent).toBe(`Ver ${TABELAS_DROP.ressaca!.length} cartas e chances`)
     abrir()
     fireEvent.keyDown(within(dialogo()).getByRole('button', { name: 'Fechar' }), { key: 'Escape' })
     expect(screen.queryByRole('dialog')).toBeNull()

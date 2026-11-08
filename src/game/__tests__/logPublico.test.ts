@@ -24,27 +24,27 @@ describe('logPublico / eventosPublicos', () => {
   })
 
   it('unidade adversária baixada e movida virada para baixo não vaza identidade no evento ou texto', () => {
-    let e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-056'] } })
-    e = ok(jogar(e, 'oponente', 'CC-056', { posicao: 'ATAQUE', viradaParaBaixo: true }))
+    let e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-156'] } })
+    e = ok(jogar(e, 'oponente', 'CC-156', { posicao: 'ATAQUE', viradaParaBaixo: true }))
     e = ok(aplicarComando(e, { tipo: 'mudarPosicao', jogador: 'oponente', zona: 0, posicao: 'DEFESA' }))
     const publico = logPublico(e, 'humano')
-    expect(JSON.stringify(publico)).not.toContain('CC-056')
-    expect(publico.map((x) => x.texto).join(' ')).not.toContain('Derramamento de Óleo')
+    expect(JSON.stringify(publico)).not.toContain('CC-156')
+    expect(publico.map((x) => x.texto).join(' ')).not.toContain('GORGÔNIA-ESCARLATE')
     expect(publico.find((x) => x.tipo === 'carta_jogada')).toMatchObject({ carta: { uid: '?', cartaId: '?' }, viradaParaBaixo: true })
     expect(publico.find((x) => x.tipo === 'posicao_alterada')?.texto).toContain('unidade virada para baixo')
-    expect(JSON.stringify(logPublico(e, 'oponente'))).toContain('CC-056')
+    expect(JSON.stringify(logPublico(e, 'oponente'))).toContain('CC-156')
   })
 
   it('unidade colocada virada para baixo não publica a identidade nem dispara efeitos', () => {
-    let e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-056'] } })
-    e = ok(jogar(e, 'oponente', 'CC-056', { viradaParaBaixo: true }))
+    let e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-156'] } })
+    e = ok(jogar(e, 'oponente', 'CC-156', { viradaParaBaixo: true }))
     const publico = JSON.stringify(logPublico(e, 'humano'))
-    expect(publico).not.toContain('CC-056')
-    expect(publico).not.toContain('Derramamento de Óleo')
+    expect(publico).not.toContain('CC-156')
+    expect(publico).not.toContain('GORGÔNIA-ESCARLATE')
   })
 
   it('turno completo da IA: nenhum cartaId de carta oculta (mão/unidade virada) vaza para o humano', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-006', 'CC-009'], baralho: 20 }, humano: { campo: ['CC-043', 'CC-056'], baralho: 20 } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-106', 'CC-109'], baralho: 20 }, humano: { campo: ['CC-143', 'CC-156'], baralho: 20 } })
     const r = executarTurnoIA(e)
     if (!r.ok) throw new Error('x')
     const json = JSON.stringify(eventosPublicos(r.eventos, 'humano'))

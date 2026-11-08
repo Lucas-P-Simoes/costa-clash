@@ -27,7 +27,7 @@ afterEach(async () => {
 })
 
 function montar(cfg: ConfigCenario = {}) {
-  const e = cenario({ humano: { baralho: 20, mao: ['CC-003', 'CC-004'] }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
+  const e = cenario({ humano: { baralho: 20, mao: ['CC-103', 'CC-104'] }, oponente: { baralho: 20, mao: ['CC-101'] }, ...cfg })
   return render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={0} onVoltar={() => {}} onNovamente={() => {}} />)
 }
 const mao = (i = 1) => screen.getByRole('button', { name: new RegExp('^Mão ' + i + ':') })
@@ -62,7 +62,7 @@ describe('Toque: pressão longa arma o arrasto', () => {
       vi.advanceTimersByTime(0)
     })
     fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
-    expect(campoV()).toMatch(/^Zona 3 sua: Recife de Coral/)
+    expect(campoV()).toMatch(/^Zona 3 sua: CARANGUEJO-AZUL/)
   })
 
   it('mover mais de 8 px antes do tempo cancela (é rolagem): nada de arrasto, mesmo depois do prazo', () => {
@@ -191,7 +191,7 @@ describe('Dica e tela baixa', () => {
     fireEvent.click(mao(1))
     fireEvent.click(document.querySelector<HTMLElement>('.duelo-lado--voce .duelo-zonas button.zona--vazia')!)
     fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
-    expect(campoV()).toContain('Recife de Coral')
+    expect(campoV()).toContain('CARANGUEJO-AZUL')
   })
 })
 
@@ -200,20 +200,20 @@ describe('Nomes por palavra e selo de posição', () => {
     expect(nomeCurto('Pesquisa Oceanográfica')).toBe('Pesquisa Oceanogr.')
     expect(nomeCurto('Branqueamento de Corais')).toBe('Branquea. de Corais')
     expect(nomeCurto('Caranguejo-Uçá')).toBe('Carangue.-Uçá')
-    expect(nomeCurto('Manguezal Protegido')).toBe('Manguezal Protegido')
+    expect(nomeCurto('CHAMA-MARÉ')).toBe('CHAMA-MARÉ')
     expect(nomeCurto('Derramamento de Óleo')).toBe('Derramam. de Óleo')
   })
 
   it('carta de campo guarda nome completo e curto (CSS escolhe pela largura); a mão mostra o nome inteiro', () => {
-    const c = CATALOGO.find((x) => x.nome === 'Pesquisa Oceanográfica')!
+    const c = CATALOGO.find((x) => x.nome === 'CARANGUEJO-AZUL')!
     const { container } = render(<CartaView carta={c} tamanho="campo" posicao="DEFESA" rotulo="x" />)
-    expect(container.querySelector('.nome-completo')!.textContent).toBe('Pesquisa Oceanográfica')
-    expect(container.querySelector('.nome-curto')!.textContent).toBe('Pesquisa Oceanogr.')
+    expect(container.querySelector('.nome-completo')!.textContent).toBe('CARANGUEJO-AZUL')
+    expect(container.querySelector('.nome-curto')!.textContent).toBe('CARANGUE.-AZUL')
     expect(container.querySelector('.nome-curto')!.getAttribute('aria-hidden')).toBe('true')
     cleanup()
     const r = render(<CartaView carta={c} tamanho="mao" rotulo="x" />)
     expect(r.container.querySelector('.nome-curto')).toBeNull()
-    expect(r.container.querySelector('.carta__nome')!.textContent).toBe('Pesquisa Oceanográfica')
+    expect(r.container.querySelector('.carta__nome')!.textContent).toBe('CARANGUEJO-AZUL')
   })
 
   it('CSS (em rem, escala fluida): selo de posição de 10 px de referência; deitada o chip contra-rotacionado tem o centro a >= 20 px de referência da borda; container query do nome', () => {

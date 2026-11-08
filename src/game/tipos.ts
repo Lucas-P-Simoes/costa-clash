@@ -17,6 +17,12 @@ export interface Carta {
   defesa: number | null
   efeito: Efeito | null
   educacao: string
+  /** Metadados informativos fornecidos para a carta; exibidos pelo botão "i" quando presentes. */
+  informacao?: {
+    classificacao: string
+    ambiente: string
+    caracteristica: string | null
+  }
 }
 
 export const VIDA_INICIAL = 5000

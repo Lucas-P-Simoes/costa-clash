@@ -46,6 +46,10 @@ for (const v of VIEWPORTS) {
       const fontes = [...document.querySelectorAll('.drops-dialogo *')]
         .filter((e) => e.childNodes.length && [...e.childNodes].some((n) => n.nodeType === 3 && n.textContent!.trim()))
         .map((e) => parseFloat(getComputedStyle(e).fontSize))
+      const alvosInfo = [...document.querySelectorAll('.drops-item__info')].map((e) => {
+        const r = e.getBoundingClientRect()
+        return Math.min(r.width, r.height)
+      })
       return {
         d: { l: d.left, r: d.right, t: d.top, b: d.bottom },
         f: { t: f.top, b: f.bottom, h: f.height },
@@ -56,6 +60,7 @@ for (const v of VIEWPORTS) {
         listaAltura: ul.clientHeight,
         textoCortadoH: nomes,
         menorFonte: Math.min(...fontes),
+        menorAlvoInfo: Math.min(...alvosInfo),
       }
     })
     expect(erros).toEqual([])
@@ -68,6 +73,7 @@ for (const v of VIEWPORTS) {
     expect(m.listaAltura, 'lista sem altura útil').toBeGreaterThan(40)
     expect(m.textoCortadoH, 'texto cortado na horizontal').toBe(0)
     expect(m.menorFonte, 'fonte < 11px').toBeGreaterThanOrEqual(11)
+    expect(m.menorAlvoInfo, 'alvo do botão de informação < 44px').toBeGreaterThanOrEqual(44)
     await expect(page.locator('.drops-dialogo__fechar')).toBeFocused()
     await page.keyboard.press('Escape')
     await expect(dialogo).toHaveCount(0)
@@ -77,7 +83,7 @@ for (const v of VIEWPORTS) {
   })
 }
 
-test('teclado: Tab preso, grade de adversários intacta após fechar, Esc com foco fora do botão', async ({ browser }) => {
+test('teclado: Tab percorre lista e todos os botões de informação, volta a Fechar e permanece preso', async ({ browser }) => {
   const ctx = await browser.newContext({ viewport: { width: 1366, height: 650 } })
   const page = await ctx.newPage()
   await abrirCena(page, 'dueloLivre')
@@ -86,23 +92,34 @@ test('teclado: Tab preso, grade de adversários intacta após fechar, Esc com fo
   await page.keyboard.press('Enter')
   const dialogo = page.getByRole('dialog')
   await dialogo.waitFor()
-  // Tab e Shift+Tab nunca saem do diálogo
-  for (const tecla of ['Tab', 'Tab', 'Tab', 'Shift+Tab', 'Shift+Tab', 'Shift+Tab']) {
-    await page.keyboard.press(tecla)
-    expect(await page.evaluate(() => !!document.activeElement?.closest('.drops-dialogo')), `foco escapou após ${tecla}`).toBe(true)
+  const lista = page.locator('.drops-dialogo__lista')
+  const informacoes = page.getByRole('button', { name: /^Informações sobre / })
+  await expect(page.locator('.drops-dialogo__fechar')).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(lista).toBeFocused()
+  const totalInformacoes = await informacoes.count()
+  expect(totalInformacoes, 'lista sem botões de informação').toBeGreaterThan(0)
+  for (let i = 0; i < totalInformacoes; i += 1) {
+    await page.keyboard.press('Tab')
+    await expect(informacoes.nth(i), `ordem de Tab incorreta no botão de informação ${i + 1}`).toBeFocused()
+    expect(await page.evaluate(() => !!document.activeElement?.closest('.drops-dialogo')), `foco escapou no botão ${i + 1}`).toBe(true)
   }
+  await page.keyboard.press('Tab')
+  await expect(page.locator('.drops-dialogo__fechar')).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(lista).toBeFocused()
+  await page.keyboard.press('Shift+Tab')
+  await expect(page.locator('.drops-dialogo__fechar')).toBeFocused()
   // fundo inerte
   for (const sel of ['header', 'main', 'footer']) expect(await page.locator(sel).first().getAttribute('inert'), `${sel} inert`).not.toBeNull()
   await page.keyboard.press('Escape')
   await expect(dialogo).toHaveCount(0)
   for (const sel of ['header', 'main', 'footer']) expect(await page.locator(sel).first().getAttribute('inert'), `${sel} ainda inert`).toBeNull()
-  // grade continua navegável por setas
+  // A cena de convidado deixa só o primeiro adversário desbloqueado; a grade deve voltar a aceitar foco sem perder seleção.
   const marcado = page.getByRole('radio', { checked: true })
-  const antes = await marcado.getAttribute('aria-label') ?? (await marcado.textContent())
   await marcado.focus()
-  await page.keyboard.press('ArrowRight')
-  const depois = await page.getByRole('radio', { checked: true }).evaluate((e) => e.getAttribute('aria-label') ?? e.textContent)
-  expect(depois, 'seta não mudou a seleção').not.toBe(antes)
+  await expect(marcado).toBeFocused()
+  await expect(page.getByRole('radio')).toHaveCount(17)
   await ctx.close()
 })
 
@@ -166,7 +183,18 @@ test('rodada 2: lista transborda em viewport baixa, é alcançável por Tab e ro
   await page.keyboard.press('PageDown')
   await page.keyboard.press('ArrowDown')
   await expect.poll(() => lista.evaluate((ul) => ul.scrollTop), { message: 'lista não rola por teclado' }).toBeGreaterThan(0)
+  const informacoes = page.getByRole('button', { name: /^Informações sobre / })
+  const totalInformacoes = await informacoes.count()
+  expect(totalInformacoes, 'lista sem botões de informação').toBeGreaterThan(0)
+  for (let i = 0; i < totalInformacoes; i += 1) {
+    await page.keyboard.press('Tab')
+    await expect(informacoes.nth(i), `ordem de Tab incorreta no botão de informação ${i + 1}`).toBeFocused()
+  }
   await page.keyboard.press('Tab')
+  await expect(page.locator('.drops-dialogo__fechar')).toBeFocused()
+  await page.keyboard.press('Tab')
+  await expect(lista).toBeFocused()
+  await page.keyboard.press('Shift+Tab')
   await expect(page.locator('.drops-dialogo__fechar')).toBeFocused()
   await page.keyboard.press('Escape')
   await expect(page.getByRole('dialog')).toHaveCount(0)

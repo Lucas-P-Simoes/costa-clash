@@ -6,7 +6,7 @@ import type { ServicoAuth, UsuarioAutenticado } from '../../auth/servicoAuth'
 import { proximoIndice } from '../../components/ui/navegacaoGrade'
 import { BARALHO_INICIAL, colecaoInicial } from '../../data/baralhoInicial'
 import { CATALOGO } from '../../data/catalogo'
-import { HISTORIAS_CARTAS } from '../../data/historiasCartas'
+import { TABELAS_DROP } from '../../data/dropsOponentes'
 import { OPONENTES } from '../../data/oponentes'
 import { TelaDueloLivre } from '../dueloLivre/TelaDueloLivre'
 
@@ -15,8 +15,8 @@ afterEach(cleanup)
 const usuario: UsuarioAutenticado = {
   id: 'u1',
   email: 'ana@exemplo.com',
-  baralho: Array<string>(40).fill('CC-001'),
-  colecao: [{ cartaId: 'CC-001', quantidade: 40 }],
+  baralho: Array<string>(40).fill('CC-101'),
+  colecao: [{ cartaId: 'CC-101', quantidade: 40 }],
 }
 
 const radios = () => screen.getAllByRole('radio') as HTMLButtonElement[]
@@ -44,7 +44,7 @@ describe('Tela Duelo Livre: seleção', () => {
     expect(within(painel()).getByText('Médio')).toBeTruthy()
     expect(within(painel()).getByText(/Domina cartas de impacto costeiro/)).toBeTruthy()
     expect(within(painel()).getByRole('heading', { level: 3, name: 'Cartas que podem ser obtidas' })).toBeTruthy()
-    expect(within(painel()).getByRole('button', { name: 'Ver 14 cartas e chances' }).getAttribute('aria-haspopup')).toBe('dialog')
+    expect(within(painel()).getByRole('button', { name: `Ver ${TABELAS_DROP.ressaca!.length} cartas e chances` }).getAttribute('aria-haspopup')).toBe('dialog')
   })
 
   it('clique seleciona e atualiza o painel (anúncio fica só no aviso role=status)', () => {
@@ -254,11 +254,11 @@ describe('Clique em bloqueado e engrenagem', () => {
 
 describe('Modal Baralho (coleção)', () => {
   it('lista as cartas ganhas com a quantidade; atalho e botão abrem; Esc fecha', () => {
-    const u: UsuarioAutenticado = { id: 'u9', email: 'z@x.co', colecao: [{ cartaId: 'CC-001', quantidade: 2 }] }
+    const u: UsuarioAutenticado = { id: 'u9', email: 'z@x.co', colecao: [{ cartaId: 'CC-101', quantidade: 2 }] }
     render(<TelaDueloLivre onDuelo={() => {}} usuario={u} />)
     fireEvent.click(screen.getByRole('button', { name: 'Coleção de cartas' }))
     const d = screen.getByRole('dialog', { name: 'Baralho' })
-    expect(d.textContent).toContain('1 de 72 cartas diferentes')
+    expect(d.textContent).toContain('1 de 70 cartas diferentes')
     expect(within(d).getAllByRole('listitem')).toHaveLength(1)
     expect(d.textContent).toContain('×2')
     fireEvent.keyDown(document, { key: 'Escape' })
@@ -348,7 +348,7 @@ describe('Modal da carta (Baralho)', () => {
     expect(abas[0].getAttribute('aria-selected')).toBe('true')
     expect(within(d).getByRole('tabpanel').textContent).toContain(extra.educacao)
     fireEvent.click(abas[1])
-    expect(within(d).getByRole('tabpanel').textContent).toBe(HISTORIAS_CARTAS[extra.id])
+    expect(within(d).getByRole('tabpanel').textContent).toBe(extra.educacao)
     fireEvent.keyDown(document, { key: 'Escape' })
     expect(screen.queryByRole('dialog', { name: extra.nome })).toBeNull()
     expect(screen.getByRole('dialog', { name: 'Baralho' })).toBeTruthy() // o modal Baralho continua aberto

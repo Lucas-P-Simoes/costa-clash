@@ -38,35 +38,7 @@ export interface ClassificacaoVisual {
 type Ajuste = { categoria: CategoriaId; selo?: SeloId }
 
 /** Ajustes por carta (tema), que sobrepõem o padrão derivado de tipo + grupo. */
-const AJUSTES: Readonly<Record<string, Ajuste>> = {
-  // Ecossistemas
-  'CC-002': { categoria: 'protegida' }, // Restinga
-  'CC-003': { categoria: 'fenomeno' }, // Recife de coral (como na referência)
-  'CC-014': { categoria: 'protegida' }, // Ilha costeira (áreas protegidas)
-  // Fauna costeira (referência: garça = verde)
-  'CC-020': { categoria: 'verde' },
-  'CC-021': { categoria: 'verde' },
-  'CC-028': { categoria: 'verde' },
-  // Atividades
-  'CC-031': { categoria: 'ondas' }, // Pesca artesanal (comunidades tradicionais)
-  'CC-039': { categoria: 'ondas' }, // Comunidade caiçara
-  'CC-042': { categoria: 'ondas' }, // Gestão participativa
-  'CC-032': { categoria: 'verde' }, // Turismo responsável
-  'CC-040': { categoria: 'verde' }, // Restauração de dunas
-  'CC-041': { categoria: 'verde' }, // Viveiro de mudas
-  'CC-044': { categoria: 'verde' }, // Proteção de nascentes
-  'CC-045': { categoria: 'verde' }, // Mata ciliar
-  'CC-035': { categoria: 'protegida', selo: 'engrenagem' }, // Coleta seletiva (saneamento)
-  'CC-037': { categoria: 'protegida', selo: 'engrenagem' }, // Monitoramento da água
-  'CC-043': { categoria: 'protegida', selo: 'engrenagem' }, // Saneamento integrado
-  // Impactos
-  'CC-048': { categoria: 'fenomeno' }, // Erosão costeira (fenômeno natural)
-  'CC-050': { categoria: 'fenomeno' }, // Chuva intensa
-  'CC-057': { categoria: 'ondas' }, // Ressaca marinha (referência: azul-ondas)
-  'CC-067': { categoria: 'impacto', selo: 'caveira' }, // Espécies exóticas
-  'CC-070': { categoria: 'fenomeno', selo: 'termometro' }, // Branqueamento (clima)
-  'CC-071': { categoria: 'fenomeno', selo: 'termometro' }, // Elevação do nível do mar
-}
+const AJUSTES: Readonly<Record<string, Ajuste>> = {}
 
 function padrao(c: Carta): Ajuste {
   if (c.tipo === 'unidade') {

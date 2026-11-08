@@ -20,14 +20,10 @@ describe('baralhos dos oponentes (provisórios)', () => {
     expect(validarBaralhoDuelo(b as string[])).toEqual({ ok: true })
   })
 
-  it.each(OPONENTES.map((o) => [o.id] as const))('%s: tem só unidades, em sua maioria do próprio grupo', (id) => {
-    const o = OPONENTES.find((x) => x.id === id)!
+  it.each(OPONENTES.map((o) => [o.id] as const))('%s: tem somente unidades do catálogo atual', (id) => {
     const cartas = (baralhoDoOponente(id) as string[]).map((c) => porId.get(c)!)
     expect(cartas.every((c) => c.tipo === 'unidade')).toBe(true)
-    const unidades = cartas.filter((c) => c.tipo === 'unidade')
-    const doGrupo = unidades.filter((c) => c.grupo === o.grupo).length
-    // unidades temáticas dominam o baralho (>= 50% das unidades)
-    expect(doGrupo / unidades.length).toBeGreaterThanOrEqual(0.5)
+    expect(cartas.every((c) => Number(c.id.slice(3)) >= 101 && Number(c.id.slice(3)) <= 170)).toBe(true)
   })
 
   it('dificuldade só pela composição: unidades mais fortes nos níveis altos', () => {
@@ -40,6 +36,12 @@ describe('baralhos dos oponentes (provisórios)', () => {
       return u.reduce((s, c) => s + (c.atk ?? 0) + (c.defesa ?? 0), 0) / u.length
     }
     expect(media(3, forca)).toBeGreaterThan(media(1, forca))
+  })
+
+  it('distribui as 70 cartas atuais e mantém todas acessíveis', () => {
+    const cobertas = new Set(Object.values(BARALHOS_OPONENTES).flat())
+    expect(cobertas).toEqual(new Set(CATALOGO.map((c) => c.id)))
+    for (const c of CATALOGO) expect(cobertas.has(c.id), c.id).toBe(true)
   })
 })
 

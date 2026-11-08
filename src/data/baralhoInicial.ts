@@ -1,12 +1,11 @@
 // BARALHO INICIAL PROVISÓRIO (decisão registrada em docs/CONTAS_E_NUVEM.md).
-// 40 cartas, no máximo 3 por ID, só unidades (as cartas de suporte e de ação foram removidas do jogo em 05/11/2026;
-// as cópias removidas viraram cópias extras das primeiras unidades). A coleção inicial é exatamente este baralho.
+// 40 cartas, no máximo 3 por ID, usando exclusivamente o catálogo atual CC-101…CC-170.
+// A coleção inicial é exatamente este baralho.
 
 const CONTAGENS: ReadonlyArray<readonly [string, number]> = [
-  ['CC-001', 3], ['CC-002', 3], ['CC-003', 3], ['CC-004', 3], ['CC-005', 3],
-  ['CC-017', 3], ['CC-018', 2], ['CC-019', 3], ['CC-020', 2], ['CC-023', 2],
-  ['CC-031', 2], ['CC-032', 2], ['CC-033', 2], ['CC-034', 1], ['CC-037', 1],
-  ['CC-047', 2], ['CC-049', 1], ['CC-051', 1], ['CC-052', 1],
+  ['CC-101', 3], ['CC-102', 3], ['CC-103', 3], ['CC-104', 3], ['CC-105', 3],
+  ['CC-106', 3], ['CC-107', 3], ['CC-108', 3], ['CC-109', 3], ['CC-110', 3],
+  ['CC-111', 3], ['CC-112', 3], ['CC-113', 3], ['CC-114', 1],
 ]
 
 export const BARALHO_INICIAL: readonly string[] = CONTAGENS.flatMap(([id, n]) => Array<string>(n).fill(id))

@@ -1,7 +1,7 @@
 // npm run arte:manifesto — regenera/sincroniza public/assets/cards/art/manifest.json e src/arte/indiceArte.json
 // preservando estados e hashes existentes. Opções:
 //   --check                          só confere se manifesto e índice estão em dia (não grava; sai com 1 se não estiverem)
-//   --marcar CC-001,CC-018 --estado provisoria|gerada|rejeitada [--origem "texto"] [--observacao "texto"]   altera o estado (exige arquivo existente)
+//   --marcar CC-101,CC-118 --estado provisoria|gerada|rejeitada [--origem "texto"] [--observacao "texto"]   altera o estado (exige arquivo existente)
 //   --estado aprovada ... --autorizado-pelo-dono                                    aprovação explícita (nunca automática)
 import { existsSync, readFileSync } from 'node:fs'
 import { CAMINHOS, serializar, sincronizarPasta } from './arte/manifesto.mjs'

@@ -23,8 +23,8 @@ export interface Oponente {
 
 export const ROTULO_DIFICULDADE: Readonly<Record<NivelDificuldade, string>> = { 1: 'Fácil', 2: 'Médio', 3: 'Difícil' }
 
-// Grupos alinhados às cartas afins do catálogo: Urbanização ~ CC-033 Urbanização Planejada (atividade);
-// Porto ~ CC-058 Expansão Portuária (impacto). Grupo é só rótulo temático, não define baralho.
+// Grupos alinhados às cartas afins do catálogo: Urbanização ~ CC-133 Urbanização Planejada (atividade);
+// Porto ~ CC-158 Expansão Portuária (impacto). Grupo é só rótulo temático, não define baralho.
 export const OPONENTE_PADRAO_ID = 'ressaca'
 
 // Ordem = ordem visual da grade (linha a linha). O atalho inativo BARALHO não faz parte destes dados.

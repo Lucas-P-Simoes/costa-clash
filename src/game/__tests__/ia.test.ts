@@ -35,12 +35,12 @@ describe('visão parcial: não vaza informação oculta', () => {
   })
 
   it('unidade virada para baixo aparece sem identidade, uid, arte lógica, ATK, DEF ou buffs', () => {
-    const e = cenario({ humano: { campo: [{ id: 'CC-056', pos: 'ATAQUE', viradaParaBaixo: true, buffAtk: 900, buffDef: 700 }] }, ativo: 'oponente' })
+    const e = cenario({ humano: { campo: [{ id: 'CC-156', pos: 'ATAQUE', viradaParaBaixo: true, buffAtk: 900, buffDef: 700 }] }, ativo: 'oponente' })
     const v = visaoParaJogador(e, 'oponente')
     expect(v.oponente.campo[0]).toEqual({ oculta: true, posicao: 'ATAQUE', atacou: false })
     const json = JSON.stringify(v.oponente.campo[0])
-    expect(json).not.toMatch(/CC-056|cartaId|uid|buff|atk|def/i)
-    expect(visaoParaJogador(e, 'humano').eu.campo[0]).toMatchObject({ cartaId: 'CC-056', viradaParaBaixo: true })
+    expect(json).not.toMatch(/CC-156|cartaId|uid|buff|atk|def/i)
+    expect(visaoParaJogador(e, 'humano').eu.campo[0]).toMatchObject({ cartaId: 'CC-156', viradaParaBaixo: true })
   })
 
   it('o estado reconstruído para planejamento só tem marcadores no lugar do oculto', () => {
@@ -55,14 +55,14 @@ describe('visão parcial: não vaza informação oculta', () => {
     const mk = (maoH: string[]) =>
       cenario({
         ativo: 'oponente',
-        oponente: { mao: ['CC-003', 'CC-001', 'CC-014', 'CC-013', 'CC-021'], campo: ['CC-007'] },
-        humano: { mao: maoH, campo: ['CC-047'] },
+        oponente: { mao: ['CC-103', 'CC-101', 'CC-114', 'CC-113', 'CC-121'], campo: ['CC-107'] },
+        humano: { mao: maoH, campo: ['CC-147'] },
       })
-    const a = mk(['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'])
-    const b = mk(['CC-015', 'CC-016', 'CC-022', 'CC-056', 'CC-071'])
+    const a = mk(['CC-101', 'CC-102', 'CC-104', 'CC-105', 'CC-106'])
+    const b = mk(['CC-115', 'CC-116', 'CC-122', 'CC-156', 'CC-169'])
     // embaralha também o baralho do humano em um deles
     b.jogadores.humano.baralho.reverse()
-    b.jogadores.humano.baralho.forEach((c, i) => (c.cartaId = i % 2 ? 'CC-020' : 'CC-025'))
+    b.jogadores.humano.baralho.forEach((c, i) => (c.cartaId = i % 2 ? 'CC-120' : 'CC-125'))
     expect(JSON.stringify(visaoParaJogador(a, 'oponente'))).not.toBe('')
     const va = visaoParaJogador(a, 'oponente')
     const vb = visaoParaJogador(b, 'oponente')
@@ -82,31 +82,31 @@ describe('visão parcial: não vaza informação oculta', () => {
 
 describe('escolha da jogada (§9)', () => {
   it('1º: unidade capaz de vencer combate (e a coloca em ATAQUE quando há vantagem)', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-047', 'CC-014', 'CC-021'] }, humano: { campo: ['CC-007'] } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-101', 'CC-147', 'CC-114', 'CC-121'] }, humano: { campo: ['CC-107'] } })
     const c = decide(e)
-    expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-047'), posicao: 'ATAQUE', viradaParaBaixo: false }) // 1800 > 1700
+    expect(c).toMatchObject({ tipo: 'jogarCarta', uid: uidDe(e, 'oponente', 'CC-101'), posicao: 'ATAQUE', viradaParaBaixo: false }) // 2500 > 1700
   })
 
   it('entre as que vencem, a de maior ATK; empate total por ID/uid crescente', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-003', 'CC-009'] } }) // campo adversário vazio: todas vencem
-    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-003') })
-    const dup = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001', 'CC-001'] } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-101', 'CC-103', 'CC-109'] } }) // campo adversário vazio: todas vencem
+    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-101') })
+    const dup = cenario({ ativo: 'oponente', oponente: { mao: ['CC-101', 'CC-101'] } })
     const uids = dup.jogadores.oponente.mao.map((c) => c.uid).sort()
     expect(decide(dup)).toMatchObject({ uid: uids[0] })
   })
 
   it('3º: sem vitória possível nem ação eficaz, a unidade de maior DEFESA, em DEFESA', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-013', 'CC-004'] }, humano: { campo: ['CC-056'] } })
-    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-004'), posicao: 'DEFESA', viradaParaBaixo: true })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-113', 'CC-104'] }, humano: { campo: ['CC-156'] } })
+    expect(decide(e)).toMatchObject({ uid: uidDe(e, 'oponente', 'CC-104'), posicao: 'DEFESA', viradaParaBaixo: true })
   })
 
   it('sem jogada legal descarta (a carta de menor utilidade; empate por ID)', () => {
     const e = cenario({
       ativo: 'oponente',
-      oponente: { mao: ['CC-003', 'CC-013', 'CC-001', 'CC-007', 'CC-004'], campo: ['CC-002', 'CC-004', 'CC-005', 'CC-006', 'CC-009'] },
+      oponente: { mao: ['CC-103', 'CC-113', 'CC-101', 'CC-107', 'CC-104'], campo: ['CC-102', 'CC-104', 'CC-105', 'CC-106', 'CC-109'] },
     })
     const c = decide(e)
-    expect(c).toMatchObject({ tipo: 'descartar', uid: uidDe(e, 'oponente', 'CC-013') }) // 700+1800 é o menor
+    expect(c).toMatchObject({ tipo: 'descartar', uid: uidDe(e, 'oponente', 'CC-107') }) // 0+1500 é o menor
   })
 })
 
@@ -115,66 +115,66 @@ describe('posições e ataques (§9)', () => {
     const e = cenario({
       ativo: 'oponente',
       jogadaFeita: true,
-      oponente: { campo: [{ id: 'CC-003', pos: 'DEFESA' }, { id: 'CC-001', pos: 'ATAQUE' }] },
-      humano: { campo: ['CC-001'] },
+      oponente: { campo: [{ id: 'CC-103', pos: 'DEFESA' }, { id: 'CC-101', pos: 'ATAQUE' }] },
+      humano: { campo: ['CC-101'] },
     })
-    // CC-003 (1600) vence 1200 e não é mais fraca: deve ir a ataque
+    // CC-103 (1600) vence 1200 e não é mais fraca: deve ir a ataque
     expect(decide(e)).toEqual({ tipo: 'mudarPosicao', jogador: 'oponente', zona: 0, posicao: 'ATAQUE' })
-    // CC-001 (1200) empata com o atacante inimigo (não vence): vai a defesa
+    // CC-101 (1200) empata com o atacante inimigo (não vence): vai a defesa
     const e2 = ok(aplicarComando(e, decide(e)))
     expect(decide(e2)).toEqual({ tipo: 'mudarPosicao', jogador: 'oponente', zona: 1, posicao: 'DEFESA' })
   })
 
   it('depois das posições avança para o combate; no turno 1 absoluto apenas encerra', () => {
-    const e = cenario({ ativo: 'oponente', jogadaFeita: true, oponente: { campo: [{ id: 'CC-003', pos: 'ATAQUE' }] }, humano: { campo: ['CC-001'] } })
+    const e = cenario({ ativo: 'oponente', jogadaFeita: true, oponente: { campo: [{ id: 'CC-103', pos: 'ATAQUE' }] }, humano: { campo: ['CC-101'] } })
     expect(decide(e)).toEqual({ tipo: 'avancarFase', jogador: 'oponente' })
-    const t1 = cenario({ turno: 1, jogadaFeita: true, humano: { campo: ['CC-003'] } })
+    const t1 = cenario({ turno: 1, jogadaFeita: true, humano: { campo: ['CC-103'] } })
     expect(decide(t1, 'humano')).toEqual({ tipo: 'encerrarTurno', jogador: 'humano' })
   })
 
   it('ataca diretamente quando o adversário não tem unidades', () => {
-    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-001', 'CC-003'] } })
+    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-101', 'CC-103'] } })
     expect(decide(e)).toEqual({ tipo: 'atacar', jogador: 'oponente', atacante: 1, alvo: 'direto' }) // maior ATK primeiro
   })
 
   it('prioriza sequência de vitória: usa a unidade menor para abrir o campo e preserva o atacante letal', () => {
     const e = cenarioCombate({
       ativo: 'oponente',
-      oponente: { campo: ['CC-043', 'CC-071'] },
-      humano: { lp: 2300, campo: [{ id: 'CC-013', pos: 'DEFESA' }] },
+      oponente: { campo: ['CC-143', 'CC-169'] },
+      humano: { lp: 2300, campo: [{ id: 'CC-113', pos: 'DEFESA' }] },
     })
     expect(decide(e)).toEqual({ tipo: 'atacar', jogador: 'oponente', atacante: 0, alvo: 0 })
   })
 
   it('avalia sem mutar e explica ataques vantajosos/prejudiciais', () => {
-    const bom = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-003'] }, humano: { campo: ['CC-001'] } })
+    const bom = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-103'] }, humano: { campo: ['CC-101'] } })
     const antes = JSON.stringify(bom)
     const avaliacao = avaliarAtaque(bom, { tipo: 'atacar', jogador: 'oponente', atacante: 0, alvo: 0 })
     expect(avaliacao.score).toBeGreaterThan(0)
     expect(avaliacao.motivo).toContain('Elimina')
     expect(JSON.stringify(bom)).toBe(antes)
-    const ruim = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-001'] }, humano: { campo: [{ id: 'CC-004', pos: 'DEFESA' }] } })
+    const ruim = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-101'] }, humano: { campo: [{ id: 'CC-104', pos: 'DEFESA' }] } })
     expect(escolherMelhorAtaque(ruim)).toBeNull()
   })
 
   it('ataca a unidade que consegue vencer, preferindo remover a mais forte', () => {
-    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-071'] }, humano: { campo: ['CC-001', 'CC-056', 'CC-013'] } })
+    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-169'] }, humano: { campo: ['CC-101', 'CC-156', 'CC-113'] } })
     // 2400 vence 2200 (zona 1), 1200 (0) e 700 (2): prefere a de maior ATK
     expect(decide(e)).toMatchObject({ tipo: 'atacar', atacante: 0, alvo: 1 })
   })
 
   it('nunca ataca em suicídio (defesa mais alta, alvo mais forte); aceita a troca equivalente', () => {
-    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-001'] }, humano: { campo: [{ id: 'CC-004', pos: 'DEFESA' }] } })
+    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-101'] }, humano: { campo: [{ id: 'CC-104', pos: 'DEFESA' }] } })
     expect(decide(e)).toEqual({ tipo: 'encerrarTurno', jogador: 'oponente' })
     // IA agressiva: aceita a troca equivalente (ambas destruídas), mas nunca o suicídio contra alvo mais forte
-    const empate = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-003'] }, humano: { campo: ['CC-003'] } })
+    const empate = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-103'] }, humano: { campo: ['CC-103'] } })
     expect(decide(empate)).toMatchObject({ tipo: 'atacar', atacante: 0, alvo: 0 })
-    const fraco = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-001'] }, humano: { campo: ['CC-003'] } })
+    const fraco = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-101'] }, humano: { campo: ['CC-103'] } })
     expect(decide(fraco)).toEqual({ tipo: 'encerrarTurno', jogador: 'oponente' })
   })
 
   it('destrói unidade em defesa quando o ATK é maior', () => {
-    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-003'] }, humano: { campo: [{ id: 'CC-047', pos: 'DEFESA' }] } })
+    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: ['CC-103'] }, humano: { campo: [{ id: 'CC-147', pos: 'DEFESA' }] } })
     expect(decide(e)).toMatchObject({ tipo: 'atacar', alvo: 0 })
   })
 
@@ -182,11 +182,11 @@ describe('posições e ataques (§9)', () => {
     const montarOculta = (id: string) =>
       cenarioCombate({
         ativo: 'oponente',
-        oponente: { campo: ['CC-003', 'CC-007'] },
+        oponente: { campo: ['CC-103', 'CC-107'] },
         humano: { campo: [null, { id, pos: 'ATAQUE', viradaParaBaixo: true }] },
       })
-    const fraca = montarOculta('CC-013')
-    const forte = montarOculta('CC-056')
+    const fraca = montarOculta('CC-113')
+    const forte = montarOculta('CC-156')
     expect(JSON.stringify(visaoParaJogador(fraca, 'oponente'))).toBe(JSON.stringify(visaoParaJogador(forte, 'oponente')))
     expect(decide(fraca)).toEqual({ tipo: 'atacar', jogador: 'oponente', atacante: 1, alvo: 1 })
     expect(decide(forte)).toEqual(decide(fraca))
@@ -195,14 +195,14 @@ describe('posições e ataques (§9)', () => {
   it('IA agressiva: ataca mesmo um alvo oculto com uma unidade fraca', () => {
     const e = cenarioCombate({
       ativo: 'oponente',
-      oponente: { campo: ['CC-013'] },
-      humano: { campo: [{ id: 'CC-056', pos: 'ATAQUE', viradaParaBaixo: true }] },
+      oponente: { campo: ['CC-113'] },
+      humano: { campo: [{ id: 'CC-156', pos: 'ATAQUE', viradaParaBaixo: true }] },
     })
     expect(decide(e)).toMatchObject({ tipo: 'atacar', atacante: 0, alvo: 0 })
   })
 
   it('unidades em DEFESA ou que já atacaram não atacam', () => {
-    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: [{ id: 'CC-003', pos: 'DEFESA' }, { id: 'CC-007', atacou: true }] } })
+    const e = cenarioCombate({ ativo: 'oponente', oponente: { campo: [{ id: 'CC-103', pos: 'DEFESA' }, { id: 'CC-107', atacou: true }] } })
     expect(decide(e)).toEqual({ tipo: 'encerrarTurno', jogador: 'oponente' })
   })
 })
@@ -253,7 +253,7 @@ describe('executarTurnoIA', () => {
   })
 
   it('a IA pode vencer a partida durante o próprio turno', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001'], campo: ['CC-071'], baralho: 10 }, humano: { lp: 2000, baralho: 10 } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-101'], campo: ['CC-169'], baralho: 10 }, humano: { lp: 2000, baralho: 10 } })
     const r = executarTurnoIA(e)
     expect(r.ok).toBe(true)
     if (r.ok) expect(r.estado.resultado).toEqual({ vencedor: 'oponente', motivo: 'lp' })
@@ -262,7 +262,7 @@ describe('executarTurnoIA', () => {
   it('o IA descarta quando não há jogada e ainda assim encerra o turno', () => {
     const e = cenario({
       ativo: 'oponente',
-      oponente: { mao: ['CC-003', 'CC-013', 'CC-001', 'CC-007', 'CC-004'], campo: ['CC-002', 'CC-004', 'CC-005', 'CC-006', 'CC-009'].map((id) => ({ id, atacou: true })), baralho: 20 },
+      oponente: { mao: ['CC-103', 'CC-113', 'CC-101', 'CC-107', 'CC-104'], campo: ['CC-102', 'CC-104', 'CC-105', 'CC-106', 'CC-109'].map((id) => ({ id, atacou: true })), baralho: 20 },
       humano: { baralho: 20 },
     })
     const r = executarTurnoIA(e)
@@ -271,7 +271,7 @@ describe('executarTurnoIA', () => {
   })
 
   it('perde por compra incompleta ao passar a vez (a IA nunca trava, o jogo apenas termina)', () => {
-    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-001'], baralho: 5 }, humano: { mao: ['CC-001', 'CC-002'], baralho: 1 } })
+    const e = cenario({ ativo: 'oponente', oponente: { mao: ['CC-101'], baralho: 5 }, humano: { mao: ['CC-101', 'CC-102'], baralho: 1 } })
     const r = executarTurnoIA(e)
     expect(r.ok).toBe(true)
     if (r.ok) expect(r.estado.resultado).toEqual({ vencedor: 'oponente', motivo: 'compra' })

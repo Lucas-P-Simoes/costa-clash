@@ -244,17 +244,17 @@ describe('PUT /baralho', () => {
     const base = [...BARALHO_INICIAL]
     expect((await put(base.slice(1))).r.status).toBe(400)
     expect((await put([...base.slice(1), 'CC-999'])).json.erro.codigo).toBe('baralho_invalido')
-    expect((await put([...base.slice(0, 36), 'CC-001', 'CC-001', 'CC-001', 'CC-001'])).r.status).toBe(400)
-    expect((await put([...base.filter((i) => i !== 'CC-034'), 'CC-072'])).json.erro.mensagem).toMatch(/coleção/)
+    expect((await put([...base.slice(0, 36), 'CC-101', 'CC-101', 'CC-101', 'CC-101'])).r.status).toBe(400)
+    expect((await put([...base.slice(1), 'CC-170'])).json.erro.mensagem).toMatch(/coleção/)
     expect((await put('texto')).r.status).toBe(400)
     expect((await chamar('/api/me', { token })).json.usuario.baralho).toEqual(base)
   })
 
   it('não existe endpoint para aumentar a coleção', async () => {
     for (const rota of ['/api/colecao', '/api/carta', '/api/recompensa']) {
-      expect((await chamar(rota, { metodo: 'POST', corpo: { cartaId: 'CC-072' }, token })).r.status).toBe(404)
+      expect((await chamar(rota, { metodo: 'POST', corpo: { cartaId: 'CC-170' }, token })).r.status).toBe(404)
     }
-    expect((await chamar('/api/me', { token })).json.usuario.colecao.find((i: { cartaId: string }) => i.cartaId === 'CC-072')).toBeUndefined()
+    expect((await chamar('/api/me', { token })).json.usuario.colecao.find((i: { cartaId: string }) => i.cartaId === 'CC-170')).toBeUndefined()
   })
 })
 

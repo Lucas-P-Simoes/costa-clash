@@ -23,7 +23,7 @@ const q = <T extends Element = HTMLElement>(s: string) => document.querySelector
 const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
 
 function montar(cfg: ConfigCenario = {}, atrasoIA = 0) {
-  const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
+  const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-101'] }, ...cfg })
   return render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={atrasoIA} onVoltar={() => {}} onNovamente={() => {}} />)
 }
 
@@ -86,7 +86,7 @@ describe('Painéis OPONENTE e VOCÊ', () => {
   })
 
   it('zonas vazias têm o losango e a mão mostra o título e as cartas', () => {
-    montar({ humano: { mao: ['CC-001', 'CC-003'] } })
+    montar({ humano: { mao: ['CC-101', 'CC-103'] } })
     expect(q('.duelo-lado--voce .zona--vazia .zona__losango')).toBeTruthy()
     expect(screen.getByRole('heading', { level: 2, name: /Sua mão/ }).textContent).toContain('(2 cartas)')
     expect(q('.duelo-mao').className).toContain('moldura-orn')
@@ -94,8 +94,8 @@ describe('Painéis OPONENTE e VOCÊ', () => {
 
   it('todo verso usa a arte costeira padrão sem o antigo losango decorativo', () => {
     montar({
-      humano: { campo: [{ id: 'CC-001', viradaParaBaixo: true }] },
-      oponente: { campo: [{ id: 'CC-003', pos: 'DEFESA', viradaParaBaixo: true }], mao: ['CC-001', 'CC-002'] },
+      humano: { campo: [{ id: 'CC-101', viradaParaBaixo: true }] },
+      oponente: { campo: [{ id: 'CC-103', pos: 'DEFESA', viradaParaBaixo: true }], mao: ['CC-101', 'CC-102'] },
     })
     const versos = Array.from(document.querySelectorAll('.carta--verso'))
     expect(versos.length).toBeGreaterThanOrEqual(4)
@@ -120,7 +120,7 @@ describe('Painéis OPONENTE e VOCÊ', () => {
 
 describe('Coluna lateral', () => {
   it('banner do turno (aria-live), botões com ícones e subtítulos, cartas restantes e dica com ícones', () => {
-    montar({ humano: { mao: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-101'] } })
     const banner = q('.duelo-turno')
     expect(banner.getAttribute('aria-live')).toBe('polite')
     expect(banner.className).toContain('duelo-turno--meu')
@@ -143,7 +143,7 @@ describe('Coluna lateral', () => {
   })
 
   it('botão bloqueado: motivo visível ligado por aria-describedby, sem perder o foco nem a ação', () => {
-    montar({ humano: { mao: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-101'] } })
     const usar = botao(/Encerrar turno/)
     expect(usar.getAttribute('aria-disabled')).toBe('true')
     const motivo = document.getElementById(usar.getAttribute('aria-describedby')!)!
@@ -155,7 +155,7 @@ describe('Coluna lateral', () => {
 
   it('banner muda para "Turno do oponente" durante a IA (estilo frio) e volta ao jogador', () => {
     vi.useFakeTimers()
-    montar({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } }, 100)
+    montar({ humano: { mao: ['CC-103'], baralho: 30 }, oponente: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105', 'CC-106'], baralho: 30 } }, 100)
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
@@ -172,7 +172,7 @@ describe('Coluna lateral', () => {
 
 describe('Posição ataque/defesa representada visualmente', () => {
   it('ataque: ícone de espadas e classe; defesa: ícone de escudo e classe', () => {
-    montar({ humano: { campo: ['CC-001', { id: 'CC-003', pos: 'DEFESA' }] } })
+    montar({ humano: { campo: ['CC-101', { id: 'CC-103', pos: 'DEFESA' }] } })
     const cartas = document.querySelectorAll('.duelo-lado--voce .zona .carta')
     expect(cartas).toHaveLength(2)
     const [atq, def] = [cartas[0], cartas[1]]
@@ -207,7 +207,7 @@ describe('Posição ataque/defesa representada visualmente', () => {
     expect(reduzido.slice(0, reduzido.indexOf('/* ----'))).toMatch(/\.carta--campo \{\s*transition: none/)
     // rótulo acessível continua dizendo a posição, também para a unidade do oponente
     cleanup()
-    montar({ oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA' }], mao: ['CC-001'] } })
+    montar({ oponente: { campo: [{ id: 'CC-101', pos: 'DEFESA' }], mao: ['CC-101'] } })
     const op = q('.duelo-lado--oponente .zona .carta')
     expect(op.className).toContain('carta--defesa')
     expect(op.getAttribute('aria-label')).toContain('em defesa')
@@ -217,15 +217,15 @@ describe('Posição ataque/defesa representada visualmente', () => {
 describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
   const atacar = () => {
     arrastarAtaque(
-      screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }),
-      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+      screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: CHAMA-MARÉ/ }),
     )
   }
   const fxAtivos = () => document.querySelectorAll('[class*="carta--fx-"]').length
 
   it('carta usada entra no campo com classe temporária que expira', () => {
     vi.useFakeTimers()
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(screen.getByRole('button', { name: /Zona 2 sua: vazia/ }))
     confirmarFaceParaCima()
@@ -239,7 +239,7 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
 
   it('ataque: atacante em destaque, destruída permanece até o fim da animação, dano pulsa a vida e tudo expira', () => {
     vi.useFakeTimers()
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'], mao: ['CC-001'] } })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: ['CC-101'], mao: ['CC-101'] } })
     atacar()
     // lógica já aplicada (zona do oponente esvaziada, vida atualizada) ...
     expect(screen.getByLabelText('Vida do oponente: 4600')).toBeTruthy()
@@ -272,17 +272,17 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
 
   it('impacto na unidade atacada que sobrevive (defesa repele o ataque)', () => {
     vi.useFakeTimers()
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA' }], mao: ['CC-001'] } })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: [{ id: 'CC-101', pos: 'DEFESA' }], mao: ['CC-101'] } })
     arrastarAtaque(
-      screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }),
-      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+      screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: CHAMA-MARÉ/ }),
     )
     expect(q('.duelo-lado--oponente .zona .carta').className).toContain('carta--fx-impacto')
   })
 
   it('mudança de turno destaca o banner por um instante', () => {
     vi.useFakeTimers()
-    montar({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } })
+    montar({ humano: { mao: ['CC-103'], baralho: 30 }, oponente: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105', 'CC-106'], baralho: 30 } })
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
@@ -297,7 +297,7 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
   it('prefers-reduced-motion: o jogo funciona igual, mas sem nenhuma classe de animação', () => {
     vi.useFakeTimers()
     window.matchMedia = ((m: string) => ({ matches: m.includes('reduce'), media: m, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003'] }, oponente: { campo: ['CC-001'], mao: ['CC-001'] } })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103'] }, oponente: { campo: ['CC-101'], mao: ['CC-101'] } })
     atacar()
     expect(screen.getByLabelText('Vida do oponente: 4600')).toBeTruthy()
     expect(fxAtivos()).toBe(0)
@@ -307,16 +307,16 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
 
   it('a animação não bloqueia a entrada: dá para agir logo após o ataque, com a classe ainda ativa', () => {
     vi.useFakeTimers()
-    montar({ jogadaFeita: true, humano: { campo: ['CC-003', 'CC-002'] }, oponente: { campo: ['CC-001', 'CC-004'], mao: ['CC-001'] } })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-103', 'CC-102'] }, oponente: { campo: ['CC-101', 'CC-104'], mao: ['CC-101'] } })
     arrastarAtaque(
-      screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral.*pode atacar/ }),
-      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+      screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: CHAMA-MARÉ/ }),
     )
     expect(fxAtivos()).toBeGreaterThan(0)
     // segundo ataque imediatamente, sem esperar a animação
     arrastarAtaque(
-      screen.getByRole('button', { name: /Zona 2 sua: Restinga Preservada.*pode atacar/ }),
-      screen.getByRole('button', { name: /Zona 2 do oponente: Duna Costeira/ }),
+      screen.getByRole('button', { name: /Zona 2 sua: MARINHA-FARINHA.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 2 do oponente: MEXILHÃO/ }),
     )
     expect(screen.queryByRole('button', { name: /Zona 2 do oponente/ })).toBeNull()
   })
@@ -324,7 +324,7 @@ describe('Animações como classes temporárias (sem alterar o fluxo)', () => {
 
 describe('Tela de resultado (estilo Tela-derrota / Tela-recompensa)', () => {
   function desistir() {
-    montar({ humano: { campo: ['CC-001'], mao: ['CC-003'] }, oponente: { campo: ['CC-004', 'CC-005'], lp: 5000, mao: ['CC-001'] } })
+    montar({ humano: { campo: ['CC-101'], mao: ['CC-103'] }, oponente: { campo: ['CC-104', 'CC-105'], lp: 5000, mao: ['CC-101'] } })
     fireEvent.click(botao('Desistir'))
     fireEvent.click(botao('Confirmar'))
     return screen.getByRole('dialog')
@@ -355,9 +355,9 @@ describe('Tela de resultado (estilo Tela-derrota / Tela-recompensa)', () => {
   it('vitória usa o tema dourado; botões chamam os callbacks', () => {
     const onVoltar = vi.fn()
     const onNovamente = vi.fn()
-    const e = cenario({ jogadaFeita: true, humano: { campo: ['CC-056'], baralho: 20 }, oponente: { lp: 1000, mao: ['CC-001'], baralho: 20 } })
+    const e = cenario({ jogadaFeita: true, humano: { campo: ['CC-156'], baralho: 20 }, oponente: { lp: 1000, mao: ['CC-101'], baralho: 20 } })
     render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={0} onVoltar={onVoltar} onNovamente={onNovamente} />)
-    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Derramamento de Óleo.*pode atacar/ }), screen.getByLabelText('Vida do oponente: 1000'))
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: GORGÔNIA-ESCARLATE.*pode atacar/ }), screen.getByLabelText('Vida do oponente: 1000'))
     const d = screen.getByRole('dialog')
     expect(d.className).toContain('duelo-dialogo--vitoria')
     expect(within(d).getByRole('heading', { name: 'Vitória' })).toBeTruthy()
@@ -371,10 +371,10 @@ describe('Tela de resultado (estilo Tela-derrota / Tela-recompensa)', () => {
 describe('Fantasma da carta destruída em defesa', () => {
   it('é desenhado deitado, como a unidade estava', () => {
     vi.useFakeTimers()
-    montar({ jogadaFeita: true, humano: { campo: ['CC-071'] }, oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA' }], mao: ['CC-001'] } })
+    montar({ jogadaFeita: true, humano: { campo: ['CC-169'] }, oponente: { campo: [{ id: 'CC-101', pos: 'DEFESA' }], mao: ['CC-101'] } })
     arrastarAtaque(
-      screen.getByRole('button', { name: /Zona 1 sua: Elevação.*pode atacar/ }),
-      screen.getByRole('button', { name: /Zona 1 do oponente: Manguezal Protegido/ }),
+      screen.getByRole('button', { name: /Zona 1 sua: BALEIA-MINKE-ANTÁRTICA.*pode atacar/ }),
+      screen.getByRole('button', { name: /Zona 1 do oponente: CHAMA-MARÉ/ }),
     )
     const f = q('.duelo-lado--oponente [data-fantasma="destruida"] .carta')
     expect(f.className).toContain('carta--defesa')
@@ -392,7 +392,7 @@ describe('Correções pós-QA (D1, D2, D5)', () => {
   }
 
   it('D1: cena do resultado fica num contêiner de altura própria (imagem absoluta, cover) e os botões grudam na base', () => {
-    montar({ humano: { campo: ['CC-001'] } })
+    montar({ humano: { campo: ['CC-101'] } })
     fireEvent.click(botao('Desistir'))
     fireEvent.click(botao('Confirmar'))
     const d = screen.getByRole('dialog')
@@ -412,14 +412,14 @@ describe('Correções pós-QA (D1, D2, D5)', () => {
   it('D2: nomes nunca quebram no meio da palavra e a carta guarda o nome completo no tooltip', () => {
     expect(css).not.toContain('break-word')
     expect(css).toContain('overflow-wrap: normal')
-    montar({ humano: { campo: ['CC-001'] } })
+    montar({ humano: { campo: ['CC-101'] } })
     const c = q('.duelo-lado--voce .zona .carta')
-    expect(c.getAttribute('title')).toBe('Manguezal Protegido')
+    expect(c.getAttribute('title')).toBe('CHAMA-MARÉ')
   })
 
   it('D5: o aviso do turno do oponente não atravessa a troca de turno', () => {
     vi.useFakeTimers()
-    montar({ humano: { mao: ['CC-003'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } }, 100)
+    montar({ humano: { mao: ['CC-103'], baralho: 30 }, oponente: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105', 'CC-106'], baralho: 30 } }, 100)
     fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
@@ -434,7 +434,7 @@ describe('Correções pós-QA (D1, D2, D5)', () => {
   })
 
   it('D5: botão bloqueado acionado pelo teclado (Enter/clique) mostra o motivo no aviso com aria-live', () => {
-    montar({ humano: { mao: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-101'] } })
     const usar = botao(/Encerrar turno/)
     usar.focus()
     expect(document.activeElement).toBe(usar) // aria-disabled mantém o foco

@@ -4,6 +4,7 @@ import type { Comando, ResultadoComando } from '../acoes'
 import { criarEstadoInicial } from '../estado'
 import type { CartaInstancia, EstadoDuelo, Fase, IdJogador, Posicao, UnidadeEmCampo } from '../estado'
 import { CARTAS_NO_DUELO } from '../tipos'
+import { CATALOGO } from '../../data/catalogo'
 
 export type CampoCfg = string | { id: string; pos?: Posicao; viradaParaBaixo?: boolean; atacou?: boolean; buffAtk?: number; buffDef?: number }
 
@@ -13,7 +14,7 @@ export interface ConfigJogador {
   /** Por zona (índice); `null` = vazia. */
   campo?: (CampoCfg | null)[]
   descarte?: string[]
-  /** Tamanho do baralho; padrão = completa até 30 cartas no total (cartas de enchimento CC-013). */
+  /** Tamanho do baralho; padrão = completa até 30 cartas no total (cartas de enchimento CC-113). */
   baralho?: number
 }
 
@@ -26,7 +27,18 @@ export interface ConfigCenario {
   jogadaFeita?: boolean
 }
 
-const ENCHIMENTO = 'CC-013'
+const ENCHIMENTO = 'CC-113'
+const ATRIBUTOS_DE_CENARIO: Readonly<Record<string, readonly [atk: number, defesa: number]>> = {
+  'CC-101': [1200, 2000],
+  'CC-103': [1600, 1500],
+  'CC-104': [900, 2000],
+  'CC-107': [1700, 2000],
+  'CC-109': [1200, 1700],
+  'CC-113': [700, 1800],
+  'CC-147': [1800, 900],
+  'CC-156': [2200, 700],
+}
+const CARTAS_POR_ID = new Map(CATALOGO.map((carta) => [carta.id, carta]))
 
 export function cenario(cfg: ConfigCenario = {}): EstadoDuelo {
   let n = 0
@@ -42,13 +54,15 @@ export function cenario(cfg: ConfigCenario = {}): EstadoDuelo {
       if (cc === null || cc === undefined) return
       const o = typeof cc === 'string' ? { id: cc } : cc
       const inst = nova(p, o.id)
+      const alvo = ATRIBUTOS_DE_CENARIO[o.id]
+      const carta = CARTAS_POR_ID.get(o.id)
       const u: UnidadeEmCampo = {
         ...inst,
         posicao: o.pos ?? 'ATAQUE',
         viradaParaBaixo: o.viradaParaBaixo ?? false,
         atacou: o.atacou ?? false,
-        buffAtk: o.buffAtk ?? 0,
-        buffDef: o.buffDef ?? 0,
+        buffAtk: (alvo ? alvo[0] - (carta?.atk ?? 0) : 0) + (o.buffAtk ?? 0),
+        buffDef: (alvo ? alvo[1] - (carta?.defesa ?? 0) : 0) + (o.buffDef ?? 0),
         invocadaNoTurno: 1,
       }
       j.campo[z] = u

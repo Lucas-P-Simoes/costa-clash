@@ -22,8 +22,8 @@ describe('Tutorial do Guardião do Mangue na tela do duelo', () => {
     expect(screen.getByText('Bem-vindo ao manguezal!')).toBeTruthy()
     expect(screen.getByLabelText('Vida do oponente: 2000')).toBeTruthy()
     expect(screen.getByLabelText('Sua vida: 5000')).toBeTruthy()
-    // mão fixa: a primeira carta é Saneamento Integrado
-    expect(screen.getByRole('button', { name: /^Mão 1: Saneamento Integrado/ })).toBeTruthy()
+    // mão fixa: a primeira carta é GUARÁ
+    expect(screen.getByRole('button', { name: /^Mão 1: GUARÁ/ })).toBeTruthy()
   })
 
   it('Continuar avança para "Baixe uma carta" e destaca a mão; jogar a carta avança sozinho', () => {
@@ -89,13 +89,13 @@ describe('Tutorial do Guardião do Mangue na tela do duelo', () => {
 
   it('vencer o tutorial mostra a cena de corrupção antes do resultado; vencer um duelo normal não mostra', () => {
     const montar = (comTutorial: boolean) => {
-      const e = cenario({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, campo: ['CC-043'] }, oponente: { baralho: 20, lp: 500, campo: [] } })
+      const e = cenario({ turno: 3, fase: 'COMBATE', humano: { baralho: 20, campo: ['CC-143'] }, oponente: { baralho: 20, lp: 500, campo: [] } })
       return render(
         <Partida estadoInicial={e} oponente={buscarOponente('guardiao-manguezal')!} atrasoIA={0} tutorial={comTutorial ? { onPular: () => {} } : undefined} onVoltar={() => {}} onNovamente={() => {}} />,
       )
     }
     montar(true)
-    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Saneamento Integrado/ }), screen.getByLabelText('Vida do oponente: 500'))
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: GARÇA AZUL/ }), screen.getByLabelText('Vida do oponente: 500'))
     expect(screen.getByRole('dialog', { name: 'Algo está errado...' })).toBeTruthy()
     expect(screen.queryByRole('button', { name: 'Jogar novamente' })).toBeNull()
     fireEvent.click(botao('Continuar'))
@@ -103,7 +103,7 @@ describe('Tutorial do Guardião do Mangue na tela do duelo', () => {
     expect(screen.getByRole('button', { name: /Jogar novamente/ })).toBeTruthy()
     cleanup()
     montar(false)
-    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: Saneamento Integrado/ }), screen.getByLabelText('Vida do oponente: 500'))
+    arrastarAtaque(screen.getByRole('button', { name: /Zona 1 sua: GARÇA AZUL/ }), screen.getByLabelText('Vida do oponente: 500'))
     expect(screen.queryByRole('dialog', { name: 'Algo está errado...' })).toBeNull()
     expect(screen.getByRole('button', { name: /Jogar novamente/ })).toBeTruthy()
   })

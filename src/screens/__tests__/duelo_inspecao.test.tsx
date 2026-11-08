@@ -22,7 +22,7 @@ afterEach(() => {
 })
 
 function montar(cfg: ConfigCenario = {}) {
-  const estado = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
+  const estado = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-101'] }, ...cfg })
   return render(<Partida estadoInicial={estado} oponente={buscarOponente('ressaca')!} atrasoIA={0} onVoltar={() => {}} onNovamente={() => {}} />)
 }
 
@@ -31,7 +31,7 @@ const inspecao = () => document.querySelector<HTMLElement>('.duelo-inspecao')
 
 describe('mão em leque e inspeção ampliada', () => {
   it('usa wrappers simétricos sem aplicar a rotação do leque na própria carta', () => {
-    montar({ humano: { mao: ['CC-001', 'CC-002', 'CC-003', 'CC-004', 'CC-005'] } })
+    montar({ humano: { mao: ['CC-101', 'CC-102', 'CC-103', 'CC-104', 'CC-105'] } })
     const itens = [...document.querySelectorAll<HTMLElement>('.duelo-mao__item')]
     expect(itens).toHaveLength(5)
     expect(itens[0]!.style.getPropertyValue('--mao-angulo')).toBe('-6deg')
@@ -42,11 +42,11 @@ describe('mão em leque e inspeção ampliada', () => {
   })
 
   it('abre somente uma cópia visual no hover, mostra os detalhes completos e fecha ao sair', () => {
-    montar({ humano: { mao: ['CC-001', 'CC-003'] } })
+    montar({ humano: { mao: ['CC-101', 'CC-103'] } })
     const carta = cartaMao()
     fireEvent.pointerEnter(carta, { pointerType: 'mouse' })
     const painel = inspecao()!
-    const catalogo = CATALOGO.find((c) => c.id === 'CC-001')!
+    const catalogo = CATALOGO.find((c) => c.id === 'CC-101')!
     expect(document.querySelectorAll('.duelo-inspecao')).toHaveLength(1)
     expect(painel.getAttribute('aria-hidden')).toBe('true')
     expect(painel.textContent).toContain(catalogo.nome)
@@ -57,7 +57,7 @@ describe('mão em leque e inspeção ampliada', () => {
   })
 
   it('mantém a inspeção enquanto a carta tem foco e Escape fecha só essa camada', () => {
-    montar({ humano: { mao: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-101'] } })
     const carta = cartaMao()
     fireEvent.focus(carta)
     expect(inspecao()).toBeTruthy()
@@ -68,8 +68,8 @@ describe('mão em leque e inspeção ampliada', () => {
 
   it('não amplia automaticamente a primeira carta ao devolver o foco depois do turno da IA', () => {
     montar({
-      humano: { mao: ['CC-003'], baralho: 30 },
-      oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 },
+      humano: { mao: ['CC-103'], baralho: 30 },
+      oponente: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105', 'CC-106'], baralho: 30 },
     })
     fireEvent.click(cartaMao())
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
@@ -83,7 +83,7 @@ describe('mão em leque e inspeção ampliada', () => {
   })
 
   it('mantém a inspeção de foco quando o ponteiro entra e sai da mesma carta', () => {
-    montar({ humano: { mao: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-101'] } })
     const carta = cartaMao()
     carta.focus()
     fireEvent.focus(carta)
@@ -94,11 +94,11 @@ describe('mão em leque e inspeção ampliada', () => {
   })
 
   it('prioriza o hover e restaura o foco sem um gatilho apagar o outro', () => {
-    montar({ humano: { mao: ['CC-001', 'CC-003'] } })
+    montar({ humano: { mao: ['CC-101', 'CC-103'] } })
     const primeira = cartaMao(1)
     const segunda = cartaMao(2)
-    const nomePrimeira = CATALOGO.find((c) => c.id === 'CC-001')!.nome
-    const nomeSegunda = CATALOGO.find((c) => c.id === 'CC-003')!.nome
+    const nomePrimeira = CATALOGO.find((c) => c.id === 'CC-101')!.nome
+    const nomeSegunda = CATALOGO.find((c) => c.id === 'CC-103')!.nome
 
     primeira.focus()
     fireEvent.focus(primeira)
@@ -123,7 +123,7 @@ describe('mão em leque e inspeção ampliada', () => {
 
   it('no toque curto seleciona e inspeciona; toque fora fecha sem apagar a seleção', () => {
     window.matchMedia = ((consulta: string) => ({ matches: consulta === '(pointer: coarse)', media: consulta, addEventListener() {}, removeEventListener() {} })) as unknown as typeof window.matchMedia
-    montar({ humano: { mao: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-101'] } })
     const carta = cartaMao()
     const toque = { pointerId: 1, pointerType: 'touch', button: 0, isPrimary: true, clientX: 80, clientY: 500 }
     fireEvent.pointerDown(carta, toque)
@@ -138,7 +138,7 @@ describe('mão em leque e inspeção ampliada', () => {
   })
 
   it('fecha quando o arrasto realmente arma, sem criar uma segunda rota de comando', () => {
-    montar({ humano: { mao: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-101'] } })
     const carta = cartaMao()
     fireEvent.pointerEnter(carta, { pointerType: 'mouse' })
     expect(inspecao()).toBeTruthy()
@@ -151,7 +151,7 @@ describe('mão em leque e inspeção ampliada', () => {
   })
 
   it('invalida a inspeção quando a fonte é removida sem mudar a chave guardada', () => {
-    const carta = CATALOGO.find((item) => item.id === 'CC-001')!
+    const carta = CATALOGO.find((item) => item.id === 'CC-101')!
 
     function FonteRemovivel() {
       const [removida, setRemovida] = useState(false)
@@ -195,7 +195,7 @@ describe('mão em leque e inspeção ampliada', () => {
     function FonteAtualizavel() {
       const [bonus, setBonus] = useState(0)
       const [aberta, setAberta] = useState(false)
-      const estado = cenario({ humano: { campo: [{ id: 'CC-001', buffAtk: bonus, buffDef: bonus }] } })
+      const estado = cenario({ humano: { campo: [{ id: 'CC-101', buffAtk: bonus, buffDef: bonus }] } })
       const visao = visaoParaJogador(estado, 'humano')
       const conteudo = resolverConteudoInspecao(chave, visao, estadoDeVisao(visao))
       const fonte: FonteInspecao | null = aberta && conteudo ? { chave, conteudo, gatilho: 'ponteiro' } : null
@@ -230,24 +230,24 @@ describe('inspeção no campo e ocultação', () => {
       const visao = visaoParaJogador(estado, 'humano')
       return resolverConteudoInspecao(chave, visao, estadoDeVisao(visao))
     }
-    const visivel = resolver(cenario({ oponente: { campo: ['CC-001'] } }))
-    const oculta = resolver(cenario({ oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA', viradaParaBaixo: true }] } }))
+    const visivel = resolver(cenario({ oponente: { campo: ['CC-101'] } }))
+    const oculta = resolver(cenario({ oponente: { campo: [{ id: 'CC-101', pos: 'DEFESA', viradaParaBaixo: true }] } }))
     const removida = resolver(cenario({ oponente: { campo: [] } }))
 
-    expect(visivel).toMatchObject({ oculta: false, carta: { id: 'CC-001' } })
+    expect(visivel).toMatchObject({ oculta: false, carta: { id: 'CC-101' } })
     expect(oculta).toEqual({ oculta: true, posicao: 'DEFESA' })
-    expect(JSON.stringify(oculta)).not.toMatch(/CC-001|Manguezal|1200|2000|sedimentos|uid/i)
+    expect(JSON.stringify(oculta)).not.toMatch(/CC-101|Manguezal|1200|2000|sedimentos|uid/i)
     expect(removida).toBeNull()
   })
 
   it('mostra carta completa no campo, mas uma unidade oculta do oponente continua somente como verso', () => {
     montar({
-      humano: { campo: ['CC-003'] },
-      oponente: { campo: [{ id: 'CC-001', pos: 'DEFESA', viradaParaBaixo: true }], mao: ['CC-002'] },
+      humano: { campo: ['CC-103'] },
+      oponente: { campo: [{ id: 'CC-101', pos: 'DEFESA', viradaParaBaixo: true }], mao: ['CC-102'] },
     })
-    const propria = screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ })
+    const propria = screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL/ })
     fireEvent.pointerEnter(propria, { pointerType: 'mouse' })
-    expect(inspecao()?.textContent).toContain(CATALOGO.find((c) => c.id === 'CC-003')!.educacao)
+    expect(inspecao()?.textContent).toContain(CATALOGO.find((c) => c.id === 'CC-103')!.educacao)
 
     fireEvent.pointerLeave(propria, { pointerType: 'mouse' })
     const oculta = screen.getByRole('button', { name: /Zona 1 do oponente: unidade virada para baixo/ })
@@ -256,7 +256,7 @@ describe('inspeção no campo e ocultação', () => {
     expect(painel.dataset.inspecao).toBe('verso')
     expect(painel.querySelector('.carta--verso')).toBeTruthy()
     expect(painel.querySelector('.carta__nome, .carta__atributos, .duelo-inspecao__detalhes')).toBeNull()
-    expect(painel.textContent).not.toContain('Manguezal Protegido')
+    expect(painel.textContent).not.toContain('CHAMA-MARÉ')
 
     fireEvent.pointerLeave(oculta, { pointerType: 'mouse' })
     for (const verso of [document.querySelector<HTMLElement>('.duelo-mao-oponente .carta--verso')!]) {
@@ -278,8 +278,8 @@ describe('inspeção no campo e ocultação', () => {
     montar({
       oponente: {
         campo: [
-          { id: 'CC-001', pos: 'DEFESA', viradaParaBaixo: true },
-          { id: 'CC-003', pos: 'ATAQUE', viradaParaBaixo: true },
+          { id: 'CC-101', pos: 'DEFESA', viradaParaBaixo: true },
+          { id: 'CC-103', pos: 'ATAQUE', viradaParaBaixo: true },
         ],
       },
     })

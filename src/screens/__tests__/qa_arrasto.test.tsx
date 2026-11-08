@@ -17,7 +17,7 @@ afterEach(async () => {
 })
 
 function montar(cfg: ConfigCenario = {}) {
-  const e = cenario({ humano: { baralho: 20, mao: ['CC-003', 'CC-004'] }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
+  const e = cenario({ humano: { baralho: 20, mao: ['CC-103', 'CC-104'] }, oponente: { baralho: 20, mao: ['CC-101'] }, ...cfg })
   return render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={0} onVoltar={() => {}} onNovamente={() => {}} />)
 }
 const mao = (i = 1) => screen.getByRole('button', { name: new RegExp('^Mão ' + i + ':') })
@@ -51,7 +51,7 @@ describe('QA arrasto: bordas', () => {
     expect(screen.getByRole('dialog', { name: /^Colocar / })).toBeTruthy()
     await tick()
     fireEvent.click(screen.getByRole('button', { name: 'Colocar carta' }))
-    expect(campoV()).toMatch(/Zona 3 sua: Recife de Coral/)
+    expect(campoV()).toMatch(/Zona 3 sua: CARANGUEJO-AZUL/)
   })
 
   it('todo listener de janela adicionado pelo arrasto é removido (soltar, cancelar por Esc, pointercancel e desmontar)', async () => {
@@ -110,13 +110,13 @@ describe('QA arrasto: bordas', () => {
   })
 
   it('o fantasma do arrasto contém só a carta do jogador (nada do oponente) e é aria-hidden', () => {
-    montar({ oponente: { baralho: 20, mao: ['CC-034'] } })
+    montar({ oponente: { baralho: 20, mao: ['CC-134'] } })
     document.elementFromPoint = () => zona(0)
     fireEvent.pointerDown(mao(1), { ...P, clientX: 100, clientY: 500 })
     fireEvent.pointerMove(window, { ...P, clientX: 200, clientY: 300 })
     const f = document.querySelector('.duelo-arrasto-fantasma')!
     expect(f.getAttribute('aria-hidden')).toBe('true')
-    expect(f.textContent).toContain('Recife de Coral')
-    expect(document.documentElement.outerHTML).not.toMatch(/Pesquisa Oceanogr|CC-034/)
+    expect(f.textContent).toContain('CARANGUEJO-AZUL')
+    expect(document.documentElement.outerHTML).not.toMatch(/Pesquisa Oceanogr|CC-134/)
   })
 })

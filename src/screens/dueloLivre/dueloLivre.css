@@ -465,7 +465,7 @@
 }
 .drops-item {
   display: grid;
-  grid-template-columns: 2.6rem minmax(0, 1fr) auto;
+  grid-template-columns: 2.6rem minmax(0, 1fr) 44px auto;
   align-items: center;
   gap: 0.6rem;
   padding: 0.3rem 0.5rem 0.3rem 0.3rem;
@@ -485,6 +485,11 @@
 .drops-item__texto { display: flex; flex-direction: column; min-width: 0; }
 .drops-item__nome { font-size: 0.9rem; font-weight: 700; line-height: 1.2; overflow-wrap: anywhere; }
 .drops-item__tipo { color: #8eb4c2; font-size: var(--fs-min); }
+.drops-item__info { display: grid; place-items: center; width: 44px; height: 44px; padding: 0; border: 0; background: transparent; color: #7deaff; cursor: pointer; }
+.drops-item__info svg { width: 1.7rem; height: 1.7rem; overflow: visible; border-radius: 50%; background: #06131f; }
+.drops-item__info svg > circle:first-child, .drops-item__info path { fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 2; }
+.drops-item__info .drops-item__info-ponto { fill: #fff2b8; stroke: none; }
+.drops-item__info:hover svg, .drops-item__info:focus-visible svg { background: #0e3c54; outline: 0.15rem solid #fff; outline-offset: 0.08rem; }
 .drops-item__chance {
   min-width: 4.2rem;
   color: #41d4ed;
@@ -495,6 +500,22 @@
 }
 .drops-item[data-completa] .drops-item__chance { color: #6fe48b; font-size: var(--fs-min); text-transform: uppercase; }
 .drops-dialogo__fechar { align-self: center; min-width: 10rem; min-height: 44px; }
+
+@media (max-width: 28rem) {
+  .drops-overlay { padding: 0.35rem; }
+  .drops-dialogo { gap: 0.45rem; max-height: calc(100dvh - 0.7rem); padding: 0.65rem; }
+  .drops-item {
+    grid-template-columns: 2.35rem minmax(0, 1fr) 44px;
+    grid-template-rows: auto auto;
+    gap: 0.15rem 0.4rem;
+    padding: 0.25rem;
+  }
+  .drops-item__arte { grid-column: 1; grid-row: 1 / 3; width: 2.35rem; }
+  .drops-item__texto { grid-column: 2; grid-row: 1; }
+  .drops-item__info { grid-column: 3; grid-row: 1 / 3; }
+  .drops-item__chance { grid-column: 2; grid-row: 2; min-width: 0; text-align: left; }
+  .drops-item__nome, .drops-item__tipo, .drops-item__chance { max-width: 100%; overflow-wrap: anywhere; }
+}
 
 .painel-oponente__aviso:empty { display: none; }
 .painel-oponente__aviso {
@@ -763,6 +784,8 @@
 .colecao-item__abrir { flex-direction: column; gap: 0.2rem; }
 .colecao-linha__abrir { align-items: center; gap: 0.5rem; }
 .colecao-linha__abrir .colecao-linha__arte { flex: none; }
+.colecao-item__arte, .colecao-linha__arte { position: relative; }
+.colecao-carta__info { position: absolute; left: 0.2rem; bottom: 0.2rem; display: grid; place-items: center; width: 1.35rem; height: 1.35rem; border: 0.1rem solid #7deaff; border-radius: 50%; background: rgba(4, 19, 31, 0.94); color: #fff2b8; font: 800 0.9rem/1 Georgia, serif; box-shadow: 0 0 0.35rem rgba(63, 220, 240, 0.5); }
 .colecao-item__abrir:hover .colecao-item__nome, .colecao-linha__abrir:hover .colecao-item__nome { color: #7deaff; }
 .colecao-item__abrir:focus-visible, .colecao-linha__abrir:focus-visible { outline: 0.18rem solid #fff; outline-offset: 0.12rem; }
 

@@ -141,6 +141,7 @@ export function DialogoColecao({ logado, colecao, baralho, onSalvarBaralho, onFe
                         <span className="colecao-item__arte" aria-hidden="true">
                           <Arte carta={carta} />
                           <span className="colecao-item__qtd">×{n}</span>
+                          <span className="colecao-carta__info">i</span>
                         </span>
                         <span className="colecao-item__nome">{carta.nome}</span>
                         <span className="colecao-item__tipo">
@@ -175,6 +176,7 @@ export function DialogoColecao({ logado, colecao, baralho, onSalvarBaralho, onFe
                       <button type="button" className="colecao-linha__abrir" aria-label={`Ver carta ${carta.nome}`} onClick={() => setCartaAberta(carta)}>
                         <span className="colecao-linha__arte" aria-hidden="true">
                           <Arte carta={carta} />
+                          <span className="colecao-carta__info">i</span>
                         </span>
                         <span className="colecao-linha__texto">
                           <span className="colecao-item__nome">{carta.nome}</span>

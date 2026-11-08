@@ -16,7 +16,7 @@ function memoria(inicial: Record<string, string> = {}) {
 const resp = (status: number, corpo?: unknown) =>
   new Response(corpo === undefined ? null : JSON.stringify(corpo), { status, headers: { 'Content-Type': 'application/json' } })
 
-const usuario = { id: 'u1', email: 'a@b.co', baralho: ['CC-001'], colecao: [{ cartaId: 'CC-001', quantidade: 2 }] }
+const usuario = { id: 'u1', email: 'a@b.co', baralho: ['CC-101'], colecao: [{ cartaId: 'CC-101', quantidade: 2 }] }
 
 describe('escolherServico', () => {
   it('sem VITE_API_URL usa o serviço não configurado', () => {
@@ -86,21 +86,21 @@ describe('servicoAuthHttp', () => {
 
   it('salvarBaralho: PUT autenticado; 401 remove o token', async () => {
     const mem = memoria({ [CHAVE_TOKEN]: 'TK' })
-    const f = vi.fn().mockResolvedValueOnce(resp(200, { baralho: ['CC-001'] })).mockResolvedValueOnce(resp(401, {}))
+    const f = vi.fn().mockResolvedValueOnce(resp(200, { baralho: ['CC-101'] })).mockResolvedValueOnce(resp(401, {}))
     const s = criarServicoAuthHttp('https://api.x', { fetch: f, armazenamento: mem })
-    expect(await s.salvarBaralho!(['CC-001'])).toEqual({ ok: true, baralho: ['CC-001'] })
+    expect(await s.salvarBaralho!(['CC-101'])).toEqual({ ok: true, baralho: ['CC-101'] })
     expect(f.mock.calls[0]![1].method).toBe('PUT')
-    expect(await s.salvarBaralho!(['CC-001'])).toMatchObject({ ok: false, codigo: 'sessao_invalida' })
+    expect(await s.salvarBaralho!(['CC-101'])).toMatchObject({ ok: false, codigo: 'sessao_invalida' })
     expect(mem.d).toEqual({})
   })
 
   it('iniciarDuelo / resgatarVitoria: POST autenticado e leitura do drop', async () => {
     const mem = memoria({ [CHAVE_TOKEN]: 'TK' })
-    const colecao = [{ cartaId: 'CC-057', quantidade: 1 }, { cartaId: 7, quantidade: 1 }]
+    const colecao = [{ cartaId: 'CC-157', quantidade: 1 }, { cartaId: 7, quantidade: 1 }]
     const f = vi
       .fn()
       .mockResolvedValueOnce(resp(201, { dueloId: 'D1' }))
-      .mockResolvedValueOnce(resp(200, { carta: 'CC-057', quantidade: 1, colecao }))
+      .mockResolvedValueOnce(resp(200, { carta: 'CC-157', quantidade: 1, colecao }))
       .mockResolvedValueOnce(resp(200, { carta: null, quantidade: 0, colecao: [] }))
       .mockResolvedValueOnce(resp(409, { erro: { codigo: 'duelo_resgatado', mensagem: 'Já entregue.' } }))
       .mockResolvedValueOnce(resp(200, { carta: 5, quantidade: 1, colecao: [] }))
@@ -109,7 +109,7 @@ describe('servicoAuthHttp', () => {
     expect(f.mock.calls[0]![0]).toBe('https://api.x/api/duelo/iniciar')
     expect(f.mock.calls[0]![1].headers.Authorization).toBe('Bearer TK')
     expect(JSON.parse(f.mock.calls[0]![1].body)).toEqual({ oponenteId: 'ressaca' })
-    expect(await s.resgatarVitoria!('D1')).toEqual({ ok: true, carta: 'CC-057', quantidade: 1, colecao: [{ cartaId: 'CC-057', quantidade: 1 }] })
+    expect(await s.resgatarVitoria!('D1')).toEqual({ ok: true, carta: 'CC-157', quantidade: 1, colecao: [{ cartaId: 'CC-157', quantidade: 1 }] })
     expect(f.mock.calls[1]![0]).toBe('https://api.x/api/duelo/vitoria')
     expect(JSON.parse(f.mock.calls[1]![1].body)).toEqual({ dueloId: 'D1' })
     expect(await s.resgatarVitoria!('D2')).toEqual({ ok: true, carta: null, quantidade: 0, colecao: [] })

@@ -57,22 +57,22 @@ describe('validação de baralho de duelo', () => {
     const r39 = validarBaralhoDuelo(BARALHO_INICIAL.slice(0, 39))
     expect(r39.ok).toBe(false)
     if (!r39.ok) expect(r39.erros.join(' ')).toContain('exatamente 40 cartas (tem 39)')
-    const r41 = validarBaralhoDuelo([...BARALHO_INICIAL, 'CC-072'])
+    const r41 = validarBaralhoDuelo([...BARALHO_INICIAL, 'CC-170'])
     expect(r41.ok).toBe(false)
     if (!r41.ok) expect(r41.erros.join(' ')).toContain('tem 41')
     expect(validarBaralhoDuelo([]).ok).toBe(false)
   })
 
   it('rejeita mais de 3 cópias do mesmo ID', () => {
-    const b = [...BARALHO_INICIAL.slice(0, 36), 'CC-001', 'CC-001', 'CC-001', 'CC-001']
-    // CC-001 já aparece 2x entre os 36 primeiros; garante > 3
+    const b = [...BARALHO_INICIAL.slice(0, 36), 'CC-101', 'CC-101', 'CC-101', 'CC-101']
+    // CC-101 já aparece 2x entre os 36 primeiros; garante > 3
     const r = validarBaralhoDuelo(b)
     expect(r.ok).toBe(false)
-    if (!r.ok) expect(r.erros.some((m) => m.includes('CC-001') && m.includes('máximo 3'))).toBe(true)
+    if (!r.ok) expect(r.erros.some((m) => m.includes('CC-101') && m.includes('máximo 3'))).toBe(true)
   })
 
   it('aceita exatamente 3 cópias', () => {
-    const b = ['CC-001', 'CC-001', 'CC-001', ...Array.from({ length: 37 }, (_, i) => `CC-${String(2 + Math.floor(i / 3)).padStart(3, '0')}`)]
+    const b = ['CC-101', 'CC-101', 'CC-101', ...Array.from({ length: 37 }, (_, i) => `CC-${String(102 + Math.floor(i / 3)).padStart(3, '0')}`)]
     expect(validarBaralhoDuelo(b)).toEqual({ ok: true })
   })
 

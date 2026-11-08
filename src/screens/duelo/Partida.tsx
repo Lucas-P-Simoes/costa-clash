@@ -21,6 +21,7 @@ import { resolverConteudoInspecao } from '../../components/duelo/resolverInspeca
 import { useFocoDialogo } from '../../components/duelo/useFocoDialogo'
 import { descricaoCarta } from '../../components/duelo/textoCarta'
 import { IconeCartas } from '../../components/ui/Icones'
+import { DialogoCarta } from '../../components/ui/DialogoCarta'
 import { MolduraOrnamentada } from '../../components/ui/MolduraOrnamentada'
 import { CATALOGO } from '../../data/catalogo'
 import type { Oponente } from '../../data/oponentes'
@@ -39,6 +40,7 @@ import {
   visaoParaJogador,
 } from '../../game'
 import type { Comando, ComandoAtacar, ComandoJogarCarta, EstadoDuelo, Evento, IdJogador, PassoIA, Posicao, UnidadeEmCampo, VisaoDuelo } from '../../game'
+import type { Carta } from '../../game/tipos'
 import { estadoDeVisao } from '../../game/visao'
 import { CenaCorrupcao } from './CenaCorrupcao'
 import { ResultadoDuelo } from './ResultadoDuelo'
@@ -143,6 +145,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const [avisoBruto, setAviso] = useState<Aviso | null>(null)
   const [confirma, setConfirma] = useState(false)
   const [colocacaoPendente, setColocacaoPendente] = useState<ComandoJogarCarta | null>(null)
+  const [cartaInfo, setCartaInfo] = useState<Carta | null>(null)
   const [, setFoco] = useState<string | null>(null)
   const [gatilhosInspecao, setGatilhosInspecao] = useState<GatilhosInspecao>(SEM_GATILHOS_INSPECAO)
   const [setaHumana, setSetaHumana] = useState<SetaVisual | null>(null)
@@ -985,6 +988,19 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
             onPointerDown={lado === 'humano' && atacantePossivel ? (e) => iniciarAtaquePointer(z, e) : undefined}
           />
         </span>
+        <button
+          type="button"
+          className="carta-info"
+          aria-label={`Informações sobre ${c.nome}`}
+          title="Informações da carta"
+          onPointerDown={(e) => e.stopPropagation()}
+          onClick={(e) => {
+            e.stopPropagation()
+            setCartaInfo(c)
+          }}
+        >
+          i
+        </button>
         {lado === 'humano' ? (
           <button
             type="button"
@@ -1022,7 +1038,7 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const desistirVisivel = confirma && (!estado.resultado || reproduzindo)
   // O resultado espera a cena de confronto do golpe final terminar (para a queima ficar visível).
   const resultadoVisivel = !!estado.resultado && !reproduzindo && (!confronto || estado.resultado.motivo === 'desistencia')
-  const dialogoAberto = !!colocacaoPendente || desistirVisivel || resultadoVisivel
+  const dialogoAberto = !!colocacaoPendente || desistirVisivel || resultadoVisivel || !!cartaInfo
   // Tutorial vencido: antes do resultado, a cena em que o Guardião começa a ser corrompido.
   const corrupcaoVisivel = !!tutorial && resultadoVisivel && estado.resultado?.vencedor === 'humano' && !corrupcaoVista
   const passoTutorial = tutorial && !dialogoAberto && !reproduzindo ? passoAtual(estado, passosConfirmados) : null
@@ -1119,6 +1135,19 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
                         arrastando={arr?.uid === m.uid}
                         inativa={!minhaVez}
                       />
+                      <button
+                        type="button"
+                        className="carta-info carta-info--mao"
+                        aria-label={`Informações sobre ${c.nome}`}
+                        title="Informações da carta"
+                        onPointerDown={(e) => e.stopPropagation()}
+                        onClick={(e) => {
+                          e.stopPropagation()
+                          setCartaInfo(c)
+                        }}
+                      >
+                        i
+                      </button>
                     </div>
                   )
                 })}
@@ -1257,6 +1286,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
           onVoltar={onVoltar}
         />
       ) : null}
+
+      {cartaInfo ? <DialogoCarta carta={cartaInfo} onFechar={() => setCartaInfo(null)} /> : null}
     </div>
   )
 }

@@ -1,6 +1,6 @@
-# Lote piloto de ilustrações (5 cartas)
+# Lote piloto de ilustrações (4 cartas)
 
-> AVISO: nenhuma ilustração final foi gerada. Este arquivo contém apenas prompts para o dono (ou um serviço autorizado) gerar as imagens. Tamanho final desejado: 768x1024 (3:4), PNG ou WebP, sem texto, moldura, selo nem ATK/DEF.
+> AVISO: este arquivo contém apenas prompts e sua exportação não gera imagens. Tamanho final desejado: 768x1024 (3:4), PNG ou WebP, sem texto, moldura, selo nem ATK/DEF.
 
 Gerado por `npm run arte:prompts` (não editar à mão). Versão legível por máquina: `docs/arte/prompts-piloto.json`.
 
@@ -8,133 +8,133 @@ Como usar: cole o prompt (português ou inglês) em qualquer gerador (ChatGPT/gp
 
 Seeds valem para geradores que aceitam seed (Stable Diffusion, Midjourney `--seed`); gpt-image, Gemini e Ideogram não garantem reprodução por seed.
 
-## CC-001 — Manguezal Protegido
+## CC-101 — CHAMA-MARÉ
 
-- Categoria: Ecossistema (manguezal)
-- Paleta: Ecossistemas: verdes, azuis e tons naturais
-- Forma de composição: cena
-- Arquivo esperado: `001.webp` (768x1024)
-- Seeds sugeridas: 1026, 2044, 3074
-
-Prompt (português, canônico):
-
-```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: cena de manguezal em plano amplo, uma grande árvore de mangue ao centro com copa densa verde-amarelada e raízes escora aéreas imponentes em arco descendo até a água rasa azul-turquesa, outras árvores de mangue ao fundo, luz dourada filtrada e reflexos na água. Paleta e luz: verdes profundos e amarelados de folhagem (#1f6e3a, #37b05f, #b8d430), azul-turquesa da água (#1f6f9c, #3fdcf0), marrons de raízes e areia (#8a5a2c, #e8d49a), luz dourada filtrada e céu azul com nuvens brancas em pixels. Composição: cena em plano médio com o elemento principal grande no centro, primeiro plano, plano médio e fundo bem definidos; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas bordas. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
-```
-
-Prompt (inglês):
-
-```text
-Collectible card illustration in retro pixel art (PlayStation 1 / modern 16-bit style), a complete scene filling the whole frame with a large, centered main subject, thin dark defined outlines, vibrant saturated harmonized colors (warm orange against turquoise blue), dramatic lighting with deep shadows, visible pixel textures with subtle dithering, high detail density, polished collectible card art finish, vertical 3:4 aspect ratio. Subject: a wide mangrove scene, one large mangrove tree at the center with a dense yellow-green canopy and towering aerial stilt roots arching down into shallow turquoise water, more mangrove trees behind, filtered golden light and reflections on the water. Palette and light: deep and yellowish foliage greens (#1f6e3a, #37b05f, #b8d430), turquoise water (#1f6f9c, #3fdcf0), root and sand browns (#8a5a2c, #e8d49a), filtered golden light and blue sky with white pixel clouds. Composition: medium-shot scene with the main element large at the center, clearly defined foreground, midground and background; main element within the central band (20% to 80% of the height) with a 10% safety margin at the edges. Avoid: photography, realism, simplified childish style, generic library icons, emojis, mixed styles. No text, no frame, no ATK/DEF, no logo.
-```
-
-Variações sugeridas:
-- Variação A: igual ao prompt base (referência).
-- Variação B: enquadramento um pouco mais fechado no elemento principal.
-- Variação C: mesma cena com outra hora do dia (pôr do sol dourado ou luz de meio-dia), mantendo a paleta.
-
-Critérios de aprovação visual (específicos):
-- [ ] Raízes escora aéreas grandes e legíveis ocupando o centro
-- [ ] Copa verde-amarelada densa e água azul-turquesa com reflexos
-- [ ] Árvore central clara, sem aparência de floresta genérica
-
-## CC-018 — Tartaruga Marinha
-
-- Categoria: Fauna / vida marinha (tartaruga)
+- Categoria: Manguezal
 - Paleta: Vida marinha: azuis e turquesas
 - Forma de composição: criatura
-- Arquivo esperado: `018.webp` (768x1024)
-- Seeds sugeridas: 18179, 36095, 54091
+- Arquivo esperado: `101.webp` (768x1024)
+- Seeds sugeridas: 101926, 202344, 303174
 
 Prompt (português, canônico):
 
 ```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: tartaruga marinha majestosa em primeiro plano nadando para a direita sobre um recife de coral colorido em laranja, rosa e roxo, casco verde-azulado com bordas douradas, raios de luz solar atravessando a água azul-turquesa a partir da superfície, peixes pequenos e bolhas ao redor. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
+Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: CHAMA-MARÉ, animal com anatomia reconhecível coerente com a classificação informada (Animal - Crustáceo - Decapoda), em cena natural no ambiente informado: Manguezal, com destaque visual para a característica informada: Grande Garra. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
 ```
 
 Prompt (inglês):
 
 ```text
-Collectible card illustration in retro pixel art (PlayStation 1 / modern 16-bit style), a complete scene filling the whole frame with a large, centered main subject, thin dark defined outlines, vibrant saturated harmonized colors (warm orange against turquoise blue), dramatic lighting with deep shadows, visible pixel textures with subtle dithering, high detail density, polished collectible card art finish, vertical 3:4 aspect ratio. Subject: a majestic sea turtle in the foreground swimming to the right over a colorful coral reef in orange, pink and purple, blue-green shell with golden edges, sunbeams piercing the turquoise water from the surface, small fish and bubbles around. Palette and light: deep blues and turquoises (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), golden sunbeams descending from the surface, warm coral accents in orange, pink and purple (#f0a63a, #e0603a, #a050c0). Composition: creature or animal in a medium shot, centered, filling about 60% of the frame height, readable silhouette, lit eyes or focal point, a complete setting behind it; main element within the central band (20% to 80% of the height) with a 10% safety margin on the sides. Avoid: photography, realism, simplified childish style, generic library icons, emojis, mixed styles. No text, no frame, no ATK/DEF, no logo.
+Collectible card illustration in retro pixel art (PlayStation 1 / modern 16-bit style), a complete scene filling the whole frame with a large, centered main subject, thin dark defined outlines, vibrant saturated harmonized colors (warm orange against turquoise blue), dramatic lighting with deep shadows, visible pixel textures with subtle dithering, high detail density, polished collectible card art finish, vertical 3:4 aspect ratio. Subject: the animal identified in Portuguese as CHAMA-MARÉ, with recognizable anatomy consistent with the provided classification (Animal - Crustáceo - Decapoda), in a natural scene set in the provided environment: Manguezal, visually emphasizing the provided characteristic: Grande Garra. Palette and light: deep blues and turquoises (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), golden sunbeams descending from the surface, warm coral accents in orange, pink and purple (#f0a63a, #e0603a, #a050c0). Composition: creature or animal in a medium shot, centered, filling about 60% of the frame height, readable silhouette, lit eyes or focal point, a complete setting behind it; main element within the central band (20% to 80% of the height) with a 10% safety margin on the sides. Avoid: photography, realism, simplified childish style, generic library icons, emojis, mixed styles. No text, no frame, no ATK/DEF, no logo.
 ```
 
 Variações sugeridas:
 - Variação A: igual ao prompt base (referência).
 - Variação B: enquadramento um pouco mais fechado no elemento principal.
-- Variação C: mesma cena com outra hora do dia (pôr do sol dourado ou luz de meio-dia), mantendo a paleta.
+- Variação C: mesma cena com outra hora do dia, mantendo a paleta.
 
 Critérios de aprovação visual (específicos):
-- [ ] Tartaruga majestosa em primeiro plano, casco com padrão detalhado e bordas douradas
-- [ ] Raios de luz subaquáticos e recife colorido sem poluir a silhueta
-- [ ] Sem lixo ou redes na cena (a carta fala de proteção da espécie)
+- [ ] Chama-maré reconhecível e central
+- [ ] Vegetação e água do manguezal legíveis
+- [ ] Silhueta clara em pixel art
 
-## CC-047 — Poluição do Mar
+## CC-131 — BOLACHA-DO-MAR-DE-CINCO-FUROS
 
-- Categoria: Impacto ambiental (poluição do mar)
-- Paleta: Impactos: vermelhos, roxos e tons sombrios
+- Categoria: Infralitoral
+- Paleta: Vida marinha: azuis e turquesas
 - Forma de composição: criatura
-- Arquivo esperado: `047.webp` (768x1024)
-- Seeds sugeridas: 47440, 94182, 141120
+- Arquivo esperado: `131.webp` (768x1024)
+- Seeds sugeridas: 132196, 262434, 393204
 
 Prompt (português, canônico):
 
 ```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: monstro de lixo, uma montanha de garrafas plásticas coloridas, pneu, latas e sacos formando uma criatura com boca de dentes pontiagudos e olhos laranja-brasa, fumaça e céu de tempestade roxo-escuro ao fundo, entulho no chão. Paleta e luz: tons sombrios de roxo-escuro e preto-azulado (#2a1a40, #0a0a14, #8a5ac4), cinza-chumbo (#6a6a72), céu de tempestade com fumaça, acentos de brasa laranja-avermelhada nos olhos e rachaduras (#e0602a, #c4402a), objetos coloridos saturados em contraste com o fundo escuro. Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
+Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: BOLACHA-DO-MAR-DE-CINCO-FUROS, animal com anatomia reconhecível coerente com a classificação informada (Animal - Equinodermata - Echinoidea), em cena natural no ambiente informado: Infralitoral. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
 ```
 
 Prompt (inglês):
 
 ```text
-Collectible card illustration in retro pixel art (PlayStation 1 / modern 16-bit style), a complete scene filling the whole frame with a large, centered main subject, thin dark defined outlines, vibrant saturated harmonized colors (warm orange against turquoise blue), dramatic lighting with deep shadows, visible pixel textures with subtle dithering, high detail density, polished collectible card art finish, vertical 3:4 aspect ratio. Subject: a trash monster, a mountain of colorful plastic bottles, tire, cans and bags forming a creature with a jagged-toothed mouth and ember-orange eyes, smoke and a dark purple storm sky behind, rubble on the ground. Palette and light: somber dark purple and blue-black tones (#2a1a40, #0a0a14, #8a5ac4), lead grey (#6a6a72), stormy sky with smoke, ember orange-red accents in eyes and cracks (#e0602a, #c4402a), saturated colorful objects contrasting with the dark background. Composition: creature or animal in a medium shot, centered, filling about 60% of the frame height, readable silhouette, lit eyes or focal point, a complete setting behind it; main element within the central band (20% to 80% of the height) with a 10% safety margin on the sides. Avoid: photography, realism, simplified childish style, generic library icons, emojis, mixed styles. No text, no frame, no ATK/DEF, no logo.
+Collectible card illustration in retro pixel art (PlayStation 1 / modern 16-bit style), a complete scene filling the whole frame with a large, centered main subject, thin dark defined outlines, vibrant saturated harmonized colors (warm orange against turquoise blue), dramatic lighting with deep shadows, visible pixel textures with subtle dithering, high detail density, polished collectible card art finish, vertical 3:4 aspect ratio. Subject: the animal identified in Portuguese as BOLACHA-DO-MAR-DE-CINCO-FUROS, with recognizable anatomy consistent with the provided classification (Animal - Equinodermata - Echinoidea), in a natural scene set in the provided environment: Infralitoral. Palette and light: deep blues and turquoises (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), golden sunbeams descending from the surface, warm coral accents in orange, pink and purple (#f0a63a, #e0603a, #a050c0). Composition: creature or animal in a medium shot, centered, filling about 60% of the frame height, readable silhouette, lit eyes or focal point, a complete setting behind it; main element within the central band (20% to 80% of the height) with a 10% safety margin on the sides. Avoid: photography, realism, simplified childish style, generic library icons, emojis, mixed styles. No text, no frame, no ATK/DEF, no logo.
 ```
 
 Variações sugeridas:
 - Variação A: igual ao prompt base (referência).
 - Variação B: enquadramento um pouco mais fechado no elemento principal.
-- Variação C: mesma cena com outra hora do dia (pôr do sol dourado ou luz de meio-dia), mantendo a paleta.
+- Variação C: mesma cena com outra hora do dia, mantendo a paleta.
 
 Critérios de aprovação visual (específicos):
-- [ ] Criatura de resíduos legível, olhos de brasa e boca de dentes
-- [ ] Resíduos reconhecíveis (garrafas, pneu, latas) sem virar apologia
-- [ ] Fundo de tempestade roxo contrastando com objetos coloridos
+- [ ] Bolacha-do-mar reconhecível sobre o fundo
+- [ ] Cena subaquática coerente
+- [ ] Sem texto ou moldura embutidos
 
-## CC-031 — Pesca Artesanal
+## CC-153 — CRISTA-DE-GALO
 
-- Categoria: Comunidade tradicional / atividade (pesca artesanal)
-- Paleta: Comunidades tradicionais: cores naturais
-- Forma de composição: personagem
-- Arquivo esperado: `031.webp` (768x1024)
-- Seeds sugeridas: 31296, 62134, 93104
+- Categoria: Costão rochoso
+- Paleta: Vida marinha: azuis e turquesas
+- Forma de composição: criatura
+- Arquivo esperado: `153.webp` (768x1024)
+- Seeds sugeridas: 154394, 306500, 459226
 
 Prompt (português, canônico):
 
 ```text
-Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: barco de pesca artesanal de madeira com casco vermelho e azul e cabine amarela, pescador na cabine, rede de pesca colorida lançada ao mar, céu de pôr do sol laranja e roxo com gaivotas, ondas ao redor, retrato digno e respeitoso, sem caricatura. Paleta e luz: cores naturais: madeira (#8a5a2c, #5a3a1a), palha e areia (#d8c690), azul-mar (#1f6f9c), vermelho e azul desbotados de casco de barco, pôr do sol dourado e laranja refletido no mar (#f2a03a, #e86a3a, #8a5aa0). Composição: personagem ou veículo em plano médio, de frente ou três quartos, digno e expressivo, ferramentas do ofício visíveis, centralizado; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
+Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: uma colônia de cracas, cirrípedes sésseis da ordem Sessilia, com corpos calcários baixos em forma de pequenos vulcões e bases largas cimentadas diretamente à rocha do costão; placas operculares visíveis no topo, sem pedúnculos, hastes, caules ou pescoços. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
 ```
 
 Prompt (inglês):
 
 ```text
-Collectible card illustration in retro pixel art (PlayStation 1 / modern 16-bit style), a complete scene filling the whole frame with a large, centered main subject, thin dark defined outlines, vibrant saturated harmonized colors (warm orange against turquoise blue), dramatic lighting with deep shadows, visible pixel textures with subtle dithering, high detail density, polished collectible card art finish, vertical 3:4 aspect ratio. Subject: a wooden artisanal fishing boat with a red and blue hull and yellow cabin, a fisher in the cabin, a colorful fishing net cast into the sea, orange and purple sunset sky with gulls, waves around, a dignified and respectful portrayal, no caricature. Palette and light: natural colors: wood (#8a5a2c, #5a3a1a), straw and sand (#d8c690), sea blue (#1f6f9c), faded red and blue of boat hulls, golden and orange sunset reflected on the sea (#f2a03a, #e86a3a, #8a5aa0). Composition: character or vehicle in a medium shot, front or three-quarter view, dignified and expressive, tools of the trade visible, centered; main element within the central band (20% to 80% of the height) with a 10% safety margin on the sides. Avoid: photography, realism, simplified childish style, generic library icons, emojis, mixed styles. No text, no frame, no ATK/DEF, no logo.
+Collectible card illustration in retro pixel art (PlayStation 1 / modern 16-bit style), a complete scene filling the whole frame with a large, centered main subject, thin dark defined outlines, vibrant saturated harmonized colors (warm orange against turquoise blue), dramatic lighting with deep shadows, visible pixel textures with subtle dithering, high detail density, polished collectible card art finish, vertical 3:4 aspect ratio. Subject: a colony of acorn barnacles, sessile cirripedes of the order Sessilia, with low volcano-shaped calcareous bodies and broad bases cemented directly to intertidal rock; visible opercular plates on top, with no peduncles, stalks, stems, or necks. Palette and light: deep blues and turquoises (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), golden sunbeams descending from the surface, warm coral accents in orange, pink and purple (#f0a63a, #e0603a, #a050c0). Composition: creature or animal in a medium shot, centered, filling about 60% of the frame height, readable silhouette, lit eyes or focal point, a complete setting behind it; main element within the central band (20% to 80% of the height) with a 10% safety margin on the sides. Avoid: photography, realism, simplified childish style, generic library icons, emojis, mixed styles. No text, no frame, no ATK/DEF, no logo.
 ```
 
 Variações sugeridas:
 - Variação A: igual ao prompt base (referência).
 - Variação B: enquadramento um pouco mais fechado no elemento principal.
-- Variação C: mesma cena com outra hora do dia (pôr do sol dourado ou luz de meio-dia), mantendo a paleta.
+- Variação C: mesma cena com outra hora do dia, mantendo a paleta.
 
 Critérios de aprovação visual (específicos):
-- [ ] Barco de madeira artesanal e rede de pesca bem visíveis
-- [ ] Retrato digno e respeitoso, sem estereótipos ou caricatura
-- [ ] Pôr do sol com contraste laranja e azul coerente com a referência
+- [ ] Cracas sésseis cimentadas à rocha
+- [ ] Sem pedúnculos ou hastes
+- [ ] Placas calcárias e maré legíveis
+
+## CC-170 — BALEIA DE BRYDE
+
+- Categoria: Costa brasileira
+- Paleta: Vida marinha: azuis e turquesas
+- Forma de composição: criatura
+- Arquivo esperado: `170.webp` (768x1024)
+- Seeds sugeridas: 171547, 340551, 510243
+
+Prompt (português, canônico):
+
+```text
+Ilustração de carta colecionável em pixel art retrô (estilo PlayStation 1 / 16-bit moderno), cena completa preenchendo todo o quadro com o elemento principal grande e centralizado, contornos escuros finos e definidos, cores vibrantes e saturadas harmonizadas (contraste de laranja quente com azul-turquesa), iluminação dramática com sombras profundas, texturas em pixels visíveis com dithering sutil, alta densidade de detalhes, acabamento polido de arte de carta colecionável, proporção vertical 3:4. Assunto: BALEIA DE BRYDE, animal com anatomia reconhecível coerente com a classificação informada (Animal - Mamífero - Cetáceo), em cena natural no ambiente informado: Costa Brasileira. Paleta e luz: azuis e turquesas profundos (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), raios de luz solar dourada descendo da superfície, acentos quentes de coral em laranja, rosa e roxo (#f0a63a, #e0603a, #a050c0). Composição: criatura ou animal em plano médio, centralizado, ocupando cerca de 60% da altura do quadro, silhueta legível, olhos ou ponto focal iluminados, cenário completo ao fundo; elemento principal dentro da faixa central (25% a 75% da altura) com margem de segurança de 10% nas laterais. Evitar: fotografia, realismo, estilo infantil simplificado, ícones genéricos de biblioteca, emojis, mistura de estilos. Sem texto, sem moldura, sem ATK/DEF, sem logotipo.
+```
+
+Prompt (inglês):
+
+```text
+Collectible card illustration in retro pixel art (PlayStation 1 / modern 16-bit style), a complete scene filling the whole frame with a large, centered main subject, thin dark defined outlines, vibrant saturated harmonized colors (warm orange against turquoise blue), dramatic lighting with deep shadows, visible pixel textures with subtle dithering, high detail density, polished collectible card art finish, vertical 3:4 aspect ratio. Subject: the animal identified in Portuguese as BALEIA DE BRYDE, with recognizable anatomy consistent with the provided classification (Animal - Mamífero - Cetáceo), in a natural scene set in the provided environment: Costa Brasileira. Palette and light: deep blues and turquoises (#0e3a5c, #1f6f9c, #3fdcf0, #8fe8f5), golden sunbeams descending from the surface, warm coral accents in orange, pink and purple (#f0a63a, #e0603a, #a050c0). Composition: creature or animal in a medium shot, centered, filling about 60% of the frame height, readable silhouette, lit eyes or focal point, a complete setting behind it; main element within the central band (20% to 80% of the height) with a 10% safety margin on the sides. Avoid: photography, realism, simplified childish style, generic library icons, emojis, mixed styles. No text, no frame, no ATK/DEF, no logo.
+```
+
+Variações sugeridas:
+- Variação A: igual ao prompt base (referência).
+- Variação B: enquadramento um pouco mais fechado no elemento principal.
+- Variação C: mesma cena com outra hora do dia, mantendo a paleta.
+
+Critérios de aprovação visual (específicos):
+- [ ] Baleia-de-Bryde reconhecível
+- [ ] Escala oceânica e movimento legíveis
+- [ ] Contraste adequado à moldura
 
 ## Critérios gerais (todas as cartas)
 
 - [ ] Pixel art retrô PS1 reconhecível, com pixels visíveis (não parece foto, 3D nem vetor suave)
-- [ ] Mesma identidade das 18 ilustrações de Referencia-telas/Estilos-de-cartas.webp (paleta, luz, densidade)
+- [ ] Mesma identidade visual do catálogo atual (paleta, luz e densidade)
 - [ ] Cena completa preenchendo o quadro, elemento principal grande e centralizado
-- [ ] Elemento principal legível dentro da faixa central (25% a 75% da altura) após o recorte da janela de arte
+- [ ] Elemento principal legível dentro da faixa central após o recorte da janela de arte
 - [ ] Nenhum texto, letra, número, logotipo, moldura, selo ou ATK/DEF desenhado na imagem
-- [ ] Conteúdo ambientalmente defensável e respeitoso (sem estereótipos, sem apologia a impactos)
-- [ ] Vertical 3:4, preferencialmente 768x1024, PNG ou WebP, sem artefatos de compressão fortes
+- [ ] Conteúdo ambientalmente defensável e respeitoso
+- [ ] Vertical 3:4, preferencialmente 768x1024, PNG ou WebP, sem artefatos fortes
 

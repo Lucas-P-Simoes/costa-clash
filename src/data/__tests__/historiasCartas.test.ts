@@ -3,9 +3,10 @@ import { CATALOGO } from '../catalogo'
 import { HISTORIAS_CARTAS } from '../historiasCartas'
 
 describe('histórias das cartas', () => {
-  it('toda carta do catálogo tem uma história, e não há histórias órfãs', () => {
-    for (const c of CATALOGO) expect(HISTORIAS_CARTAS[c.id], c.id).toBeTruthy()
-    expect(Object.keys(HISTORIAS_CARTAS).sort()).toEqual(CATALOGO.map((c) => c.id).sort())
+  it('toda carta tem história editorial ou informação educacional de fallback, sem histórias órfãs', () => {
+    for (const c of CATALOGO) expect(HISTORIAS_CARTAS[c.id] ?? c.educacao, c.id).toBeTruthy()
+    const ids = new Set(CATALOGO.map((c) => c.id))
+    for (const id of Object.keys(HISTORIAS_CARTAS)) expect(ids.has(id), id).toBe(true)
   })
 
   it('textos têm tamanho razoável e não afirmam eliminação total de riscos', () => {

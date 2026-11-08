@@ -76,7 +76,7 @@ describe('IA do tutorial', () => {
   })
 
   it('sem o decisor do tutorial a IA normal continua atacando (comportamento padrão intacto)', () => {
-    const e = cenario({ ativo: 'oponente', fase: 'COMBATE', turno: 4, oponente: { campo: ['CC-056'] }, humano: { campo: ['CC-001'] } })
+    const e = cenario({ ativo: 'oponente', fase: 'COMBATE', turno: 4, oponente: { campo: ['CC-156'] }, humano: { campo: ['CC-101'] } })
     const ia = executarTurnoIAComPassos(e)
     if (!ia.ok) throw new Error(ia.erro)
     expect(ia.eventos.some((ev) => ev.tipo === 'ataque_declarado')).toBe(true)
@@ -109,7 +109,7 @@ describe('demonstração de arrasto e alvos em vermelho', () => {
   })
 
   it('"atacar": sem unidade do Guardião em campo o alvo é a vida dele', () => {
-    const e = cenario({ turno: 3, fase: 'COMBATE', jogadaFeita: true, humano: { campo: ['CC-043'] }, oponente: { campo: [] } })
+    const e = cenario({ turno: 3, fase: 'COMBATE', jogadaFeita: true, humano: { campo: ['CC-143'] }, oponente: { campo: [] } })
     expect(passo('atacar').arrasto!(e)).toMatchObject({ para: '[aria-label^="Vida do oponente"]' })
   })
 
@@ -117,7 +117,7 @@ describe('demonstração de arrasto e alvos em vermelho', () => {
     const baixar = passo('baixar').balaos!(novoTutorial())
     expect(baixar.map((b) => [b.numero, b.texto])).toEqual([[1, 'Pegue esta carta'], [2, 'Solte aqui']])
     expect(baixar.map((b) => b.alvo)).toEqual([passo('baixar').arrasto!(novoTutorial())!.de, passo('baixar').arrasto!(novoTutorial())!.para])
-    const direto = cenario({ turno: 3, fase: 'COMBATE', jogadaFeita: true, humano: { campo: ['CC-043'] }, oponente: { campo: [] } })
+    const direto = cenario({ turno: 3, fase: 'COMBATE', jogadaFeita: true, humano: { campo: ['CC-143'] }, oponente: { campo: [] } })
     expect(passo('atacar').balaos!(direto).map((b) => b.texto)).toEqual(['Arraste sua unidade', 'até a vida do Guardião'])
   })
 

@@ -21,7 +21,7 @@ export interface VerificacaoArquivo {
 export interface EntradaManifesto {
   id: string
   nome: string
-  /** Nome de arquivo estável baseado no número do ID (001.webp; 001.png se for PNG). */
+  /** Nome de arquivo estável baseado no número do ID (101.webp; 101.png se for PNG). */
   arquivo: string
   estado: EstadoArte
   /** Prompt completo em português (canônico). */

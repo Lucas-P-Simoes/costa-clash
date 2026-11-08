@@ -24,7 +24,7 @@ describe('QA useRecompensaDuelo', () => {
     await waitFor(() => expect(s.resgatarVitoria).toHaveBeenCalledWith('d-1'))
     rerender({ p: 2 })
     expect(result.current.recompensa).toBeUndefined()
-    await act(async () => liberar({ ok: true, carta: 'CC-001', quantidade: 1, colecao: [{ cartaId: 'CC-001', quantidade: 1 }] }))
+    await act(async () => liberar({ ok: true, carta: 'CC-101', quantidade: 1, colecao: [{ cartaId: 'CC-101', quantidade: 1 }] }))
     // A carta da partida anterior não "vaza" para a nova; a coleção (verdade do servidor) ainda é atualizada.
     expect(result.current.recompensa).toBeUndefined()
     expect(aoAtualizar).toHaveBeenCalledTimes(1)
@@ -51,7 +51,7 @@ describe('QA useRecompensaDuelo', () => {
   it('re-render com usuário novo (coleção atualizada) não registra outro duelo', () => {
     const s = { entrar: vi.fn(), iniciarDuelo: vi.fn(async () => ({ ok: true as const, dueloId: 'd' })) } satisfies ServicoAuth
     const { rerender } = renderHook(({ u }) => useRecompensaDuelo('ressaca', 1, u, s), { initialProps: { u: usuario } })
-    rerender({ u: { ...usuario, colecao: [{ cartaId: 'CC-001', quantidade: 2 }] } })
+    rerender({ u: { ...usuario, colecao: [{ cartaId: 'CC-101', quantidade: 2 }] } })
     expect(s.iniciarDuelo).toHaveBeenCalledTimes(1)
   })
 })

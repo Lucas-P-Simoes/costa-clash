@@ -10,10 +10,10 @@ afterEach(cleanup)
 const usuario: UsuarioAutenticado = {
   id: 'u1',
   email: 'ana@exemplo.com',
-  baralho: Array<string>(40).fill('CC-001'),
+  baralho: Array<string>(40).fill('CC-101'),
   colecao: [
-    { cartaId: 'CC-001', quantidade: 25 },
-    { cartaId: 'CC-002', quantidade: 15 },
+    { cartaId: 'CC-101', quantidade: 25 },
+    { cartaId: 'CC-102', quantidade: 15 },
   ],
 }
 

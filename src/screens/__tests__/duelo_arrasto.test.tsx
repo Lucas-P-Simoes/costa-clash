@@ -23,7 +23,7 @@ const q = <T extends Element = HTMLElement>(s: string) => document.querySelector
 const qa = (s: string) => [...document.querySelectorAll<HTMLElement>(s)]
 
 function montar(cfg: ConfigCenario = {}) {
-  const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-001'] }, ...cfg })
+  const e = cenario({ humano: { baralho: 20 }, oponente: { baralho: 20, mao: ['CC-101'] }, ...cfg })
   return render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={0} onVoltar={() => {}} onNovamente={() => {}} />)
 }
 
@@ -46,18 +46,18 @@ const confirmarFaceParaCima = () => fireEvent.click(screen.getByRole('button', {
 
 describe('Arrastar: unidade para zona livre', () => {
   it('entra na zona solta, com a animação de entrada, e o resultado é igual ao do fluxo por botão', async () => {
-    montar({ humano: { mao: ['CC-003', 'CC-004'] } })
+    montar({ humano: { mao: ['CC-103', 'CC-104'] } })
     arrastar(mao(1), zonaDoJogador(2))
     await tick()
     confirmarFaceParaCima()
     const carta = q('.duelo-lado--voce .duelo-zonas > .zona:nth-child(3) .carta')
-    expect(carta.getAttribute('aria-label')).toMatch(/^Zona 3 sua: Recife de Coral, ATK 1600, DEF 1500, em ataque/)
+    expect(carta.getAttribute('aria-label')).toMatch(/^Zona 3 sua: CARANGUEJO-AZUL, ATK 2000, DEF 2000, em ataque/)
     expect(carta.className).toContain('carta--fx-entrando')
     const viaArrasto = tabuleiro()
     cleanup()
     await tick()
 
-    montar({ humano: { mao: ['CC-003', 'CC-004'] } })
+    montar({ humano: { mao: ['CC-103', 'CC-104'] } })
     fireEvent.click(mao(1))
     fireEvent.click(screen.getByRole('button', { name: /Zona 3 sua: vazia/ }))
     confirmarFaceParaCima()
@@ -65,7 +65,7 @@ describe('Arrastar: unidade para zona livre', () => {
   })
 
   it('ao soltar, não baixa ainda: abre a mesma escolha e aceita virada para baixo', async () => {
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     arrastar(mao(1), zonaDoJogador(0))
     const dialogo = screen.getByRole('dialog', { name: /^Colocar / })
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
@@ -78,11 +78,11 @@ describe('Arrastar: unidade para zona livre', () => {
   })
 
   it('durante o arrasto: carta fantasma aria-hidden, original esmaecida e zonas livres destacadas', () => {
-    montar({ humano: { mao: ['CC-003'], campo: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-103'], campo: ['CC-101'] } })
     arrastar(mao(1), zonaDoJogador(1), false)
     const f = q('.duelo-arrasto-fantasma')
     expect(f.getAttribute('aria-hidden')).toBe('true')
-    expect(f.textContent).toContain('Recife de Coral')
+    expect(f.textContent).toContain('CARANGUEJO-AZUL')
     expect(mao(1).className).toContain('carta--arrastando')
     const destinos = qa('.zona--drop')
     expect(destinos).toHaveLength(5) // 4 zonas livres + a lixeira; a zona ocupada não é destino
@@ -96,7 +96,7 @@ describe('Arrastar: unidade para zona livre', () => {
   it.skip('campo cheio: arrastar para uma unidade do campo mostra as duas cartas grandes, DESCARTADA na antiga, e substitui', async () => {
     vi.useFakeTimers()
     try {
-      montar({ humano: { mao: ['CC-003'], campo: ['CC-002', 'CC-004', 'CC-005', 'CC-006', 'CC-009'] } })
+      montar({ humano: { mao: ['CC-103'], campo: ['CC-102', 'CC-104', 'CC-105', 'CC-106', 'CC-109'] } })
       arrastar(mao(1), zonaDoJogador(2))
       console.log('AVISO', document.querySelector('.duelo-aviso')?.textContent, !!document.querySelector('[role=dialog]'), zonaDoJogador(2).getAttribute('data-destino'))
       confirmarFaceParaCima()
@@ -107,7 +107,7 @@ describe('Arrastar: unidade para zona livre', () => {
       expect(cena!.getAttribute('aria-hidden')).toBe('true')
       expect(cena!.querySelector('.substituicao__rotulo')?.textContent).toBe('DESCARTADA')
       expect(cena!.querySelectorAll('.carta')).toHaveLength(2)
-      expect(screen.getByRole('button', { name: /Zona 3 sua: Recife de Coral/ })).toBeTruthy()
+      expect(screen.getByRole('button', { name: /Zona 3 sua: CARANGUEJO-AZUL/ })).toBeTruthy()
       act(() => {
         vi.advanceTimersByTime(4000)
       })
@@ -118,7 +118,7 @@ describe('Arrastar: unidade para zona livre', () => {
   })
 
   it('zona ocupada: o motor recusa, a mensagem aparece e nada muda', () => {
-    montar({ humano: { mao: ['CC-003'], campo: ['CC-001'] } })
+    montar({ humano: { mao: ['CC-103'], campo: ['CC-101'] } })
     const antes = tabuleiro()
     arrastar(mao(1), zonaDoJogador(0))
     expect(aviso()).not.toBe('')
@@ -129,7 +129,7 @@ describe('Arrastar: unidade para zona livre', () => {
   })
 
   it('fora do campo (nenhum destino): cancela com motivo curto e sem alterar o estado', () => {
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     const antes = tabuleiro()
     arrastar(mao(1), null)
     expect(aviso()).toBe('Solte a unidade em uma zona livre do seu campo.')
@@ -140,7 +140,7 @@ describe('Arrastar: unidade para zona livre', () => {
 
 describe('Arrastar: cancelar, bloqueios e clique', () => {
   it('Esc cancela o arrasto sem abrir a confirmação de desistência', () => {
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     const antes = tabuleiro()
     arrastar(mao(1), zonaDoJogador(0), false)
     expect(q('.duelo-arrasto-fantasma')).toBeTruthy()
@@ -154,7 +154,7 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
   })
 
   it('jogada da mão já feita: o arrasto inicia (só a lixeira vale) e soltar no campo mostra o motivo do motor', () => {
-    montar({ jogadaFeita: true, humano: { mao: ['CC-003'] } })
+    montar({ jogadaFeita: true, humano: { mao: ['CC-103'] } })
     arrastar(mao(1), zonaDoJogador(0), false)
     expect(document.querySelector('.duelo-arrasto-fantasma')).not.toBeNull()
     expect(qa('.zona--drop')).toHaveLength(1) // só a lixeira
@@ -164,7 +164,7 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
   })
 
   it('soltar na lixeira descarta a carta (mesmo com a jogada da mão já feita) sem gastar a jogada', () => {
-    montar({ jogadaFeita: true, humano: { mao: ['CC-003', 'CC-004'] } })
+    montar({ jogadaFeita: true, humano: { mao: ['CC-103', 'CC-104'] } })
     arrastar(mao(1), q('[data-destino="lixeira"]'))
     expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
     expect(screen.getByLabelText('Cartas descartadas: 1')).toBeTruthy()
@@ -173,12 +173,12 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
   it('soltar na lixeira mostra a carta queimando (decorativa) e o efeito some sozinho; jogar no campo não queima', () => {
     vi.useFakeTimers()
     try {
-      montar({ jogadaFeita: true, humano: { mao: ['CC-003', 'CC-004'] } })
+      montar({ jogadaFeita: true, humano: { mao: ['CC-103', 'CC-104'] } })
       arrastar(mao(1), q('[data-destino="lixeira"]'))
       const queima = document.querySelector('[data-testid="lixeira-queima"]')
       expect(queima).toBeTruthy()
       expect(queima!.getAttribute('aria-hidden')).toBe('true')
-      expect(queima!.textContent).toContain('Recife de Coral')
+      expect(queima!.textContent).toContain('CARANGUEJO-AZUL')
       act(() => {
         vi.advanceTimersByTime(2000)
       })
@@ -187,14 +187,14 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
       vi.useRealTimers()
     }
     cleanup()
-    montar({ humano: { mao: ['CC-003', 'CC-004'] } })
+    montar({ humano: { mao: ['CC-103', 'CC-104'] } })
     arrastar(mao(1), zonaDoJogador(0))
     expect(document.querySelector('[data-testid="lixeira-queima"]')).toBeNull()
   })
 
   it('fora da vez (turno do oponente em reprodução): arrasto desabilitado com motivo', () => {
     vi.useFakeTimers()
-    const e = cenario({ humano: { mao: ['CC-003', 'CC-004'], baralho: 30 }, oponente: { mao: ['CC-001', 'CC-002', 'CC-004', 'CC-005', 'CC-006'], baralho: 30 } })
+    const e = cenario({ humano: { mao: ['CC-103', 'CC-104'], baralho: 30 }, oponente: { mao: ['CC-101', 'CC-102', 'CC-104', 'CC-105', 'CC-106'], baralho: 30 } })
     render(<Partida estadoInicial={e} oponente={buscarOponente('ressaca')!} atrasoIA={100} onVoltar={() => {}} onNovamente={() => {}} />)
     fireEvent.click(mao(1))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
@@ -209,7 +209,7 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
   })
 
   it('clique simples (sem passar o limiar) ainda seleciona; o clique após um arrasto cancelado não alterna a seleção', () => {
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     fireEvent.pointerDown(mao(1), { ...P, clientX: 100, clientY: 500 })
     fireEvent.pointerMove(window, { ...P, clientX: 103, clientY: 502 }) // 3 px: abaixo do limiar
     fireEvent.pointerUp(window, { ...P, clientX: 103, clientY: 502 })
@@ -225,17 +225,17 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
   })
 
   it('alternativa por clique/teclado continua disponível e a dica de arrasto aparece', () => {
-    montar({ humano: { mao: ['CC-003'] } })
+    montar({ humano: { mao: ['CC-103'] } })
     expect(q('.duelo-mao__dica').textContent).toBe('Arraste a carta até o campo ou clique nela e escolha uma zona')
     expect(mao(1).className).toContain('carta--arrastavel')
     fireEvent.click(mao(1))
     fireEvent.click(screen.getByRole('button', { name: /Zona 1 sua: vazia/ }))
     confirmarFaceParaCima()
-    expect(screen.getByRole('button', { name: /Zona 1 sua: Recife de Coral/ })).toBeTruthy()
+    expect(screen.getByRole('button', { name: /Zona 1 sua: CARANGUEJO-AZUL/ })).toBeTruthy()
   })
 
   it('desmontar durante o arrasto remove os ouvintes (nada de erro ao soltar depois)', () => {
-    const { unmount } = montar({ humano: { mao: ['CC-003'] } })
+    const { unmount } = montar({ humano: { mao: ['CC-103'] } })
     arrastar(mao(1), zonaDoJogador(0), false)
     unmount()
     expect(() => fireEvent.pointerUp(window, { ...P, clientX: 1, clientY: 1 })).not.toThrow()

@@ -61,8 +61,8 @@ describe('dados dos adversários', () => {
   })
 
   it('grupos de Urbanização e Porto alinhados ao catálogo; textos revisados', () => {
-    expect(buscarOponente('urbanizacao')!.grupo).toBe('atividade') // CC-033 Urbanização Planejada
-    expect(buscarOponente('porto')!.grupo).toBe('impacto') // CC-058 Expansão Portuária
+    expect(buscarOponente('urbanizacao')!.grupo).toBe('atividade') // CC-133 OURIÇO-DO-MAR-VERDE
+    expect(buscarOponente('porto')!.grupo).toBe('impacto') // CC-158 CARANGUEJO-ARANHA
   })
 
   it('não afirma que algo elimina totalmente um risco', () => {

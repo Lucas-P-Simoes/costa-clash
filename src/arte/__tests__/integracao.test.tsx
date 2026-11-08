@@ -22,68 +22,68 @@ const ver = (id: string, arte?: Parameters<typeof CartaView>[0]['arte']) => {
 
 describe('arteDaCarta (manifesto importado no build)', () => {
   it('só cartas do índice; usa a base do Vite; ignora estados não exibíveis', () => {
-    expect(arteDaCarta('CC-001')).toMatchObject({ estado: 'provisoria' })
-    expect(arteDaCarta('CC-001')!.url).toMatch(/assets\/cards\/art\/001\.png$/)
-    expect(arteDaCarta('CC-002')).toMatchObject({ estado: 'gerada' })
-    expect(arteDaCarta('CC-002')!.url).toMatch(/assets\/cards\/art\/002\.webp$/)
-    expect(arteDaCarta('CC-002', {})).toBeNull()
-    expect(arteDaCarta('CC-001', { 'CC-001': { arquivo: '001.webp', estado: 'rejeitada' } })).toBeNull()
-    expect(arteDaCarta('CC-001', { 'CC-001': { arquivo: '001.webp', estado: 'aprovada' } }, '/x/')).toEqual({ url: '/x/assets/cards/art/001.webp', estado: 'aprovada' })
+    expect(arteDaCarta('CC-101')).toMatchObject({ estado: 'gerada' })
+    expect(arteDaCarta('CC-101')!.url).toMatch(/assets\/cards\/art\/101\.webp$/)
+    expect(arteDaCarta('CC-102')).toMatchObject({ estado: 'gerada' })
+    expect(arteDaCarta('CC-102')!.url).toMatch(/assets\/cards\/art\/102\.webp$/)
+    expect(arteDaCarta('CC-102', {})).toBeNull()
+    expect(arteDaCarta('CC-101', { 'CC-101': { arquivo: '101.webp', estado: 'rejeitada' } })).toBeNull()
+    expect(arteDaCarta('CC-101', { 'CC-101': { arquivo: '101.webp', estado: 'aprovada' } }, '/x/')).toEqual({ url: '/x/assets/cards/art/101.webp', estado: 'aprovada' })
   })
 })
 
 describe('CartaView com e sem ilustração', () => {
   it('carta no manifesto mostra a imagem (pixelada, lazy, alt com o nome) e o selo', () => {
-    const { container } = ver('CC-001')
+    const { container } = ver('CC-101')
     const img = container.querySelector('img.carta__imagem') as HTMLImageElement
     expect(img).toBeTruthy()
-    expect(img.alt).toBe('Ilustração da carta Manguezal Protegido')
+    expect(img.alt).toBe('Ilustração da carta CHAMA-MARÉ')
     expect(img.getAttribute('loading')).toBe('lazy')
-    expect(img.src).toMatch(/001\.png$/)
+    expect(img.src).toMatch(/101\.webp$/)
     expect(container.querySelector('.carta__arte svg')).toBeTruthy() // selo
-    expect(container.querySelector('.carta--cat-verde')).toBeTruthy()
-    expect(container.querySelector('.carta__selo[data-selo="folha"]')).toBeTruthy()
+    expect(container.querySelector('.carta--cat-marinha')).toBeTruthy()
+    expect(container.querySelector('.carta__selo[data-selo="gota"]')).toBeTruthy()
   })
 
   it('carta sem arte usa o SVG de fallback, sem imagem', () => {
-    const { container } = ver('CC-002', null)
+    const { container } = ver('CC-102', null)
     expect(container.querySelector('img')).toBeNull()
     expect(container.querySelector('.carta__arte > svg')).toBeTruthy()
-    expect(container.querySelector('.carta--cat-protegida')).toBeTruthy()
+    expect(container.querySelector('.carta--cat-marinha')).toBeTruthy()
   })
 
   it('arte=null força o fallback; arte explícita é usada', () => {
-    expect(ver('CC-001', null).container.querySelector('img')).toBeNull()
+    expect(ver('CC-101', null).container.querySelector('img')).toBeNull()
     cleanup()
-    const { container } = ver('CC-002', { url: '/a/002.webp', estado: 'gerada' })
+    const { container } = ver('CC-102', { url: '/a/002.webp', estado: 'gerada' })
     expect(container.querySelector('img')!.getAttribute('src')).toBe('/a/002.webp')
   })
 
   it('erro de carregamento cai no SVG de fallback', () => {
-    const { container } = ver('CC-001')
+    const { container } = ver('CC-101')
     fireEvent.error(container.querySelector('img')!)
     expect(container.querySelector('img')).toBeNull()
     expect(container.querySelector('.carta__arte > svg')).toBeTruthy()
   })
 
   it('mantém ATK/DEF e o nome na placa', () => {
-    const { container } = ver('CC-001')
-    expect(container.querySelector('.carta__nome')!.textContent).toBe('Manguezal Protegido')
-    expect(container.querySelector('.carta__atk')!.textContent).toContain('1200')
+    const { container } = ver('CC-101')
+    expect(container.querySelector('.carta__nome')!.textContent).toBe('CHAMA-MARÉ')
+    expect(container.querySelector('.carta__atk')!.textContent).toContain('2500')
     expect(container.querySelector('.carta__def')!.textContent).toContain('2000')
   })
 })
 
 describe('página de avaliação (?arte=1)', () => {
-  it('mostra as 4 cartas piloto com selo PROVISÓRIA, prompt e critérios', () => {
+  it('mostra as 4 cartas piloto atuais com selo GERADA, prompt e critérios', () => {
     render(<PaginaAvaliacaoArte />)
     expect(screen.getAllByRole('article')).toHaveLength(4)
-    expect(screen.getAllByText('PROVISÓRIA — recorte da referência, baixa resolução')).toHaveLength(4)
+    expect(screen.getAllByText('GERADA — aguardando aprovação do dono')).toHaveLength(4)
     expect(document.querySelectorAll('img.carta__imagem')).toHaveLength(4)
     expect(screen.getAllByText('Copiar prompt')).toHaveLength(4)
     expect(screen.getAllByText(/768x1024/).length).toBeGreaterThan(4)
-    expect((screen.getByLabelText('Prompt da carta Tartaruga Marinha') as HTMLTextAreaElement).value).toBe(montarPrompt(carta('CC-018')))
-    expect(screen.getByText(/68 ilustrações geradas/)).toBeTruthy()
+    expect((screen.getByLabelText('Prompt da carta CRISTA-DE-GALO') as HTMLTextAreaElement).value).toBe(montarPrompt(carta('CC-153')))
+    expect(screen.getByText(/70 ilustrações geradas/)).toBeTruthy()
   })
 
   it('sem arte mostra o fallback com o selo PENDENTE — sem arte gerada, sem inventar imagem', () => {
@@ -98,7 +98,7 @@ describe('página de avaliação (?arte=1)', () => {
     render(<PaginaAvaliacaoArte />)
     fireEvent.click(screen.getAllByText('Copiar prompt')[0])
     await waitFor(() => expect(screen.getByText('Prompt copiado.')).toBeTruthy())
-    expect(escrever).toHaveBeenCalledWith(montarPrompt(carta('CC-001')))
+    expect(escrever).toHaveBeenCalledWith(montarPrompt(carta('CC-101')))
   })
 
   it('falha ao copiar mostra aviso', async () => {
