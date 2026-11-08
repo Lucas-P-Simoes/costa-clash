@@ -146,6 +146,10 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   const [confirma, setConfirma] = useState(false)
   const [colocacaoPendente, setColocacaoPendente] = useState<ComandoJogarCarta | null>(null)
   const [cartaInfo, setCartaInfo] = useState<Carta | null>(null)
+  const contadorQueima = useRef(0)
+  const [substituicao, setSubstituicao] = useState<{ id: number; antiga: string; nova: string } | null>(null)
+  const [queimando, setQueimando] = useState<{ id: number; cartaId: string; x: number; y: number } | null>(null)
+  const [arr, setArr] = useState<{ uid: string; x: number; y: number; sobre: string | null } | null>(null)
   const [, setFoco] = useState<string | null>(null)
   const [gatilhosInspecao, setGatilhosInspecao] = useState<GatilhosInspecao>(SEM_GATILHOS_INSPECAO)
   const [setaHumana, setSetaHumana] = useState<SetaVisual | null>(null)
@@ -456,7 +460,8 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
   function descartar() {
     const motivo = motivoDescartarLivre(sel.mao)
     if (motivo || !sel.mao) return dizer(motivo ?? 'Selecione a carta a descartar.', true)
-    enviar({ tipo: 'descartar', jogador: 'humano', uid: sel.mao })
+    const carta = cartaDoUid(sel.mao)
+    if (enviar({ tipo: 'descartar', jogador: 'humano', uid: sel.mao }) && carta) iniciarQueima(carta)
   }
 
   // ---------------------------------------------------------------- cliques no tabuleiro
@@ -593,13 +598,17 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     window.addEventListener('click', engolir, true)
     window.setTimeout(() => engolirRef.current === engolir && pararDeEngolirClique(), 0)
   }
-  const contadorQueima = useRef(0)
-  const [substituicao, setSubstituicao] = useState<{ id: number; antiga: string; nova: string } | null>(null)
-  const [queimando, setQueimando] = useState<{ id: number; cartaId: string; x: number; y: number } | null>(null)
-  const [arr, setArr] = useState<{ uid: string; x: number; y: number; sobre: string | null } | null>(null)
-
   function cartaDoUid(uid: string | undefined) {
     return uid ? cat.get(mao.find((c) => c.uid === uid)?.cartaId ?? '') : undefined
+  }
+
+  /** Posiciona a cena no ponto de soltura ou, para teclado/clique, no centro da câmara. */
+  function iniciarQueima(carta: Carta, ponto?: Ponto) {
+    const zona = document.querySelector<HTMLElement>('[data-destino="lixeira"]')
+    const r = zona?.getBoundingClientRect()
+    const x = ponto?.x ?? (r ? r.left + r.width / 2 : window.innerWidth / 2)
+    const y = ponto?.y ?? (r ? r.top + r.height * 0.48 : window.innerHeight / 2)
+    setQueimando({ id: ++contadorQueima.current, cartaId: carta.id, x, y })
   }
 
   function bloqueioArrasto(uid: string): string | null {
@@ -770,12 +779,10 @@ export function Partida({ estadoInicial, oponente, onVoltar, onNovamente, atraso
     setArr(null)
     if (a.toque && !a.moveu) return // pressão longa solta sem mover: não joga (a carta fica selecionada)
     const r = avaliarDestino(a.uid, destinoSob(e.clientX, e.clientY))
-    if (r.cmd?.tipo === 'descartar') {
-      const descartada = cartaDoUid(a.uid)
-      if (descartada) setQueimando({ id: ++contadorQueima.current, cartaId: descartada.id, x: e.clientX, y: e.clientY })
-    }
-    if (r.cmd) enviarOuEscolherFace(r.cmd)
-    else dizer(r.motivo, true)
+    const descartada = r.cmd?.tipo === 'descartar' ? cartaDoUid(a.uid) : undefined
+    if (r.cmd) {
+      if (enviarOuEscolherFace(r.cmd) && descartada) iniciarQueima(descartada, { x: e.clientX, y: e.clientY })
+    } else dizer(r.motivo, true)
   }
 
   // A cena de substituição (campo cheio) é só visual: some sozinha.

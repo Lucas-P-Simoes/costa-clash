@@ -2,8 +2,8 @@
 // `baralhosOponentes.ts`.
 // ATENÇÃO: descrições (exceto a de Ressaca, que vem da referência visual) e dificuldades são PROVISÓRIAS
 // e aguardam revisão do responsável pelo projeto (ver docs/ESTADO_DO_PROJETO.md).
-// Lista e ordem definidas pelo dono em 08/11/2026 (17 oponentes de impacto). Retratos dos oponentes novos são
-// PLACEHOLDERS (reaproveitam artes existentes) até a arte própria ser entregue.
+// Lista e ordem definidas pelo dono em 08/11/2026 (17 oponentes de impacto). Os 12 chefes destacados pelo
+// responsável receberam retratos próprios em pixel art; os demais preservam seus assets anteriores.
 
 export type NivelDificuldade = 1 | 2 | 3
 export type GrupoOponente = 'ecossistema' | 'fauna' | 'atividade' | 'impacto'
@@ -44,7 +44,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 1,
     grupo: 'impacto',
     descricao: 'Óleo derramado forma uma película na água que pode prejudicar aves, peixes e a vida nas praias e manguezais.',
-    retrato: 'porto.png',
+    retrato: 'mancha-de-oleo.png',
   },
   {
     id: 'erosao-costeira',
@@ -85,7 +85,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 2,
     grupo: 'impacto',
     descricao: 'Sacolas, garrafas e fragmentos de plástico chegam ao mar e podem ferir animais e contaminar a cadeia alimentar.',
-    retrato: 'poluicao-mar.png',
+    retrato: 'poluicao-plastica.png',
   },
   {
     id: 'esgoto-clandestino',
@@ -93,7 +93,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 2,
     grupo: 'impacto',
     descricao: 'Esgoto lançado sem tratamento pode contaminar a água, reduzir o oxigênio e trazer riscos à saúde de banhistas.',
-    retrato: 'chuva-intensa.png',
+    retrato: 'esgoto-clandestino.png',
   },
   {
     id: 'pesca-predatoria',
@@ -101,7 +101,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 2,
     grupo: 'impacto',
     descricao: 'Pescar em excesso ou em época de reprodução pode reduzir os estoques de peixe e afetar quem vive da pesca.',
-    retrato: 'pescador-tradicional.png',
+    retrato: 'pesca-predatoria.png',
   },
   {
     id: 'especies-invasoras',
@@ -109,7 +109,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 3,
     grupo: 'impacto',
     descricao: 'Espécies trazidas de outras regiões podem competir com as nativas por alimento e espaço e alterar o ambiente.',
-    retrato: 'biodiversidade-costeira.png',
+    retrato: 'especies-invasoras.png',
   },
   {
     id: 'mare-vermelha',
@@ -117,7 +117,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 3,
     grupo: 'impacto',
     descricao: 'Proliferação de algas microscópicas que pode liberar toxinas e prejudicar peixes, mariscos e a saúde de quem os consome.',
-    retrato: 'coral.png',
+    retrato: 'mare-vermelha.png',
   },
   {
     id: 'residuos-quimicos',
@@ -125,7 +125,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 3,
     grupo: 'impacto',
     descricao: 'Substâncias químicas lançadas por indústrias e outras fontes podem se acumular na água e nos organismos marinhos.',
-    retrato: 'poluicao-mar.png',
+    retrato: 'residuos-quimicos.png',
   },
   {
     id: 'mineracao',
@@ -133,7 +133,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 3,
     grupo: 'impacto',
     descricao: 'A extração de areia e minérios pode remover vegetação, mexer nos sedimentos e alterar a dinâmica da costa.',
-    retrato: 'erosao-costeira.png',
+    retrato: 'mineracao.png',
   },
   {
     id: 'bitucas-na-areia',
@@ -141,7 +141,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 3,
     grupo: 'impacto',
     descricao: 'Bitucas de cigarro são muito comuns nas praias, demoram a se degradar e podem liberar substâncias tóxicas.',
-    retrato: 'restinga.png',
+    retrato: 'bitucas-na-areia.png',
   },
   {
     id: 'poluicao-farmacos',
@@ -149,7 +149,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 3,
     grupo: 'impacto',
     descricao: 'Resíduos de medicamentos que passam pelo esgoto e não são removidos podem chegar à água e afetar organismos aquáticos.',
-    retrato: 'oceano-limpo.png',
+    retrato: 'poluicao-farmacos.png',
   },
   {
     id: 'guardiao-corrompido',
@@ -157,8 +157,8 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 3,
     grupo: 'impacto',
     descricao: 'O Guardião tomado pela poluição: o mesmo protetor do manguezal, agora a serviço dos impactos que antes combatia.',
-    retrato: 'guardiao-manguezal.png',
-    retratoGrande: 'guardiao-manguezal-grande.png',
+    retrato: 'guardiao-corrompido.png',
+    retratoGrande: 'guardiao-corrompido.png',
   },
   {
     id: 'ser-humano',
@@ -166,7 +166,7 @@ export const OPONENTES: readonly Oponente[] = [
     dificuldade: 3,
     grupo: 'impacto',
     descricao: 'As atividades humanas podem causar ou evitar os impactos na costa. O último duelo põe suas escolhas à prova.',
-    retrato: 'comunidade-caicara.png',
+    retrato: 'ser-humano.png',
   },
 ]
 

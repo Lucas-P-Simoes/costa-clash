@@ -2362,18 +2362,328 @@ button.carta {
   font-size: min(var(--fs-atk), 16.5cqw);
 }
 
-/* lixeira (no lugar da dica educativa) */
-.duelo-lixeira__contagem { min-width: 2ch; padding: 0 0.4rem; text-align: center; font-size: 1.05rem; color: var(--cc-ouro); border: 0.125rem solid #11566c; background: #050d15; }
-.duelo-lixeira__zona { display: flex; flex: 1 1 auto; flex-direction: column; align-items: center; justify-content: center; gap: 0.3rem; min-height: 4rem; padding: 0.4rem; border: 0.15rem dashed #2f7389; background: rgba(4, 16, 27, 0.6); text-align: center; font-size: 0.85rem; line-height: 1.25; }
-.duelo-lixeira__zona p { margin: 0; }
-.duelo-lixeira__zona small { color: #8eb4c2; font-size: max(var(--fs-min), 0.75rem); }
-.duelo-lixeira__grande { width: 2.2rem; height: auto; opacity: 0.85; }
-.duelo-lixeira__zona.zona--drop { border-color: #f2c24a; background: rgba(60, 40, 6, 0.55); }
-.duelo-lixeira__zona.zona--sobre { border-style: solid; border-color: #ff6a70; background: rgba(90, 14, 20, 0.6); box-shadow: 0 0 0.9rem rgba(255, 74, 80, 0.55); }
-.duelo-lixeira__botao { flex: none; margin-top: 0.3rem; min-height: 44px; padding: 0.3rem 0.6rem; border: 0.12rem solid #2f7389; background: #06111a; color: #d9f3fb; font: inherit; font-size: 0.8rem; font-weight: 700; text-transform: uppercase; cursor: pointer; }
-.duelo-lixeira__botao[aria-disabled="true"] { opacity: 0.5; cursor: not-allowed; }
-.duelo-lixeira__botao:not([aria-disabled="true"]):hover { border-color: #f2c24a; }
+/* lixeira/incinerador (no lugar da dica educativa) */
+.duelo-lixeira {
+  --lixeira-ciano: #39d9ed;
+  --lixeira-azul: #17677d;
+  --lixeira-fogo: #ff7a1a;
+  --lixeira-ouro: #ffd45d;
+}
+.duelo-lixeira__miolo {
+  position: relative;
+  gap: 0.35rem;
+  overflow: hidden;
+  background:
+    radial-gradient(circle at 50% 45%, rgba(24, 105, 126, 0.18), transparent 55%),
+    linear-gradient(180deg, rgba(3, 19, 30, 0.92), rgba(2, 10, 18, 0.98));
+}
+.duelo-lixeira__titulo {
+  z-index: 2;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0 0 0.45rem;
+  border-bottom: 0.125rem solid rgba(57, 217, 237, 0.38);
+}
+.duelo-lixeira__selo {
+  display: grid;
+  flex: none;
+  width: 2.65rem;
+  height: 2.65rem;
+  place-items: center;
+  border: 0.125rem solid #1b7187;
+  background: linear-gradient(135deg, #102f40, #06141f);
+  box-shadow: inset 0 0 0 0.125rem #06121c, 0 0 0.45rem rgba(57, 217, 237, 0.22);
+  clip-path: polygon(0.35rem 0, calc(100% - 0.35rem) 0, 100% 0.35rem, 100% calc(100% - 0.35rem), calc(100% - 0.35rem) 100%, 0.35rem 100%, 0 calc(100% - 0.35rem), 0 0.35rem);
+}
+.duelo-lixeira__selo .duelo-dica__icone {
+  width: 1.85rem;
+}
+.duelo-lixeira__titulo-texto {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  flex-direction: column;
+  line-height: 1;
+}
+.duelo-lixeira__titulo-texto > span {
+  letter-spacing: 0.12em;
+}
+.duelo-lixeira__titulo-texto small {
+  margin-top: 0.3rem;
+  color: #75aebf;
+  font-size: max(var(--fs-min), 0.62rem);
+  letter-spacing: 0.08em;
+}
+.duelo-lixeira__contagem {
+  display: flex;
+  flex: none;
+  min-width: 4.1rem;
+  flex-direction: column;
+  padding: 0.18rem 0.42rem;
+  text-align: center;
+  color: var(--lixeira-ouro);
+  border: 0.125rem solid #1c7188;
+  background: #030b12;
+  box-shadow: inset 0 0 0 1px #092b39, 0 0 0.4rem rgba(57, 217, 237, 0.18);
+}
+.duelo-lixeira__contagem small {
+  color: #75aebf;
+  font-size: max(var(--fs-min), 0.52rem);
+  letter-spacing: 0.04em;
+}
+.duelo-lixeira__contagem span {
+  font-family: var(--cc-fonte-logo);
+  font-size: 1.25rem;
+  line-height: 1;
+}
+.duelo-lixeira__zona {
+  position: relative;
+  isolation: isolate;
+  display: grid;
+  flex: 1 1 auto;
+  min-height: 7.8rem;
+  grid-template-rows: minmax(4.5rem, 1fr) auto;
+  align-items: center;
+  justify-items: center;
+  gap: 0.2rem;
+  overflow: hidden;
+  padding: 0.45rem 0.55rem 0.5rem;
+  border: 0.125rem solid #1d6479;
+  background:
+    linear-gradient(rgba(29, 100, 121, 0.09) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(29, 100, 121, 0.09) 1px, transparent 1px),
+    radial-gradient(ellipse at 50% 45%, rgba(16, 94, 115, 0.3), rgba(2, 12, 20, 0.95) 68%);
+  background-size: 0.75rem 0.75rem, 0.75rem 0.75rem, auto;
+  text-align: center;
+  font-size: 0.8rem;
+  line-height: 1.2;
+  transition: border-color 0.16s steps(2, end), box-shadow 0.16s steps(2, end), background-color 0.16s steps(2, end);
+}
+.duelo-lixeira__zona::before,
+.duelo-lixeira__zona::after {
+  position: absolute;
+  z-index: -1;
+  width: 1rem;
+  height: 1rem;
+  content: '';
+  border-color: var(--lixeira-ciano);
+  opacity: 0.55;
+}
+.duelo-lixeira__zona::before {
+  top: 0.3rem;
+  left: 0.3rem;
+  border-top: 0.16rem solid;
+  border-left: 0.16rem solid;
+}
+.duelo-lixeira__zona::after {
+  right: 0.3rem;
+  bottom: 0.3rem;
+  border-right: 0.16rem solid;
+  border-bottom: 0.16rem solid;
+}
+.duelo-lixeira__maquina {
+  position: relative;
+  display: block;
+  width: min(86%, 11rem);
+  aspect-ratio: 3 / 1.72;
+  align-self: stretch;
+  max-height: 7.5rem;
+  margin: auto;
+  border: 0.18rem solid #07141d;
+  background: linear-gradient(180deg, #1b4b5c, #0a2735 68%, #06141e);
+  box-shadow:
+    inset 0 0 0 0.125rem #28778c,
+    inset 0 -0.75rem 0 #06111a,
+    0 0.35rem 0 #02070b,
+    0 0 0.65rem rgba(35, 165, 190, 0.24);
+  clip-path: polygon(0.6rem 0, calc(100% - 0.6rem) 0, 100% 0.6rem, 100% 100%, 0 100%, 0 0.6rem);
+}
+.duelo-lixeira__trilho {
+  position: absolute;
+  top: 1.05rem;
+  bottom: 0.75rem;
+  width: 0.42rem;
+  background: repeating-linear-gradient(to bottom, #68d9ea 0 0.22rem, #123b4a 0.22rem 0.48rem);
+  opacity: 0.72;
+}
+.duelo-lixeira__trilho--esq { left: 0.55rem; }
+.duelo-lixeira__trilho--dir { right: 0.55rem; }
+.duelo-lixeira__painel {
+  position: absolute;
+  top: 0.35rem;
+  right: 0.8rem;
+  display: flex;
+  gap: 0.22rem;
+}
+.duelo-lixeira__painel i {
+  width: 0.3rem;
+  height: 0.3rem;
+  background: #2ad8ef;
+  box-shadow: 0 0 0.25rem currentColor;
+}
+.duelo-lixeira__painel i:nth-child(2) { color: #ffd45d; background: currentColor; }
+.duelo-lixeira__painel i:nth-child(3) { opacity: 0.3; }
+.duelo-lixeira__boca {
+  position: absolute;
+  top: 1.25rem;
+  right: 1.2rem;
+  bottom: 1rem;
+  left: 1.2rem;
+  overflow: hidden;
+  border: 0.18rem solid #317f91;
+  background: radial-gradient(ellipse at 50% 100%, rgba(255, 109, 22, 0.75), #170a08 45%, #020609 78%);
+  box-shadow: inset 0 0 0 0.18rem #03090e, inset 0 -0.55rem 0 rgba(255, 81, 13, 0.2);
+}
+.duelo-lixeira__tampa {
+  position: absolute;
+  z-index: 3;
+  top: 0;
+  right: 0;
+  left: 0;
+  height: 0.5rem;
+  border-bottom: 0.14rem solid #52b5c7;
+  background: repeating-linear-gradient(90deg, #163f4f 0 0.75rem, #245b6c 0.75rem 1rem);
+}
+.duelo-lixeira__fogo {
+  position: absolute;
+  right: 0.35rem;
+  bottom: 0.38rem;
+  left: 0.35rem;
+  display: flex;
+  height: 52%;
+  align-items: end;
+  justify-content: space-around;
+}
+.duelo-lixeira__fogo i {
+  width: 13%;
+  height: 66%;
+  transform-origin: 50% 100%;
+  background: linear-gradient(to top, #ff3b0a, #ff9e22 55%, #fff19a);
+  clip-path: polygon(50% 0, 100% 48%, 82% 100%, 14% 100%, 0 48%);
+}
+.duelo-lixeira__fogo i:nth-child(2),
+.duelo-lixeira__fogo i:nth-child(4) { height: 95%; }
+.duelo-lixeira__fogo i:nth-child(3) { height: 78%; }
+.duelo-lixeira__grade {
+  position: absolute;
+  z-index: 2;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  height: 0.55rem;
+  border-top: 0.125rem solid #377d8e;
+  background: repeating-linear-gradient(90deg, #07131b 0 0.5rem, #1c5668 0.5rem 0.7rem);
+}
+.duelo-lixeira__base {
+  position: absolute;
+  right: 1rem;
+  bottom: 0.15rem;
+  left: 1rem;
+  height: 0.35rem;
+  background: #07141d;
+  box-shadow: 0 0.25rem 0 #02070b;
+}
+.duelo-lixeira__instrucao {
+  position: relative;
+  z-index: 3;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  gap: 0.18rem;
+  padding: 0.35rem 0.45rem;
+  color: #d8f7fb;
+  background: rgba(2, 11, 18, 0.88);
+  border-top: 0.125rem solid rgba(57, 217, 237, 0.34);
+}
+.duelo-lixeira__instrucao strong {
+  color: #e8fbff;
+  font-size: max(var(--fs-min), 0.72rem);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.duelo-lixeira__instrucao small {
+  color: #8ebdca;
+  font-size: max(var(--fs-min), 0.66rem);
+}
+.duelo-lixeira__zona.zona--drop {
+  border-color: var(--lixeira-ouro);
+  outline-color: rgba(255, 212, 93, 0.8);
+  background-color: rgba(87, 52, 4, 0.28);
+  box-shadow: 0 0 0.85rem rgba(255, 164, 34, 0.42), inset 0 0 1rem rgba(255, 113, 20, 0.12);
+}
+.duelo-lixeira__zona.zona--drop .duelo-lixeira__maquina {
+  border-color: #5c370a;
+  box-shadow: inset 0 0 0 0.125rem #c78524, inset 0 -0.75rem 0 #160a05, 0 0.35rem 0 #02070b, 0 0 0.8rem rgba(255, 139, 25, 0.45);
+}
+.duelo-lixeira__zona.zona--drop .duelo-lixeira__fogo i {
+  animation: lixeira-chama-pronta 0.45s steps(3, end) infinite alternate;
+}
+.duelo-lixeira__zona.zona--sobre {
+  border-color: #ff7a24;
+  outline-color: rgba(255, 122, 36, 0.95);
+  background-color: rgba(105, 28, 5, 0.42);
+  box-shadow: 0 0 1.25rem 0.18rem rgba(255, 93, 20, 0.68), inset 0 0 1.4rem rgba(255, 76, 13, 0.22);
+}
+.duelo-lixeira__zona.zona--sobre .duelo-lixeira__boca {
+  border-color: #ffd45d;
+  box-shadow: inset 0 0 0 0.18rem #160704, inset 0 -0.6rem 1.2rem rgba(255, 70, 10, 0.68), 0 0 0.8rem rgba(255, 118, 19, 0.75);
+}
+.duelo-lixeira__zona.zona--sobre .duelo-lixeira__instrucao strong { color: #ffd45d; }
+.duelo-lixeira__botao {
+  display: flex;
+  flex: none;
+  align-items: center;
+  justify-content: center;
+  gap: 0.55rem;
+  min-height: 44px;
+  padding: 0.36rem 0.65rem;
+  border: 0.14rem solid #2f8298;
+  background: linear-gradient(180deg, #123b4b, #061620);
+  color: #ddf9ff;
+  box-shadow: inset 0 0 0 1px #071019, 0 0.2rem 0 #02080c;
+  font: inherit;
+  font-size: max(var(--fs-min), 0.76rem);
+  font-weight: 700;
+  letter-spacing: 0.035em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+.duelo-lixeira__botao-icone {
+  display: grid;
+  width: 1.55rem;
+  height: 1.55rem;
+  flex: none;
+  place-items: center;
+  color: var(--lixeira-ouro);
+  background: #06111a;
+  border: 1px solid #296b7f;
+}
+.duelo-lixeira__botao-icone svg { width: 1rem; height: 1rem; }
+.duelo-lixeira__botao[aria-disabled="true"] {
+  color: #76929c;
+  border-color: #244653;
+  background: linear-gradient(180deg, #10242d, #071119);
+  box-shadow: inset 0 0 0 1px #071019;
+  cursor: not-allowed;
+}
+.duelo-lixeira__botao[aria-disabled="true"] .duelo-lixeira__botao-icone { color: #657e87; opacity: 0.68; }
+.duelo-lixeira__botao:not([aria-disabled="true"]):hover {
+  border-color: var(--lixeira-ouro);
+  background: linear-gradient(180deg, #1a5363, #09212d);
+  box-shadow: inset 0 0 0 1px #071019, 0 0 0.65rem rgba(255, 196, 72, 0.28);
+}
 .duelo-lixeira__botao:focus-visible { outline: 0.18rem solid #fff; outline-offset: 0.15rem; }
+@keyframes lixeira-chama-pronta {
+  to { transform: scaleY(1.18) translateY(-0.1rem); filter: brightness(1.22); }
+}
+@media (max-width: 899px), (max-height: 559px) {
+  .duelo-lixeira__maquina { width: min(72%, 12rem); min-height: 5.6rem; }
+  .duelo-lixeira__zona { min-height: 9.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .duelo-lixeira__zona,
+  .duelo-lixeira__fogo i { transition: none; animation: none !important; }
+}
 
 /* ---- cena de confronto (ataque entre unidades): cartas grandes lado a lado, vibração e queima ---- */
 @property --queima {
@@ -2614,62 +2924,196 @@ button.carta {
   }
 }
 
-/* ---- carta solta na lixeira: queima no lugar (reaproveita --queima e os keyframes da cena de confronto) ---- */
+/* ---- carta descartada: queda curta, impacto, carbonização e cinzas em pixel art ---- */
 .lixeira-queima {
+  --queima: 0%;
   position: fixed;
   z-index: 70;
   width: 7rem;
   height: 9.3333rem;
+  isolation: isolate;
   pointer-events: none;
-  transform: translate(-50%, -60%);
-  filter: drop-shadow(0 0 0.9rem rgba(255, 120, 20, 0.55));
-  animation: confronto-queima 1.3s ease-in both;
+  transform: translate(-50%, -58%);
+  animation: lixeira-descarta 2.2s steps(18, end) both, lixeira-consome 1.42s 0.55s linear both;
 }
-.lixeira-queima__corpo {
+.lixeira-queima__palco {
+  position: relative;
   width: 100%;
   height: 100%;
-  -webkit-mask-image: linear-gradient(to top, transparent calc(var(--queima) - 4%), #000 calc(var(--queima) + 6%));
-  mask-image: linear-gradient(to top, transparent calc(var(--queima) - 4%), #000 calc(var(--queima) + 6%));
+}
+.lixeira-queima__corpo {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  -webkit-mask-image: linear-gradient(to top, transparent calc(var(--queima) - 2%), #000 calc(var(--queima) + 3%));
+  mask-image: linear-gradient(to top, transparent calc(var(--queima) - 2%), #000 calc(var(--queima) + 3%));
 }
 .lixeira-queima__corpo .carta {
   width: 100%;
   height: 100%;
   aspect-ratio: auto;
   transform: none;
-  animation: confronto-carboniza 1.3s ease-in both;
+  box-shadow: 0 0 0 0.125rem #ffcf54, 0 0 0.8rem rgba(255, 105, 22, 0.65);
+  animation: lixeira-carboniza 1.58s 0.48s steps(8, end) both;
+}
+.lixeira-queima__carbonizacao {
+  position: absolute;
+  z-index: 3;
+  inset: 0;
+  background:
+    repeating-linear-gradient(17deg, transparent 0 0.58rem, rgba(7, 5, 4, 0.72) 0.58rem 0.72rem),
+    linear-gradient(to top, rgba(8, 5, 3, 0.96) 0 var(--queima), transparent calc(var(--queima) + 16%));
+  mix-blend-mode: multiply;
+  opacity: 0;
+  -webkit-mask-image: linear-gradient(to top, transparent calc(var(--queima) - 2%), #000 calc(var(--queima) + 3%));
+  mask-image: linear-gradient(to top, transparent calc(var(--queima) - 2%), #000 calc(var(--queima) + 3%));
+  animation: lixeira-carbonizacao 1.55s 0.48s steps(8, end) both;
 }
 .lixeira-queima__brasa {
   position: absolute;
-  inset: 0;
-  z-index: 5;
+  z-index: 4;
+  inset: 0 -0.16rem;
   background: linear-gradient(
     to top,
-    transparent calc(var(--queima) - 3%),
+    transparent calc(var(--queima) - 2%),
     #fff3a0 calc(var(--queima) - 1%),
-    #ff8a1c calc(var(--queima) + 2%),
-    rgba(120, 30, 0, 0.85) calc(var(--queima) + 7%),
-    rgba(40, 10, 0, 0.4) calc(var(--queima) + 14%),
-    transparent calc(var(--queima) + 22%)
+    #ffba2b var(--queima),
+    #ff4d0b calc(var(--queima) + 3%),
+    rgba(79, 17, 3, 0.72) calc(var(--queima) + 7%),
+    transparent calc(var(--queima) + 12%)
   );
   mix-blend-mode: hard-light;
   opacity: 0;
-  animation: confronto-brasa 1.3s linear both;
+  animation: lixeira-brasa 1.5s 0.52s steps(12, end) both;
 }
 .lixeira-queima__chamas {
   position: absolute;
-  left: 0;
-  right: 0;
-  bottom: calc(var(--queima) - 4%);
-  height: 0;
   z-index: 6;
+  right: 0;
+  bottom: calc(var(--queima) - 2%);
+  left: 0;
+  height: 1.9rem;
 }
-.lixeira-queima__fagulha {
-  animation-duration: 0.9s;
+.lixeira-queima__chama {
+  position: absolute;
+  bottom: 0;
+  width: 0.82rem;
+  height: 1.55rem;
+  margin-left: -0.4rem;
+  background: linear-gradient(to top, #ff3908 0 26%, #ff9820 26% 58%, #fff18b 58% 76%, transparent 76%);
+  clip-path: polygon(38% 0, 68% 22%, 100% 58%, 78% 100%, 14% 100%, 0 57%);
+  opacity: 0;
+  animation: lixeira-chama 0.52s steps(4, end) 3;
+}
+.lixeira-queima__chama:nth-child(even) {
+  width: 0.58rem;
+  height: 1.18rem;
+}
+.lixeira-queima__cinzas {
+  position: absolute;
+  z-index: 7;
+  inset: 0;
+}
+.lixeira-queima__cinza {
+  position: absolute;
+  bottom: 8%;
+  width: 0.3rem;
+  height: 0.3rem;
+  background: #a36c3b;
+  box-shadow: 0.32rem 0.32rem 0 #463627;
+  opacity: 0;
+  animation: lixeira-cinza 0.9s steps(8, end) both;
+}
+.lixeira-queima__fumaca {
+  position: absolute;
+  z-index: 1;
+  inset: -2.4rem 0 18%;
+}
+.lixeira-queima__fumaca i {
+  position: absolute;
+  bottom: 0;
+  width: 0.72rem;
+  height: 0.72rem;
+  background: #52606a;
+  box-shadow: 0.72rem -0.18rem 0 #35434d, -0.36rem -0.65rem 0 #263640;
+  opacity: 0;
+  animation: lixeira-fumaca 0.85s steps(7, end) both;
+}
+.lixeira-queima__impacto {
+  position: absolute;
+  z-index: 8;
+  top: 57%;
+  left: 50%;
+  width: 1rem;
+  height: 1rem;
+  margin: -0.5rem;
+  background: #fff7b0;
+  box-shadow: -1rem 0 0 #ff8a1c, 1rem 0 0 #ff8a1c, 0 -1rem 0 #ffc23c, 0 1rem 0 #ff5a0d;
+  opacity: 0;
+  animation: lixeira-impacto 0.34s 0.43s steps(4, end) both;
+}
+@keyframes lixeira-descarta {
+  0% { opacity: 1; transform: translate(-50%, -82%) rotate(-5deg) scale(1.04); }
+  18% { transform: translate(-50%, -66%) rotate(3deg) scale(1); }
+  26% { transform: translate(-50%, -58%) rotate(-2deg) scale(0.97); }
+  34%, 82% { opacity: 1; transform: translate(-50%, -55%) rotate(0) scale(0.96); }
+  100% { opacity: 0; transform: translate(-50%, -48%) rotate(2deg) scale(0.82); }
+}
+@keyframes lixeira-consome {
+  from { --queima: 0%; }
+  to { --queima: 112%; }
+}
+@keyframes lixeira-impacto {
+  0% { opacity: 0; transform: scale(0.4); }
+  35% { opacity: 1; transform: scale(1); }
+  100% { opacity: 0; transform: scale(4.2); }
+}
+@keyframes lixeira-carboniza {
+  0%, 12% { filter: none; }
+  55% { filter: sepia(0.65) saturate(0.8) contrast(1.25) brightness(0.7); }
+  100% { filter: sepia(0.95) saturate(0.25) contrast(1.55) brightness(0.28); }
+}
+@keyframes lixeira-carbonizacao {
+  0%, 12% { opacity: 0; }
+  32% { opacity: 0.35; }
+  100% { opacity: 0.92; }
+}
+@keyframes lixeira-brasa {
+  0% { opacity: 0; }
+  8%, 86% { opacity: 1; }
+  100% { opacity: 0; }
+}
+@keyframes lixeira-chama {
+  0% { opacity: 0; transform: translateY(0) scaleY(0.45); }
+  22%, 72% { opacity: 1; }
+  48% { transform: translate(-0.18rem, -0.42rem) scaleY(1.18); }
+  100% { opacity: 0; transform: translate(0.12rem, -1.35rem) scaleY(0.72); }
+}
+@keyframes lixeira-cinza {
+  0% { opacity: 0; transform: translate(0, 0); }
+  18% { opacity: 1; }
+  100% { opacity: 0; transform: translate(0.8rem, -3.7rem) rotate(90deg); }
+}
+@keyframes lixeira-fumaca {
+  0% { opacity: 0; transform: translate(0, 0) scale(0.55); }
+  22%, 58% { opacity: 0.66; }
+  100% { opacity: 0; transform: translate(-0.55rem, -2.8rem) scale(1.25); }
 }
 @media (prefers-reduced-motion: reduce) {
   .lixeira-queima {
-    display: none;
+    --queima: 32%;
+    opacity: 0.72;
+    transform: translate(-50%, -55%) scale(0.96);
+    animation: none;
   }
+  .lixeira-queima__corpo .carta { filter: sepia(0.85) saturate(0.35) brightness(0.48); animation: none; }
+  .lixeira-queima__carbonizacao { opacity: 0.65; animation: none; }
+  .lixeira-queima__brasa { opacity: 0.75; animation: none; }
+  .lixeira-queima__impacto,
+  .lixeira-queima__chamas,
+  .lixeira-queima__cinzas,
+  .lixeira-queima__fumaca { display: none; }
 }
 
 /* ---- prévia da colocação: carta grande com seta à direita que a vira para baixo ---- */

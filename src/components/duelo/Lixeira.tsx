@@ -11,36 +11,77 @@ interface Props {
   onDescartarSelecionada: () => void
 }
 
-/** Ícone pixel de lixeira (decorativo). */
-function IconeLixeira({ className }: { className?: string }) {
+/** Ícone pixel do incinerador de descarte (decorativo). */
+function IconeIncinerador({ className }: { className?: string }) {
   return (
-    <svg className={className} viewBox="0 0 16 18" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
-      <rect x="6" y="0" width="4" height="2" fill="#8fa6b4" />
-      <rect x="1" y="2" width="14" height="2" fill="#b7cbd6" />
-      <rect x="2" y="4" width="12" height="13" fill="#46687a" />
-      <rect x="2" y="16" width="12" height="2" fill="#2c4553" />
-      <rect x="4" y="6" width="2" height="9" fill="#1f3340" />
-      <rect x="7" y="6" width="2" height="9" fill="#1f3340" />
-      <rect x="10" y="6" width="2" height="9" fill="#1f3340" />
+    <svg className={className} viewBox="0 0 24 24" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
+      <path fill="#153e50" d="M3 5h18v17H3z" />
+      <path fill="#68d9ea" d="M2 3h20v3H2zM5 1h14v2H5zM5 20h14v2H5z" />
+      <path fill="#08202d" d="M6 8h12v9H6z" />
+      <path fill="#174e61" d="M8 10h8v5H8z" />
+      <path fill="#ffcf4b" d="M10 14h4v2h-4z" />
+      <path fill="#ff6b24" d="M11 11h2v4h-2zM9 13h2v2H9zM13 12h2v3h-2z" />
+      <path fill="#c8f7ff" d="M4 4h2v1H4zM18 4h2v1h-2z" />
+    </svg>
+  )
+}
+
+function IconeSetaDescarte() {
+  return (
+    <svg viewBox="0 0 18 18" shapeRendering="crispEdges" aria-hidden="true" focusable="false">
+      <path fill="currentColor" d="M7 1h4v8h4l-6 6-6-6h4z" />
+      <path fill="#07141e" d="M5 15h8v2H5z" />
     </svg>
   )
 }
 
 /** Lixeira: solte aqui as cartas da mão para descartá-las. A mão é reposta até 5 no início do seu próximo turno. */
 export function Lixeira({ descartadas, classeDrop = '', podeDescartarSelecionada, motivo, onDescartarSelecionada }: Props) {
+  const sobre = classeDrop.includes('zona--sobre')
+  const pronta = classeDrop.includes('zona--drop')
+  const estado = sobre ? 'sobre' : pronta ? 'pronta' : 'repouso'
+
   return (
-    <MolduraOrnamentada as="section" className="duelo-dica duelo-lixeira" aria-label="Lixeira" classeMiolo="duelo-dica__miolo">
-      <h2 className="duelo-dica__titulo">
-        <IconeLixeira className="duelo-dica__icone" />
-        <span>Lixeira</span>
+    <MolduraOrnamentada as="section" className="duelo-dica duelo-lixeira" aria-label="Lixeira" classeMiolo="duelo-dica__miolo duelo-lixeira__miolo">
+      <h2 className="duelo-dica__titulo duelo-lixeira__titulo">
+        <span className="duelo-lixeira__selo" aria-hidden="true">
+          <IconeIncinerador className="duelo-dica__icone" />
+        </span>
+        <span className="duelo-lixeira__titulo-texto">
+          <span>Lixeira</span>
+          <small>Câmara de descarte</small>
+        </span>
         <strong className="duelo-lixeira__contagem" aria-label={`Cartas descartadas: ${descartadas}`}>
-          {descartadas}
+          <small>Descartadas</small>
+          <span>{descartadas}</span>
         </strong>
       </h2>
-      <div className={`duelo-lixeira__zona${classeDrop}`} data-destino="lixeira" aria-dropeffect={classeDrop ? 'move' : undefined}>
-        <IconeLixeira className="duelo-lixeira__grande" />
-        <p>Arraste aqui as cartas da mão que quiser descartar.</p>
-        <small>No próximo turno sua mão volta a ter 5 cartas.</small>
+      <div className={`duelo-lixeira__zona${classeDrop}`} data-destino="lixeira" data-estado={estado} aria-dropeffect={pronta ? 'move' : undefined}>
+        <span className="duelo-lixeira__maquina" aria-hidden="true">
+          <span className="duelo-lixeira__trilho duelo-lixeira__trilho--esq" />
+          <span className="duelo-lixeira__trilho duelo-lixeira__trilho--dir" />
+          <span className="duelo-lixeira__painel">
+            <i />
+            <i />
+            <i />
+          </span>
+          <span className="duelo-lixeira__boca">
+            <span className="duelo-lixeira__tampa" />
+            <span className="duelo-lixeira__fogo">
+              <i />
+              <i />
+              <i />
+              <i />
+              <i />
+            </span>
+            <span className="duelo-lixeira__grade" />
+          </span>
+          <span className="duelo-lixeira__base" />
+        </span>
+        <span className="duelo-lixeira__instrucao">
+          <strong>{sobre ? 'Solte para incinerar' : pronta ? 'Destino de descarte pronto' : 'Arraste uma carta para a câmara'}</strong>
+          <small>No próximo turno, sua mão tenta voltar a 5 cartas.</small>
+        </span>
       </div>
       <button
         type="button"
@@ -50,7 +91,10 @@ export function Lixeira({ descartadas, classeDrop = '', podeDescartarSelecionada
         title={motivo ?? undefined}
         onClick={onDescartarSelecionada}
       >
-        Jogar selecionada na lixeira
+        <span className="duelo-lixeira__botao-icone" aria-hidden="true">
+          <IconeSetaDescarte />
+        </span>
+        <span>Descartar carta selecionada</span>
       </button>
     </MolduraOrnamentada>
   )

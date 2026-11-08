@@ -138,8 +138,29 @@ describe('Coluna lateral', () => {
     const lixeira = screen.getByRole('region', { name: 'Lixeira' })
     expect(lixeira.className).toContain('moldura-orn')
     expect(lixeira.querySelector('h2 svg')).toBeTruthy()
-    expect(lixeira.querySelector('[data-destino="lixeira"]')).toBeTruthy()
+    const destino = lixeira.querySelector('[data-destino="lixeira"]')!
+    expect(destino.getAttribute('data-estado')).toBe('repouso')
+    expect(destino.querySelector('.duelo-lixeira__maquina')?.getAttribute('aria-hidden')).toBe('true')
+    expect(destino.querySelector('.duelo-lixeira__boca')).toBeTruthy()
+    expect(lixeira.textContent).toContain('Câmara de descarte')
+    expect(lixeira.textContent).toContain('sua mão tenta voltar a 5 cartas')
+    const descartar = within(lixeira).getByRole('button', { name: 'Descartar carta selecionada' })
+    expect(descartar.getAttribute('aria-disabled')).toBe('true')
+    expect(descartar.querySelector('.duelo-lixeira__botao-icone svg')).toBeTruthy()
     expect(screen.queryByRole('region', { name: 'Dica educativa' })).toBeNull()
+  })
+
+  it('lixeira selecionada tem CTA ativo e reduced-motion mantém feedback estático sem esconder a cena', () => {
+    montar({ jogadaFeita: true, humano: { mao: ['CC-103'] } })
+    fireEvent.click(screen.getByRole('button', { name: /^Mão 1:/ }))
+    expect(screen.getByRole('button', { name: 'Descartar carta selecionada' }).hasAttribute('aria-disabled')).toBe(false)
+
+    const css = readFileSync(resolve(__dirname, '../duelo/duelo.css'), 'utf8')
+    const inicio = css.lastIndexOf('@media (prefers-reduced-motion: reduce)', css.indexOf('/* ---- prévia da colocação'))
+    const reduzido = css.slice(inicio, css.indexOf('/* ---- prévia da colocação', inicio))
+    expect(reduzido).toMatch(/\.lixeira-queima\s*\{[^}]*animation:\s*none/s)
+    expect(reduzido).not.toMatch(/\.lixeira-queima\s*\{[^}]*display:\s*none/s)
+    expect(css).toMatch(/\.lixeira-queima\s*\{[^}]*pointer-events:\s*none/s)
   })
 
   it('botão bloqueado: motivo visível ligado por aria-describedby, sem perder o foco nem a ação', () => {

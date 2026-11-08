@@ -1,3 +1,6 @@
+import { createHash } from 'node:crypto'
+import { readFileSync } from 'node:fs'
+import { join } from 'node:path'
 import { describe, expect, it } from 'vitest'
 import { OPONENTES, OPONENTE_PADRAO_ID, ROTULO_DIFICULDADE, buscarOponente, urlArquivoOponente } from '../oponentes'
 
@@ -53,11 +56,43 @@ describe('dados dos adversários', () => {
     expect(urlArquivoOponente(guardiao.retratoGrande!)).toBeTruthy()
   })
 
-  it('o atalho Baralho tem asset empacotado e o Guardião Corrompido reaproveita a arte do Guardião', () => {
+  it('o atalho Baralho tem asset empacotado', () => {
     expect(urlArquivoOponente('baralho.png')).toBeTruthy()
-    const corrompido = buscarOponente('guardiao-corrompido')!
-    expect(corrompido.nome).toBe('Guardião do Mangue Corrompido')
-    expect(urlArquivoOponente(corrompido.retrato)).toBeTruthy()
+  })
+
+  it('os 12 chefes destacados usam retratos próprios, únicos e empacotados', () => {
+    const ids = [
+      'mancha-de-oleo', 'poluicao-plastica', 'esgoto-clandestino', 'pesca-predatoria',
+      'especies-invasoras', 'mare-vermelha', 'residuos-quimicos', 'mineracao',
+      'bitucas-na-areia', 'poluicao-farmacos', 'guardiao-corrompido', 'ser-humano',
+    ]
+    const retratos = ids.map((id) => {
+      const oponente = buscarOponente(id)!
+      expect(oponente.retrato).toBe(`${id}.png`)
+      expect(urlArquivoOponente(oponente.retrato), oponente.retrato).toBeTruthy()
+      return oponente.retrato
+    })
+
+    expect(new Set(retratos).size).toBe(ids.length)
+    expect(buscarOponente('guardiao-corrompido')!.retratoGrande).toBe('guardiao-corrompido.png')
+  })
+
+  it('os 12 PNGs finais são 768x512 e batem com o registro de prompts/hashes', () => {
+    const registro = JSON.parse(readFileSync(join(import.meta.dirname, '../../../docs/arte/prompts-oponentes.json'), 'utf8')) as {
+      gerador: string
+      artes: { id: string; arquivo: string; sha256: string; promptEspecifico: string }[]
+    }
+    expect(registro.gerador).toBe('ImageGen built-in')
+    expect(registro.artes).toHaveLength(12)
+
+    for (const arte of registro.artes) {
+      expect(arte.promptEspecifico.length).toBeGreaterThan(80)
+      const dados = readFileSync(join(import.meta.dirname, '../../assets/oponentes', `${arte.id}.png`))
+      expect(dados.subarray(0, 8).toString('hex')).toBe('89504e470d0a1a0a')
+      expect(dados.readUInt32BE(16)).toBe(768)
+      expect(dados.readUInt32BE(20)).toBe(512)
+      expect(createHash('sha256').update(dados).digest('hex')).toBe(arte.sha256.toLowerCase())
+    }
   })
 
   it('grupos de Urbanização e Porto alinhados ao catálogo; textos revisados', () => {

@@ -2,6 +2,7 @@
 // Arrastar a carta da mão até o campo (Pointer Events): mesmo caminho do botão USAR CARTA, sem regra duplicada na UI.
 import { act, cleanup, fireEvent, render, screen } from '@testing-library/react'
 import { afterEach, describe, expect, it, vi } from 'vitest'
+import { DURACAO_QUEIMA_LIXEIRA_MS } from '../../components/duelo/CartaQueimando'
 import { buscarOponente } from '../../data/oponentes'
 import { cenario } from '../../game/__tests__/util'
 import type { ConfigCenario } from '../../game/__tests__/util'
@@ -89,6 +90,7 @@ describe('Arrastar: unidade para zona livre', () => {
     destinos.forEach((d) => expect(d.getAttribute('aria-dropeffect')).toBe('move'))
     expect(qa('.duelo-lado--oponente .zona--drop')).toHaveLength(0)
     expect(zonaDoJogador(1).className).toContain('zona--sobre')
+    expect(q('[data-destino="lixeira"]').getAttribute('data-estado')).toBe('pronta')
     fireEvent.pointerUp(window, { ...P, clientX: 1, clientY: 1 })
   })
 
@@ -170,6 +172,16 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
     expect(screen.getByLabelText('Cartas descartadas: 1')).toBeTruthy()
   })
 
+  it('ao sobrevoar a lixeira durante o arrasto, expõe o estado e a instrução de soltura', () => {
+    montar({ jogadaFeita: true, humano: { mao: ['CC-103'] } })
+    const lixeira = q('[data-destino="lixeira"]')
+    arrastar(mao(1), lixeira, false)
+    expect(lixeira.getAttribute('data-estado')).toBe('sobre')
+    expect(lixeira.className).toContain('zona--sobre')
+    expect(lixeira.textContent).toContain('Solte para incinerar')
+    fireEvent.pointerUp(window, { ...P, clientX: 200, clientY: 300 })
+  })
+
   it('soltar na lixeira mostra a carta queimando (decorativa) e o efeito some sozinho; jogar no campo não queima', () => {
     vi.useFakeTimers()
     try {
@@ -179,8 +191,13 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
       expect(queima).toBeTruthy()
       expect(queima!.getAttribute('aria-hidden')).toBe('true')
       expect(queima!.textContent).toContain('CARANGUEJO-AZUL')
+      expect(queima!.querySelector('.lixeira-queima__impacto')).toBeTruthy()
+      expect(queima!.querySelector('.lixeira-queima__carbonizacao')).toBeTruthy()
+      expect(queima!.querySelectorAll('.lixeira-queima__chama')).toHaveLength(6)
+      expect(queima!.querySelectorAll('.lixeira-queima__cinza')).toHaveLength(5)
+      expect(queima!.querySelectorAll('.lixeira-queima__fumaca i')).toHaveLength(3)
       act(() => {
-        vi.advanceTimersByTime(2000)
+        vi.advanceTimersByTime(DURACAO_QUEIMA_LIXEIRA_MS)
       })
       expect(document.querySelector('[data-testid="lixeira-queima"]')).toBeNull()
     } finally {
@@ -190,6 +207,50 @@ describe('Arrastar: cancelar, bloqueios e clique', () => {
     montar({ humano: { mao: ['CC-103', 'CC-104'] } })
     arrastar(mao(1), zonaDoJogador(0))
     expect(document.querySelector('[data-testid="lixeira-queima"]')).toBeNull()
+  })
+
+  it('descartar pelo botão preserva a alternativa de clique/teclado e também mostra a carta real na queima', () => {
+    vi.useFakeTimers()
+    montar({ jogadaFeita: true, humano: { mao: ['CC-103', 'CC-104'] } })
+    fireEvent.click(mao(1))
+    fireEvent.click(botao(/Descartar carta selecionada/))
+    expect(screen.getAllByRole('button', { name: /^Mão \d/ })).toHaveLength(1)
+    expect(screen.getByLabelText('Cartas descartadas: 1')).toBeTruthy()
+    const queima = q('[data-testid="lixeira-queima"]')
+    expect(queima.textContent).toContain('CARANGUEJO-AZUL')
+    expect(queima.getAttribute('style')).toMatch(/left: 0px; top: 0px/)
+  })
+
+  it('descartes rápidos substituem a cena e limpam somente pelo timer da carta mais recente', () => {
+    vi.useFakeTimers()
+    montar({ jogadaFeita: true, humano: { mao: ['CC-103', 'CC-104'] } })
+    fireEvent.click(mao(1))
+    fireEvent.click(botao(/Descartar carta selecionada/))
+    expect(q('[data-testid="lixeira-queima"]').textContent).toContain('CARANGUEJO-AZUL')
+    act(() => vi.advanceTimersByTime(1000))
+
+    fireEvent.click(mao(1))
+    fireEvent.click(botao(/Descartar carta selecionada/))
+    expect(q('[data-testid="lixeira-queima"]').textContent).toContain('MEXILHÃO')
+    expect(document.querySelectorAll('[data-testid="lixeira-queima"]')).toHaveLength(1)
+
+    act(() => vi.advanceTimersByTime(1300))
+    expect(document.querySelector('[data-testid="lixeira-queima"]')).toBeTruthy()
+    act(() => vi.advanceTimersByTime(DURACAO_QUEIMA_LIXEIRA_MS - 1300))
+    expect(document.querySelector('[data-testid="lixeira-queima"]')).toBeNull()
+  })
+
+  it('desmontar durante a queima limpa o timer sem atualização tardia', () => {
+    vi.useFakeTimers()
+    const { unmount } = montar({ jogadaFeita: true, humano: { mao: ['CC-103'] } })
+    fireEvent.click(mao(1))
+    fireEvent.click(botao(/Descartar carta selecionada/))
+    expect(document.querySelector('[data-testid="lixeira-queima"]')).toBeTruthy()
+    const timersComCena = vi.getTimerCount()
+    expect(timersComCena).toBeGreaterThan(0)
+    unmount()
+    expect(vi.getTimerCount()).toBeLessThan(timersComCena)
+    expect(() => act(() => vi.advanceTimersByTime(DURACAO_QUEIMA_LIXEIRA_MS))).not.toThrow()
   })
 
   it('fora da vez (turno do oponente em reprodução): arrasto desabilitado com motivo', () => {

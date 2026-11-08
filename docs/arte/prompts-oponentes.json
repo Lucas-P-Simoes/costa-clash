@@ -1,0 +1,86 @@
+{
+  "versao": 1,
+  "data": "2026-11-08",
+  "gerador": "ImageGen built-in",
+  "montagemPromptFinal": "Para cada arte, concatenar promptComum e promptEspecifico; as referências listadas foram usadas apenas nos IDs indicados.",
+  "posProcessamento": "Redução mecânica de 1536x1024 para 768x512 por vizinho mais próximo, preservando a pixel art; PNG sem transparência.",
+  "referencias": [
+    "captura do Duelo Livre enviada pelo responsável (referência de estilo e composição, não alvo de edição)",
+    "src/assets/oponentes/guardiao-manguezal.png (âncora de identidade somente para guardiao-corrompido)"
+  ],
+  "promptComum": "Use case: stylized-concept. Asset type: landscape boss portrait/panel for the Costa Clash coastal card-battle game. Style/medium: detailed retro 16-bit/32-bit pixel art, crisp square pixels, deliberate chunky pixel clusters, hard dark outlines, limited vivid palette, high contrast, no smooth antialiasing, no photorealism, no 3D. Composition/framing: landscape 3:2, one centered dominant boss, bold readable silhouette at 212x150 thumbnail size, safe margins for cover cropping, environmental details secondary. Constraints: standalone art only; no interface, no frame, no card border, no lock icon, no text, no letters, no numbers, no labels, no logos, no watermark.",
+  "artes": [
+    {
+      "id": "mancha-de-oleo",
+      "arquivo": "src/assets/oponentes/mancha-de-oleo.png",
+      "sha256": "BD7D584F409A13C584B17060E36B6F41BAA7D61450E9FADE127E85F470DDF4D1",
+      "promptEspecifico": "Contaminated coastal sea at dusk with a dark iridescent oil film. One threatening humanoid entity made entirely of glossy black petroleum rises from the sea, with broad shoulders, liquid claw-like hands, fierce amber eyes and oily rainbow highlights. Clearly an oil-spill monster, not a worker, sailor or port operator. Ominous orange rim light against deep navy and petroleum black."
+    },
+    {
+      "id": "poluicao-plastica",
+      "arquivo": "src/assets/oponentes/poluicao-plastica.png",
+      "sha256": "42F1BC00911A458AF0FA2DC8BC98863789A65A3A38D9DEF77864A71EB8DB9839",
+      "promptEspecifico": "Polluted Brazilian coastal shallows at stormy dusk. A huge threatening monster unmistakably assembled from plastic bottles, shopping bags, colorful caps, broken containers, straws and a ghost fishing net. Materials remain visibly plastic rather than generic rock or garbage; no readable packaging or recycling logos."
+    },
+    {
+      "id": "esgoto-clandestino",
+      "arquivo": "src/assets/oponentes/esgoto-clandestino.png",
+      "sha256": "71739D09E04A56DB8C3F0F207979474D205879D6A16F98AD237DB97DF06C2B2D",
+      "promptEspecifico": "Hidden cracked concrete drainpipe beneath mangrove roots at the beach, pouring untreated wastewater. A menacing humanoid sludge creature emerges directly from the concealed pipe, with green-brown wastewater body, bubbles and murky runoff flowing toward the sea. Pipe and clandestine discharge are visually obvious."
+    },
+    {
+      "id": "pesca-predatoria",
+      "arquivo": "src/assets/oponentes/pesca-predatoria.png",
+      "sha256": "484EBBB1E2583A0B08A41C6590A99691AFBDCB312B4CB38F4890D804CB7BA1A5",
+      "promptEspecifico": "Open sea with an industrial trawler at twilight. A ruthless industrial fishing boss in heavy deck gear grips an oversized trawl net packed with excessive catch including juvenile fish. Clearly industrial overfishing, not a friendly traditional artisan fisherman."
+    },
+    {
+      "id": "especies-invasoras",
+      "arquivo": "src/assets/oponentes/especies-invasoras.png",
+      "sha256": "328337E463BBC2A2D60580D3E6B746400B73D7EC6BDA0922E68D18B3541A1CF4",
+      "promptEspecifico": "Coastal reef beside a ship ballast outlet. One biologically plausible marine bio-invader combines a dominant lionfish silhouette, orange sun-coral colonies and invasive mussels, spreading across the reef while native fish retreat. Marine, cohesive and threatening; not a bird or space alien."
+    },
+    {
+      "id": "mare-vermelha",
+      "arquivo": "src/assets/oponentes/mare-vermelha.png",
+      "sha256": "A1C6FB75AB55EBAE2BE087E24583A97634127D44C01BB35512D89D519CEFAC50",
+      "promptEspecifico": "Coastal bay transformed by a dense crimson microalgal bloom. An enormous entity formed from swirling red algae and foamy seawater rises with amber eyes, while affected fish silhouettes remain under the surface. Scientifically suggestive of harmful algal bloom, not literal blood or gore."
+    },
+    {
+      "id": "residuos-quimicos",
+      "arquivo": "src/assets/oponentes/residuos-quimicos.png",
+      "sha256": "2859A5EF32957613CF6910B2657CCA7EC9337824886CF5FCE2DC162895047987",
+      "promptEspecifico": "Contaminated rocky coast beside an industrial discharge. A toxic mutant made of dark sludge and corroded containers leaks neon green, acid yellow and violet liquids into coastal water. Plain container surfaces, no readable labels or hazard text."
+    },
+    {
+      "id": "mineracao",
+      "arquivo": "src/assets/oponentes/mineracao.png",
+      "sha256": "0CAE301CCD8EEFE93F4BE6EA1145E1D1ED45F37917CE8C656FBA6498AC2C2B83",
+      "promptEspecifico": "Coastal cliff and sandy shore being excavated, vegetation stripped and sediment entering the sea. A massive boss merges a jagged rock golem with an excavator bucket arm and tracks, crushing the cliff and scooping sand. Mining machinery is unmistakable and unbranded."
+    },
+    {
+      "id": "bitucas-na-areia",
+      "arquivo": "src/assets/oponentes/bitucas-na-areia.png",
+      "sha256": "3996D62DFC8B2BE23781771EB4BC56A4761FBB863F7F229561C30B4D56E153F1",
+      "promptEspecifico": "Polluted beach at dusk. A grotesque sand-and-ash golem is built from hundreds of clearly visible used cigarette filters and paper butts, with ember-orange eyes and compacted hands. Environmental villain, not a tobacco advertisement; no active smoking or brands."
+    },
+    {
+      "id": "poluicao-farmacos",
+      "arquivo": "src/assets/oponentes/poluicao-farmacos.png",
+      "sha256": "B84E4C53AC773E60BD996318D1276139CF208EEB4673EE60B91000805E92333F",
+      "promptEspecifico": "Dark wastewater outfall entering a coastal lagoon. An eerie translucent aquatic humanoid is made of contaminated effluent, with unlabeled capsules and tablets visibly dissolving inside its body, cyan-violet veins and affected fish nearby. No packaging, brands or labels."
+    },
+    {
+      "id": "guardiao-corrompido",
+      "arquivo": "src/assets/oponentes/guardiao-corrompido.png",
+      "sha256": "E977CFA20689983CFF0417890F1CBF3F7424D1D044AC3424AF330BD28FB5A34C",
+      "promptEspecifico": "Preserve the original Guardião do Mangue identity: same severe human face, broad brow, root-like hair and beard, and crown of leaves. Corrupt it with black oil, purple sludge, cracked bark, diseased roots, wilted spotted leaves, toxic magenta veins and amber-red eyes. Still unmistakably the same guardian."
+    },
+    {
+      "id": "ser-humano",
+      "arquivo": "src/assets/oponentes/ser-humano.png",
+      "sha256": "0D78BAF6D39EDBE70230109019CA75F2B232FBE77EE3AEB651210321A8EBA8C9",
+      "promptEspecifico": "Contemporary coastal city at twilight. One clearly human adult in ordinary modern clothing stands centrally, face half lit and half shadowed. One side shows smoke, plastic, oil and damaged mangrove; the other shows a subtle restored green shore. Serious and morally ambiguous, representing humanity as cause and possible caretaker; not a fantasy warrior or stereotype."
+    }
+  ]
+}
